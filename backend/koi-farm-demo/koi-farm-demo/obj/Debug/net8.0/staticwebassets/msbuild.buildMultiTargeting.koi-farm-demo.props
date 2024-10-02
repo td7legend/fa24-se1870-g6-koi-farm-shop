@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\koi-farm-demo.props" />
+</Project>
