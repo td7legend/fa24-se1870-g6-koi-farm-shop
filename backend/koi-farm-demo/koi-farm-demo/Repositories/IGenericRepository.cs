@@ -10,7 +10,7 @@
         Task DeleteAsync(int id);
     }
 
-    // IFishRepository.cs
+    
     public interface IFishRepository : IGenericRepository<Fish>
     {
         // Bạn có thể thêm các phương thức riêng cho Fish nếu cần

@@ -209,24 +209,103 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "koi_farm_demo.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
+    "ContainingType": "koi_farm_demo.Controllers.PaymentController",
+    "Method": "CreatePaymentUrl",
+    "RelativePath": "api/Payment",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "koi_farm_demo.Models.PaymentInformationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "koi_farm_demo.Controllers.PaymentController",
+    "Method": "PaymentCallback",
+    "RelativePath": "api/Payment/callback",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "koi_farm_demo.Controllers.UserController",
+    "Method": "AddStaff",
+    "RelativePath": "api/User/add-staff",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[koi_farm_demo.WeatherForecast, koi-farm-demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
+        "Name": "model",
+        "Type": "koi_farm_demo.Models.AddStaffModel",
+        "IsRequired": true
       }
     ],
-    "EndpointName": "GetWeatherForecast"
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "koi_farm_demo.Controllers.UserController",
+    "Method": "Login",
+    "RelativePath": "api/User/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "koi_farm_demo.Models.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "koi_farm_demo.Controllers.UserController",
+    "Method": "LoginWithGoogle",
+    "RelativePath": "api/User/login/google",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "koi_farm_demo.Controllers.UserController",
+    "Method": "GoogleCallback",
+    "RelativePath": "api/User/login/google/callback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "koi_farm_demo.Controllers.UserController",
+    "Method": "RegisterCustomer",
+    "RelativePath": "api/User/register-customer",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "koi_farm_demo.Models.RegisterCustomerModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]
