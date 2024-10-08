@@ -1,0 +1,88 @@
+.recently__added {
+  position: relative;
+  text-align: center;
+  padding: 40px 0;
+  background-image: url("../../../images/background.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+
+  // Lớp phủ kính mờ
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(187, 171, 111, 0.1); // Màu phủ mờ nhẹ
+    backdrop-filter: blur(10px); // Hiệu ứng kính mờ
+    z-index: 1;
+  }
+
+  h2 {
+    font-size: 32px;
+    color: #bbab6f;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+    text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .product__grid__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 10px;
+    z-index: 2;
+  }
+
+  .products__display {
+    display: flex;
+    gap: 30px;
+    transition: opacity 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  &.fade__out {
+    opacity: 0;
+  }
+
+  &.fade__in {
+    opacity: 1;
+  }
+
+  .nav__button {
+    background-color: #bbab6f;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: opacity 0.3s;
+    position: relative;
+    opacity: 0;
+    z-index: 2;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); // Bóng cho nút bấm để tạo cảm giác nổi lên
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &.left {
+      margin-right: 10px;
+    }
+
+    &.right {
+      margin-left: 10px;
+    }
+  }
+
+  &:hover .nav__button {
+    opacity: 1;
+  }
+}

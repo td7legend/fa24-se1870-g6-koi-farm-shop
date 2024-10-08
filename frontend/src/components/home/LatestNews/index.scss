@@ -1,0 +1,124 @@
+.latest__news {
+  position: relative;
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #fffaf0;
+  background-image: url("../../../images/background.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(187, 171, 111, 0.1); // Màu phủ mờ nhẹ
+    backdrop-filter: blur(10px); // Hiệu ứng kính mờ
+    z-index: 1;
+  }
+
+  h2 {
+    font-size: 32px;
+    color: #bbab6f;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+    text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .news__grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 10px;
+    z-index: 2;
+
+    .news__display {
+      display: flex;
+      gap: 30px;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+
+      .news__card {
+        width: 350px;
+        text-decoration: none;
+        text-align: center;
+        color: inherit;
+        background: #fffaf0;
+        border-radius: 15px;
+        border: 1px solid #e6e6e6;
+        box-shadow: 0 4px 8px rgba(0, 0, 0.4, 0.8);
+
+        .news__image {
+          margin-top: 20px;
+          width: 300px;
+          height: 300px;
+          object-fit: cover;
+          border-radius: 15px;
+          margin-bottom: 10px;
+          transition: transform 0.3s;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+
+        .news__content {
+          h3 {
+            font-size: 25px;
+            margin: 5px 0;
+          }
+
+          p {
+            font-size: 15px;
+            margin-bottom: 20px;
+          }
+        }
+      }
+    }
+
+    &.fade__out {
+      opacity: 0;
+    }
+
+    &.fade__in {
+      opacity: 1;
+    }
+
+    .nav__button {
+      background-color: #bbab6f;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: opacity 0.3s;
+      position: relative;
+      opacity: 0;
+      z-index: 2;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &.left {
+        margin-right: 10px;
+      }
+
+      &.right {
+        margin-left: 10px;
+      }
+    }
+
+    &:hover .nav__button {
+      opacity: 1;
+    }
+  }
+}
