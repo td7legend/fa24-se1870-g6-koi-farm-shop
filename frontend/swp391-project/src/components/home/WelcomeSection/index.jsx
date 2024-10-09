@@ -3,9 +3,9 @@ import Picture2 from "../../../images/picture-1.png";
 import "./index.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import "swiper/css"; 
-import "swiper/css/pagination"; 
-import "swiper/css/navigation"; 
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 function WelcomSestion() {
   return (
     <section className="welcome__section">
@@ -14,7 +14,7 @@ function WelcomSestion() {
           spaceBetween={100} // Khoảng cách giữa các slide
           slidesPerView={1} // Số lượng slide hiển thị mỗi lần
           autoplay={{
-            delay: 5000,
+            delay: 3000,
             disableOnInteraction: false,
           }}
           pagination={{ clickable: true }} // Hiển thị các nút điều hướng

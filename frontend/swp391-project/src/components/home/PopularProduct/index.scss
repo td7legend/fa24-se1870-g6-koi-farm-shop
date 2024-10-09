@@ -1,3 +1,4 @@
+@import "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap";
 .popular__product {
   position: relative;
   text-align: center;
@@ -22,11 +23,13 @@
   }
 
   h2 {
+    font-family: "Lora";
     font-size: 32px;
     color: #bbab6f;
     margin-bottom: 30px;
     position: relative;
     z-index: 2;
+    -webkit-text-stroke: 0.3px white;
     text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
   }
 

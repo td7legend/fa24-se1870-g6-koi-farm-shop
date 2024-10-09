@@ -1,3 +1,4 @@
+@import "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap";
 .about__farm {
   position: relative;
   text-align: center;
@@ -21,6 +22,7 @@
   //   }
 
   h2 {
+    font-family: "Lora";
     font-size: 32px;
     color: #bbab6f;
     margin-bottom: 30px;

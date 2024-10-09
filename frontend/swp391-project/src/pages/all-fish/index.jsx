@@ -67,7 +67,7 @@ const AllFishPage = () => {
             <Breadcrumb.Item>Product List</Breadcrumb.Item>
           </Breadcrumb>
         </div>
-        <h1>All Koi Fish</h1>
+        {/* <h1>All Koi Fish</h1> */}
       </Col>
       {/* Hiển thị cá theo từng loại breed */}
       {Object.keys(fishByBreed).map((breed) => {

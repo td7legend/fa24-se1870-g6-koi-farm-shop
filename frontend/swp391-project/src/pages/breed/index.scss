@@ -1,6 +1,11 @@
 .breed-page-container {
   overflow: hidden;
-
+  .left-side {
+    width: 300px;
+    background-color: rebeccapurple;
+    .product-list-filter {
+    }
+  }
   .banner {
     img {
       width: 100%;

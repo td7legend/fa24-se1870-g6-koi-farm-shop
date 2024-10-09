@@ -157,7 +157,6 @@ const BreedFishPage = () => {
                 value={searchQuery}
                 onChange={handleSearch}
                 placeholder="Search fish by name"
-                style={{ width: 400 }}
               ></Search>
             </div>
             <div className="filter-container">
@@ -168,7 +167,6 @@ const BreedFishPage = () => {
                   onChange={handleOriginChange}
                   multiple
                   placeholder="Select origin"
-                  style={{ width: 400, marginBottom: 20, marginTop: 20 }}
                 />
               </div>
               <div className="size-filter">
@@ -178,7 +176,6 @@ const BreedFishPage = () => {
                   onChange={handleSizeChange}
                   multiple
                   placeholder="Select size"
-                  style={{ width: 400 }}
                 />
               </div>
               <div className="price-filter">
@@ -199,7 +196,7 @@ const BreedFishPage = () => {
             </div>
           </div>
         </Col>
-        <Col span={18} className="right-side">
+        {/* <Col span={18} className="right-side">
           <div className="banner">
             <img
               src="https://img.freepik.com/premium-photo/set-koi-carps_933530-3237.jpg"
@@ -295,7 +292,7 @@ const BreedFishPage = () => {
             />
           </div>
           <FloatButton.BackTop />
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );
