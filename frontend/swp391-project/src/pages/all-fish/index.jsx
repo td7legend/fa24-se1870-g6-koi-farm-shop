@@ -4,6 +4,7 @@ import ProductCard from "../../components/product-card";
 import "./index.scss"; // Import CSS để điều chỉnh layout
 import { Link } from "react-router-dom";
 import { Breadcrumb, Col } from "antd";
+import ImageFrame from "../../components/home/ImageFrame";
 
 const AllFishPage = () => {
   const [allFish, setAllFish] = useState([]);
@@ -81,8 +82,9 @@ const AllFishPage = () => {
 
         return (
           <div key={breed}>
+            <ImageFrame />
             <Link to={`/breed/${breed}`}>
-              <div className="breed">{breed}</div>
+              <div className="breed-link">{breed}</div>
             </Link>
             {/* Liên kết tới trang breed */} {/* Tên loại breed */}
             <div className="fish-list">
@@ -104,22 +106,6 @@ const AllFishPage = () => {
                 &gt;
               </button>
             </div>
-            {/* Điều khiển phân trang */}
-            {/* <div className="pagination-controls">
-              <button
-                onClick={() => handlePageChange(breed, -1)}
-                disabled={currentPageForBreed === 1} // Vô hiệu hóa nút 'Previous' ở trang đầu tiên
-              >
-                Previous
-              </button>
-              <span>Page {currentPageForBreed}</span>
-              <button
-                onClick={() => handlePageChange(breed, 1)}
-                disabled={endIndex >= breedFish.length} // Vô hiệu hóa nút 'Next' ở trang cuối
-              >
-                Next
-              </button>
-            </div> */}
           </div>
         );
       })}

@@ -1,0 +1,16 @@
+.breed-page-container {
+  overflow: hidden;
+
+  .banner {
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+  }
+  .fish-list-breed {
+    display: flex; /* Để đảm bảo các item sẽ xuống dòng khi hết chiều ngang */
+    gap: 20px; /* Khoảng cách giữa các item */
+    justify-content: flex-start; /* Canh các item bắt đầu từ đầu hàng */
+  }
+}

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
 .breadcrumb-container {
   padding: 20px;
   background-image: url("https://img.freepik.com/premium-photo/set-koi-carps_933530-3237.jpg");
@@ -7,7 +8,6 @@
   justify-content: flex-start;
   align-items: center;
   margin: 20px 0;
-  border-radius: 20px;
   .breadcrumb {
     background-color: rgba(255, 255, 255, 0.7);
     padding: 10px;
@@ -24,11 +24,7 @@
     }
   }
 }
-.breed {
-  p {
-    text-decoration: none;
-  }
-}
+
 .fish-list {
   display: flex;
   gap: 20px;
@@ -67,9 +63,14 @@
     }
   }
 }
-// .pagination-controls {
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   gap: 20px;
-// }
+
+a {
+  text-decoration: none;
+  color: #bbab6f;
+  text-align: center;
+  .breed-link {
+    font-family: "Lora", serif;
+    font-size: 30px;
+    font-weight: bold;
+  }
+}

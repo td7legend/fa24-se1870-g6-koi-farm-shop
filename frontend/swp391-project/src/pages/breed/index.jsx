@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ProductCard from "../../components/product-card";
@@ -20,7 +20,7 @@ const BreedFishPage = () => {
   const [breedFish, setBreedFish] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(3);
   const [sortOrder, setSortOrder] = useState("");
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -44,31 +44,31 @@ const BreedFishPage = () => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSortChange = (value) => {
     setSortOrder(value);
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleOriginChange = (value) => {
     setSelectedOrigins(value);
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSizeChange = (value) => {
     setSelectedSizes(value);
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
@@ -130,9 +130,9 @@ const BreedFishPage = () => {
     currentPage * pageSize
   );
 
-  const onChange = (page) => {
+  const handleChangPagination = (page) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -199,7 +199,7 @@ const BreedFishPage = () => {
             </div>
           </div>
         </Col>
-        <Col span={18}>
+        <Col span={18} className="right-side">
           <div className="banner">
             <img
               src="https://img.freepik.com/premium-photo/set-koi-carps_933530-3237.jpg"
@@ -291,7 +291,7 @@ const BreedFishPage = () => {
               current={currentPage}
               pageSize={pageSize}
               total={filteredFishs.length}
-              onChange={onChange}
+              onChange={handleChangPagination}
             />
           </div>
           <FloatButton.BackTop />

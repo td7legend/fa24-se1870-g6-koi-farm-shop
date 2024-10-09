@@ -22,7 +22,6 @@ const ProductCard = ({ fish }) => {
         </div>
         <div className="info-container">
           <div className="info">
-            <Tag color="blue">{fish.breed}</Tag>
             <h2>{fish.name}</h2>
             <p>Size: {fish.size} cm</p>
             <p>Origin: {fish.origin}</p>
@@ -37,7 +36,6 @@ const ProductCard = ({ fish }) => {
                 height: 50,
                 padding: "8px 16px",
                 borderRadius: 20,
-                marginRight: 20,
               }}
             >
               Add to Cart
