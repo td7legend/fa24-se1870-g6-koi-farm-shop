@@ -5,6 +5,8 @@ import HomePage from "./pages/home";
 import AllFishPage from "./pages/all-fish";
 import BreedFishPage from "./pages/breed";
 import ProductDetail from "./pages/product-detail";
+import Cart from "./pages/cart/Cart";
+import Checkout from "./pages/checkout/Checkout";
 
 function App() {
   const router = createBrowserRouter([
@@ -18,6 +20,8 @@ function App() {
         { path: "/products/:id", element: <ProductDetail /> },
         { path: "/breed/:id", element: <ProductDetail /> },
         { path: "/consignment", element: <Consignment /> },
+        { path: "/cart", element: <Cart /> },
+        { path: "/checkout", element: <Checkout /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi
