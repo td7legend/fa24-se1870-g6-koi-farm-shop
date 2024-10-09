@@ -15,10 +15,16 @@ namespace koi_farm_demo.Controllers
         {
             _fishTypeService = fishTypeService;
         }
+        [HttpGet("getall")] 
+        public async Task<ActionResult<IEnumerable<FishType>>> GetAll()
+        {
+            var fishTypes = await _fishTypeService.GetAllFishTypesAsync(); 
+            return Ok(fishTypes); 
+        }
 
-        // POST: api/FishType
-        [HttpPost]
-        public async Task<IActionResult> PostFishType([FromBody] FishTypeCreateDto fishTypeCreateDto) // Kiểm tra lại kiểu dữ liệu ở đây
+        
+        [HttpPost("AddFishType")]
+        public async Task<IActionResult> PostFishType([FromBody] FishTypeCreateDto fishTypeCreateDto) 
         {
             if (fishTypeCreateDto == null)
             {

@@ -19,9 +19,9 @@ public class OrderLineRepository : IOrderLineRepository
 
         if (existingOrderLine != null)
         {
-            // Cập nhật các thuộc tính cần thiết
+            
             existingOrderLine.Quantity += orderLineCreateDto.Quantity;
-            // hoặc cập nhật các thuộc tính khác
+            
             existingOrderLine.TotalPrice += orderLineCreateDto.Quantity * existingOrderLine.UnitPrice;
             _context.OrderLines.Update(existingOrderLine);
         }

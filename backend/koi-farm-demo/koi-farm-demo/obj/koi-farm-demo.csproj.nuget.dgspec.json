@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SWP391\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj": {}
+    "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj": {}
   },
   "projects": {
-    "D:\\SWP391\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj": {
+    "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SWP391\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj",
+        "projectUniqueName": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj",
         "projectName": "koi-farm-demo",
-        "projectPath": "D:\\SWP391\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj",
+        "projectPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-demo\\koi-farm-demo\\koi-farm-demo.csproj",
         "packagesPath": "C:\\Users\\td7le\\.nuget\\packages\\",
-        "outputPath": "D:\\SWP391\\koi-farm-demo\\koi-farm-demo\\obj\\",
+        "outputPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-demo\\koi-farm-demo\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\td7le\\AppData\\Roaming\\NuGet\\NuGet.Config",

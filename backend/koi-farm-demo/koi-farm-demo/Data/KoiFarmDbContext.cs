@@ -20,7 +20,7 @@ public class KoiFarmDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Cấu hình bảng User
+        
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.UserId);
@@ -29,7 +29,7 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.Role).IsRequired();
         });
 
-        // Cấu hình bảng Staff
+        
         modelBuilder.Entity<Staff>(entity =>
         {
             entity.HasKey(e => e.StaffId);
@@ -38,14 +38,14 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.Email).IsRequired();
             entity.Property(e => e.PhoneNumber).IsRequired();
 
-            // Cấu hình quan hệ 1-1 giữa Staff và User
+            
             entity.HasOne(e => e.User)
                   .WithOne()
-                  .HasForeignKey<Staff>(e => e.UserId)  // Sử dụng trực tiếp UserId
+                  .HasForeignKey<Staff>(e => e.UserId)  
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Cấu hình bảng Customer
+        
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.CustomerId);
@@ -58,11 +58,11 @@ public class KoiFarmDbContext : DbContext
 
             entity.HasOne(e => e.User)
                   .WithOne()
-                  .HasForeignKey<Customer>(e => e.UserId)  // Sử dụng trực tiếp UserId
+                  .HasForeignKey<Customer>(e => e.UserId)  
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Cấu hình bảng Order
+       
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.OrderId);
@@ -71,10 +71,10 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.TotalTax).IsRequired();
             entity.Property(e => e.TotalDiscount).IsRequired();
 
-            // Thay đổi mối quan hệ từ WithOne sang WithMany
+            
             entity.HasOne<Customer>()
-                  .WithMany(c => c.Orders)  // Khai báo rằng Customer có nhiều Orders
-                  .HasForeignKey(e => e.CustomerId)  // Sử dụng trực tiếp CustomerId
+                  .WithMany(c => c.Orders)  
+                  .HasForeignKey(e => e.CustomerId)  
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -82,25 +82,24 @@ public class KoiFarmDbContext : DbContext
         // Cấu hình bảng OrderLine
         modelBuilder.Entity<OrderLine>(entity =>
         {
-            entity.HasKey(e => new { e.OrderId, e.FishId }); // Khóa chính là sự kết hợp của OrderId và FishId
+            entity.HasKey(e => new { e.OrderId, e.FishId }); 
             entity.Property(e => e.Quantity).IsRequired();
             entity.Property(e => e.UnitPrice).IsRequired();
             entity.Property(e => e.TotalPrice).IsRequired();
 
-            entity.HasOne(e => e.Order) // Mối quan hệ với Order
-                  .WithMany(e => e.OrderLines) // Một Order có nhiều OrderLines
+            entity.HasOne(e => e.Order) 
+                  .WithMany(e => e.OrderLines) 
                   .HasForeignKey(e => e.OrderId)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(e => e.Fish) // Mối quan hệ với Fish
-                  .WithMany(e => e.OrderLines) // Một Fish có thể nằm trong nhiều OrderLines
-                  .HasForeignKey(e => e.FishId) // Sử dụng trực tiếp FishId
-                  .OnDelete(DeleteBehavior.Restrict); // Không tự động xóa OrderLines khi Fish bị xóa
+            entity.HasOne(e => e.Fish) 
+                  .WithMany(e => e.OrderLines)
+                  .HasForeignKey(e => e.FishId) 
+                  .OnDelete(DeleteBehavior.Restrict); 
         });
 
 
-        // Cấu hình bảng Fish
-        // Cấu hình bảng Fish
+        
         modelBuilder.Entity<Fish>(entity =>
         {
             entity.HasKey(e => e.FishId);
@@ -114,14 +113,14 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.Price).IsRequired();
             entity.Property(e => e.Batch).IsRequired();
 
-            // Thiết lập mối quan hệ Nhiều đến Một với FishType
+            
             entity.HasOne(e => e.FishType)
-                  .WithMany(e => e.Fishes) // Thay đổi từ WithOne() sang WithMany()
-                  .HasForeignKey(e => e.FishTypeId) // Khóa ngoại trong bảng Fish
+                  .WithMany(e => e.Fishes) 
+                  .HasForeignKey(e => e.FishTypeId) 
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Cấu hình bảng FishType
+        
         modelBuilder.Entity<FishType>(entity =>
         {
             entity.HasKey(e => e.FishTypeId);
@@ -130,7 +129,7 @@ public class KoiFarmDbContext : DbContext
         });
 
 
-        // Cấu hình bảng Certification
+        
         modelBuilder.Entity<Certification>(entity =>
         {
             entity.HasKey(e => e.CertificationId);
@@ -143,7 +142,7 @@ public class KoiFarmDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Cấu hình bảng Consignment
+        
         modelBuilder.Entity<Consignment>(entity =>
         {
             entity.HasKey(e => e.ConsignmentId);
@@ -152,15 +151,15 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.Amount).IsRequired();
             entity.Property(e => e.Status).IsRequired();
 
-            // Thiết lập mối quan hệ "Một Staff có nhiều Consignment"
+            
             entity.HasOne(e => e.Staff)
-                  .WithMany(s => s.Consignments)  // Một Staff có nhiều Consignment
-                  .HasForeignKey(e => e.StaffId)  // Khóa ngoại trong bảng Consignment
+                  .WithMany(s => s.Consignments)  
+                  .HasForeignKey(e => e.StaffId)  
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
 
-        // Cấu hình bảng ConsignmentLine
+        
         modelBuilder.Entity<ConsignmentLine>(entity =>
         {
             entity.HasKey(e => e.ConsignmentLineId);
@@ -179,7 +178,7 @@ public class KoiFarmDbContext : DbContext
                   .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Cấu hình bảng Rating
+        
         modelBuilder.Entity<Rating>(entity =>
         {
             entity.HasKey(e => e.RatingId);
@@ -188,7 +187,7 @@ public class KoiFarmDbContext : DbContext
 
             entity.HasOne(e => e.Customer)
                   .WithMany(e => e.Ratings)
-                  .HasForeignKey(e => e.CustomerId)  // Sử dụng trực tiếp CustomerId
+                  .HasForeignKey(e => e.CustomerId)  
                   .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.Fish)
@@ -197,7 +196,7 @@ public class KoiFarmDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Cấu hình bảng LoyaltyPoint
+        
         modelBuilder.Entity<LoyaltyPoint>(entity =>
         {
             entity.HasKey(e => e.LPId);

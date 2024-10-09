@@ -1,4 +1,6 @@
-﻿namespace koi_farm_demo.Repositories
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace koi_farm_demo.Repositories
 {
     public class FishTypeRepository : IFishTypeRepository
     {
@@ -8,7 +10,10 @@
         {
             _context = context;
         }
-
+        public async Task<IEnumerable<FishType>> GetAllAsync()
+        {
+            return await _context.FishTypes.ToListAsync();
+        }
         public async Task<bool> AddAsync(FishType entity)
         {
             await _context.FishTypes.AddAsync(entity);

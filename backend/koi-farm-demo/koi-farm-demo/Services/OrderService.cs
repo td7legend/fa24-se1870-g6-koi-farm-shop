@@ -56,7 +56,7 @@ public class OrderService : IOrderService
             throw new Exception("Fish not available or insufficient quantity");
         }
 
-        // Tạo OrderLine mới
+        
         var orderLine = new OrderLine
         {
             OrderId = orderId,
@@ -66,10 +66,9 @@ public class OrderService : IOrderService
             TotalPrice = fish.Price * orderLineCreateDto.Quantity
         };
 
-        // Thêm OrderLine vào database
         await _orderLineRepository.AddAsync(orderLine, orderLineCreateDto);
 
-        // Cập nhật TotalAmount của Order
+       
         order.TotalAmount = order.OrderLines.Sum(ol => ol.TotalPrice);
         await _orderRepository.UpdateAsync(order);
     }

@@ -15,7 +15,7 @@ namespace koi_farm_demo.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet("{orderId}")]
+        [HttpGet("getByID/{orderId}")]
         public async Task<ActionResult<Order>> GetOrder(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
@@ -26,21 +26,21 @@ namespace koi_farm_demo.Controllers
             return Ok(order);
         }
 
-        [HttpPost("{orderId}/add-line")]
+        [HttpPost("addToCart/{orderId}")]
         public async Task<IActionResult> AddOrderLine(int orderId, OrderLineCreateDTO orderLineCreateDto)
         {
             await _orderService.AddOrderLineAsync(orderId, orderLineCreateDto);
             return Ok();
         }
 
-        [HttpDelete("{orderId}/remove-line/{fishId}")]
+        [HttpDelete("delete/{orderId}/{fishId}")]
         public async Task<IActionResult> RemoveOrderLine(int orderId, int fishId)
         {
             await _orderService.RemoveOrderLineAsync(orderId, fishId);
             return NoContent();
         }
 
-        [HttpPost("{orderId}/pay")]
+        [HttpPost("pay/{orderId}")]
         public async Task<IActionResult> PayForOrder(int orderId)
         {
             await _orderService.PayForOrderAsync(orderId);

@@ -36,7 +36,7 @@ namespace koi_farm_demo.Services
                 OverallRating = fishCreateDto.OverallRating ?? 0,
                 Price = fishCreateDto.Price ?? 0,
                 Batch = fishCreateDto.Batch ?? false,
-                FishTypeId = fishCreateDto.FishTypeId  // Thêm dòng này để gán FishTypeId
+                FishTypeId = fishCreateDto.FishTypeId  
             };
 
             await _fishRepository.AddAsync(fish);

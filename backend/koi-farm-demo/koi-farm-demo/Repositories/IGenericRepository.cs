@@ -13,7 +13,7 @@
     
     public interface IFishRepository : IGenericRepository<Fish>
     {
-        // Bạn có thể thêm các phương thức riêng cho Fish nếu cần
+        
         Task UpdateQuantityAsync(int id, int quantity);
         Task<Fish> GetByIdAsync(int id);
         Task UpdateFishAsync(Fish fish);

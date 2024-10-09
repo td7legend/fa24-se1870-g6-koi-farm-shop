@@ -2,6 +2,7 @@
 {
     public interface IFishTypeRepository
     {
+        Task<IEnumerable<FishType>> GetAllAsync();
         Task<bool> AddAsync(FishType entity);
     }
 }

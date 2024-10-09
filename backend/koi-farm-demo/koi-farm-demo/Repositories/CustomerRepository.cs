@@ -3,7 +3,7 @@
     public interface ICustomerRepository
     {
         Task AddAsync(Customer customer);
-        // Các phương thức khác nếu cần
+        
     }
 
     public class CustomerRepository : ICustomerRepository
@@ -18,10 +18,10 @@
         public async Task AddAsync(Customer customer)
         {
             await _context.Customers.AddAsync(customer);
-            await _context.SaveChangesAsync(); // Đừng quên lưu thay đổi!
+            await _context.SaveChangesAsync(); 
         }
 
-        // Các phương thức khác nếu cần
+        
     }
 
 }

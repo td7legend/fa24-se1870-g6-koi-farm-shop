@@ -2,7 +2,7 @@
 {
     public class OrderLineDTO
     {
-        public int OrderId { get; set; }  // Có thể không cần nếu không sử dụng
+        public int OrderId { get; set; }  
         public int FishId { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }

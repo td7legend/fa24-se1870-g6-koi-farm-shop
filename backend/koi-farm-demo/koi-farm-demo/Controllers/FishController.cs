@@ -14,14 +14,14 @@ namespace koi_farm_demo.Controllers
             _fishService = fishService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Fish>>> GetFish()
+        [HttpGet("getall")]
+        public async Task<ActionResult<IEnumerable<Fish>>> GetAll()
         {
             var fish = await _fishService.GetAllFishAsync();
             return Ok(fish);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getById/{id}")]
         public async Task<ActionResult<Fish>> GetFish(int id)
         {
             var fish = await _fishService.GetFishByIdAsync(id);
@@ -32,20 +32,20 @@ namespace koi_farm_demo.Controllers
             return Ok(fish);
         }
 
-        [HttpPost]
+        [HttpPost("addFish")]
         public async Task<ActionResult<Fish>> PostFish(FishCreateDto fishCreateDto)
         {
             await _fishService.AddFishAsync(fishCreateDto);
             return CreatedAtAction(nameof(GetFish), new { id = fishCreateDto.Name }, fishCreateDto); // Cần điều chỉnh lại để trả về đối tượng Fish đúng
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteFish/{id}")]
         public async Task<IActionResult> DeleteFish(int id)
         {
             await _fishService.DeleteFishAsync(id);
             return NoContent();
         }
-        [HttpPatch("{id}/quantity")]
+        [HttpPatch("updateQuantity/{id}/quantity")]
         public async Task<IActionResult> UpdateQuantity(int id, int quantity)
         {
             var fish = await _fishService.GetFishByIdAsync(id);
@@ -54,7 +54,6 @@ namespace koi_farm_demo.Controllers
                 return NotFound();
             }
 
-            // Gọi service để cập nhật Quantity
             await _fishService.UpdateFishQuantityAsync(id, quantity);
 
             return NoContent();
