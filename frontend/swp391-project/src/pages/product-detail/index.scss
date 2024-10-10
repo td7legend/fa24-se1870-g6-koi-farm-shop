@@ -1,3 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+.breadcrumb-container {
+  .breadcrumb {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto 0;
+    .breadcrumb-item {
+      margin-right: 20px;
+    }
+
+    .breadcrumb-item:last-child {
+      margin-right: 0;
+    }
+  }
+}
 .product-detail-container {
   max-width: 1200px;
   padding: 20px;
@@ -13,25 +32,36 @@
     object-fit: cover;
     border-radius: 10px;
   }
-  h1 {
-    font-size: 50px;
-    margin-bottom: 10px;
+  .info-container {
+    height: 320px;
+    box-sizing: border-box;
+    font-family: "Lora", serif;
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
   }
 
-  h2 {
-    font-size: 24px;
-    color: #f00;
-    margin-bottom: 10px;
-  }
   .product-info {
     margin-bottom: 20px;
     font-size: 25px;
+    gap: 10px;
     p {
-      margin-bottom: 10px;
+      margin: 10px auto;
     }
     span {
       font-weight: bold;
+      height: 15px;
     }
+  }
+  .product-submit {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 50px;
   }
   .add-to-cart {
     span {
@@ -39,7 +69,8 @@
       font-size: 20px;
     }
     background-color: white;
-    height: 50px;
+    margin: auto;
+    height: 40px;
     width: 400px;
   }
   // .product-detail-container .quantity-selector {
@@ -64,23 +95,4 @@
   //   padding: 5px;
   //   margin: 0 10px;
   // }
-}
-
-.breadcrumb-container {
-  .breadcrumb {
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    max-width: 1200px;
-    margin: auto 0;
-    .breadcrumb-item {
-      margin-right: 20px;
-    }
-
-    .breadcrumb-item:last-child {
-      margin-right: 0;
-    }
-  }
 }
