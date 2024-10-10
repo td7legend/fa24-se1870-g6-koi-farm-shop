@@ -9,6 +9,7 @@ import {
   InputNumber,
   Carousel,
   Breadcrumb,
+  Rate,
 } from "antd";
 import "./index.scss"; // Import CSS cho component
 import { ShoppingCartOutlined } from "@ant-design/icons";
@@ -65,6 +66,7 @@ function ProductDetail() {
           <Col span={12}>
             <div className="info-container">
               <h1>{product.name}</h1>
+              <Rate disabled defaultValue={5} />
               <p>
                 <h2>{product.price} VND</h2>
               </p>
@@ -92,7 +94,11 @@ function ProductDetail() {
                   icon={<ShoppingCartOutlined />}
                   onClick={handleAddToCart}
                   Size="large"
-                  style={{ width: 400 }}
+                  style={{
+                    fontSize: 10,
+                    padding: "8px 16px",
+                    borderRadius: 20,
+                  }}
                 >
                   Add to Cart
                 </Button>

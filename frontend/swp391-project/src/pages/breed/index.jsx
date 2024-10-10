@@ -20,7 +20,7 @@ const BreedFishPage = () => {
   const [breedFish, setBreedFish] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
+  const [pageSize, setPageSize] = useState(4);
   const [sortOrder, setSortOrder] = useState("");
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -147,8 +147,8 @@ const BreedFishPage = () => {
         </div>
       </Col>
       <h1>{breedName}</h1> {/* Hiển thị tên breed */}
-      <Row gutter={16}>
-        <Col span={6} className="left-side">
+      <Row className="row-container">
+        <Col className="left-side">
           <div className="product-list-filter">
             <div className="search-container">
               <h1>Filter</h1>
@@ -162,6 +162,7 @@ const BreedFishPage = () => {
             <div className="filter-container">
               <div className="breed-filter">
                 <TreeSelect
+                  className="tree-select"
                   treeData={originTreeData}
                   value={selectedOrigins}
                   onChange={handleOriginChange}
@@ -171,6 +172,7 @@ const BreedFishPage = () => {
               </div>
               <div className="size-filter">
                 <TreeSelect
+                  className="tree-select"
                   treeData={sizeTreeData}
                   value={selectedSizes}
                   onChange={handleSizeChange}
@@ -196,7 +198,7 @@ const BreedFishPage = () => {
             </div>
           </div>
         </Col>
-        {/* <Col span={18} className="right-side">
+        <Col className="right-side">
           <div className="banner">
             <img
               src="https://img.freepik.com/premium-photo/set-koi-carps_933530-3237.jpg"
@@ -292,7 +294,7 @@ const BreedFishPage = () => {
             />
           </div>
           <FloatButton.BackTop />
-        </Col> */}
+        </Col>
       </Row>
     </div>
   );
