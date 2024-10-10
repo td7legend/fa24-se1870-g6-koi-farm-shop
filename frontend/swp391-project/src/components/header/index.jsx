@@ -61,7 +61,7 @@ const Header = () => {
 
         {/* User Options */}
         <div className="user__options">
-          <Link to="/sign-in" className="register__sign__in">
+          <Link to="/login" className="register__sign__in">
             <FontAwesomeIcon icon={faUser} className="fa__icon" /> Register/Sign
             in
           </Link>
