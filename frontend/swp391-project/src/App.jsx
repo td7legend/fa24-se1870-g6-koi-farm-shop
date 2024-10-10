@@ -7,6 +7,7 @@ import BreedFishPage from "./pages/breed";
 import ProductDetail from "./pages/product-detail";
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
+import UserForm from "./pages/user_Dasboard";
 function App() {
   const router = createBrowserRouter([
     {
@@ -19,6 +20,7 @@ function App() {
         { path: "/products/:id", element: <ProductDetail /> },
         { path: "/breed/:id", element: <ProductDetail /> },
         { path: "/consignment", element: <Consignment /> },
+        { path: "/user_info/:id", element: <UserForm /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Form, Input, Button, Modal, message, Avatar, Upload } from "antd";
 import axios from "axios";
 import { PlusOutlined } from "@ant-design/icons";
-import uploadFile from "../../utils/upload";
+import uploadFile from "../../utils/upload/upload";
 
 const UserForm = () => {
   const { id } = useParams(); // Lấy id từ URL
