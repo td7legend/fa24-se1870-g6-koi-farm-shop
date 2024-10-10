@@ -9,10 +9,12 @@ import {
   Col,
   Image,
   Breadcrumb,
+  Modal,
 } from "antd";
 
 const Checkout = () => {
   const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [cart, setCart] = useState([
     {
       id: 1,
@@ -32,14 +34,24 @@ const Checkout = () => {
     },
   ]);
 
-  const [user, setUser] = useState([
-    {
-      id: 1,
-      name: "Tran Quang Duy",
-      phoneNumber: "0941460781",
-      address: "Vinhomes Grand Park",
-    },
-  ]);
+  const [user, setUser] = useState({
+    id: 1,
+    firstName: "Haha",
+    lastName: "Quang Duy",
+    phoneNumber: "0941460781",
+    address: "Vinhomes Grand Park",
+    ward: "Long Thạnh Mỹ",
+    district: "Thủ Đức",
+    city: "Ho Chi Minh City",
+    email: "example@email.com",
+  });
+
+  const [paymentMethod, setPaymentMethod] = useState("VnPay");
+
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   const columns = [
     {
@@ -66,8 +78,22 @@ const Checkout = () => {
     },
   ];
 
+  const showModal = () => {
+    form.setFieldsValue(user);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    form.submit();
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   const onFinish = (values) => {
-    console.log(values);
+    setUser(values);
+    setIsModalVisible(false);
   };
 
   return (
@@ -84,133 +110,154 @@ const Checkout = () => {
         <Col span={12}>
           <h2>Billing Information</h2>
           <div>
-            <p>Name: {user.name}</p>
+            <p>
+              Name: {user.firstName} {user.lastName}
+            </p>
             <p>Phone Number: {user.phoneNumber}</p>
+            <p>
+              Address: {user.address}, {user.ward}, {user.district}, {user.city}
+            </p>
+            <p>Email: {user.email}</p>
           </div>
-          <Form
-            form={form}
-            name="checkout"
-            onFinish={onFinish}
-            layout="vertical"
+          <Button type="primary" onClick={showModal}>
+            Edit Billing Information
+          </Button>
+          <Modal
+            title="Edit Billing Information"
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
           >
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="First name"
-                  name="firstName"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your first name!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Address"
-                  name="address"
-                  rules={[
-                    { required: true, message: "Please input your address!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="District"
-                  name="district"
-                  rules={[
-                    { required: true, message: "Please input your district!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[
-                    { required: true, message: "Please input your email!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Last name"
-                  name="lastName"
-                  rules={[
-                    { required: true, message: "Please input your last name!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Ward"
-                  name="ward"
-                  rules={[
-                    { required: true, message: "Please input your ward!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="City"
-                  name="city"
-                  rules={[
-                    { required: true, message: "Please input your city!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Phone"
-                  name="phone"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your phone number!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item label="Order Notes (Optional)" name="orderNotes">
-              <Input.TextArea />
-            </Form.Item>
-          </Form>
+            <Form
+              form={form}
+              name="checkout"
+              onFinish={onFinish}
+              layout="vertical"
+            >
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="First name"
+                    name="firstName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your first name!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Address"
+                    name="address"
+                    rules={[
+                      { required: true, message: "Please input your address!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="District"
+                    name="district"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your district!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[
+                      { required: true, message: "Please input your email!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Last name"
+                    name="lastName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your last name!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Ward"
+                    name="ward"
+                    rules={[
+                      { required: true, message: "Please input your ward!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="City"
+                    name="city"
+                    rules={[
+                      { required: true, message: "Please input your city!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Phone"
+                    name="phoneNumber"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your phone number!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item label="Order Notes (Optional)" name="orderNotes">
+                <Input.TextArea />
+              </Form.Item>
+            </Form>
+          </Modal>
         </Col>
         <Col span={12}>
           <h2>Order Summary</h2>
-          <Table columns={columns} dataSource={cart} pagination={false} />
-          <h2>
-            Total Price:{" "}
-            {cart
-              .reduce((total, item) => total + item.price * item.quantity, 0)
-              .toLocaleString()}{" "}
-            VND
-          </h2>
+          <Table
+            columns={columns}
+            dataSource={cart}
+            pagination={false}
+            footer={() => (
+              <div>
+                <p>
+                  <strong>Total Price:</strong> {totalPrice.toLocaleString()}{" "}
+                  VND
+                </p>
+              </div>
+            )}
+          />
           <h2>Payment Method</h2>
-          <Form
-            form={form}
-            name="checkout"
-            onFinish={onFinish}
-            layout="vertical"
+          <Radio.Group
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            value={paymentMethod}
           >
-            <Form.Item name="paymentMethod">
-              <Radio.Group>
-                <Radio value="VnPay">VnPay</Radio>
-                <Radio value="bankTransfer">Bank Transfer</Radio>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Place Order
-              </Button>
-            </Form.Item>
-          </Form>
+            <Radio value="VnPay">VnPay</Radio>
+            <Radio value="bankTransfer">Bank Transfer</Radio>
+          </Radio.Group>
+          <div style={{ marginTop: "20px" }}>
+            <Button type="primary" onClick={showModal}>
+              Place Order
+            </Button>
+          </div>
         </Col>
       </Row>
     </div>

@@ -1,0 +1,33 @@
+$color_1: #9b8e5e;
+$color_2: #bbab6f;
+
+@import "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap";
+.forgot-password {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+  color: $color_1;
+  span {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    display: block;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  input {
+    margin-top: 15px;
+  }
+  i {
+    font-size: 30px;
+    color: $color_2;
+  }
+}
+.warning-icon {
+  margin: 10px 0;
+}
