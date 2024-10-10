@@ -223,6 +223,7 @@ const Checkout = () => {
       </Row>
       <Modal
         title="Edit Address"
+        centered
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
