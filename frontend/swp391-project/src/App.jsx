@@ -5,8 +5,8 @@ import HomePage from "./pages/home";
 import AllFishPage from "./pages/all-fish";
 import BreedFishPage from "./pages/breed";
 import ProductDetail from "./pages/product-detail";
-import Cart from "./pages/cart/Cart";
-import Checkout from "./pages/checkout/Checkout";
+import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
 
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
