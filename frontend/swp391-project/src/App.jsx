@@ -10,6 +10,7 @@ import Checkout from "./pages/checkout/Checkout";
 
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
+import UserForm from "./pages/user_Dasboard";
 function App() {
   const router = createBrowserRouter([
     {
@@ -24,6 +25,7 @@ function App() {
         { path: "/consignment", element: <Consignment /> },
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
+        { path: "/user_info/:id", element: <UserForm /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi
