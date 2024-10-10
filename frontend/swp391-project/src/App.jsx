@@ -5,14 +5,11 @@ import HomePage from "./pages/home";
 import AllFishPage from "./pages/all-fish";
 import BreedFishPage from "./pages/breed";
 import ProductDetail from "./pages/product-detail";
-<<<<<<< HEAD
 import Cart from "./pages/cart/Cart";
 import Checkout from "./pages/checkout/Checkout";
 
-=======
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
->>>>>>> origin/main
 function App() {
   const router = createBrowserRouter([
     {
