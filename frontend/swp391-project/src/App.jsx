@@ -5,10 +5,13 @@ import HomePage from "./pages/home";
 import AllFishPage from "./pages/all-fish";
 import BreedFishPage from "./pages/breed";
 import ProductDetail from "./pages/product-detail";
+import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
 import UserForm from "./pages/user_Dasboard";
 import LoginSuccess from "./pages/Login/LoginSuccess";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -21,6 +24,8 @@ function App() {
         { path: "/products/:id", element: <ProductDetail /> },
         { path: "/breed/:id", element: <ProductDetail /> },
         { path: "/consignment", element: <Consignment /> },
+        { path: "/cart", element: <Cart /> },
+        { path: "/checkout", element: <Checkout /> },
         { path: "/user_info/:id", element: <UserForm /> },
         // Page for Japanese Koi
         // Page for F1 Koi
@@ -41,6 +46,7 @@ function App() {
       element: <ForgotPassword />,
     },
   ]);
+
   return <RouterProvider router={router} />;
 }
 

@@ -1,11 +1,14 @@
 ﻿using Google.Apis.Auth;
+using Google.Apis.Auth.OAuth2.Responses;
 using koi_farm_demo.Models;
 using koi_farm_demo.Repositories;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace koi_farm_demo.Services
 {
@@ -16,13 +19,15 @@ namespace koi_farm_demo.Services
         private readonly IStaffRepository _staffRepository;
         private readonly IConfiguration _configuration;
         private readonly ICustomerRepository _customerRepository;
+        private readonly HttpClient _httpClient;
 
-        public UserService(IUserRepository userRepository, IStaffRepository staffRepository, IConfiguration configuration, ICustomerRepository customerRepository)
+        public UserService(IUserRepository userRepository, IStaffRepository staffRepository, IConfiguration configuration, ICustomerRepository customerRepository, HttpClient httpClient)
         {
             _userRepository = userRepository;
             _staffRepository = staffRepository;
             _configuration = configuration;
-            _customerRepository = customerRepository;   
+            _customerRepository = customerRepository;
+            _httpClient = httpClient;
         }
 
         public async Task RegisterCustomerAsync(RegisterCustomerModel model)
@@ -106,14 +111,11 @@ namespace koi_farm_demo.Services
         }
         public async Task<string> LoginWithGoogleAsync()
         {
-            // Tạo URL đăng nhập Google
-            var redirectUri = $"{_configuration["AppUrl"]}/api/user/login/google/callback";
-            var url = $"https://accounts.google.com/o/oauth2/v2/auth?client_id={_configuration["GoogleOAuth:ClientId"]}&redirect_uri={redirectUri}&response_type=code&scope=email%20profile&access_type=offline";
+            var redirectUri = $"{_configuration["AppUrl"]}/api/User/login/google/callback";
+            var url = $"https://accounts.google.com/o/oauth2/v2/auth?client_id={_configuration["GoogleOAuth:ClientId"]}&redirect_uri={redirectUri}&response_type=code&scope=email%20profile%20openid&access_type=offline";
 
-            // Chuyển hướng người dùng đến URL Google để đăng nhập
-            return await Task.FromResult(url);
+            return url;
         }
-
 
         public async Task<User> GetUserFromGoogleAsync(string idToken)
         {
@@ -123,10 +125,10 @@ namespace koi_farm_demo.Services
             {
                 user = new User
                 {
-                    UserId = int.TryParse(payload.Subject, out var userId) ? userId : 0,
                     Username = payload.Email,
-                    HashPassword = "", // Không cần mật khẩu cho Google login
-                    Role = UserRole.Customer
+                    HashPassword = "",
+                    Role = UserRole.Customer,
+                    GoogleId = payload.Subject
                 };
                 await _userRepository.AddUserAsync(user);
             }
@@ -141,8 +143,40 @@ namespace koi_farm_demo.Services
             };
             return await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
         }
+
+        public async Task<TokenResult> GetTokenFromGoogle(string code)
+        {
+            var tokenRequest = new Dictionary<string, string>
+            {
+                { "code", code },
+                { "client_id", _configuration["GoogleOAuth:ClientId"] },
+                { "client_secret", _configuration["GoogleOAuth:ClientSecret"] },
+                { "redirect_uri", $"{_configuration["AppUrl"]}/api/User/login/google/callback" },
+                { "grant_type", "authorization_code" }
+            };
+
+            var requestContent = new FormUrlEncodedContent(tokenRequest);
+            var response = await _httpClient.PostAsync("https://oauth2.googleapis.com/token", requestContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Invalid token response: {errorContent}");
+            }
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var tokenResponse = JsonSerializer.Deserialize<TokenResult>(responseContent);
+            if (string.IsNullOrEmpty(tokenResponse?.IdToken))
+            {
+                throw new Exception("Id token is null or empty.");
+            }
+
+            return tokenResponse;
+        }
+
     }
 }
+
         
     
 

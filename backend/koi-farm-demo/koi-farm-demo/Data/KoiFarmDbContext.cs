@@ -27,6 +27,7 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.Username).IsRequired().HasMaxLength(100);
             entity.Property(e => e.HashPassword).IsRequired();
             entity.Property(e => e.Role).IsRequired();
+            entity.Property(e => e.GoogleId);
         });
 
         
@@ -70,8 +71,9 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.TotalAmount).IsRequired();
             entity.Property(e => e.TotalTax).IsRequired();
             entity.Property(e => e.TotalDiscount).IsRequired();
+            entity.Property(e => e.OrderDate);
+            entity.Property(e => e.Address);
 
-            
             entity.HasOne<Customer>()
                   .WithMany(c => c.Orders)  
                   .HasForeignKey(e => e.CustomerId)  
@@ -112,8 +114,10 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.OverallRating).IsRequired();
             entity.Property(e => e.Price).IsRequired();
             entity.Property(e => e.Batch).IsRequired();
+            entity.Property(e => e.Quantity).IsRequired();
+            entity.Property(e => e.ImageUrl).IsRequired();
 
-            
+
             entity.HasOne(e => e.FishType)
                   .WithMany(e => e.Fishes) 
                   .HasForeignKey(e => e.FishTypeId) 

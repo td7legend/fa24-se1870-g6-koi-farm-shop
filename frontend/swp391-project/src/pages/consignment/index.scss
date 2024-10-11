@@ -7,9 +7,12 @@
   align-items: center;
   height: 100vh;
   background-color: #fffaf0;
+  background-image: url("src/images/Image-ai-brush-removebg-xk79dav7.png");
+  background-size: 700px;
+  background-position: center;
   &__wrapper {
-    // background-color: aquamarine;
     width: 900px;
+    max-height: 100%;
     border-radius: 20px;
     padding: 20px;
     border: 1px solid #aca8a8;

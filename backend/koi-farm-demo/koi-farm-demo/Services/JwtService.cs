@@ -16,7 +16,7 @@ namespace koi_farm_demo.Services
 
         public string GenerateToken(User user)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var jwtSettings = _configuration.GetSection("Jwt");
 
             var claims = new[]
             {
@@ -25,7 +25,7 @@ namespace koi_farm_demo.Services
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

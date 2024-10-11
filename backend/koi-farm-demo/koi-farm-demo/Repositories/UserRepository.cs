@@ -12,7 +12,7 @@ namespace koi_farm_demo.Repositories
         }
         public async Task<User> GetUserByGoogleIdAsync(string googleId)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.UserId == int.Parse(googleId)); // Google ID lưu ở UserId
+            return await _context.Users.FirstOrDefaultAsync(u => u.GoogleId == googleId);
         }
 
         public async Task<User> GetUserByIdAsync(int userId)
