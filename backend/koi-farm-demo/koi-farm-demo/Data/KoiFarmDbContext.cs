@@ -27,6 +27,7 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.Username).IsRequired().HasMaxLength(100);
             entity.Property(e => e.HashPassword).IsRequired();
             entity.Property(e => e.Role).IsRequired();
+            entity.Property(e => e.GoogleId);
         });
 
         

@@ -4,6 +4,7 @@
     public string Username { get; set; }
     public string HashPassword { get; set; }
     public UserRole Role { get; set; }
+    public string? GoogleId { get; set; }
 }
 
 public enum UserRole

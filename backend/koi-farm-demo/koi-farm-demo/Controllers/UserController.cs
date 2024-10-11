@@ -3,7 +3,8 @@ using koi_farm_demo.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Configuration;
+using System.Text.Json;
+using Google.Apis.Auth.OAuth2.Responses;
 
 namespace koi_farm_demo.Controllers
 {
@@ -14,11 +15,14 @@ namespace koi_farm_demo.Controllers
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
         private readonly IJwtService _jwtService;
+        private readonly HttpClient _httpClient; // Thêm HttpClient
+
         public UserController(IUserService userService, IConfiguration configuration, IJwtService jwtService)
         {
             _jwtService = jwtService;
             _configuration = configuration;
             _userService = userService;
+            _httpClient = new HttpClient(); // Khởi tạo HttpClient
         }
 
         [HttpPost("register-customer")]
@@ -26,7 +30,7 @@ namespace koi_farm_demo.Controllers
         {
             try
             {
-                await _userService.RegisterCustomerAsync(model); 
+                await _userService.RegisterCustomerAsync(model);
                 return Ok("Customer registered successfully.");
             }
             catch (Exception ex)
@@ -34,6 +38,7 @@ namespace koi_farm_demo.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost("add-staff")]
         public async Task<IActionResult> AddStaff([FromBody] AddStaffModel model)
         {
@@ -75,45 +80,28 @@ namespace koi_farm_demo.Controllers
         {
             return int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value);
         }
-        
+
         [HttpGet("login/google")]
         public IActionResult LoginWithGoogle()
         {
             var url = _userService.LoginWithGoogleAsync().Result;
-            return Ok(new { url }); // Chuyển hướng đến Google để đăng nhập
+            return Ok(new { url });
         }
 
         [HttpGet("login/google/callback")]
         public async Task<IActionResult> GoogleCallback(string code)
         {
-            // Sử dụng mã code để lấy access token và id token
-            var tokenResponse = await GetTokenFromGoogle(code);
-            var user = await _userService.GetUserFromGoogleAsync(tokenResponse.IdToken);
-            var token = _jwtService.GenerateToken(user);
-
-            return Ok(new { Token = token });
-        }
-
-        private async Task<TokenResponse> GetTokenFromGoogle(string code)
-        {
-            var clientId = _configuration["GoogleOAuth:ClientId"];
-            var clientSecret = _configuration["GoogleOAuth:ClientSecret"];
-            var redirectUri = $"{_configuration["AppUrl"]}/api/user/login/google/callback";
-
-            // Gửi yêu cầu đến Google để lấy token
-            // (Sử dụng HttpClient hoặc một thư viện khác để gửi yêu cầu POST đến Google)
-
-            return new TokenResponse
+            try
             {
-                IdToken = "your-id-token", // Lấy id token từ phản hồi Google
-            };
+                var tokenResponse = await _userService.GetTokenFromGoogle(code);
+                var user = await _userService.GetUserFromGoogleAsync(tokenResponse.IdToken);
+                var token = _jwtService.GenerateToken(user);
+                return Ok(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while processing the callback: {ex.Message}");
+            }
         }
     }
-
-    public class TokenResponse
-    {
-        public string IdToken { get; set; }
-    }
-
 }
-
