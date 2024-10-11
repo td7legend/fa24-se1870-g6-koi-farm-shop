@@ -239,8 +239,8 @@ function Consignment() {
                   placeholder="Notes about your order, e.g. special notes for delivery"
                   autoSize={{
                     length: 50,
-                    minRows: 6,
-                    maxRows: 6,
+                    minRows: 5,
+                    maxRows: 5,
                   }}
                 />
               </Form.Item>
@@ -262,8 +262,6 @@ function Consignment() {
           />
         )}
       </div>
-
-      <ToastContainer />
     </div>
   );
 }

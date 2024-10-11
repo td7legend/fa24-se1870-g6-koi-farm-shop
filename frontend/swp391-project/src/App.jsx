@@ -7,10 +7,10 @@ import BreedFishPage from "./pages/breed";
 import ProductDetail from "./pages/product-detail";
 import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
-
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
 import UserForm from "./pages/user_Dasboard";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -40,6 +40,7 @@ function App() {
       element: <ForgotPassword />,
     },
   ]);
+
   return <RouterProvider router={router} />;
 }
 
