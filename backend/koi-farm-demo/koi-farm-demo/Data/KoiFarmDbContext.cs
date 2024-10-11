@@ -112,8 +112,10 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.OverallRating).IsRequired();
             entity.Property(e => e.Price).IsRequired();
             entity.Property(e => e.Batch).IsRequired();
+            entity.Property(e => e.Quantity).IsRequired();
+            entity.Property(e => e.ImageUrl).IsRequired();
 
-            
+
             entity.HasOne(e => e.FishType)
                   .WithMany(e => e.Fishes) 
                   .HasForeignKey(e => e.FishTypeId) 
