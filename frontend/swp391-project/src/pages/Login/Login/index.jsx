@@ -1,10 +1,49 @@
-// src/components/Login/index.js
 import React, { useState } from "react";
 import "./index.scss";
-import { Link } from "react-router-dom";
-import axios from "axios"; // For HTTP requests
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGooglePlusG } from "@fortawesome/free-brands-svg-icons"; // Import the specific icons you need
+import { faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
+import emailjs from "@emailjs/browser";
+import config from "../../../config/config";
+
+const OtpModal = ({
+  isOpen,
+  onClose,
+  otp,
+  otpInput,
+  setOtpInput,
+  verifyOtp,
+  resendOtp,
+  remainingTime,
+  isResendDisabled,
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal">
+      <div className="modal-content">
+        <h2>Nhập OTP</h2>
+        <input
+          type="text"
+          placeholder={`Nhập OTP (còn ${remainingTime} giây)`}
+          value={otpInput}
+          onChange={(e) => setOtpInput(e.target.value)}
+          required
+        />
+        <button type="button" onClick={verifyOtp}>
+          Xác thực OTP
+        </button>
+        <button type="button" onClick={resendOtp} disabled={isResendDisabled}>
+          Gửi lại OTP
+        </button>
+        <button type="button" onClick={onClose}>
+          Đóng
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Main = ({
   active,
@@ -17,10 +56,13 @@ const Main = ({
   setPassword,
   name,
   setName,
+  address,
+  setAddress,
   confirmPassword,
   setConfirmPassword,
   handleLogin,
   handleRegister,
+  handleLoginGoogle,
 }) => (
   <main>
     <div className={`container ${active ? "active" : ""}`} id="container">
@@ -29,7 +71,6 @@ const Main = ({
         <form onSubmit={handleRegister}>
           <h1>Create Account</h1>
           <div className="social-icons">
-            {/* Custom Google Sign-Up Button */}
             <button type="button" className="google-btn">
               <FontAwesomeIcon icon={faGooglePlusG} />
             </button>
@@ -40,6 +81,13 @@ const Main = ({
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
             required
           />
           <input
@@ -73,8 +121,11 @@ const Main = ({
         <form onSubmit={handleLogin}>
           <h1>Sign In</h1>
           <div className="social-icons">
-            {/* Custom Google Sign-In Button */}
-            <button type="button" className="google-btn">
+            <button
+              type="button"
+              className="google-btn"
+              onClick={handleLoginGoogle}
+            >
               <FontAwesomeIcon icon={faGooglePlusG} />
             </button>
           </div>
@@ -127,31 +178,35 @@ const Main = ({
 );
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [active, setActive] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [otp, setOtp] = useState(null);
+  const [otpInput, setOtpInput] = useState("");
+  const [otpExpiry, setOtpExpiry] = useState(null);
+  const [isOtpModalOpen, setOtpModalOpen] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
 
-  // Email validation
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
 
-  // Password validation: At least 6 characters, one uppercase, one number, one special character
   const validatePassword = (password) => {
     const passwordRegex =
       /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     return passwordRegex.test(password);
   };
 
-  // Handle Login Form Submission
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (!email || !password) {
       setError("Please fill in both email and password.");
       return;
@@ -162,12 +217,12 @@ const LoginPage = () => {
     }
 
     setError("");
-    const loginAPI = "https://api.yourdomain.com/login";
+    const loginAPI = `${config.API_ROOT}User/login`;
 
     try {
       const response = await axios.post(
         loginAPI,
-        { email, password },
+        { username: email, password: password },
         {
           headers: {
             "Content-Type": "application/json",
@@ -176,11 +231,10 @@ const LoginPage = () => {
       );
 
       const data = response.data;
-      if (data.success) {
-        console.log("Login Token: ", data.token); // Log the token to the console
-        localStorage.setItem("token", data.token); // Store the token
+      if (data.token) {
+        navigate(`/LoginSuccess/${data.token}`);
+        localStorage.setItem("token", data.token);
         alert("Login successful");
-        // Handle successful login (e.g., store tokens, redirect)
       } else {
         setError(data.message || "Invalid login credentials.");
       }
@@ -189,12 +243,54 @@ const LoginPage = () => {
     }
   };
 
-  // Handle Register Form Submission
+  const sendOtpEmail = async (otp) => {
+    try {
+      await emailjs
+        .send("service_a1o085u", "template_1gbuioi", {
+          user_name: name,
+          user_email: email,
+          otp_code: otp,
+          reply_to: "khoakhoatran20.m@gmail.com",
+        })
+        .then(
+          (response) => {
+            console.log("SUCCESS!", response.status, response.text);
+          },
+          (error) => {
+            console.log("FAILED...", error);
+          }
+        );
+    } catch (error) {
+      setError("Failed to send OTP: " + error.message);
+    }
+  };
+
+  const generateAndSendOtp = () => {
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(generatedOtp);
+    setOtp(generatedOtp);
+    setOtpExpiry(Date.now() + 2 * 60 * 1000);
+    sendOtpEmail(generatedOtp);
+    setOtpModalOpen(true);
+    setRemainingTime(120);
+    setIsResendDisabled(true);
+
+    const timer = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setIsResendDisabled(false);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+  };
+  const api_register = `${config.API_ROOT}User/register-customer`;
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !address || !email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
@@ -214,33 +310,84 @@ const LoginPage = () => {
     }
 
     setError("");
-    const registerAPI = "https://api.yourdomain.com/register"; // Replace with your actual register API endpoint
-
     try {
-      const response = await axios.post(
-        registerAPI,
-        { name, email, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = response.data;
-      if (data.success) {
-        console.log("Registration Token: ", data.token); // Log the registration token to the console
-        alert("Registration successful");
-        // Optionally, switch to sign-in form or redirect
-        setActive(false);
-      } else {
-        setError(data.message || "Registration failed.");
-      }
+      await generateAndSendOtp();
+      alert("OTP đã được gửi thành công!");
     } catch (error) {
-      setError("An error occurred: " + error.message);
+      setError("Không thể gửi OTP: " + error.message);
     }
   };
 
+  const verifyOtp = async () => {
+    if (otpInput === otp && Date.now() < otpExpiry) {
+      alert("OTP verified successfully!");
+      setOtpModalOpen(false);
+      try {
+        const response = await axios.post(
+          api_register,
+          {
+            username: email,
+            password: password,
+            fullName: name,
+            address: address,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // Lấy responseBody từ response
+        const responseBody = response.data;
+        console.log("Response Body:", responseBody);
+
+        // Xử lý responseBody
+        if (responseBody === "Customer registered successfully.") {
+          alert("Đăng ký thành công!");
+          setActive(false); // Chuyển sang form đăng nhập
+        } else {
+          setError("Đăng ký không thành công. Vui lòng thử lại.");
+        }
+      } catch (error) {
+        setError("An error occurred: " + error.message);
+      }
+    } else {
+      setError("Invalid or expired OTP. Please try again.");
+    }
+  };
+
+  const resendOtp = async () => {
+    if (Date.now() > otpExpiry) {
+      try {
+        await generateAndSendOtp();
+        alert("OTP mới đã được gửi thành công!");
+      } catch (error) {
+        setError("Không thể gửi OTP mới: " + error.message);
+      }
+    } else {
+      setError("Vui lòng đợi trước khi yêu cầu OTP mới.");
+    }
+  };
+  const LoginGoogle_api = `${config.API_ROOT}User/login/google`;
+  console.log("URL đăng nhập Google:", LoginGoogle_api);
+  const LoginGoogleCallBack_api = `${config.API_ROOT}User/login/google/callback`;
+
+  const handleLoginGoogle = async () => {
+    try {
+      const response = await axios.get(LoginGoogle_api);
+      const url = response.data.url;
+      console.log(url);
+      if (url) {
+        // Sử dụng window.location.href cho URL bên ngoài
+        // window.location.href = url;
+      } else {
+        console.error("Không nhận được URL xác thực từ server");
+      }
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi bắt đầu đăng nhập Google:", error);
+    }
+  };
   return (
     <div className="page__container">
       <Main
@@ -254,10 +401,24 @@ const LoginPage = () => {
         setPassword={setPassword}
         name={name}
         setName={setName}
+        address={address}
+        setAddress={setAddress}
         confirmPassword={confirmPassword}
         setConfirmPassword={setConfirmPassword}
         handleLogin={handleLogin}
         handleRegister={handleRegister}
+        handleLoginGoogle={handleLoginGoogle}
+      />
+      <OtpModal
+        isOpen={isOtpModalOpen}
+        onClose={() => setOtpModalOpen(false)}
+        otp={otp}
+        otpInput={otpInput}
+        setOtpInput={setOtpInput}
+        verifyOtp={verifyOtp}
+        resendOtp={resendOtp}
+        remainingTime={remainingTime}
+        isResendDisabled={isResendDisabled}
       />
     </div>
   );

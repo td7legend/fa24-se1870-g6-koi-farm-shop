@@ -8,6 +8,7 @@ import ProductDetail from "./pages/product-detail";
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
 import UserForm from "./pages/user_Dasboard";
+import LoginSuccess from "./pages/Login/LoginSuccess";
 function App() {
   const router = createBrowserRouter([
     {
@@ -26,6 +27,11 @@ function App() {
         // Page for Vietnamese Koi
       ],
     },
+    {
+      path: "/LoginSuccess/:token",
+      element: <LoginSuccess />,
+    },
+
     {
       path: "/login",
       element: <Login />,
