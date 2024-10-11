@@ -70,8 +70,9 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.TotalAmount).IsRequired();
             entity.Property(e => e.TotalTax).IsRequired();
             entity.Property(e => e.TotalDiscount).IsRequired();
+            entity.Property(e => e.OrderDate);
+            entity.Property(e => e.Address);
 
-            
             entity.HasOne<Customer>()
                   .WithMany(c => c.Orders)  
                   .HasForeignKey(e => e.CustomerId)  
