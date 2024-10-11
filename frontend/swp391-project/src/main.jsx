@@ -6,6 +6,7 @@ import reduxStore from "./redux.js";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { initEmailJS } from "./config/emailjsConfig.js";
+import { ToastContainer } from "react-toastify";
 
 const { store, persistor } = reduxStore();
 const root = ReactDOM.createRoot(document.getElementById("root"));
