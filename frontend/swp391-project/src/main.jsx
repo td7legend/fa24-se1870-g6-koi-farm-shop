@@ -18,7 +18,7 @@ root.render(
       <React.StrictMode>
         <App />
       </React.StrictMode>
-      <ToastContainer />;
+      <ToastContainer />
     </PersistGate>
   </Provider>
 );
