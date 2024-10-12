@@ -370,8 +370,6 @@ const LoginPage = () => {
     }
   };
   const LoginGoogle_api = `${config.API_ROOT}User/login/google`;
-  console.log("URL đăng nhập Google:", LoginGoogle_api);
-  const LoginGoogleCallBack_api = `${config.API_ROOT}User/login/google/callback`;
 
   const handleLoginGoogle = async () => {
     try {

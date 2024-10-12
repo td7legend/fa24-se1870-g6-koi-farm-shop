@@ -1,5 +1,5 @@
 const config = {
-  API_ROOT: `https://localhost:7071/api/`,
+  API_ROOT: `http://localhost:5282/api/`,
   //API_ROOT: `http://localhost:5000`,
   CLIENT_ID:
     "74411651978-ovufkn9aqqhcatlrq16lfb4du49udc3e.apps.googleusercontent.com",
