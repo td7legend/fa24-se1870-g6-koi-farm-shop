@@ -2,10 +2,12 @@
 using koi_farm_demo.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
 
 namespace koi_farm_demo.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/payments")]
     [ApiController]
     public class PaymentController : ControllerBase
     {
@@ -17,25 +19,27 @@ namespace koi_farm_demo.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a VNPay payment URL")]
         public IActionResult CreatePaymentUrl(PaymentInformationModel model)
         {
             if (model == null)
             {
-                return BadRequest("Model không hợp lệ.");
+                return BadRequest("Invalid payment information.");
             }
 
             try
             {
                 var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
-                return Ok(new { paymentUrl = url }); 
+                return Ok(new { paymentUrl = url });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Đã xảy ra lỗi: {ex.Message}");
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
 
         [HttpGet("callback")]
+        [SwaggerOperation(Summary = "Handle VNPay payment callback")]
         public IActionResult PaymentCallback()
         {
             try
@@ -45,7 +49,7 @@ namespace koi_farm_demo.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Đã xảy ra lỗi trong quá trình callback thanh toán.");
+                return StatusCode(500, "An error occurred during payment callback.");
             }
         }
     }

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using koi_farm_demo.Services;
 using koi_farm_demo.Data;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace koi_farm_demo.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/fishtypes")]
     [ApiController]
     public class FishTypeController : ControllerBase
     {
@@ -15,16 +17,19 @@ namespace koi_farm_demo.Controllers
         {
             _fishTypeService = fishTypeService;
         }
-        [HttpGet("getall")] 
+
+        [HttpGet]
+        [SwaggerOperation(Summary = "Retrieve all fish types")]
+
         public async Task<ActionResult<IEnumerable<FishType>>> GetAll()
         {
-            var fishTypes = await _fishTypeService.GetAllFishTypesAsync(); 
-            return Ok(fishTypes); 
+            var fishTypes = await _fishTypeService.GetAllFishTypesAsync();
+            return Ok(fishTypes);
         }
 
-        
-        [HttpPost("AddFishType")]
-        public async Task<IActionResult> PostFishType([FromBody] FishTypeCreateDto fishTypeCreateDto) 
+        [HttpPost]
+        [SwaggerOperation(Summary = "Add a new fish type")]
+        public async Task<IActionResult> AddFishType([FromBody] FishTypeCreateDto fishTypeCreateDto)
         {
             if (fishTypeCreateDto == null)
             {
@@ -35,11 +40,10 @@ namespace koi_farm_demo.Controllers
 
             if (result)
             {
-                return CreatedAtAction(nameof(PostFishType), new { name = fishTypeCreateDto.Name });
+                return CreatedAtAction(nameof(AddFishType), new { name = fishTypeCreateDto.Name });
             }
 
             return BadRequest("Failed to add fish type.");
         }
-
     }
 }

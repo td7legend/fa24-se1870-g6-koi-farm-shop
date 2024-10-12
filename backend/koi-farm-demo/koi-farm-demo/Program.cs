@@ -55,7 +55,10 @@ namespace koi_farm_demo
 
             // Đăng ký Swagger
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+            });
 
             // Đăng ký các dịch vụ Fish
             builder.Services.AddScoped<IFishRepository, FishRepository>();
