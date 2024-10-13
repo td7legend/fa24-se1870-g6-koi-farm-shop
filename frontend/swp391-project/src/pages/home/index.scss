@@ -74,5 +74,5 @@ $font-family_2: sans-serif;
   background-image: url("../../images/picture-3.png"); /* Thay 'path/to/your/image.jpg' bằng đường dẫn thực tế tới hình ảnh của bạn */
   background-size: cover; /* Để hình ảnh bao phủ toàn bộ khung */
   background-position: center; /* Để căn giữa hình ảnh */
-  filter: blur(3px);
+  backdrop-filter: blur(3px);
 }

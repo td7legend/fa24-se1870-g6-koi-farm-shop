@@ -4,7 +4,6 @@ public class KoiFarmDbContext : DbContext
 {
     public KoiFarmDbContext(DbContextOptions<KoiFarmDbContext> options) : base(options) { }
 
-    // DbSet cho các bảng
     public DbSet<User> Users { get; set; }
     public DbSet<Staff> Staffs { get; set; }
     public DbSet<Customer> Customers { get; set; }
@@ -24,7 +23,7 @@ public class KoiFarmDbContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.UserId);
-            entity.Property(e => e.Username).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
             entity.Property(e => e.HashPassword).IsRequired();
             entity.Property(e => e.Role).IsRequired();
             entity.Property(e => e.GoogleId);
@@ -36,7 +35,6 @@ public class KoiFarmDbContext : DbContext
             entity.HasKey(e => e.StaffId);
             entity.Property(e => e.FullName).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Role).IsRequired();
-            entity.Property(e => e.Email).IsRequired();
             entity.Property(e => e.PhoneNumber).IsRequired();
 
             
@@ -52,6 +50,7 @@ public class KoiFarmDbContext : DbContext
             entity.HasKey(e => e.CustomerId);
             entity.Property(e => e.FullName).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Address).IsRequired();
+            entity.Property(e => e.PhoneNumber).IsRequired();
             entity.Property(e => e.Tier).IsRequired();
             entity.Property(e => e.PointAvailable).IsRequired();
             entity.Property(e => e.UsedPoint).IsRequired();

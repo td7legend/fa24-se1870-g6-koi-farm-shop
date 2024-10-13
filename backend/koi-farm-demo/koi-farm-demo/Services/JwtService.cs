@@ -21,7 +21,7 @@ namespace koi_farm_demo.Services
             var claims = new[]
             {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.Email),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
