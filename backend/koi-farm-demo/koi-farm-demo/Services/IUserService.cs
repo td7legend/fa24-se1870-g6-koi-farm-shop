@@ -14,6 +14,7 @@ namespace koi_farm_demo.Services
         Task AddStaffAsync(string email, string password, Staff staff, int managerId);
         Task<string> LoginAsync(string email, string password);
         Task<bool> IsEmailTakenAsync(string email);
+        Task ResetPasswordAsync(string email, string newPassword);
     }
 
 }

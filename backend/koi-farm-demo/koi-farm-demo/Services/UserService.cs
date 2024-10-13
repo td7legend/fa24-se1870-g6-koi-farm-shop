@@ -192,6 +192,17 @@ namespace koi_farm_demo.Services
         {
             return await _userRepository.EmailExistsAsync(email);
         }
+        public async Task ResetPasswordAsync(string email, string newPassword)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(email);
+            if (user == null) throw new Exception("User not found");
+
+            var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.HashPassword = hashedNewPassword;
+
+            await _userRepository.UpdateUserAsync(user);
+        }
+
 
     }
 }

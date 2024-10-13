@@ -141,6 +141,21 @@ namespace koi_farm_demo.Controllers
 
             return Ok("Email is available.");
         }
+        [HttpPost("reset-password")]
+        [SwaggerOperation(Summary = "Reset password for users who forgot their password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            try
+            {
+                await _userService.ResetPasswordAsync(model.Email, model.NewPassword);
+                return Ok("Password reset successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
     }
 }
