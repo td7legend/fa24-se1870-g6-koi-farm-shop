@@ -33,7 +33,7 @@ namespace koi_farm_demo.Services
         public async Task RegisterCustomerAsync(RegisterCustomerModel model)
         {
             // Kiểm tra xem tên đăng nhập đã tồn tại chưa
-            var existingUser = await _userRepository.GetUserByUsernameAsync(model.Username);
+            var existingUser = await _userRepository.GetUserByUsernameAsync(model.Email);
             if (existingUser != null) throw new Exception("Username already exists");
 
             // Băm mật khẩu
@@ -42,7 +42,7 @@ namespace koi_farm_demo.Services
             // Tạo người dùng mới
             var newUser = new User
             {
-                Username = model.Username,
+                Email = model.Email,
                 HashPassword = hashedPassword,
                 Role = UserRole.Customer
             };
@@ -62,7 +62,7 @@ namespace koi_farm_demo.Services
             await _customerRepository.AddAsync(customer); // Lưu khách hàng vào repository
         }
 
-        public async Task AddStaffAsync(string username, string password, Staff staff, int managerId)
+        public async Task AddStaffAsync(string email, string password, Staff staff, int managerId)
         {
             var manager = await _userRepository.GetUserByIdAsync(managerId);
             if (manager == null || manager.Role != UserRole.Manager)
@@ -70,13 +70,13 @@ namespace koi_farm_demo.Services
                 throw new UnauthorizedAccessException("Only manager can add staff.");
             }
 
-            var existingUser = await _userRepository.GetUserByUsernameAsync(username);
+            var existingUser = await _userRepository.GetUserByUsernameAsync(email);
             if (existingUser != null) throw new Exception("Username already exists");
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
             var newUser = new User
             {
-                Username = username,
+                Email = email,
                 HashPassword = hashedPassword,
                 Role = UserRole.Staff
             };
@@ -86,9 +86,9 @@ namespace koi_farm_demo.Services
             await _staffRepository.AddStaffAsync(staff);
         }
 
-        public async Task<string> LoginAsync(string username, string password)
+        public async Task<string> LoginAsync(string email, string password)
         {
-            var user = await _userRepository.GetUserByUsernameAsync(username);
+            var user = await _userRepository.GetUserByUsernameAsync(email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.HashPassword))
             {
                 throw new UnauthorizedAccessException("Invalid username or password.");
@@ -125,7 +125,7 @@ namespace koi_farm_demo.Services
             {
                 user = new User
                 {
-                    Username = payload.Email,
+                    Email = payload.Email,
                     HashPassword = "",
                     Role = UserRole.Customer,
                     GoogleId = payload.Subject
@@ -172,6 +172,25 @@ namespace koi_farm_demo.Services
             }
 
             return tokenResponse;
+        }
+        public async Task ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null) throw new Exception("User not found");
+
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.HashPassword))
+            {
+                throw new UnauthorizedAccessException("Old password is incorrect");
+            }
+
+            var hashedNewPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.HashPassword = hashedNewPassword;
+
+            await _userRepository.UpdateUserAsync(user);
+        }
+        public async Task<bool> IsEmailTakenAsync(string email)
+        {
+            return await _userRepository.EmailExistsAsync(email);
         }
 
     }

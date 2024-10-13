@@ -69,7 +69,7 @@ namespace koi_farm_demo.Controllers
         {
             try
             {
-                var token = await _userService.LoginAsync(model.Username, model.Password);
+                var token = await _userService.LoginAsync(model.Email, model.Password);
                 return Ok(new { Token = token });
             }
             catch (UnauthorizedAccessException ex)
@@ -111,5 +111,36 @@ namespace koi_farm_demo.Controllers
                 return BadRequest($"An error occurred while processing the callback: {ex.Message}");
             }
         }
+        [HttpPost("change-password")]
+        [SwaggerOperation(Summary = "Change password for authenticated users")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            try
+            {
+                var currentUserId = GetCurrentUserId(); 
+                await _userService.ChangePasswordAsync(currentUserId, model.OldPassword, model.NewPassword);
+                return Ok("Password changed successfully.");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("check-email")]
+        [SwaggerOperation(Summary = "Check if the email is already in use")]
+        public async Task<IActionResult> CheckEmailExists(string email)
+        {
+            if (await _userService.IsEmailTakenAsync(email))
+            {
+                return BadRequest("Email already exists.");
+            }
+
+            return Ok("Email is available.");
+        }
+
     }
 }

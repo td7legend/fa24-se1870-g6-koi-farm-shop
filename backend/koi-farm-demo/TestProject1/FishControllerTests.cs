@@ -63,7 +63,7 @@ public class FishControllerTests
         _fishServiceMock.Setup(service => service.AddFishAsync(fishCreateDto)).Returns(Task.CompletedTask);
 
         // Act: Gọi API
-        var result = await _fishController.PostFish(fishCreateDto);
+        var result = await _fishController.AddFish(fishCreateDto);
 
         // Assert: Kiểm tra kết quả
         var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
