@@ -21,9 +21,11 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import uploadFile from "../../utils/upload/upload";
 
 const { Title, Text } = Typography;
-
+const DEFAULT_AVATAR =
+  "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg";
 const UserForm = () => {
   const { id } = useParams();
   const [user, setUser] = useState({});
@@ -47,7 +49,7 @@ const UserForm = () => {
           const userInfo = response.data[0];
           setUser(userInfo);
           form.setFieldsValue(userInfo);
-          setPreviewImage(userInfo.avatar_path);
+          setPreviewImage(userInfo.avatar_path || DEFAULT_AVATAR);
         }
       } catch (error) {
         message.error("Error fetching user data");
@@ -86,7 +88,7 @@ const UserForm = () => {
       setPreviewImage(preview);
       setIsModifiedImage(true);
     } else {
-      setPreviewImage(user.avatar_path);
+      setPreviewImage(user.avatar_path || DEFAULT_AVATAR);
       setIsModifiedImage(false);
     }
   };
@@ -99,9 +101,9 @@ const UserForm = () => {
         try {
           setLoading(true);
           if (isModifiedImage && fileList.length > 0) {
-            // Implement file upload logic here
-            // const url = await uploadFile(fileList[0].originFileObj);
-            // user.avatar_path = url;
+            const file = fileList[0].originFileObj;
+            const url = await uploadFile(file);
+            user.avatar_path = url;
           }
           await axios.put(
             `https://66ffa8eb4da5bd2375516c72.mockapi.io/User_Information/${user.id}`,
@@ -110,6 +112,7 @@ const UserForm = () => {
           message.success("User information updated successfully!");
           setIsModified(false);
           setIsModifiedImage(false);
+          setPreviewImage(user.avatar_path || DEFAULT_AVATAR);
         } catch (error) {
           message.error("Failed to update user information");
         } finally {
@@ -176,7 +179,11 @@ const UserForm = () => {
         </Title>
 
         <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <Avatar src={previewImage} size={128} icon={<UserOutlined />} />
+          <Avatar
+            src={previewImage || DEFAULT_AVATAR}
+            size={128}
+            icon={<UserOutlined />}
+          />
           <Upload
             accept="image/*"
             showUploadList={false}
