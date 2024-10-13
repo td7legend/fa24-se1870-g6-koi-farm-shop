@@ -167,7 +167,9 @@ const Checkout = () => {
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb">
             <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item>Product List</Breadcrumb.Item>
+            <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
+            <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
+            <Breadcrumb.Item>Checkout</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
