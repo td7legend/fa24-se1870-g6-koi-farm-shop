@@ -11,6 +11,8 @@ import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
 import UserForm from "./pages/user_Dasboard";
 import LoginSuccess from "./pages/Login/LoginSuccess";
+import OrderHistoryPage from "./pages/user_Dasboard/order_history";
+import OrderDetailsPage from "./pages/user_Dasboard/order_detail";
 
 function App() {
   const router = createBrowserRouter([
@@ -27,6 +29,8 @@ function App() {
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
         { path: "/user_info/:id", element: <UserForm /> },
+        { path: "/order-history", element: <OrderHistoryPage /> },
+        { path: "/order-details", element: <OrderDetailsPage /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi
