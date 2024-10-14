@@ -40,4 +40,13 @@ public class OrderRepository : IOrderRepository
         _context.Orders.Remove(order);
         await _context.SaveChangesAsync();
     }
+    public async Task<List<Order>> GetOrdersByCustomerIdAsync(int customerId)
+    {
+        return await _context.Orders
+            .Include(o => o.OrderLines)
+            .ThenInclude(ol => ol.Fish)
+            .Where(o => o.CustomerId == customerId)
+            .ToListAsync();
+    }
+
 }
