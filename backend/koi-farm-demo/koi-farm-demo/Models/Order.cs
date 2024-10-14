@@ -17,5 +17,7 @@ public enum OrderStatus
 {
     InCart = 0,
     Paid = 1,
-    Cancelled = 2
+    Cancelled = 2,  
+    Shipping = 3,
+    Completed = 4
 }

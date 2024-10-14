@@ -19,7 +19,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetOrderByIdAsync(id);
 
         if (order == null)
-            return null; // Hoặc ném ra ngoại lệ nếu cần
+            return null; 
 
         var orderDto = new OrderDTO
         {
@@ -86,7 +86,6 @@ public class OrderService : IOrderService
         {
             await _orderLineRepository.DeleteAsync(orderLine);
 
-            // Cập nhật lại TotalAmount sau khi xóa OrderLine
             order.TotalAmount = order.OrderLines.Sum(ol => ol.TotalPrice);
             await _orderRepository.UpdateAsync(order);
         }
@@ -100,13 +99,11 @@ public class OrderService : IOrderService
             throw new Exception("Order not found");
         }
 
-        // Cập nhật lại TotalAmount trước khi thanh toán
         order.TotalAmount = order.OrderLines.Sum(ol => ol.TotalPrice);
         order.Status = OrderStatus.Paid;
 
         await _orderRepository.UpdateAsync(order);
 
-        // Cập nhật số lượng cá
         foreach (var orderLine in order.OrderLines)
         {
             var fish = await _fishRepository.GetByIdAsync(orderLine.FishId);
@@ -140,6 +137,59 @@ public class OrderService : IOrderService
             }).ToList();
 
         return orderDtos;
+    }
+    public async Task AddItemToCart(int customerId, OrderLineCreateDTO orderLineCreateDto)
+    {
+        
+        var inCartOrder = await _orderRepository.GetInCartOrderByCustomerIdAsync(customerId);
+
+        if (inCartOrder == null)
+        {
+            var newOrder = new Order
+            {
+                CustomerId = customerId,
+                Status = OrderStatus.InCart,
+                TotalAmount = 0,
+                TotalTax = 0,
+                TotalDiscount = 0,
+                OrderLines = new List<OrderLine>()
+            };
+
+            await _orderRepository.AddOrderAsync(newOrder);
+            inCartOrder = newOrder;
+        }
+
+        var fish = await _fishRepository.GetByIdAsync(orderLineCreateDto.FishId);
+        if (fish == null || fish.Quantity < orderLineCreateDto.Quantity)
+        {
+            throw new Exception("Fish not available or insufficient quantity");
+        }
+
+        var orderLine = new OrderLine
+        {
+            OrderId = inCartOrder.OrderId,
+            FishId = orderLineCreateDto.FishId,
+            Quantity = orderLineCreateDto.Quantity,
+            UnitPrice = fish.Price,
+            TotalPrice = fish.Price * orderLineCreateDto.Quantity
+        };
+
+        await _orderLineRepository.AddAsync(orderLine, orderLineCreateDto);
+
+        inCartOrder.TotalAmount = inCartOrder.OrderLines.Sum(ol => ol.TotalPrice);
+        await _orderRepository.UpdateAsync(inCartOrder);
+    }
+    public async Task<List<OrderHistoryDTO>> GetOrderHistory(int customerId)
+    {
+        var orders = await _orderRepository.GetOrderHistoryByCustomerIdAsync(customerId);
+
+        return orders.Select(order => new OrderHistoryDTO
+        {
+            OrderId = order.OrderId,
+            OrderDate = order.OrderDate ?? DateTime.MinValue,
+            TotalAmount = order.TotalAmount,
+            Status = order.Status.ToString()  
+        }).ToList();
     }
 
 }

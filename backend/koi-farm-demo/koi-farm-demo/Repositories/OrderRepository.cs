@@ -48,5 +48,18 @@ public class OrderRepository : IOrderRepository
             .Where(o => o.CustomerId == customerId)
             .ToListAsync();
     }
-
+    public async Task<Order> GetInCartOrderByCustomerIdAsync(int customerId)
+    {
+        return await _context.Orders
+            .Include(o => o.OrderLines)
+            .FirstOrDefaultAsync(o => o.CustomerId == customerId && o.Status == OrderStatus.InCart);
+    }
+    public async Task<List<Order>> GetOrderHistoryByCustomerIdAsync(int customerId)
+    {
+        return await _context.Orders
+            .Include(o => o.OrderLines)
+            .ThenInclude(ol => ol.Fish)
+            .Where(o => o.CustomerId == customerId && o.Status != OrderStatus.InCart)
+            .ToListAsync();
+    }
 }

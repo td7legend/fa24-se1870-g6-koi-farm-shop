@@ -5,5 +5,7 @@
     Task<Order> GetByIdAsync(int orderId); 
     Task AddOrderAsync(Order order); 
     Task UpdateAsync(Order order); 
-    Task DeleteOrderAsync(Order order); 
+    Task DeleteOrderAsync(Order order);
+    Task<Order> GetInCartOrderByCustomerIdAsync(int customerId);
+    Task<List<Order>> GetOrderHistoryByCustomerIdAsync(int customerId);
 }

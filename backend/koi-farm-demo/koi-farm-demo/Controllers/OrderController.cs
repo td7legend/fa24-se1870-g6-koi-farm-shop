@@ -54,7 +54,7 @@ namespace koi_farm_demo.Controllers
             await _orderService.PayForOrderAsync(orderId);
             return Ok();
         }
-        [HttpGet("customer/{customerId}/incart")]
+        [HttpGet("customer/{customerId}/in-cart")]
         [SwaggerOperation(Summary = "Retrieve all in-cart orders for a customer")]
         public async Task<ActionResult<List<OrderDTO>>> GetInCartOrders(int customerId)
         {
@@ -65,6 +65,25 @@ namespace koi_farm_demo.Controllers
             }
             return Ok(orders);
         }
+        [HttpPost("customer/{customerId}/add-to-cart")]
+        [SwaggerOperation(Summary = "Retrieve an order history by customerID")]
+        public async Task<IActionResult> AddItemToCart(int customerId, OrderLineCreateDTO orderLineCreateDto)
+        {
+            await _orderService.AddItemToCart(customerId, orderLineCreateDto);
+            return Ok();
+        }
+        [HttpGet("order-history/{customerId}")]
+        [SwaggerOperation(Summary = "Add an item to the customer's cart")]
+        public async Task<IActionResult> GetOrderHistory(int customerId)
+        {
+            var orders = await _orderService.GetOrderHistory(customerId);
 
+            if (orders == null || orders.Count == 0)
+            {
+                return NotFound("No order history found for this customer.");
+            }
+
+            return Ok(orders);
+        }
     }
 }
