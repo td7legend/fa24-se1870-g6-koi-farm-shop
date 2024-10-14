@@ -54,5 +54,17 @@ namespace koi_farm_demo.Controllers
             await _orderService.PayForOrderAsync(orderId);
             return Ok();
         }
+        [HttpGet("customer/{customerId}/incart")]
+        [SwaggerOperation(Summary = "Retrieve all in-cart orders for a customer")]
+        public async Task<ActionResult<List<OrderDTO>>> GetInCartOrders(int customerId)
+        {
+            var orders = await _orderService.GetOrdersInCartByCustomerIdAsync(customerId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound();
+            }
+            return Ok(orders);
+        }
+
     }
 }

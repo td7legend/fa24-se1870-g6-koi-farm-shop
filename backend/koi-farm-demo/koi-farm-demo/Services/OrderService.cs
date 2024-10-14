@@ -31,7 +31,6 @@ public class OrderService : IOrderService
             CustomerId = order.CustomerId,
             OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
             {
-                OrderId = ol.OrderId, // Chỉ bao gồm nếu cần
                 FishId = ol.FishId,
                 Quantity = ol.Quantity,
                 UnitPrice = ol.UnitPrice,
@@ -115,4 +114,32 @@ public class OrderService : IOrderService
             await _fishRepository.UpdateAsync(fish);
         }
     }
+    public async Task<List<OrderDTO>> GetOrdersInCartByCustomerIdAsync(int customerId)
+    {
+        var orders = await _orderRepository.GetOrdersByCustomerIdAsync(customerId);
+
+        var orderDtos = orders
+            .Where(o => o.Status == OrderStatus.InCart) 
+            .Select(order => new OrderDTO
+            {
+                OrderId = order.OrderId,
+                Status = order.Status,
+                TotalAmount = order.TotalAmount,
+                TotalTax = order.TotalTax,
+                TotalDiscount = order.TotalDiscount,
+                CustomerId = order.CustomerId,
+                OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
+                {
+                    FishId = ol.FishId,
+                    Quantity = ol.Quantity,
+                    UnitPrice = ol.UnitPrice,
+                    TotalPrice = ol.TotalPrice,
+                    FishName = ol.Fish.Name, 
+                    ImageUrl = ol.Fish.ImageUrl 
+                }).ToList()
+            }).ToList();
+
+        return orderDtos;
+    }
+
 }
