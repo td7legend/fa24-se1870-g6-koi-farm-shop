@@ -50,12 +50,11 @@ public class KoiFarmDbContext : DbContext
             entity.HasKey(e => e.CustomerId);
             entity.Property(e => e.FullName).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Address).IsRequired();
-            entity.Property(e => e.PhoneNumber).IsRequired();
             entity.Property(e => e.Tier).IsRequired();
             entity.Property(e => e.PointAvailable).IsRequired();
             entity.Property(e => e.UsedPoint).IsRequired();
             entity.Property(e => e.AccommodatePoint).IsRequired();
-
+            entity.Property(e => e.PhoneNumber);
             entity.HasOne(e => e.User)
                   .WithOne()
                   .HasForeignKey<Customer>(e => e.UserId)  

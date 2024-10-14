@@ -14,20 +14,21 @@ namespace koi_farm_demo.Services
 {
     public class UserService : IUserService
     {
-        private readonly JwtService _jwtService;
+        private readonly IJwtService _jwtService;
         private readonly IUserRepository _userRepository;
         private readonly IStaffRepository _staffRepository;
         private readonly IConfiguration _configuration;
         private readonly ICustomerRepository _customerRepository;
         private readonly HttpClient _httpClient;
 
-        public UserService(IUserRepository userRepository, IStaffRepository staffRepository, IConfiguration configuration, ICustomerRepository customerRepository, HttpClient httpClient)
+        public UserService(IUserRepository userRepository, IStaffRepository staffRepository, IConfiguration configuration, ICustomerRepository customerRepository, HttpClient httpClient, IJwtService jwtService)
         {
             _userRepository = userRepository;
             _staffRepository = staffRepository;
             _configuration = configuration;
             _customerRepository = customerRepository;
             _httpClient = httpClient;
+            _jwtService = jwtService;
         }
 
         public async Task RegisterCustomerAsync(RegisterCustomerModel model)
@@ -94,24 +95,11 @@ namespace koi_farm_demo.Services
                 throw new UnauthorizedAccessException("Invalid username or password.");
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.Name, user.UserId.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
-            }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return _jwtService.GenerateToken(user);
         }
         public async Task<string> LoginWithGoogleAsync()
         {
-            var redirectUri = $"{_configuration["AppUrl"]}/api/User/login/google/callback";
+            var redirectUri = $"{_configuration["AppUrl"]}/api/users/login/google/callback";
             var url = $"https://accounts.google.com/o/oauth2/v2/auth?client_id={_configuration["GoogleOAuth:ClientId"]}&redirect_uri={redirectUri}&response_type=code&scope=email%20profile%20openid&access_type=offline";
 
             return url;
@@ -151,7 +139,7 @@ namespace koi_farm_demo.Services
                 { "code", code },
                 { "client_id", _configuration["GoogleOAuth:ClientId"] },
                 { "client_secret", _configuration["GoogleOAuth:ClientSecret"] },
-                { "redirect_uri", $"{_configuration["AppUrl"]}/api/User/login/google/callback" },
+                { "redirect_uri", $"{_configuration["AppUrl"]}/api/users/login/google/callback" },
                 { "grant_type", "authorization_code" }
             };
 
