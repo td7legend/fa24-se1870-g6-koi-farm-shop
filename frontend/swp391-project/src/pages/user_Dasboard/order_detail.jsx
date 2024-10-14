@@ -1,230 +1,281 @@
-import React from "react";
-import { Card, Row, Col, Typography, Steps, Table, Image, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Card,
+  Row,
+  Col,
+  Typography,
+  Steps,
+  Table,
+  Image,
+  Button,
+  Spin,
+  message,
+  Breadcrumb,
+} from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import axios from "axios";
+import BreadcrumbItem from "antd/es/breadcrumb/BreadcrumbItem";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
 
-// Static data mimicking the database structure
-const staticOrderData = {
-  order: {
-    OrderID: 4152,
-    CustomerID: 1001,
-    Status: 1,
-    TotalAmount: 20800000,
-    TotalTax: 0,
-    TotalDiscount: 0,
+// Demo data
+const demoOrders = [
+  {
+    orderId: 1001,
+    status: 1,
+    totalAmount: 1350000,
+    totalTax: 135000,
+    totalDiscount: 0,
+    customerId: 1,
+    orderLines: [
+      {
+        fishId: 1,
+        fishName: "Koi Carp",
+        imageUrl:
+          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
+        quantity: 2,
+        unitPrice: 500000,
+        totalPrice: 1000000,
+      },
+      {
+        fishId: 2,
+        fishName: "Goldfish",
+        imageUrl:
+          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
+        quantity: 1,
+        unitPrice: 350000,
+        totalPrice: 350000,
+      },
+    ],
   },
-  orderLines: [
-    {
-      OrderLineID: 1,
-      OrderID: 4152,
-      FishID: 1,
-      Quantity: 1,
-      UnitPrice: 8000000,
-      TotalPrice: 8000000,
-    },
-    {
-      OrderLineID: 2,
-      OrderID: 4152,
-      FishID: 2,
-      Quantity: 1,
-      UnitPrice: 800000,
-      TotalPrice: 800000,
-    },
-    {
-      OrderLineID: 3,
-      OrderID: 4152,
-      FishID: 3,
-      Quantity: 1,
-      UnitPrice: 12000000,
-      TotalPrice: 12000000,
-    },
-  ],
-  customer: {
-    CustomerID: 1001,
-    Name: "Dainne Russell",
-    Address: "4140 Parker Rd. Allentown, New Mexico 31134",
-    Email: "dainne.ressell@gmail.com",
-    Phone: "(671) 555-0110",
+  {
+    orderId: 1002,
+    status: 2,
+    totalAmount: 2800000,
+    totalTax: 280000,
+    totalDiscount: 100000,
+    customerId: 2,
+    orderLines: [
+      {
+        fishId: 3,
+        fishName: "Arowana",
+        imageUrl:
+          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
+        quantity: 1,
+        unitPrice: 2800000,
+        totalPrice: 2800000,
+      },
+    ],
   },
-  fishProducts: {
-    1: { Name: "Goromo", Image: "/api/placeholder/80/80" },
-    2: { Name: "Platinum Tosai", Image: "/api/placeholder/80/80" },
-    3: { Name: "Kohaku", Image: "/api/placeholder/80/80" },
+  {
+    orderId: 1003,
+    status: 3,
+    totalAmount: 750000,
+    totalTax: 75000,
+    totalDiscount: 50000,
+    customerId: 1,
+    orderLines: [
+      {
+        fishId: 4,
+        fishName: "Guppy",
+        imageUrl:
+          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
+        quantity: 5,
+        unitPrice: 150000,
+        totalPrice: 750000,
+      },
+    ],
   },
-};
+];
 
-const OrderDetailsPage = ({ orderId, onBackToList }) => {
-  // In a real scenario, you would fetch data based on orderId
-  // For now, we'll just use our static data
+const OrderDetailsPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(amount);
-  };
+  useEffect(() => {
+    const fetchOrderDetails = async () => {
+      try {
+        setLoading(true);
+        const orderId = location.state?.orderId;
+        if (!orderId) {
+          message.error("Order ID not provided");
+          navigate("/order-history");
+          return;
+        }
+        // Simulating API call
+        // const response = await axios.get(`YOUR_API_ENDPOINT_HERE/${orderId}`);
+        // setOrder(response.data);
 
-  const orderStatusMap = [
-    "Order received",
-    "Processing",
-    "On the way",
-    "Delivered",
-  ];
+        const demoOrder = demoOrders.find((o) => o.orderId === orderId);
+        if (demoOrder) {
+          setOrder(demoOrder);
+        } else {
+          message.error("Order not found");
+          navigate("/order-history");
+        }
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+        message.error("Failed to fetch order details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrderDetails();
+  }, [location.state, navigate]);
+
+  if (loading) return <Spin size="large" />;
+  if (!order) return null;
+
+  const totalPrice = order.orderLines.reduce(
+    (sum, line) => sum + line.totalPrice,
+    0
+  );
 
   const columns = [
     {
       title: "PRODUCT",
-      dataIndex: "FishID",
+      dataIndex: "fishName",
       key: "product",
-      render: (FishID) => (
+      render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <Image
-            src={staticOrderData.fishProducts[FishID].Image}
-            alt={staticOrderData.fishProducts[FishID].Name}
+            src={record.imageUrl}
+            alt={record.fishName}
             width={80}
             height={80}
             style={{ marginRight: 16 }}
           />
-          {staticOrderData.fishProducts[FishID].Name}
+          {record.fishName}
         </div>
       ),
     },
     {
       title: "PRICE",
-      dataIndex: "UnitPrice",
+      dataIndex: "unitPrice",
       key: "price",
-      render: (price) => formatCurrency(price),
+      render: (price) =>
+        price.toLocaleString("vi-VN", { style: "currency", currency: "VND" }),
     },
-    { title: "QUANTITY", dataIndex: "Quantity", key: "quantity" },
+    { title: "QUANTITY", dataIndex: "quantity", key: "quantity" },
     {
       title: "SUBTOTAL",
-      dataIndex: "TotalPrice",
+      dataIndex: "totalPrice",
       key: "subtotal",
-      render: (price) => formatCurrency(price),
+      render: (price) =>
+        price.toLocaleString("vi-VN", { style: "currency", currency: "VND" }),
     },
   ];
 
   return (
-    <Card style={{ maxWidth: 1200, margin: "0 auto" }}>
-      <Button
-        type="link"
-        icon={<ArrowLeftOutlined />}
-        onClick={onBackToList}
-        style={{ marginBottom: 16, color: "#D4B57E" }}
-      >
-        Back to List
-      </Button>
-      <Title level={3}>
-        Order Details • April 24, 2021 • {staticOrderData.orderLines.length}{" "}
-        Products
-      </Title>
+    <div>
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb">
+          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+          <Breadcrumb.Item href="/user_info/user">
+            User Dashboard
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/order-history">Order History</Breadcrumb.Item>
+          <Breadcrumb.Item>Order Detail</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+      <Card style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <Button
+          type="link"
+          icon={<ArrowLeftOutlined />}
+          onClick={() => navigate("/order-history")}
+          style={{ marginBottom: 16, color: "#D4B57E" }}
+        >
+          Back to List
+        </Button>
+        <Title level={3}>
+          Order Details • {new Date(order.orderId * 1000).toLocaleDateString()}{" "}
+          • {order.orderLines.length} Products
+        </Title>
 
-      <Row gutter={24}>
-        <Col span={8}>
-          <Card title="BILLING ADDRESS" bordered={false}>
-            <Text>{staticOrderData.customer.Name}</Text>
-            <br />
-            <Text>{staticOrderData.customer.Address}</Text>
-            <br />
-            <Text>EMAIL</Text>
-            <br />
-            <Text>{staticOrderData.customer.Email}</Text>
-            <br />
-            <Text>PHONE</Text>
-            <br />
-            <Text>{staticOrderData.customer.Phone}</Text>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card title="SHIPPING ADDRESS" bordered={false}>
-            <Text>{staticOrderData.customer.Name}</Text>
-            <br />
-            <Text>{staticOrderData.customer.Address}</Text>
-            <br />
-            <Text>EMAIL</Text>
-            <br />
-            <Text>{staticOrderData.customer.Email}</Text>
-            <br />
-            <Text>PHONE</Text>
-            <br />
-            <Text>{staticOrderData.customer.Phone}</Text>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false}>
-            <Row>
-              <Col span={12}>
-                <Text strong>ORDER ID:</Text>
-              </Col>
-              <Col span={12}>
-                <Text>#{staticOrderData.order.OrderID}</Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <Text strong>PAYMENT METHOD:</Text>
-              </Col>
-              <Col span={12}>
-                <Text>COD</Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <Text strong>Subtotal:</Text>
-              </Col>
-              <Col span={12}>
-                <Text>{formatCurrency(staticOrderData.order.TotalAmount)}</Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <Text strong>Discount:</Text>
-              </Col>
-              <Col span={12}>
-                <Text>
-                  {formatCurrency(staticOrderData.order.TotalDiscount)}
-                </Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <Text strong>Shipping:</Text>
-              </Col>
-              <Col span={12}>
-                <Text>Free</Text>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <Text strong>Total:</Text>
-              </Col>
-              <Col span={12}>
-                <Text strong style={{ color: "#D4B57E" }}>
-                  {formatCurrency(staticOrderData.order.TotalAmount)}
-                </Text>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+        <Row gutter={24}>
+          <Col span={16}>
+            <Card title="ORDER SUMMARY" bordered={false}>
+              <Row>
+                <Col span={12}>
+                  <Text strong>ORDER ID:</Text>
+                </Col>
+                <Col span={12}>
+                  <Text>#{order.orderId}</Text>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <Text strong>STATUS:</Text>
+                </Col>
+                <Col span={12}>
+                  <Text>
+                    {["Processing", "Shipping", "Delivered"][
+                      order.status - 1
+                    ] || "Unknown"}
+                  </Text>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <Text strong>TOTAL AMOUNT:</Text>
+                </Col>
+                <Col span={12}>
+                  <Text>
+                    {totalPrice.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Text>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <Text strong>TOTAL TAX:</Text>
+                </Col>
+                <Col span={12}>
+                  <Text>
+                    {order.totalTax.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Text>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <Text strong>TOTAL DISCOUNT:</Text>
+                </Col>
+                <Col span={12}>
+                  <Text>
+                    {order.totalDiscount.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Text>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
 
-      <Steps
-        current={staticOrderData.order.Status}
-        style={{ margin: "24px 0" }}
-      >
-        {orderStatusMap.map((status, index) => (
-          <Step key={index} title={status} />
-        ))}
-      </Steps>
+        <Steps current={order.status - 1} style={{ margin: "24px 0" }}>
+          <Step title="Processing" />
+          <Step title="Shipped" />
+          <Step title="Delivered" />
+        </Steps>
 
-      <Table
-        columns={columns}
-        dataSource={staticOrderData.orderLines}
-        pagination={false}
-      />
-    </Card>
+        <Table
+          columns={columns}
+          dataSource={order.orderLines}
+          pagination={false}
+        />
+      </Card>
+    </div>
   );
 };
 
