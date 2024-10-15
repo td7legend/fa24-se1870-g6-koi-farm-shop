@@ -1,7 +1,9 @@
 ﻿using koi_farm_demo.Data;
 using koi_farm_demo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace koi_farm_demo.Controllers
@@ -11,10 +13,11 @@ namespace koi_farm_demo.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-
-        public OrderController(IOrderService orderService)
+        private readonly ICustomerService _customerService;
+        public OrderController(IOrderService orderService, ICustomerService customerService)
         {
             _orderService = orderService;
+            _customerService = customerService;
         }
 
 
@@ -85,5 +88,32 @@ namespace koi_farm_demo.Controllers
 
             return Ok(orders);
         }
+        [HttpGet("order-history")]
+        [Authorize]
+        [SwaggerOperation(Summary = "Get the customer's order history")]
+        public async Task<IActionResult> GetOrderHistory()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (!int.TryParse(userIdClaim, out int userId))
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            var customer = await _customerService.GetCustomerByUserIdAsync(userId);
+            if (customer == null)
+            {
+                return NotFound("Customer not found.");
+            }
+            var orders = await _orderService.GetOrderHistory(customer.CustomerId);
+
+            if (orders == null || orders.Count == 0)
+            {
+                return NotFound("No order history found for this customer.");
+            }
+
+            return Ok(orders);
+        }
+
     }
 }

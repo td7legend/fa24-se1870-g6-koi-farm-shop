@@ -59,7 +59,7 @@ namespace koi_farm_demo.Services
                 UserId = newUser.UserId, 
             };
 
-            await _customerRepository.AddAsync(customer); 
+            await _customerRepository.AddCustomerAsync(customer); 
         }
 
         public async Task AddStaffAsync(string email, string password, Staff staff, int managerId)
@@ -124,7 +124,7 @@ namespace koi_farm_demo.Services
                     Address = "", 
                     UserId = user.UserId,
                 };
-                await _customerRepository.AddAsync(customer);
+                await _customerRepository.AddCustomerAsync(customer);
             }
 
             return user;

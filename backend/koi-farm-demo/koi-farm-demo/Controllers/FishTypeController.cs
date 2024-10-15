@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using koi_farm_demo.Services;
 using koi_farm_demo.Data;
 using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace koi_farm_demo.Controllers
 {
@@ -17,7 +18,7 @@ namespace koi_farm_demo.Controllers
         {
             _fishTypeService = fishTypeService;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [SwaggerOperation(Summary = "Retrieve all fish types")]
 
@@ -26,7 +27,7 @@ namespace koi_farm_demo.Controllers
             var fishTypes = await _fishTypeService.GetAllFishTypesAsync();
             return Ok(fishTypes);
         }
-
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [SwaggerOperation(Summary = "Add a new fish type")]
         public async Task<IActionResult> AddFishType([FromBody] FishTypeCreateDto fishTypeCreateDto)

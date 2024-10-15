@@ -99,13 +99,12 @@ namespace koi_farm_demo
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
             // Đăng ký các dịch vụ Customer
             builder.Services.AddAuthorization(options =>
             {
-                // Configure your authorization options here if needed
             });
             builder.Services.AddHttpClient();
-            // Đăng ký các dịch vụ Staff
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddCors(options =>

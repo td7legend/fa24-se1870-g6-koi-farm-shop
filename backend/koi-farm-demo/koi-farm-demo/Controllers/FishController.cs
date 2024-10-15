@@ -17,7 +17,7 @@ namespace koi_farm_demo.Controllers
         {
             _fishService = fishService;
         }
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         [SwaggerOperation(Summary = "Retrieve all fish in the system")]
 
@@ -26,7 +26,7 @@ namespace koi_farm_demo.Controllers
             var fish = await _fishService.GetAllFishAsync();
             return Ok(fish);
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [SwaggerOperation(Summary = "Retrieve a fish by its ID")]
 
@@ -39,7 +39,7 @@ namespace koi_farm_demo.Controllers
             }
             return Ok(fish);
         }
-
+        [Authorize(Roles = "Staff,Manager")]
         [HttpPost]
         [SwaggerOperation(Summary = "Retrieve a fish by its ID")]
 
@@ -48,7 +48,7 @@ namespace koi_farm_demo.Controllers
             await _fishService.AddFishAsync(fishCreateDto);
             return CreatedAtAction(nameof(GetFish), new { id = fishCreateDto.Name }, fishCreateDto); // Có thể điều chỉnh để trả về đối tượng Fish phù hợp.
         }
-
+        [Authorize(Roles = "Manager")]
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Delete a fish by its ID")]
         public async Task<IActionResult> DeleteFish(int id)
@@ -56,7 +56,7 @@ namespace koi_farm_demo.Controllers
             await _fishService.DeleteFishAsync(id);
             return NoContent();
         }
-
+        [Authorize(Roles = "Staff,Manager")]
         [HttpPatch("{id}/quantity")]
         [SwaggerOperation(Summary = "Update the quantity of a specific fish")]
 
