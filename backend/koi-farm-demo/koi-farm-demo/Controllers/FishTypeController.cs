@@ -27,7 +27,6 @@ namespace koi_farm_demo.Controllers
             var fishTypes = await _fishTypeService.GetAllFishTypesAsync();
             return Ok(fishTypes);
         }
-        [Authorize(Roles = "Manager")]
         [HttpPost]
         [SwaggerOperation(Summary = "Add a new fish type")]
         public async Task<IActionResult> AddFishType([FromBody] FishTypeCreateDto fishTypeCreateDto)

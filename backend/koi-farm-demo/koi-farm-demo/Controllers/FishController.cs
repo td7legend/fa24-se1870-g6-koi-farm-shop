@@ -39,7 +39,6 @@ namespace koi_farm_demo.Controllers
             }
             return Ok(fish);
         }
-        [Authorize(Roles = "Staff,Manager")]
         [HttpPost]
         [SwaggerOperation(Summary = "Retrieve a fish by its ID")]
 

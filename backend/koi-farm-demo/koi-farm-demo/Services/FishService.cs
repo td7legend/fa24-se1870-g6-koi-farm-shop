@@ -36,7 +36,8 @@ namespace koi_farm_demo.Services
                 OverallRating = fishCreateDto.OverallRating ?? 0,
                 Price = fishCreateDto.Price ?? 0,
                 Batch = fishCreateDto.Batch ?? false,
-                FishTypeId = fishCreateDto.FishTypeId  
+                FishTypeId = fishCreateDto.FishTypeId,
+                ImageUrl = fishCreateDto.ImageUrl,
             };
 
             await _fishRepository.AddAsync(fish);
