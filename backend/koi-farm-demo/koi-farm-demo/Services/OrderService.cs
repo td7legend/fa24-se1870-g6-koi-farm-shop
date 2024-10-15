@@ -192,4 +192,22 @@ public class OrderService : IOrderService
         }).ToList();
     }
 
+    public async Task UpdateCartAsync(int customerId,UpdateCartDTO updateCartDTO)
+    {
+        var orders = await _orderRepository.GetInCartOrderByCustomerIdAsync(customerId);
+        if(orders == null)
+        {
+            throw new Exception("Cart not found");
+        }
+        if (updateCartDTO.IsRemove == true)
+        {
+            await _orderLineRepository.DeleteAsync(await _orderLineRepository.GetOrderLineByFishId( updateCartDTO.FishId, orders.OrderId));
+        }
+        else
+        {
+            await _orderLineRepository.UpdateAsync(updateCartDTO, orders.OrderId);
+        }
+
+    }
+
 }

@@ -55,7 +55,6 @@ namespace koi_farm_demo.Controllers
             await _fishService.DeleteFishAsync(id);
             return NoContent();
         }
-        [Authorize(Roles = "Staff,Manager")]
         [HttpPatch("{id}/quantity")]
         [SwaggerOperation(Summary = "Update the quantity of a specific fish")]
 

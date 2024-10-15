@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace koi_farm_demo.Controllers
 {
-    [Route("api/users")]
+    [Route("api/auth")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -28,7 +28,7 @@ namespace koi_farm_demo.Controllers
             _httpClient = new HttpClient(); // Khởi tạo HttpClient
         }
 
-        [HttpPost("register-customer")]
+        [HttpPost("register")]
         [SwaggerOperation(Summary = "Register a new customer")]
         public async Task<IActionResult> RegisterCustomer([FromBody] RegisterCustomerModel model)
         {
