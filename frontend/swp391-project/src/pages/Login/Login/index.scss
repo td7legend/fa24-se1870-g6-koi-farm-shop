@@ -234,3 +234,75 @@ $border-color_1: #fff;
   margin-top: 10px;
   text-align: center;
 }
+
+.otp-section {
+  background-color: #ffffff;
+  border-radius: 10px;
+  // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+
+  h2 {
+    font-family: "Lora", serif;
+    color: $color_1;
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: $color_1;
+    font-family: sans-serif;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-family: sans-serif;
+
+    &:focus {
+      border-color: $color_4;
+      outline: none;
+      box-shadow: 0 0 5px rgba($color_4, 0.5);
+    }
+  }
+
+  .otp-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .otp-button {
+      font-family: sans-serif;
+      background-color: $background-color_3;
+      color: $color_2;
+      font-size: 12px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin: 0 5px;
+      flex: 1;
+
+      &:hover {
+        background-color: darken($background-color_3, 10%);
+      }
+    }
+
+    .resend-button {
+      background-color: $color_4;
+    }
+  }
+}
