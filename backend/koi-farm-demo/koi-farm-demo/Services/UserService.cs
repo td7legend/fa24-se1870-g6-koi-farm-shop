@@ -56,11 +56,10 @@ namespace koi_farm_demo.Services
             {
                 FullName = model.FullName,
                 Address = model.Address,
-                UserId = newUser.UserId, // Gán UserId cho khách hàng
-                                         // Khởi tạo các thuộc tính khác nếu cần thiết
+                UserId = newUser.UserId, 
             };
 
-            await _customerRepository.AddAsync(customer); // Lưu khách hàng vào repository
+            await _customerRepository.AddAsync(customer); 
         }
 
         public async Task AddStaffAsync(string email, string password, Staff staff, int managerId)
@@ -119,7 +118,15 @@ namespace koi_farm_demo.Services
                     GoogleId = payload.Subject
                 };
                 await _userRepository.AddUserAsync(user);
+                var customer = new Customer
+                {
+                    FullName = payload.Name, 
+                    Address = "", 
+                    UserId = user.UserId,
+                };
+                await _customerRepository.AddAsync(customer);
             }
+
             return user;
         }
 

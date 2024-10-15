@@ -1,4 +1,5 @@
 ﻿using koi_farm_demo.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace koi_farm_demo.Controllers
         {
             _fishService = fishService;
         }
-
+        [Authorize]
         [HttpGet]
         [SwaggerOperation(Summary = "Retrieve all fish in the system")]
 
