@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace koi_farm_demo.Controllers
 {
-    [Route("api/carts")]
+    [Route("api")]
     [ApiController]
     public class CartController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace koi_farm_demo.Controllers
             _orderService = orderService;
             _customerService = customerService;
         }
-        [HttpGet]
+        [HttpGet("cart")]
         [SwaggerOperation(Summary = "Retrieve all in-cart orders for a customer")]
         public async Task<ActionResult<List<OrderDTO>>> GetInCartOrders()
         {
@@ -44,7 +44,7 @@ namespace koi_farm_demo.Controllers
             }
             return Ok(orders);
         }
-        [HttpPost]
+        [HttpPost("carts")]
         [SwaggerOperation(Summary = "Add an item to the cart for a customer")]
         public async Task<IActionResult> AddItemToCart(OrderLineCreateDTO orderLineCreateDto)
         {
@@ -65,7 +65,7 @@ namespace koi_farm_demo.Controllers
             await _orderService.AddItemToCart(customer.CustomerId, orderLineCreateDto);
             return Ok();
         }
-        [HttpPatch]
+        [HttpPatch("carts")]
         public async Task<IActionResult> UpdateCart(UpdateCartDTO updateCartDTO)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.Name)?.Value;

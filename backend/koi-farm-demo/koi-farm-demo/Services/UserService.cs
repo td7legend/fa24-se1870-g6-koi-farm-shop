@@ -98,7 +98,7 @@ namespace koi_farm_demo.Services
         }
         public async Task<string> LoginWithGoogleAsync()
         {
-            var redirectUri = $"{_configuration["AppUrl"]}/api/users/login/google/callback";
+            var redirectUri = $"{_configuration["AppUrl"]}/api/auth/login/google/callback";
             var url = $"https://accounts.google.com/o/oauth2/v2/auth?client_id={_configuration["GoogleOAuth:ClientId"]}&redirect_uri={redirectUri}&response_type=code&scope=email%20profile%20openid&access_type=offline";
 
             return url;
@@ -146,7 +146,7 @@ namespace koi_farm_demo.Services
                 { "code", code },
                 { "client_id", _configuration["GoogleOAuth:ClientId"] },
                 { "client_secret", _configuration["GoogleOAuth:ClientSecret"] },
-                { "redirect_uri", $"{_configuration["AppUrl"]}/api/users/login/google/callback" },
+                { "redirect_uri", $"{_configuration["AppUrl"]}/api/auth/login/google/callback" },
                 { "grant_type", "authorization_code" }
             };
 

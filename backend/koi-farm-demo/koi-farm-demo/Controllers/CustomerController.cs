@@ -1,6 +1,8 @@
-﻿using koi_farm_demo.Services;
+﻿using koi_farm_demo.Data;
+using koi_farm_demo.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 
 namespace koi_farm_demo.Controllers
@@ -10,10 +12,11 @@ namespace koi_farm_demo.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-
-        public CustomerController(ICustomerService customerService)
+        private readonly IOrderService _orderService;
+        public CustomerController(ICustomerService customerService, IOrderService orderService)
         {
             _customerService = customerService;
+            _orderService = orderService;
         }
 
         [HttpGet("my-info")]
