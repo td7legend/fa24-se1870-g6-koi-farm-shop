@@ -25,7 +25,7 @@ function Footer() {
           </p>
           <p>
             <FontAwesomeIcon icon={faEnvelope} className="icon" />
-            Email: info@mywebsite.vn
+            Email: goldenkoi.vn@gmail.com
           </p>
         </div>
 
