@@ -102,8 +102,21 @@ const Header = () => {
             <li>
               <Link to="/">Home</Link>
             </li>
-            <li>
-              <Link to="/products">Product</Link>
+            <li className="dropdown">
+              <Link to="/products">
+                Product
+                <ul className="dropdown-menu">
+                  <li className="menu-item">
+                    <Link to="/breed/Ogon">Ogon</Link>
+                  </li>
+                  <li className="menu-item">
+                    <Link to="/breed/Ochiba">Ochiba</Link>
+                  </li>
+                  <li className="menu-item">
+                    <Link to="/breed/Kujaku">Kujaku</Link>
+                  </li>
+                </ul>
+              </Link>
             </li>
             <li>
               <Link to="/blog">Blog</Link>
