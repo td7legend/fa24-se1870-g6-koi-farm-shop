@@ -59,6 +59,13 @@ namespace koi_farm_demo.Controllers
 
             return Ok(orders);
         }
+        [HttpPost("{orderId}/pay")]
+        [SwaggerOperation(Summary = "Process payment for an order")]
+        public async Task<IActionResult> PayForOrder(int orderId)
+        {
+            await _orderService.PayForOrderAsync(orderId);
+            return Ok();
+        }
 
     }
 }

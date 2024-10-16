@@ -4,11 +4,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Chiều cao toàn màn hình */
-  background-color: #fffaf0; /* Màu nền */
+  height: 100vh; 
+  background-color: #fffaf0; 
 
   .error__image {
-    width: 50%; /* Đặt kích thước cho hình ảnh */
+    width: 50%; 
     max-width: 600px; /* Giới hạn kích thước tối đa */
     margin-bottom: 20px; /* Khoảng cách dưới */
   }
