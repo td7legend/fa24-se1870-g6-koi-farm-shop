@@ -13,7 +13,9 @@ function Footer() {
       <div className="footer__content">
         <div className="footer__1">
           {/* Logo and contact information */}
-          <img src={logo} alt="Golden Koi Logo" className="footer__logo" />
+          <Link to="/">
+            <img src={logo} alt="Golden Koi" />
+          </Link>
           <p>
             <FontAwesomeIcon icon={faLocationDot} className="icon" />
             Lô E2a-7, Đường D1, D. D1, Long Thành Mỹ, Thành Phố Thủ Đức, Thành

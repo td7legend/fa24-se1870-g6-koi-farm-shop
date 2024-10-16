@@ -45,7 +45,9 @@ const Header = () => {
     <header className="header">
       <div className="header__top">
         <div className="header__logo">
-          <img src={logo} alt="Golden Koi" />
+          <Link to="/">
+            <img src={logo} alt="Golden Koi" />
+          </Link>
         </div>
 
         <div className="search__bar">
