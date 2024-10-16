@@ -218,7 +218,7 @@ const LoginPage = () => {
     }
 
     setError("");
-    const loginAPI = `${config.API_ROOT}users/login`;
+    const loginAPI = `${config.API_ROOT}auth/login`;
 
     try {
       const response = await axios.post(
@@ -288,7 +288,7 @@ const LoginPage = () => {
     }, 1000);
   };
 
-  const api_register = `${config.API_ROOT}users/register-customer`;
+  const api_register = `${config.API_ROOT}auth/register`;
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -370,7 +370,7 @@ const LoginPage = () => {
       toast.error("Please wait before requesting a new OTP.");
     }
   };
-  const LoginGoogle_api = `${config.API_ROOT}users/login/google`;
+  const LoginGoogle_api = `${config.API_ROOT}auth/login/google`;
 
   const handleLoginGoogle = async () => {
     try {
