@@ -35,16 +35,16 @@ function Footer() {
           <h4>Personal</h4>
           <ul>
             <li>
-              <Link>Account</Link>
+              <Link to="/user-dashboard/:id">Account</Link>
             </li>
             <li>
-              <Link>Cart</Link>
+              <Link to="/cart">Cart</Link>
             </li>
             <li>
-              <Link>Change Password</Link>
+              <Link to="/user-setting/:id">Change Password</Link>
             </li>
             <li>
-              <Link>Order History</Link>
+              <Link to="/order-history">Order History</Link>
             </li>
           </ul>
         </div>
@@ -60,7 +60,7 @@ function Footer() {
               <Link to="/products">Product</Link>
             </li>
             <li>
-              <Link>Home Page</Link>
+              <Link to="/">Home Page</Link>
             </li>
             <li>
               <Link to="/about-us">About Our Shop</Link>
@@ -80,7 +80,7 @@ function Footer() {
               <Link to="/policy-page">Policy</Link>
             </li>
             <li>
-              <Link to="shopping-guide">Shopping Guide</Link>
+              <Link to="/shopping-guide">Shopping Guide</Link>
             </li>
           </ul>
         </div>

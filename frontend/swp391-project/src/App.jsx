@@ -9,16 +9,17 @@ import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
-import UserForm from "./pages/user_Dasboard";
 import LoginSuccess from "./pages/Login/LoginSuccess";
-import OrderHistoryPage from "./pages/user_Dasboard/order_history";
-import OrderDetailsPage from "./pages/user_Dasboard/order_detail";
 import ErrorPage from "./components/error";
 import Contact from "./pages/contact";
 import AboutUs from "./pages/about-us";
 import FAQsPage from "./pages/faqs";
 import PolicyPage from "./pages/policy";
 import ShoppingGuidePage from "./pages/shopping-guide";
+import UserSetting from "./pages/user-page/user-setting";
+import OrderDetailsPage from "./pages/user-page/order-detail";
+import OrderHistoryPage from "./pages/user-page/order-history";
+import UserDashboard from "./pages/user-page/user-dashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -34,7 +35,8 @@ function App() {
         { path: "/consignment", element: <Consignment /> },
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
-        { path: "/user_info/:id", element: <UserForm /> },
+        { path: "/user-setting/:id", element: <UserSetting /> },
+        { path: "/user-dashboard/:id", element: <UserDashboard /> },
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
         { path: "/error-page", element: <ErrorPage /> },

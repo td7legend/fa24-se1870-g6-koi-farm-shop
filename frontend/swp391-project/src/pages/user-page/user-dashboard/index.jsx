@@ -23,13 +23,13 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
-import uploadFile from "../../utils/upload/upload";
+import uploadFile from "../../../utils/upload/upload";
 
 const { Title, Text } = Typography;
 const DEFAULT_AVATAR =
   "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg";
 
-const UserForm = () => {
+const UserDashboard = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState({});
@@ -378,4 +378,4 @@ const UserForm = () => {
   );
 };
 
-export default UserForm;
+export default UserDashboard;
