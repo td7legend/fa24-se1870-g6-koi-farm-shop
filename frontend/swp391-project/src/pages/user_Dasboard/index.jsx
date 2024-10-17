@@ -56,7 +56,6 @@ const UserForm = () => {
           form.setFieldsValue(userInfo);
           setPreviewImage(userInfo.avatar_path || DEFAULT_AVATAR);
 
-          // Mock data for order history
           setOrderHistory([
             {
               orderId: 1001,

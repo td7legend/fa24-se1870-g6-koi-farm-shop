@@ -117,6 +117,9 @@ const Header = () => {
                   <li className="menu-item">
                     <Link to="/breed/Kujaku">Kujaku</Link>
                   </li>
+                  <li className="menu-item">
+                    <Link to="/breed/kohaku">Kohaku</Link>
+                  </li>
                 </ul>
               </Link>
             </li>

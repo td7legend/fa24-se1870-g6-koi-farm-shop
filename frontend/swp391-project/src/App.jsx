@@ -33,6 +33,10 @@ function App() {
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
         { path: "/error-page", element: <ErrorPage /> },
+        { path: "/contact", element: <Contact /> },
+        { path: "/about-us", element: <AboutUs /> },
+        { path: "/faqs-page", element: <FAQsPage /> },
+        { path: "/policy-page", element: <PolicyPage /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi
