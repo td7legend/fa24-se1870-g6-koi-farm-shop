@@ -45,7 +45,9 @@ const Header = () => {
     <header className="header">
       <div className="header__top">
         <div className="header__logo">
-          <img src={logo} alt="Golden Koi" />
+          <Link to="/">
+            <img src={logo} alt="Golden Koi" />
+          </Link>
         </div>
 
         <div className="search__bar">
@@ -102,17 +104,27 @@ const Header = () => {
             <li>
               <Link to="/">Home</Link>
             </li>
-            <li>
-              <Link to="/products">Product</Link>
+            <li className="dropdown">
+              <Link to="/products">
+                Product
+                <ul className="dropdown-menu">
+                  <li className="menu-item">
+                    <Link to="/breed/Ogon">Ogon</Link>
+                  </li>
+                  <li className="menu-item">
+                    <Link to="/breed/Ochiba">Ochiba</Link>
+                  </li>
+                  <li className="menu-item">
+                    <Link to="/breed/Kujaku">Kujaku</Link>
+                  </li>
+                </ul>
+              </Link>
             </li>
             <li>
               <Link to="/blog">Blog</Link>
             </li>
             <li>
               <Link to="/about-us">About Us</Link>
-            </li>
-            <li>
-              <Link to="/contact-us">Contact Us</Link>
             </li>
             <li>
               <Link to="/consignment">Consignment</Link>

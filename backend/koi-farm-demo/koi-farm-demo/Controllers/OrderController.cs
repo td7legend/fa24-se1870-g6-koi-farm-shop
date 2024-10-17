@@ -59,6 +59,25 @@ namespace koi_farm_demo.Controllers
 
             return Ok(orders);
         }
+        [HttpPost("pay")]
+        [SwaggerOperation(Summary = "Process payment for an order")]
+        public async Task<IActionResult> PayForOrder([FromBody] OrderDTO orderDto)
+        {
+            if (orderDto == null || orderDto.OrderLines == null || orderDto.OrderLines.Count == 0)
+            {
+                return BadRequest("Invalid order data.");
+            }
 
+            try
+            {
+                await _orderService.PayForOrderAsync(orderDto.OrderId, orderDto);
+
+                return Ok("Payment processed successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

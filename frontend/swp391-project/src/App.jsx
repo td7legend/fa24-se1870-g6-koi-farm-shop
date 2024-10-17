@@ -13,7 +13,7 @@ import UserForm from "./pages/user_Dasboard";
 import LoginSuccess from "./pages/Login/LoginSuccess";
 import OrderHistoryPage from "./pages/user_Dasboard/order_history";
 import OrderDetailsPage from "./pages/user_Dasboard/order_detail";
-
+import ErrorPage from "./components/error";
 function App() {
   const router = createBrowserRouter([
     {
@@ -31,6 +31,7 @@ function App() {
         { path: "/user_info/:id", element: <UserForm /> },
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
+        { path: "/error-page", element: <ErrorPage /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi

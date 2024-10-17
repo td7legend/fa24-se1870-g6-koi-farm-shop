@@ -139,6 +139,44 @@
           color: #bbab6f;
         }
       }
+
+      .dropdown:hover .dropdown-menu {
+        /* Hiển thị dropdown khi hover vào .dropdown */
+        display: block;
+      }
+      .dropdown {
+        /* Định dạng để dropdown nằm dưới mục "Product" */
+        position: relative;
+      }
+
+      .dropdown-menu {
+        /* Ẩn menu con (dropdown) ban đầu */
+        width: 150px;
+        height: fit-content;
+        text-align: start;
+        top: 150%; /* Đặt dropdown ngay bên dưới phần tử cha */
+        left: 0;
+        display: none;
+        position: absolute;
+        background-color: #fffaf0;
+        list-style: none;
+        margin: auto 0;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .menu-item {
+          /* Định dạng từng mục trong dropdown */
+          padding: 10px 20px;
+          border-bottom: 1px solid #333;
+          &:hover {
+            /* Định dạng khi hover vào mục trong dropdown */
+            background-color: #f0f0f0;
+          }
+        }
+        a {
+          text-decoration: none;
+          color: #333;
+        }
+      }
     }
   }
 

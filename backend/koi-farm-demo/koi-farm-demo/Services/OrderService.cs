@@ -91,7 +91,7 @@ public class OrderService : IOrderService
         }
     }
 
-    public async Task PayForOrderAsync(int orderId)
+    public async Task PayForOrderAsync(int orderId, OrderDTO orderDto)
     {
         var order = await _orderRepository.GetByIdAsync(orderId);
         if (order == null)
@@ -99,18 +99,40 @@ public class OrderService : IOrderService
             throw new Exception("Order not found");
         }
 
-        order.TotalAmount = order.OrderLines.Sum(ol => ol.TotalPrice);
-        order.Status = OrderStatus.Paid;
+        // Cập nhật các thuộc tính từ OrderDTO vào Order
+        order.TotalAmount = orderDto.TotalAmount;
+        order.TotalTax = orderDto.TotalTax;
+        order.TotalDiscount = orderDto.TotalDiscount;
+        order.Status = OrderStatus.Paid;  // Cập nhật trạng thái đơn hàng thành Paid
+        order.OrderDate = orderDto.OrderDate;
+        order.Address = orderDto.Address;
+
+        // Cập nhật từng OrderLine từ DTO
+        foreach (var orderLineDto in orderDto.OrderLines)
+        {
+            var orderLine = order.OrderLines.FirstOrDefault(ol => ol.FishId == orderLineDto.FishId);
+            if (orderLine != null)
+            {
+                orderLine.Quantity = orderLineDto.Quantity;
+                orderLine.UnitPrice = orderLineDto.UnitPrice;
+                orderLine.TotalPrice = orderLineDto.TotalPrice;
+            }
+        }
 
         await _orderRepository.UpdateAsync(order);
 
+        // Trừ số lượng cá từ kho
         foreach (var orderLine in order.OrderLines)
         {
             var fish = await _fishRepository.GetByIdAsync(orderLine.FishId);
-            fish.Quantity -= orderLine.Quantity;
-            await _fishRepository.UpdateAsync(fish);
+            if (fish != null)
+            {
+                fish.Quantity -= orderLine.Quantity;
+                await _fishRepository.UpdateAsync(fish);
+            }
         }
     }
+
     public async Task<List<OrderDTO>> GetOrdersInCartByCustomerIdAsync(int customerId)
     {
         var orders = await _orderRepository.GetOrdersByCustomerIdAsync(customerId);

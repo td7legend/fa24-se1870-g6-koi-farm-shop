@@ -104,7 +104,7 @@ namespace koi_farm_demo.Controllers
                 var tokenResponse = await _userService.GetTokenFromGoogle(code);
                 var user = await _userService.GetUserFromGoogleAsync(tokenResponse.IdToken);
                 var token = _jwtService.GenerateToken(user);
-                return Ok(new { Token = token });
+                return Redirect($"http://localhost:5173?token={token}");
             }
             catch (Exception ex)
             {

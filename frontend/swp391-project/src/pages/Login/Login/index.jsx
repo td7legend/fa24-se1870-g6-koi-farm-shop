@@ -289,7 +289,7 @@ const LoginPage = () => {
     }, 1000);
   };
 
-  const api_register = `${config.API_ROOT}users/register-customer`;
+  const api_register = `${config.API_ROOT}auth/register`;
 
   const handleRegister = async (e) => {
     e.preventDefault();

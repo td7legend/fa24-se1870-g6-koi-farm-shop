@@ -72,14 +72,14 @@ function Consignment() {
     try {
       if (fromDate && toDate) {
         if (from > to) {
-          toast("From Date can be latter than To Date");
+          toast.error("From Date can be latter than To Date");
           return false;
         }
         if (from >= currentDate || to >= currentDate) {
-          toast("Submit successfully");
+          toast.success("Submit successfully");
           return true;
         } else {
-          toast("From Date or To Date can't be in the past");
+          toast.error("From Date or To Date can't be in the past");
           return false;
         }
       }
@@ -112,6 +112,7 @@ function Consignment() {
         if (!values.note) {
           values.note = "";
         }
+
         console.log(values);
 
         const response = await axios.post(
@@ -161,6 +162,16 @@ function Consignment() {
                     required: true,
                     message: "Please fill in the information before submit!",
                   },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Quantity must be greater than 0!")
+                      );
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" />
