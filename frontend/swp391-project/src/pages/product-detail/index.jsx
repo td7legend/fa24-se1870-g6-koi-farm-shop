@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Row,
@@ -10,28 +10,129 @@ import {
   Carousel,
   Breadcrumb,
   Rate,
+  message,
+  Drawer,
+  List,
+  Typography,
 } from "antd";
-import "./index.scss"; // Import CSS cho component
+import "./index.scss";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import axios from "axios";
+
+const { Text } = Typography;
+
+const config = {
+  API_ROOT: "https://localhost:44366/api",
+};
 
 function ProductDetail() {
   const { id } = useParams();
-  const [product, setProduct] = React.useState({});
-  const [quantity, setQuantity] = React.useState(1);
+  const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [fishes, setFishes] = useState([]);
 
-  React.useEffect(() => {
-    fetch(`https://66fe08fb699369308956d74e.mockapi.io/KoiProduct/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setProduct(data);
-      })
-      .catch((error) => console.log(error));
+  useEffect(() => {
+    fetchProduct();
+    fetchFishes();
   }, [id]);
 
-  const handleAddToCart = () => {
-    // Xử lý logic thêm vào giỏ hàng tại đây
-    console.log(`Added ${quantity} of ${product.name} to cart`);
+  const fetchProduct = async () => {
+    try {
+      const response = await fetch(
+        `https://66fe08fb699369308956d74e.mockapi.io/KoiProduct/${id}`
+      );
+      const data = await response.json();
+      setProduct(data);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      message.error("Failed to fetch product data.");
+    }
+  };
+
+  const fetchFishes = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}/fishs`);
+      setFishes(response.data);
+    } catch (error) {
+      console.error("Error fetching fishes:", error);
+      message.error("Failed to fetch fish data.");
+    }
+  };
+
+  const getFishPrice = (fishId) => {
+    const fish = fishes.find((f) => f.fishId === fishId);
+    return fish ? fish.price : 0;
+  };
+
+  const fetchCart = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        message.error("Please log in to view your cart.");
+        return;
+      }
+
+      const response = await axios.get(`${config.API_ROOT}/cart`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data && response.data.length > 0) {
+        setCartItems(response.data[0].orderLines || []);
+      }
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      message.error("Failed to fetch cart data.");
+    }
+  };
+
+  async function handleAddToCart() {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        message.error("Please log in to add items to your cart.");
+        return;
+      }
+
+      const response = await axios.post(
+        `${config.API_ROOT}/carts`,
+        {
+          fishId: parseInt(id),
+          quantity: quantity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        message.success(`Added ${quantity} of ${product.name} to cart`);
+        await fetchCart();
+        setCartDrawerVisible(true);
+      } else {
+        throw new Error("Failed to add item to cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      message.error("Failed to add item to cart. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => {
+      const price = getFishPrice(item.fishId);
+      return total + price * item.quantity;
+    }, 0);
   };
 
   if (!product.name) {
@@ -92,12 +193,13 @@ function ProductDetail() {
                   className="add-to-cart"
                   icon={<ShoppingCartOutlined />}
                   onClick={handleAddToCart}
-                  Size="large"
+                  size="large"
                   style={{
                     fontSize: 10,
                     padding: "8px 16px",
                     borderRadius: 20,
                   }}
+                  loading={loading}
                 >
                   Add to Cart
                 </Button>
@@ -106,6 +208,49 @@ function ProductDetail() {
           </Col>
         </Row>
       </div>
+
+      <Drawer
+        title="Your Cart"
+        placement="right"
+        onClose={() => setCartDrawerVisible(false)}
+        visible={cartDrawerVisible}
+        width={400}
+      >
+        <List
+          itemLayout="horizontal"
+          dataSource={cartItems}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Image src={item.imageUrl} width={50} />}
+                title={item.fishName}
+                description={`Quantity: ${item.quantity}`}
+              />
+              <div>
+                <Text>
+                  {(getFishPrice(item.fishId) * item.quantity).toLocaleString()}{" "}
+                  VND
+                </Text>
+              </div>
+            </List.Item>
+          )}
+        />
+        <div style={{ marginTop: 16, textAlign: "right" }}>
+          <Text strong>Total: {calculateTotal().toLocaleString()} VND</Text>
+        </div>
+        <div style={{ textAlign: "right", marginTop: 16 }}>
+          <Button type="primary" onClick={() => setCartDrawerVisible(false)}>
+            Close
+          </Button>
+          <Button
+            type="primary"
+            style={{ marginLeft: 8 }}
+            onClick={() => (window.location.href = "/cart")}
+          >
+            View Full Cart
+          </Button>
+        </div>
+      </Drawer>
     </div>
   );
 }
