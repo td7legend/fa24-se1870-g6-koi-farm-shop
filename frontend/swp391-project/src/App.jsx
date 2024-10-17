@@ -18,16 +18,17 @@ import Contact from "./pages/contact";
 import AboutUs from "./pages/about-us";
 import FAQsPage from "./pages/faqs";
 import PolicyPage from "./pages/policy";
+import ShoppingGuidePage from "./pages/shopping-guide";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />, // Đảm bảo Layout được sử dụng
+      element: <Layout />,
       children: [
         { path: "/", element: <HomePage /> },
-        { path: "/products", element: <AllFishPage /> }, // Main page for all fish
-        { path: "/breed/:breedName", element: <BreedFishPage /> }, // Page for breed
+        { path: "/products", element: <AllFishPage /> },
+        { path: "/breed/:breedName", element: <BreedFishPage /> },
         { path: "/products/:id", element: <ProductDetail /> },
         { path: "/breed/:id", element: <ProductDetail /> },
         { path: "/consignment", element: <Consignment /> },
@@ -41,9 +42,7 @@ function App() {
         { path: "/about-us", element: <AboutUs /> },
         { path: "/faqs-page", element: <FAQsPage /> },
         { path: "/policy-page", element: <PolicyPage /> },
-        // Page for Japanese Koi
-        // Page for F1 Koi
-        // Page for Vietnamese Koi
+        { path: "/shopping-guide", element: <ShoppingGuidePage /> },
       ],
     },
     {

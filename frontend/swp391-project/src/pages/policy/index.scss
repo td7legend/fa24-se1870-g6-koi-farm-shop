@@ -1,35 +1,33 @@
-// PolicyPage.scss
-
-$background-color: #fffaf0; // Light background color
-$primary-color-1: #bbab6f; // Main primary color
-$primary-color-2: #9b8e5e; // Secondary primary color
-$secondary-color: #fff; // Background color for sections
-$shadow-color: rgba(0, 0, 0, 0.1); // Soft shadow for depth
-$border-radius: 12px; // Consistent border radius for buttons and sections
-$transition-duration: 0.3s; // Transition duration for hover effects
-$max-width: 1200px; // Maximum width for content
+$background-color: #fffaf0;
+$primary-color-1: #bbab6f;
+$primary-color-2: #9b8e5e;
+$secondary-color: #fff;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$border-radius: 12px;
+$transition-duration: 0.3s;
+$max-width: 1200px;
 
 .policy-page {
   background-color: $background-color;
   color: $primary-color-2;
-  font-family: "Lora", serif; // Main font
-  padding: 60px 20px; // Generous padding for spacious feel
-  width: 100%; // Full width
-  max-width: $max-width; // Maximum width for readability
-  margin: 0 auto; // Center alignment
+  font-family: "Lora", serif;
+  padding: 60px 20px;
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center; // Centering content
+  align-items: center;
 
   h1 {
     color: $primary-color-1;
     text-align: center;
     margin-bottom: 50px;
-    font-size: 2.5em; // Decreased size for prominence
-    text-shadow: 2px 2px 6px $shadow-color; // Enhanced text shadow for depth
-    font-weight: bold; // Bold for emphasis
-    letter-spacing: 1px; // Spacing between letters for elegance
-    text-transform: uppercase; // Uppercase for a more formal touch
+    font-size: 2.5em;
+    text-shadow: 2px 2px 6px $shadow-color;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
 
   h2,
@@ -38,49 +36,50 @@ $max-width: 1200px; // Maximum width for content
     text-align: left;
     margin-bottom: 25px;
     font-weight: bold;
-    font-size: 2em; // Decreased size for better visibility
+    font-size: 2em;
     position: relative;
 
     &::after {
       content: "";
       display: block;
-      width: 80px; // Wider underline for better visual
-      height: 5px; // Height of the underline
+      width: 80px;
+      height: 5px;
       background: $primary-color-1;
       margin-top: 5px;
       border-radius: 2px;
-      transition: width $transition-duration; // Smooth transition effect
+      transition: width $transition-duration;
     }
 
     &:hover::after {
-      width: 100%; // Full width on hover
+      width: 100%;
     }
   }
 
   p {
-    line-height: 1.6; // Improved readability
-    margin-bottom: 30px; // More spacing between paragraphs
-    font-size: 1em; // Decreased font size for body text
-    text-align: justify; // Justified text
-    padding: 0 15px; // Responsive padding
-    border-left: 5px solid $primary-color-1; // Stylish left border
-    padding-left: 20px; // Padding for text
-    background: rgba(255, 255, 255, 0.8); // Slight background for text block
-    border-radius: $border-radius; // Rounded corners for text blocks
-    box-shadow: 0 4px 10px $shadow-color; // Shadow for text block
-    color: black; // Set paragraph text color to black
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-size: 1em;
+    text-align: justify;
+    padding: 0 15px;
+    border-left: 5px solid $primary-color-1;
+    padding-left: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    font-family: sans-serif;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 10px $shadow-color;
+    color: black;
 
     &:last-child {
-      margin-bottom: 0; // Remove margin for last paragraph
+      margin-bottom: 0;
     }
   }
 
   a {
-    color: black; // Set link color to black
-    text-decoration: none; // Remove underline from links
+    // color: black;
+    text-decoration: none;
 
     &:hover {
-      text-decoration: underline; // Underline on hover
+      text-decoration: underline;
     }
   }
 
@@ -88,46 +87,46 @@ $max-width: 1200px; // Maximum width for content
     display: inline-block;
     background-color: $primary-color-1;
     color: $secondary-color;
-    padding: 15px 35px; // Larger padding for a more button-like appearance
+    padding: 15px 35px;
     text-decoration: none;
-    border-radius: $border-radius; // Consistent border radius
+    border-radius: $border-radius;
     transition: background-color $transition-duration,
       transform $transition-duration;
-    margin-top: 40px; // Margin for spacing
-    font-weight: bold; // Bold text
-    font-size: 1em; // Decreased font size for buttons
-    box-shadow: 0 6px 15px $shadow-color; // Soft shadow for button
+    margin-top: 40px;
+    font-weight: bold;
+    font-size: 1em;
+    box-shadow: 0 6px 15px $shadow-color;
 
     &:hover {
       background-color: $primary-color-2;
-      transform: translateY(-5px); // Slight upward movement on hover
-      box-shadow: 0 8px 20px $shadow-color; // Deeper shadow on hover
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px $shadow-color;
     }
   }
 
   .section {
-    margin: 40px 0; // Increased margin for sections
-    padding: 40px; // More padding for sections
-    border: 1px solid $primary-color-1; // Border color
-    border-radius: $border-radius; // Rounded corners
-    background-color: $secondary-color; // White background for sections
-    width: 100%; // Full width for sections
-    max-width: 800px; // Optional max-width
-    box-shadow: 0 6px 15px $shadow-color; // Enhanced shadow for sections
-    position: relative; // For any pseudo-elements or effects
+    margin: 40px 0;
+    padding: 40px;
+    border: 1px solid $primary-color-1;
+    border-radius: $border-radius;
+    background-color: $secondary-color;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 6px 15px $shadow-color;
+    position: relative;
 
     h3 {
       color: $primary-color-2;
       margin-bottom: 20px;
-      font-size: 1.5em; // Decreased section heading size
+      font-size: 1.5em;
       text-align: left;
       position: relative;
 
       &::after {
         content: "";
         display: block;
-        width: 50px; // Width of the underline for section headers
-        height: 4px; // Height of the underline
+        width: 50px;
+        height: 4px;
         background: $primary-color-1;
         margin-top: 5px;
         border-radius: 2px;
@@ -140,21 +139,21 @@ $max-width: 1200px; // Maximum width for content
       top: 0;
       left: 0;
       width: 100%;
-      height: 5px; // Top border line
-      background: $primary-color-1; // Color of the top border
-      border-radius: $border-radius $border-radius 0 0; // Rounded top corners
+      height: 5px;
+      background: $primary-color-1;
+      border-radius: $border-radius $border-radius 0 0;
     }
   }
 
   .footer-note {
-    margin-top: 50px; // Space above the footer note
-    font-size: 0.9em; // Decreased size of the footer note
-    color: $primary-color-2; // Color for footer note
-    text-align: center; // Center the footer note
-    font-style: italic; // Italic style for emphasis
-    padding: 10px 20px; // Padding for footer note
-    background-color: rgba(255, 255, 255, 0.9); // Background for footer note
-    border-radius: $border-radius; // Rounded corners for footer note
-    box-shadow: 0 4px 10px $shadow-color; // Shadow for footer note
+    margin-top: 50px;
+    font-size: 0.9em;
+    color: $primary-color-2;
+    text-align: center;
+    font-style: italic;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: $border-radius;
+    box-shadow: 0 4px 10px $shadow-color;
   }
 }

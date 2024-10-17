@@ -80,7 +80,7 @@ function Footer() {
               <Link to="/policy-page">Policy</Link>
             </li>
             <li>
-              <Link>Shopping Guide</Link>
+              <Link to="shopping-guide">Shopping Guide</Link>
             </li>
           </ul>
         </div>
