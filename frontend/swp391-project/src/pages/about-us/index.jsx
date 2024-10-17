@@ -34,7 +34,7 @@ function AboutUs() {
           </div>
           <br />
           <figure className="introduce-image">
-            <img src="src/images/background-koi-introduce-2.jpg" alt="" />
+            <img src="src/images/background-koi-introduce-4.webp" alt="" />
             <figcaption>Koi Fish Pond Area</figcaption>
           </figure>
           <div className="development-history">
