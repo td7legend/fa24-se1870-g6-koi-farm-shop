@@ -3,138 +3,123 @@ import {
   Button,
   Card,
   Table,
-  InputNumber,
   Image,
   Breadcrumb,
   Col,
   message,
   Spin,
 } from "antd";
-// import axios from "axios";
+import axios from "axios";
+
+const config = {
+  API_ROOT: "https://localhost:44366/api",
+};
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
+  const [fishes, setFishes] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Demo data
-  const demoCart = {
-    orderId: 1001,
-    status: 0,
-    totalAmount: 40800000,
-    totalTax: 0,
-    totalDiscount: 0,
-    customerId: 1,
-    orderLines: [
-      {
-        fishId: 1,
-        fishName: "Platinum Arowana",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 2,
-        unitPrice: 10000000,
-        totalPrice: 20000000,
-      },
-      {
-        fishId: 2,
-        fishName: "Golden Koi",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 1,
-        unitPrice: 20800000,
-        totalPrice: 20800000,
-      },
-    ],
-  };
 
   useEffect(() => {
     fetchCart();
+    fetchFishes();
   }, []);
 
+  const getAuthToken = () => {
+    return localStorage.getItem("token");
+  };
+
   const fetchCart = async () => {
-    // Simulating API call delay
-    setTimeout(() => {
-      setCart(demoCart);
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        message.error("No authentication token found. Please log in.");
+        return;
+      }
+
+      const response = await axios.get(`${config.API_ROOT}/cart`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data && response.data.length > 0) {
+        setCart(response.data[0]);
+      } else {
+        setCart(null);
+        message.info("Your cart is empty.");
+      }
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      message.error("Failed to fetch cart data. Please try again later.");
+    }
+  };
+
+  const fetchFishes = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}/fishs`);
+      setFishes(response.data);
+    } catch (error) {
+      console.error("Error fetching fishes:", error);
+      message.error(
+        "Failed to fetch fish data. Some prices may be unavailable."
+      );
+    } finally {
       setLoading(false);
-    }, 1000);
-
-    // Commented out API call
-    // try {
-    //   setLoading(true);
-    //   const response = await axios.get('YOUR_API_ENDPOINT/orders');
-    //   const activeCart = response.data.find(order => order.status === 0);
-    //   setCart(activeCart || null);
-    // } catch (error) {
-    //   console.error("Error fetching cart:", error);
-    //   message.error("Failed to fetch cart data");
-    // } finally {
-    //   setLoading(false);
-    // }
+    }
   };
 
-  const handleQuantityChange = async (fishId, value) => {
-    if (!cart) return;
-
-    const newOrderLines = cart.orderLines.map((line) =>
-      line.fishId === fishId
-        ? { ...line, quantity: value, totalPrice: value * line.unitPrice }
-        : line
-    );
-
-    const newCart = {
-      ...cart,
-      orderLines: newOrderLines,
-      totalAmount: newOrderLines.reduce(
-        (sum, line) => sum + line.totalPrice,
-        0
-      ),
-    };
-
-    setCart(newCart);
-
-    // Simulating API call
-    setTimeout(() => {
-      message.success("Cart updated successfully");
-    }, 500);
-
-    // Commented out API call
-    // try {
-    //   await axios.put(`YOUR_API_ENDPOINT/orders/${cart.orderId}`, newCart);
-    //   message.success("Cart updated successfully");
-    // } catch (error) {
-    //   console.error("Error updating cart:", error);
-    //   message.error("Failed to update cart");
-    //   fetchCart(); // Refresh cart data in case of error
-    // }
+  const getFishPrice = (fishId) => {
+    const fish = fishes.find((f) => f.fishId === fishId);
+    return fish ? fish.price : 0;
   };
 
-  const handleRemoveProduct = async (orderId, fishId) => {
-    const newOrderLines = cart.orderLines.filter(
-      (line) => line.fishId !== fishId
-    );
-    const newCart = {
-      ...cart,
-      orderLines: newOrderLines,
-      totalAmount: newOrderLines.reduce(
-        (sum, line) => sum + line.totalPrice,
-        0
-      ),
-    };
-    setCart(newCart);
+  const calculateTotalPrice = () => {
+    if (!cart || !cart.orderLines) return 0;
+    return cart.orderLines.reduce((total, line) => {
+      const price = getFishPrice(line.fishId);
+      return total + price * line.quantity;
+    }, 0);
+  };
 
-    // Simulating API call
-    setTimeout(() => {
-      message.success("Fish removed from cart");
-    }, 500);
+  const updateCart = async (fishId, isAdd, isRemove) => {
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        message.error("No authentication token found. Please log in.");
+        return;
+      }
 
-    // Commented out API call
-    // try {
-    //   await axios.delete(`YOUR_API_ENDPOINT/orders/${orderId}/fish/${fishId}`);
-    //   message.success("Fish removed from cart");
-    //   fetchCart(); // Refresh cart data after successful deletion
-    // } catch (error) {
-    //   console.error("Error removing fish from cart:", error);
-    //   message.error("Failed to remove Fish from cart");
-    // }
+      await axios.patch(
+        `${config.API_ROOT}/carts`,
+        { fishId, isAdd, isRemove },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      fetchCart(); // Refresh cart after update
+      message.success(
+        isRemove ? "Fish removed from cart" : "Cart updated successfully"
+      );
+    } catch (error) {
+      console.error("Error updating cart:", error);
+      message.error("Failed to update cart. Please try again.");
+    }
+  };
+
+  const handleIncreaseQuantity = (fishId) => {
+    updateCart(fishId, true, false);
+  };
+
+  const handleDecreaseQuantity = (fishId) => {
+    updateCart(fishId, false, false);
+  };
+
+  const handleRemoveItem = (fishId) => {
+    updateCart(fishId, false, true);
   };
 
   const columns = [
@@ -151,36 +136,38 @@ const Cart = () => {
     },
     {
       title: "Price",
-      dataIndex: "unitPrice",
-      key: "unitPrice",
-      render: (price) => `${price.toLocaleString()} VND`,
+      key: "price",
+      render: (_, record) =>
+        `${getFishPrice(record.fishId).toLocaleString()} VND`,
     },
     {
       title: "Quantity",
       key: "quantity",
       render: (_, record) => (
-        <InputNumber
-          min={1}
-          value={record.quantity}
-          onChange={(value) => handleQuantityChange(record.fishId, value)}
-        />
+        <div>
+          <Button onClick={() => handleDecreaseQuantity(record.fishId)}>
+            -
+          </Button>
+          <span style={{ margin: "0 10px" }}>{record.quantity}</span>
+          <Button onClick={() => handleIncreaseQuantity(record.fishId)}>
+            +
+          </Button>
+        </div>
       ),
     },
     {
       title: "Total",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
-      render: (price) => `${price.toLocaleString()} VND`,
+      key: "total",
+      render: (_, record) =>
+        `${(
+          getFishPrice(record.fishId) * record.quantity
+        ).toLocaleString()} VND`,
     },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button
-          onClick={() => handleRemoveProduct(cart.orderId, record.fishId)}
-        >
-          Delete
-        </Button>
+        <Button onClick={() => handleRemoveItem(record.fishId)}>Remove</Button>
       ),
     },
   ];
@@ -202,7 +189,12 @@ const Cart = () => {
       </Col>
       <Card
         title="Cart"
-        style={{ width: "100%", maxWidth: 800, margin: "auto" }}
+        style={{
+          width: "100%",
+          maxWidth: 800,
+          margin: "20px auto",
+          padding: "20px",
+        }}
       >
         {cart && cart.orderLines && cart.orderLines.length > 0 ? (
           <>
@@ -211,19 +203,26 @@ const Cart = () => {
               columns={columns}
               pagination={false}
             />
-            <div style={{ textAlign: "right", marginTop: 20 }}>
-              <p style={{ fontSize: 18, fontWeight: "bold" }}>
-                Total Price: {cart.totalAmount.toLocaleString()} VND
+            <div
+              style={{ textAlign: "right", margin: "5px 0", padding: "5px" }}
+            >
+              <p style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
+                Total Price: {calculateTotalPrice().toLocaleString()} VND
               </p>
+              <Button
+                size="large"
+                onClick={() => (window.location.href = "/products")}
+                style={{ marginRight: 10 }}
+              >
+                Back to Shop
+              </Button>
               <Button
                 href="/checkout"
                 type="primary"
-                style={{ marginRight: 10 }}
+                size="large"
+                style={{ width: 200 }}
               >
                 Checkout
-              </Button>
-              <Button onClick={() => (window.location.href = "/products")}>
-                Back to Shop
               </Button>
             </div>
           </>

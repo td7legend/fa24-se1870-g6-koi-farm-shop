@@ -24,7 +24,7 @@ const { Step } = Steps;
 const demoOrders = [
   {
     orderId: 1001,
-    status: 1,
+    status: 0,
     totalAmount: 1350000,
     totalTax: 135000,
     totalDiscount: 0,

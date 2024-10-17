@@ -13,78 +13,84 @@ import {
   message,
   Spin,
 } from "antd";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+
+const config = {
+  API_ROOT: "https://localhost:44366/api",
+};
 
 const Checkout = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState(null);
+  const [fishes, setFishes] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState("VnPay");
   const [loading, setLoading] = useState(true);
-
-  // Demo data
-  const demoUser = {
-    id: 1,
-    fullName: "Tran Quang Duy",
-    phoneNumber: "0941460781",
-    email: "example@email.com",
-    address: "123 Main St, Ward 1, District 1, Ho Chi Minh City",
-  };
-
-  const demoCart = {
-    orderId: 1001,
-    status: 0,
-    totalAmount: 5800000,
-    totalTax: 0,
-    totalDiscount: 0,
-    customerId: 1,
-    orderLines: [
-      {
-        fishId: 1,
-        fishName: "Platinum Tosai",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 1,
-        unitPrice: 800000,
-        totalPrice: 800000,
-      },
-      {
-        fishId: 2,
-        fishName: "Red Capsicum",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 2,
-        unitPrice: 2500000,
-        totalPrice: 5000000,
-      },
-    ],
-  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    // Simulating API call delay
-    setTimeout(() => {
-      setUser(demoUser);
-      setCart(demoCart);
-      setLoading(false);
-    }, 1000);
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const vnp_ResponseCode = searchParams.get("vnp_ResponseCode");
+    const vnp_TxnRef = searchParams.get("vnp_TxnRef");
 
-    // Commented out API calls
-    // try {
-    //   const userData = await axios.get('YOUR_API_ENDPOINT/user');
-    //   const cartData = await axios.get('YOUR_API_ENDPOINT/orders');
-    //   const activeCart = cartData.data.find(order => order.status === 0);
-    //   setUser(userData.data);
-    //   setCart(activeCart || null);
-    // } catch (error) {
-    //   console.error("Error fetching data:", error);
-    //   message.error("Failed to fetch data");
-    // } finally {
-    //   setLoading(false);
-    // }
+    if (vnp_ResponseCode && vnp_TxnRef) {
+      handleVnPayCallback(searchParams);
+    }
+  }, [location]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        message.error("No authentication token found. Please log in.");
+        return;
+      }
+
+      const [userResponse, cartResponse, fishesResponse] = await Promise.all([
+        axios.get(`${config.API_ROOT}/customers/my-info`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get(`${config.API_ROOT}/cart`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get(`${config.API_ROOT}/fishs`),
+      ]);
+
+      setUser(userResponse.data);
+      setCart(cartResponse.data[0]); // Assuming the API returns an array and we take the first item
+      setFishes(fishesResponse.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      message.error("Failed to fetch data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getFishPrice = (fishId) => {
+    const fish = fishes.find((f) => f.fishId === fishId);
+    return fish ? fish.price : 0;
+  };
+
+  const calculateItemTotal = (item) => {
+    const price = getFishPrice(item.fishId);
+    return price * item.quantity;
+  };
+
+  const calculateTotalPrice = () => {
+    if (!cart || !cart.orderLines) return 0;
+    return cart.orderLines.reduce(
+      (total, item) => total + calculateItemTotal(item),
+      0
+    );
   };
 
   const columns = [
@@ -106,15 +112,15 @@ const Checkout = () => {
     },
     {
       title: "Price",
-      dataIndex: "unitPrice",
-      key: "unitPrice",
-      render: (price) => `${price.toLocaleString()} VND`,
+      key: "price",
+      render: (_, record) =>
+        `${getFishPrice(record.fishId).toLocaleString()} VND`,
     },
     {
       title: "Total",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
-      render: (price) => `${price.toLocaleString()} VND`,
+      key: "total",
+      render: (_, record) =>
+        `${calculateItemTotal(record).toLocaleString()} VND`,
     },
   ];
 
@@ -137,38 +143,138 @@ const Checkout = () => {
   };
 
   const handlePlaceOrder = async () => {
-    const orderData = {
-      ...cart,
-      paymentMethod,
-      shippingAddress: user.address,
-    };
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        message.error("No authentication token found. Please log in.");
+        return;
+      }
 
-    // Simulating API call
-    setTimeout(() => {
-      console.log("Order placed:", orderData);
-      message.success(`Order placed successfully. Order ID: ${cart.orderId}`);
-    }, 1000);
-
-    // Commented out API call
-    // try {
-    //   const response = await axios.post('YOUR_API_ENDPOINT/orders', orderData);
-    //   if (response.data.success) {
-    //     message.success(`Order placed successfully. Order ID: ${response.data.orderId}`);
-    //   } else {
-    //     message.error("Failed to place order. Please try again.");
-    //   }
-    // } catch (error) {
-    //   console.error("Error placing order:", error);
-    //   message.error("An error occurred. Please try again.");
-    // }
+      if (paymentMethod === "VnPay") {
+        await processVnPayPayment();
+      } else {
+        message.error("Only VnPay is supported at the moment.");
+      }
+    } catch (error) {
+      console.error("Error processing payment:", error);
+      message.error("An error occurred. Please try again.");
+    }
   };
 
+  const processVnPayPayment = async () => {
+    try {
+      const paymentData = {
+        orderType: "01",
+        amount: calculateTotalPrice(),
+        orderDescription: `Payment for Order`,
+        name: user.fullName,
+      };
+
+      const response = await axios.post(
+        `${config.API_ROOT}/payments`,
+        paymentData,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      if (response.data && response.data.paymentUrl) {
+        window.location.href = response.data.paymentUrl;
+      } else {
+        throw new Error("Invalid payment URL received");
+      }
+    } catch (error) {
+      console.error("Error processing VnPay payment:", error);
+      message.error("Failed to process payment. Please try again.");
+    }
+  };
+
+  // const handleVnPayCallback = async (searchParams) => {
+  //   try {
+  //     setLoading(true);
+  //     const callbackUrl = `${
+  //       config.API_ROOT
+  //     }/payments/callback?${searchParams.toString()}`;
+  //     const response = await axios.get(callbackUrl);
+  //     const callbackData = response.data;
+
+  //     console.log("VnPay Callback Data:", callbackData);
+
+  //     if (callbackData.vnPayResponseCode === "00" && callbackData.success) {
+  //       await completeOrder(callbackData.orderId);
+  //     } else {
+  //       message.error("Payment was not successful. Redirecting to home page.");
+  //       setTimeout(() => {
+  //         navigate("/");
+  //       }, 2000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error handling VnPay callback:", error);
+  //     message.error(
+  //       "An error occurred while processing your payment. Please contact support."
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const completeOrder = async (orderId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found.");
+      }
+
+      const orderData = {
+        orderId: orderId,
+        status: 1,
+        totalAmount: calculateTotalPrice(),
+        totalTax: 0,
+        totalDiscount: 0,
+        orderDate: new Date().toISOString(),
+        address: user.address,
+        customerId: user.id,
+        orderLines: cart.orderLines.map((item) => ({
+          fishId: item.fishId,
+          fishName: item.fishName,
+          imageUrl: item.imageUrl,
+          quantity: item.quantity,
+          unitPrice: getFishPrice(item.fishId),
+          totalPrice: calculateItemTotal(item),
+        })),
+      };
+
+      console.log("Completing order with data:", orderData);
+
+      const response = await axios.post(
+        `${config.API_ROOT}/orders/pay`,
+        orderData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      console.log("Order completion response:", response.data);
+
+      if (response.data.success) {
+        message.success(`Order placed successfully. Order ID: ${orderId}`);
+        navigate("/", { state: { orderId } });
+      } else {
+        throw new Error("Failed to complete order");
+      }
+    } catch (error) {
+      console.error("Error completing order:", error);
+      message.error(
+        "Payment was received but failed to complete the order. Please contact support."
+      );
+    }
+  };
   if (loading) {
     return <Spin size="large" />;
   }
 
-  if (!user || !cart) {
-    return <div>No active cart found.</div>;
+  if (!user || !cart || fishes.length === 0) {
+    return <div>No active cart found or user information unavailable.</div>;
   }
 
   return (
@@ -188,8 +294,8 @@ const Checkout = () => {
           <h2>Billing Information</h2>
           <div>
             <p>Name: {user.fullName}</p>
-            <p>Phone Number: {user.phoneNumber}</p>
-            <p>Email: {user.email}</p>
+            <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
+            <p>Email: {user.email || "Not provided"}</p>
             <p>Address: {user.address}</p>
           </div>
           <Button type="primary" onClick={showModal}>
@@ -210,7 +316,9 @@ const Checkout = () => {
                     <strong style={{ float: "right" }}>Total Price:</strong>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={1}>
-                    <strong>{cart.totalAmount.toLocaleString()} VND</strong>
+                    <strong>
+                      {calculateTotalPrice().toLocaleString()} VND
+                    </strong>
                   </Table.Summary.Cell>
                 </Table.Summary.Row>
               </Table.Summary>
@@ -223,7 +331,9 @@ const Checkout = () => {
               style={{ marginRight: "20px" }}
             >
               <Radio value="VnPay">VnPay</Radio>
-              <Radio value="bankTransfer">Bank Transfer</Radio>
+              <Radio value="bankTransfer" disabled>
+                Bank Transfer
+              </Radio>
             </Radio.Group>
             <Button type="primary" onClick={handlePlaceOrder}>
               Place Order
@@ -233,15 +343,14 @@ const Checkout = () => {
       </Row>
       <Modal
         title="Edit Address"
-        centered
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         <Form form={form} name="address" onFinish={onFinish} layout="vertical">
           <Form.Item
-            label="Address"
             name="address"
+            label="Address"
             rules={[{ required: true, message: "Please input your address!" }]}
           >
             <Input.TextArea rows={4} />
