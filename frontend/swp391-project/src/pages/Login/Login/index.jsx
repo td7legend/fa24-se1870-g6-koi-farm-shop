@@ -372,6 +372,7 @@ const LoginPage = () => {
     }
   };
   const LoginGoogle_api = `${config.API_ROOT}auth/login/google`;
+
   const handleLoginGoogle = async () => {
     try {
       // Bước 1: Gọi API để lấy URL xác thực Google
@@ -395,7 +396,7 @@ const LoginPage = () => {
             const currentUrl = popup.location.href;
 
             // Nếu URL chứa token (ví dụ: callback?token=xyz), chúng ta sẽ lấy token
-            if (currentUrl.includes("callback")) {
+            if (currentUrl.includes("token")) {
               const urlParams = new URLSearchParams(popup.location.search);
               const token = urlParams.get("token");
               if (token) {
@@ -404,6 +405,8 @@ const LoginPage = () => {
                 // Đóng popup sau khi lấy token
                 popup.close();
                 clearInterval(popupInterval);
+                // Redirect về trang chủ của bạn
+                window.location.href = `/LoginSuccess/${token}`; // Cập nhật với đường dẫn đúng
               }
             }
           } catch (error) {
@@ -416,12 +419,22 @@ const LoginPage = () => {
             console.log("Popup đã đóng.");
           }
         }, 500); // Kiểm tra mỗi 500ms
+
+        // Bước 4: Kiểm tra nếu đã nhận được token từ URL
+        const tokenFromUrl = new URLSearchParams(window.location.search).get(
+          "token"
+        );
+        if (tokenFromUrl) {
+          console.log("Token nhận được từ URL callback:", tokenFromUrl);
+          localStorage.setItem("authToken", tokenFromUrl);
+          // Redirect về trang chủ của bạn
+          window.location.href = `/LoginSuccess/${tokenFromUrl}`;
+        }
       }
     } catch (error) {
       console.error("Có lỗi xảy ra khi bắt đầu đăng nhập Google:", error);
     }
   };
-
   return (
     <div className="page__container">
       <Main

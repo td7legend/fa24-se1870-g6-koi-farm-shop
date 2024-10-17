@@ -14,6 +14,7 @@ import LoginSuccess from "./pages/Login/LoginSuccess";
 import OrderHistoryPage from "./pages/user_Dasboard/order_history";
 import OrderDetailsPage from "./pages/user_Dasboard/order_detail";
 import ErrorPage from "./components/error";
+import { useEffect } from "react";
 function App() {
   const router = createBrowserRouter([
     {
@@ -51,6 +52,10 @@ function App() {
       element: <ForgotPassword />,
     },
   ]);
+  useEffect(() => {
+    // Đảm bảo sự kiện lắng nghe chỉ được thêm một lần khi component mount
+    return () => window.removeEventListener("message", () => {});
+  }, []);
 
   return <RouterProvider router={router} />;
 }
