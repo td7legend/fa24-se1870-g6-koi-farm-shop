@@ -14,6 +14,8 @@ import LoginSuccess from "./pages/Login/LoginSuccess";
 import OrderHistoryPage from "./pages/user_Dasboard/order_history";
 import OrderDetailsPage from "./pages/user_Dasboard/order_detail";
 import ErrorPage from "./components/error";
+import Contact from "./pages/contact";
+import AboutUs from "./pages/about-us";
 function App() {
   const router = createBrowserRouter([
     {
@@ -32,6 +34,8 @@ function App() {
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
         { path: "/error-page", element: <ErrorPage /> },
+        { path: "/contact", element: <Contact /> },
+        { path: "/about-us", element: <AboutUs /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi

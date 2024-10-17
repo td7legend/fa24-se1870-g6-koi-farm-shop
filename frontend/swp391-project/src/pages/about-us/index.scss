@@ -1,0 +1,28 @@
+@import "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap";
+.about-us-container {
+  font-family: "Lora", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 50px;
+  .about-us-form {
+    width: 1200px;
+    p {
+      font-size: 15px;
+    }
+    h2 {
+      color: #bbab6f;
+    }
+    h3 {
+      color: #bbab6f;
+    }
+    .introduce-image {
+      text-align: center;
+      img {
+        width: 500px;
+        height: 300px;
+        object-fit: cover;
+      }
+    }
+  }
+}

@@ -18,8 +18,7 @@ function Footer() {
           </Link>
           <p>
             <FontAwesomeIcon icon={faLocationDot} className="icon" />
-            Lô E2a-7, Đường D1, D. D1, Long Thành Mỹ, Thành Phố Thủ Đức, Thành
-            phố Hồ Chí Minh 700000, Việt Nam
+            Lô E2a-7, Đường D1, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh
           </p>
           <p>
             <FontAwesomeIcon icon={faPhone} className="icon" />
@@ -64,7 +63,7 @@ function Footer() {
               <Link>Home Page</Link>
             </li>
             <li>
-              <Link>About Our Shop</Link>
+              <Link to="/about-us">About Our Shop</Link>
             </li>
           </ul>
         </div>
@@ -72,7 +71,7 @@ function Footer() {
           <h4>Support</h4>
           <ul>
             <li>
-              <Link>Contact</Link>
+              <Link to="/contact">Contact</Link>
             </li>
             <li>
               <Link>FAQs</Link>
