@@ -16,6 +16,9 @@ import OrderDetailsPage from "./pages/user_Dasboard/order_detail";
 import ErrorPage from "./components/error";
 import Contact from "./pages/contact";
 import AboutUs from "./pages/about-us";
+import FAQsPage from "./pages/faqs";
+import PolicyPage from "./pages/policy";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -36,6 +39,8 @@ function App() {
         { path: "/error-page", element: <ErrorPage /> },
         { path: "/contact", element: <Contact /> },
         { path: "/about-us", element: <AboutUs /> },
+        { path: "/faqs-page", element: <FAQsPage /> },
+        { path: "/policy-page", element: <PolicyPage /> },
         // Page for Japanese Koi
         // Page for F1 Koi
         // Page for Vietnamese Koi

@@ -41,7 +41,7 @@ function Footer() {
               <Link>Cart</Link>
             </li>
             <li>
-              <Link>Forgot Password</Link>
+              <Link>Change Password</Link>
             </li>
             <li>
               <Link>Order History</Link>
@@ -57,7 +57,7 @@ function Footer() {
               <Link to="/consignment"> Consignment</Link>
             </li>
             <li>
-              <Link>Product</Link>
+              <Link to="/products">Product</Link>
             </li>
             <li>
               <Link>Home Page</Link>
@@ -74,10 +74,10 @@ function Footer() {
               <Link to="/contact">Contact</Link>
             </li>
             <li>
-              <Link>FAQs</Link>
+              <Link to="/faqs-page">FAQs</Link>
             </li>
             <li>
-              <Link>Policy</Link>
+              <Link to="/policy-page">Policy</Link>
             </li>
             <li>
               <Link>Shopping Guide</Link>
