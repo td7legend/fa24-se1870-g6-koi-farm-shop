@@ -21,6 +21,7 @@ import UserSetting from "./pages/user-page/user-setting";
 import OrderDetailsPage from "./pages/user-page/order-detail";
 import OrderHistoryPage from "./pages/user-page/order-history";
 import UserDashboard from "./pages/user-page/user-dashboard";
+import PaymentSuccess from "./pages/checkout/success";
 
 function App() {
   const router = createBrowserRouter([
@@ -36,6 +37,7 @@ function App() {
         { path: "/consignment", element: <Consignment /> },
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
+        { path: "/checkout/success", element: <PaymentSuccess /> },
         { path: "/user-setting/:id", element: <UserSetting /> },
         { path: "/user-dashboard/:id", element: <UserDashboard /> },
         { path: "/order-history", element: <OrderHistoryPage /> },
