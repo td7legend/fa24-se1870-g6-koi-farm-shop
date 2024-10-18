@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -193,6 +193,7 @@ const LoginPage = () => {
   const [isOtpModalOpen, setOtpModalOpen] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const [LoginGoogleMessage, setLoginGoogleMessage] = useState("");
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -406,10 +407,12 @@ const LoginPage = () => {
                 popup.close();
                 clearInterval(popupInterval);
                 // Redirect về trang chủ của bạn
+                setLoginGoogleMessage("Login successful");
                 window.location.href = `/LoginSuccess/${token}`; // Cập nhật với đường dẫn đúng
               }
             }
           } catch (error) {
+            setLoginGoogleMessage("Login Failed!");
             // Lỗi này thường xảy ra khi popup chưa sẵn sàng hoặc thuộc miền khác
           }
 
@@ -433,8 +436,21 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error("Có lỗi xảy ra khi bắt đầu đăng nhập Google:", error);
+      setLoginGoogleMessage("Login Failed!");
     }
   };
+  useEffect(() => {
+    if (LoginGoogleMessage === null) {
+      console.log(LoginGoogleMessage);
+    }
+
+    if (LoginGoogleMessage === "Login successful") {
+      toast.success(`${LoginGoogleMessage}`);
+    }
+    if (LoginGoogleMessage === "Login Failed!") {
+      toast.error(`${LoginGoogleMessage}`);
+    }
+  }, []);
   return (
     <div className="page__container">
       <Main

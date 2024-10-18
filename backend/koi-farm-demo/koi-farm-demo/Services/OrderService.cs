@@ -231,5 +231,11 @@ public class OrderService : IOrderService
         }
 
     }
+    public async Task<bool> HasCustomerBoughtFishAsync(int customerId, int fishId)
+    {
+        var orders = await _orderRepository.GetOrderHistoryByCustomerIdAsync(customerId);
+        return orders.Any(order => order.OrderLines.Any(ol => ol.FishId == fishId));
+    }
+
 
 }

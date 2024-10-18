@@ -45,7 +45,13 @@ namespace koi_farm_demo.Controllers
             try
             {
                 var response = _vnPayService.PaymentExecute(Request.Query);
-                return new JsonResult(response);
+                if (response.Success)
+                {
+                    return Ok("Payment successful.");
+                }else
+                {
+                    return BadRequest("Payment failed.");
+                }
             }
             catch (Exception ex)
             {
