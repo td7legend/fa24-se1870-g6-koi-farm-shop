@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+.breadcrumb-container {
+  .breadcrumb {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto 0;
+    .breadcrumb-item {
+      margin-right: 20px;
+    }
+
+    .breadcrumb-item:last-child {
+      margin-right: 0;
+    }
+  }
+}
+.product-detail-container {
+  max-width: 1200px;
+  padding: 20px;
+  margin: 40px auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ddd;
+  background-color: #fffaf0;
+  img {
+    width: 100%;
+    height: 200px;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .info-container {
+    height: 320px;
+    box-sizing: border-box;
+    font-family: "Lora", serif;
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+  }
+
+  .product-info {
+    margin-bottom: 20px;
+    font-size: 25px;
+    gap: 10px;
+    p {
+      margin: 10px auto;
+    }
+    span {
+      font-weight: bold;
+      height: 15px;
+    }
+  }
+  .product-submit {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 50px;
+  }
+  .add-to-cart {
+    span {
+      color: #bbab6f;
+      font-size: 20px;
+    }
+    background-color: white;
+    margin: auto;
+    height: 40px;
+    width: 400px;
+  }
+  // .product-detail-container .quantity-selector {
+  //   display: flex;
+  //   align-items: center;
+  //   margin-bottom: 20px;
+  //   width: auto;
+  // }
+  // .product-detail-container .quantity-selector button {
+  //   width: 30px;
+  //   height: 30px;
+  //   border: none;
+  //   cursor: pointer;
+  //   border-radius: 20px;
+  // }
+
+  // .product-detail-container .quantity-selector span {
+  //   width: 30px;
+  //   height: 30px;
+  //   border: 1px solid #ddd;
+  //   text-align: center;
+  //   padding: 5px;
+  //   margin: 0 10px;
+  // }
+}

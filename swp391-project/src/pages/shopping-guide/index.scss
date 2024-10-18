@@ -1,0 +1,90 @@
+$background-color: #fffaf0;
+$primary-color-1: #bbab6f;
+$primary-color-2: #9b8e5e;
+$secondary-color: #fff;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$border-radius: 10px;
+$transition-duration: 0.3s;
+$max-width: 1200px;
+
+.shopping-guide-page {
+  background-color: $background-color;
+  color: $primary-color-2;
+  font-family: "Lora", serif;
+  padding: 60px 20px;
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    color: $primary-color-1;
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 3em; // Larger size for prominence
+    text-shadow: 2px 2px 4px $shadow-color;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .section {
+    margin: 30px 0;
+    padding: 30px;
+    border: 1px solid $primary-color-1;
+    border-radius: $border-radius;
+    background-color: $secondary-color;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 6px 15px $shadow-color;
+    position: relative;
+    transition: transform $transition-duration;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h3 {
+      color: $primary-color-1;
+      margin-bottom: 15px;
+      font-size: 1.8em; // Increased section heading size
+      text-align: left;
+      font-weight: bold;
+      text-transform: capitalize;
+      border-bottom: 2px solid $primary-color-1;
+      padding-bottom: 5px;
+    }
+
+    p {
+      line-height: 1.7;
+      margin-bottom: 15px;
+      font-size: 1em; // Slightly larger font size for better readability
+      text-align: justify;
+      color: black;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul {
+      padding-left: 20px;
+      color: black;
+
+      li {
+        margin-bottom: 8px;
+        font-size: 1em; // Adjusted size for list items
+        position: relative;
+
+        &::before {
+          content: "•"; // Bullet point for list items
+          position: absolute;
+          left: -15px; // Space for bullet
+          color: $primary-color-1; // Color for bullet
+        }
+      }
+    }
+  }
+}

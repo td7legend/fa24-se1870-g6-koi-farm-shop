@@ -1,0 +1,82 @@
+@import "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap";
+.welcome__section {
+  background-color: #fffaf0;
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+
+  .welcome__content {
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+
+    .mySwiper {
+      flex: 1;
+      width: 100%;
+      max-width: 50%;
+      height: 400px;
+      margin-left: 150px;
+
+      .swiper-slide {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .welcome__image {
+          width: 100%;
+          height: 400px;
+          object-fit: cover;
+          border-radius: 25px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+        }
+      }
+
+      .swiper-pagination-bullet {
+        background: #bbab6f;
+      }
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        color: #bbab6f;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover {
+        .swiper-button-next,
+        .swiper-button-prev {
+          opacity: 1;
+        }
+      }
+    }
+
+    .welcome__text {
+      flex: 1;
+      max-width: 50%;
+      // padding-left: 20px;
+      h1 {
+        font-family: "Lora";
+        display: flex;
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #bbab6f;
+      }
+
+      p {
+        font-family: sans-serif;
+        margin-right: 150px;
+        display: flex;
+        font-size: 18px;
+        line-height: 1.6;
+        color: #333;
+      }
+    }
+  }
+}
