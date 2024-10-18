@@ -264,14 +264,15 @@ const Checkout = () => {
   }
 
   return (
-    <div style={{ padding: "24px", background: "#FFFAF0", minHeight: "50vh" }}>
-      <Breadcrumb style={{ marginBottom: "16px" }}>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
-        <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
-        <Breadcrumb.Item>Checkout</Breadcrumb.Item>
-      </Breadcrumb>
-
+    <div>
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb">
+          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+          <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
+          <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
+          <Breadcrumb.Item>Checkout</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <Row gutter={24}>
         <Col span={12}>
           <div
