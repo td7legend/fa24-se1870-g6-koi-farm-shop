@@ -10,6 +10,7 @@ import {
   Spin,
 } from "antd";
 import axios from "axios";
+import "./index.scss";
 
 const config = {
   API_ROOT: "https://localhost:44366/api",
@@ -187,49 +188,53 @@ const Cart = () => {
           </Breadcrumb>
         </div>
       </Col>
-      <Card
-        title="Cart"
-        style={{
-          width: "100%",
-          maxWidth: 800,
-          margin: "20px auto",
-          padding: "20px",
-        }}
-      >
-        {cart && cart.orderLines && cart.orderLines.length > 0 ? (
-          <>
-            <Table
-              dataSource={cart.orderLines}
-              columns={columns}
-              pagination={false}
-            />
-            <div
-              style={{ textAlign: "right", margin: "5px 0", padding: "5px" }}
-            >
-              <p style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
-                Total Price: {calculateTotalPrice().toLocaleString()} VND
-              </p>
-              <Button
-                size="large"
-                onClick={() => (window.location.href = "/products")}
-                style={{ marginRight: 10 }}
+      <div className="cart-container">
+        <Card
+          title="Cart"
+          style={{
+            width: "100%",
+            maxWidth: 800,
+            margin: "20px auto",
+            padding: "20px",
+          }}
+        >
+          {cart && cart.orderLines && cart.orderLines.length > 0 ? (
+            <>
+              <Table
+                dataSource={cart.orderLines}
+                columns={columns}
+                pagination={false}
+              />
+              <div
+                style={{ textAlign: "right", margin: "5px 0", padding: "5px" }}
               >
-                Back to Shop
-              </Button>
-              <Button
-                href="/checkout"
-                type="primary"
-                size="large"
-                style={{ width: 200 }}
-              >
-                Checkout
-              </Button>
-            </div>
-          </>
-        ) : (
-          <p>Your cart is empty.</p>
-        )}
-      </Card>
+                <p
+                  style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}
+                >
+                  Total Price: {calculateTotalPrice().toLocaleString()} VND
+                </p>
+                <Button
+                  size="large"
+                  onClick={() => (window.location.href = "/products")}
+                  style={{ marginRight: 10 }}
+                >
+                  Back to Shop
+                </Button>
+                <Button
+                  href="/checkout"
+                  type="primary"
+                  size="large"
+                  style={{ width: 200 }}
+                >
+                  Checkout
+                </Button>
+              </div>
+            </>
+          ) : (
+            <p>Your cart is empty.</p>
+          )}
+        </Card>
+      </div>
     </>
   );
 };

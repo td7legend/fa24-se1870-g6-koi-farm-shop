@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+
+.check-out-container {
+  padding: 40px;
+  border-radius: 10px;
+  .check-out-form {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    font-family: "Lora";
+    p,
+    h2 {
+      font-family: serif;
+      color: #bbab6f;
+    }
+    .form-left,
+    .form-right {
+      background-color: #fffaf0;
+      padding: 30px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+
+    .form-left {
+      background-color: #fffaf0;
+      width: 1000px;
+      h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      .ant-table-cell {
+        background-color: #fffaf0;
+      }
+      .ant-table {
+        border-radius: 5px;
+        overflow: hidden;
+        font-family: serif;
+      }
+
+      .ant-table-summary {
+        font-weight: bold;
+      }
+
+      .ant-radio-group {
+        margin-right: 20px;
+        .ant-radio-button-wrapper {
+          border-radius: 4px;
+          padding: 10px;
+        }
+      }
+
+      .ant-btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        padding: 10px 30px;
+        font-size: 16px;
+        &:hover {
+          background-color: #0056b3;
+          border-color: #0056b3;
+        }
+      }
+    }
+
+    .form-right {
+      flex-wrap: wrap;
+      width: 400px;
+      h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #555;
+      }
+
+      .ant-btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        &:hover {
+          background-color: #0056b3;
+          border-color: #0056b3;
+        }
+      }
+    }
+  }
+}
