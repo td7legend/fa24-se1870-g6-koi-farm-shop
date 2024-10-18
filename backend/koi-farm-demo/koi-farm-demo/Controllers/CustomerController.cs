@@ -50,21 +50,33 @@ namespace koi_farm_demo.Controllers
             return Ok(customers);
         }
 
-        // Cập nhật thông tin khách hàng
-        [HttpPut("{customerId}")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> UpdateCustomer(int customerId, Customer customer)
+        [HttpPut("my-info")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMyInfo(UpdateCustomerDto updateCustomerDto)
         {
-            if (customerId != customer.CustomerId)
+            var userIdClaim = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (!int.TryParse(userIdClaim, out int userId))
             {
-                return BadRequest("Customer ID mismatch.");
+                return BadRequest("Invalid user ID.");
             }
 
+            var customer = await _customerService.GetCustomerByUserIdAsync(userId);
+
+            if (customer == null)
+            {
+                return NotFound("Customer not found.");
+            }
+
+            customer.FullName = updateCustomerDto.Name;
+            customer.PhoneNumber = updateCustomerDto.Phone;
+            customer.Address = updateCustomerDto.Address;
+
             await _customerService.UpdateCustomerAsync(customer);
+
             return NoContent();
         }
 
-        // Xóa khách hàng (chỉ cho Manager)
         [HttpDelete("{customerId}")]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteCustomer(int customerId)
