@@ -20,7 +20,7 @@ const BreedFishPage = () => {
   const [breedFish, setBreedFish] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(8);
   const [sortOrder, setSortOrder] = useState("");
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
