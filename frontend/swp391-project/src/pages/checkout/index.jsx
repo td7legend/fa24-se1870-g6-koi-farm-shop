@@ -15,7 +15,7 @@ import {
 } from "antd";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import "./index.scss";
 const config = {
   API_ROOT: "https://localhost:44366/api",
 };
@@ -289,58 +289,61 @@ const Checkout = () => {
           </Breadcrumb>
         </div>
       </Col>
-      <Row gutter={16}>
-        <Col span={12}>
-          <h2>Billing Information</h2>
-          <div>
-            <p>Name: {user.fullName}</p>
-            <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
-            <p>Email: {user.email || "Not provided"}</p>
-            <p>Address: {user.address}</p>
-          </div>
-          <Button type="primary" onClick={showModal}>
-            Edit Address
-          </Button>
-        </Col>
-        <Col span={12}>
-          <h2>Order Summary</h2>
-          <Table
-            columns={columns}
-            dataSource={cart.orderLines}
-            pagination={false}
-            rowKey={(record) => record.fishId}
-            summary={() => (
-              <Table.Summary>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell index={0} colSpan={3}>
-                    <strong style={{ float: "right" }}>Total Price:</strong>
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={1}>
-                    <strong>
-                      {calculateTotalPrice().toLocaleString()} VND
-                    </strong>
-                  </Table.Summary.Cell>
-                </Table.Summary.Row>
-              </Table.Summary>
-            )}
-          />
-          <div style={{ marginTop: "20px", textAlign: "right" }}>
-            <Radio.Group
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              value={paymentMethod}
-              style={{ marginRight: "20px" }}
-            >
-              <Radio value="VnPay">VnPay</Radio>
-              <Radio value="bankTransfer" disabled>
-                Bank Transfer
-              </Radio>
-            </Radio.Group>
-            <Button type="primary" onClick={handlePlaceOrder}>
-              Place Order
+      <div className="check-out-container">
+        <Row className="check-out-form">
+          <Col className="form-left">
+            <h2>Order Summary</h2>
+            <Table
+              className="table"
+              columns={columns}
+              dataSource={cart.orderLines}
+              pagination={false}
+              rowKey={(record) => record.fishId}
+              summary={() => (
+                <Table.Summary>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} colSpan={3}>
+                      <strong style={{ float: "right" }}>Total Price:</strong>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>
+                      <strong>
+                        {calculateTotalPrice().toLocaleString()} VND
+                      </strong>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </Table.Summary>
+              )}
+            />
+            <div style={{ marginTop: "20px", textAlign: "right" }}>
+              <Radio.Group
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                value={paymentMethod}
+                style={{ marginRight: "20px" }}
+              >
+                <Radio value="VnPay">VnPay</Radio>
+                <Radio value="bankTransfer" disabled>
+                  Bank Transfer
+                </Radio>
+              </Radio.Group>
+              <Button type="primary" onClick={handlePlaceOrder}>
+                Place Order
+              </Button>
+            </div>
+          </Col>
+          <Col className="form-right">
+            <h2>Billing Information</h2>
+            <div>
+              <p>Name: {user.fullName}</p>
+              <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
+              <p>Email: {user.email || "Not provided"}</p>
+              <p>Address: {user.address}</p>
+            </div>
+            <Button type="primary" onClick={showModal}>
+              Edit Address
             </Button>
-          </div>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </div>
       <Modal
         title="Edit Address"
         visible={isModalVisible}
