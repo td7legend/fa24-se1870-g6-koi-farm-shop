@@ -14,13 +14,8 @@ import {
   Spin,
 } from "antd";
 import axios from "axios";
-<<<<<<< HEAD
-import { useNavigate, useLocation } from "react-router-dom";
-import "./index.scss";
-=======
 import { useNavigate } from "react-router-dom";
 
->>>>>>> 4dac1e921f3dd1c61b2a02f6abce18eadd45adc8
 const config = {
   API_ROOT: "https://localhost:44366/api",
 };
@@ -45,6 +40,7 @@ const Checkout = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         message.error("No authentication token found. Please log in.");
+        navigate("/login"); // Redirect to login if token is not available
         return;
       }
 
@@ -168,7 +164,7 @@ const Checkout = () => {
     const popup = window.open(url, "VnPay Payment", "width=800,height=600");
 
     if (!popup) {
-      console.error("Không thể mở popup. Vui lòng cho phép popup.");
+      console.error("Cannot open popup. Please allow popups.");
       return;
     }
 
@@ -186,12 +182,12 @@ const Checkout = () => {
           popup.close();
         }
       } catch (error) {
-        // Xử lý lỗi cross-origin
+        // Handle cross-origin error
       }
 
       if (popup.closed) {
         clearInterval(checkPaymentStatus);
-        console.log("Popup đã đóng.");
+        console.log("Popup has been closed.");
       }
     }, 500);
   };
@@ -217,7 +213,7 @@ const Checkout = () => {
 
       const orderData = {
         orderId: cart.orderId,
-        status: 1, // Giả sử 1 nghĩa là "Đã thanh toán"
+        status: 1, // Assuming 1 means "Paid"
         totalAmount: calculateTotalPrice(),
         totalTax: 0,
         totalDiscount: 0,
@@ -256,7 +252,14 @@ const Checkout = () => {
     } catch (error) {
       console.error("Error completing order:", error);
       message.error("Failed to complete the order. Please contact support.");
-      throw error;
+    }
+  };
+
+  const handlePlaceOrder = () => {
+    if (paymentMethod === "VnPay") {
+      processVnPayPayment();
+    } else {
+      message.warning("Please select a valid payment method.");
     }
   };
 
@@ -270,7 +273,6 @@ const Checkout = () => {
 
   return (
     <div>
-<<<<<<< HEAD
       <Col span={24}>
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb">
@@ -283,7 +285,7 @@ const Checkout = () => {
       </Col>
       <div className="check-out-container">
         <Row className="check-out-form">
-          <Col className="form-left">
+          <Col className="form-left" span={12}>
             <h2>Order Summary</h2>
             <Table
               className="table"
@@ -322,108 +324,21 @@ const Checkout = () => {
               </Button>
             </div>
           </Col>
-          <Col className="form-right">
-            <h2>Billing Information</h2>
-            <div>
+          <Col className="form-right" span={12}>
+            <div style={{ padding: "20px", border: "1px solid #f0f0f0" }}>
+              <h2>Billing Information</h2>
               <p>Name: {user.fullName}</p>
               <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
               <p>Email: {user.email || "Not provided"}</p>
               <p>Address: {user.address}</p>
-=======
-      <div className="breadcrumb-container">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
-          <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
-          <Breadcrumb.Item>Checkout</Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
-      <Row gutter={24}>
-        <Col span={12}>
-          <div
-            style={{
-              background: "#fff",
-              padding: "50px",
-              borderRadius: "10px",
-              marginBottom: "24px",
-              border: "1px solid",
-              fontSize: "16px",
-            }}
-          >
-            <h2>Billing Information</h2>
-            <div>
-              <p>
-                <strong>Name:</strong> {user.fullName}
-              </p>
-              <p>
-                <strong>Phone Number:</strong>{" "}
-                {user.phoneNumber || "Not provided"}
-              </p>
-              <p>
-                <strong>Address:</strong> {user.address}
-              </p>
->>>>>>> 4dac1e921f3dd1c61b2a02f6abce18eadd45adc8
+              <Button type="primary" onClick={showModal}>
+                Edit Address
+              </Button>
             </div>
-            <Button type="primary" onClick={showModal}>
-              Edit Address
-            </Button>
-<<<<<<< HEAD
           </Col>
         </Row>
       </div>
-=======
-          </div>
-        </Col>
-        <Col span={12}>
-          <div
-            style={{
-              background: "#fff",
-              padding: "24px",
-              borderRadius: "10px",
-              border: "1px solid",
-            }}
-          >
-            <h2>Order Summary</h2>
-            <Table
-              columns={columns}
-              dataSource={cart.orderLines}
-              pagination={false}
-              rowKey={(record) => record.fishId}
-              summary={() => (
-                <Table.Summary>
-                  <Table.Summary.Row>
-                    <Table.Summary.Cell index={0} colSpan={3}>
-                      <strong style={{ float: "right" }}>Total Price:</strong>
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={1}>
-                      <strong>
-                        {calculateTotalPrice().toLocaleString()} VND
-                      </strong>
-                    </Table.Summary.Cell>
-                  </Table.Summary.Row>
-                </Table.Summary>
-              )}
-            />
-            <div style={{ marginTop: "20px", textAlign: "right" }}>
-              <Radio.Group
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                value={paymentMethod}
-                style={{ marginRight: "20px" }}
-              >
-                <Radio value="VnPay">VnPay</Radio>
-                <Radio value="bankTransfer" disabled>
-                  Bank Transfer
-                </Radio>
-              </Radio.Group>
-              <Button type="primary" size="large" onClick={processVnPayPayment}>
-                Place Order
-              </Button>
-            </div>
-          </div>
-        </Col>
-      </Row>
 
->>>>>>> 4dac1e921f3dd1c61b2a02f6abce18eadd45adc8
       <Modal
         title="Edit Address"
         visible={isModalVisible}
