@@ -100,6 +100,8 @@ namespace koi_farm_demo
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IJwtService, JwtService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IRatingService, RatingService>();
+            builder.Services.AddScoped<IRatingRepository, RatingRepository>();
             // Đăng ký các dịch vụ Customer
             builder.Services.AddAuthorization(options =>
             {
