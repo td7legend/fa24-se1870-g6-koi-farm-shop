@@ -102,7 +102,6 @@ const UserSetting = () => {
   const saveAccountInfo = async () => {
     try {
       const values = await accountForm.validateFields();
-      setLoading(true);
 
       let avatarUrl = user.avatar_path;
       if (fileList.length > 0) {
@@ -128,8 +127,6 @@ const UserSetting = () => {
       setFileList([]);
     } catch (error) {
       toast.error(`Failed to update Account Info: ${error.message}`);
-    } finally {
-      setLoading(false);
     }
   };
 
