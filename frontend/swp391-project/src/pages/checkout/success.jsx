@@ -36,6 +36,15 @@ const PaymentSuccess = () => {
           >
             Return to Home
           </Button>,
+          <Button
+            type="primary"
+            key="home"
+            size="large"
+            icon={<HomeFilled />}
+            onClick={() => navigate("/order-details", { state: { orderId } })}
+          >
+            View order details
+          </Button>,
         ]}
       >
         <Descriptions title="Order Information" bordered column={1}>
