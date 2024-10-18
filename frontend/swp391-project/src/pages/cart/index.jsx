@@ -52,7 +52,7 @@ const Cart = () => {
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
-      message.error("Failed to fetch cart data. Please try again later.");
+      // message.error("Failed to fetch cart data. Please try again later.");
     }
   };
 
