@@ -14,7 +14,7 @@ import {
   Spin,
 } from "antd";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const config = {
   API_ROOT: "https://localhost:44366/api",
@@ -23,7 +23,6 @@ const config = {
 const Checkout = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const location = useLocation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState(null);
@@ -34,16 +33,6 @@ const Checkout = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const vnp_ResponseCode = searchParams.get("vnp_ResponseCode");
-    const vnp_TxnRef = searchParams.get("vnp_TxnRef");
-
-    if (vnp_ResponseCode && vnp_TxnRef) {
-      handleVnPayCallback(searchParams);
-    }
-  }, [location]);
 
   const fetchData = async () => {
     try {
@@ -142,25 +131,6 @@ const Checkout = () => {
     setIsModalVisible(false);
   };
 
-  const handlePlaceOrder = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        message.error("No authentication token found. Please log in.");
-        return;
-      }
-
-      if (paymentMethod === "VnPay") {
-        await processVnPayPayment();
-      } else {
-        message.error("Only VnPay is supported at the moment.");
-      }
-    } catch (error) {
-      console.error("Error processing payment:", error);
-      message.error("An error occurred. Please try again.");
-    }
-  };
-
   const processVnPayPayment = async () => {
     try {
       const paymentData = {
@@ -179,7 +149,7 @@ const Checkout = () => {
       );
 
       if (response.data && response.data.paymentUrl) {
-        window.location.href = response.data.paymentUrl;
+        openPaymentPopup(response.data.paymentUrl);
       } else {
         throw new Error("Invalid payment URL received");
       }
@@ -189,36 +159,51 @@ const Checkout = () => {
     }
   };
 
-  // const handleVnPayCallback = async (searchParams) => {
-  //   try {
-  //     setLoading(true);
-  //     const callbackUrl = `${
-  //       config.API_ROOT
-  //     }/payments/callback?${searchParams.toString()}`;
-  //     const response = await axios.get(callbackUrl);
-  //     const callbackData = response.data;
+  const openPaymentPopup = (url) => {
+    const popup = window.open(url, "VnPay Payment", "width=800,height=600");
 
-  //     console.log("VnPay Callback Data:", callbackData);
+    if (!popup) {
+      console.error("Không thể mở popup. Vui lòng cho phép popup.");
+      return;
+    }
 
-  //     if (callbackData.vnPayResponseCode === "00" && callbackData.success) {
-  //       await completeOrder(callbackData.orderId);
-  //     } else {
-  //       message.error("Payment was not successful. Redirecting to home page.");
-  //       setTimeout(() => {
-  //         navigate("/");
-  //       }, 2000);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error handling VnPay callback:", error);
-  //     message.error(
-  //       "An error occurred while processing your payment. Please contact support."
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    const checkPaymentStatus = setInterval(() => {
+      try {
+        if (popup.location.href.includes("localhost:5173/payment")) {
+          clearInterval(checkPaymentStatus);
 
-  const completeOrder = async (orderId) => {
+          const paymentStatus = popup.location.href.includes("/payment/True");
+          if (paymentStatus) {
+            handlePaymentSuccess();
+          } else {
+            message.error("Payment was not successful. Please try again.");
+          }
+          popup.close();
+        }
+      } catch (error) {
+        // Xử lý lỗi cross-origin
+      }
+
+      if (popup.closed) {
+        clearInterval(checkPaymentStatus);
+        console.log("Popup đã đóng.");
+      }
+    }, 500);
+  };
+
+  const handlePaymentSuccess = async () => {
+    try {
+      message.success("Payment successful!");
+      await completeOrder();
+    } catch (error) {
+      console.error("Error completing order:", error);
+      message.error(
+        "Payment was successful but failed to complete the order. Please contact support."
+      );
+    }
+  };
+
+  const completeOrder = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -226,8 +211,8 @@ const Checkout = () => {
       }
 
       const orderData = {
-        orderId: orderId,
-        status: 1,
+        orderId: cart.orderId,
+        status: 1, // Giả sử 1 nghĩa là "Đã thanh toán"
         totalAmount: calculateTotalPrice(),
         totalTax: 0,
         totalDiscount: 0,
@@ -244,8 +229,6 @@ const Checkout = () => {
         })),
       };
 
-      console.log("Completing order with data:", orderData);
-
       const response = await axios.post(
         `${config.API_ROOT}/orders/pay`,
         orderData,
@@ -254,21 +237,24 @@ const Checkout = () => {
         }
       );
 
-      console.log("Order completion response:", response.data);
-
-      if (response.data.success) {
-        message.success(`Order placed successfully. Order ID: ${orderId}`);
-        navigate("/", { state: { orderId } });
+      if (response.data === "Payment processed successfully.") {
+        message.success(`Order placed successfully. Order ID: ${cart.orderId}`);
+        navigate("/checkout/success", {
+          state: {
+            orderId: cart.orderId,
+            totalAmount: calculateTotalPrice(),
+          },
+        });
       } else {
         throw new Error("Failed to complete order");
       }
     } catch (error) {
       console.error("Error completing order:", error);
-      message.error(
-        "Payment was received but failed to complete the order. Please contact support."
-      );
+      message.error("Failed to complete the order. Please contact support.");
+      throw error;
     }
   };
+
   if (loading) {
     return <Spin size="large" />;
   }
@@ -278,69 +264,93 @@ const Checkout = () => {
   }
 
   return (
-    <div>
-      <Col span={24}>
-        <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
-            <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
-            <Breadcrumb.Item>Checkout</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </Col>
-      <Row gutter={16}>
+    <div style={{ padding: "24px", background: "#FFFAF0", minHeight: "50vh" }}>
+      <Breadcrumb style={{ marginBottom: "16px" }}>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
+        <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
+        <Breadcrumb.Item>Checkout</Breadcrumb.Item>
+      </Breadcrumb>
+
+      <Row gutter={24}>
         <Col span={12}>
-          <h2>Billing Information</h2>
-          <div>
-            <p>Name: {user.fullName}</p>
-            <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
-            <p>Email: {user.email || "Not provided"}</p>
-            <p>Address: {user.address}</p>
-          </div>
-          <Button type="primary" onClick={showModal}>
-            Edit Address
-          </Button>
-        </Col>
-        <Col span={12}>
-          <h2>Order Summary</h2>
-          <Table
-            columns={columns}
-            dataSource={cart.orderLines}
-            pagination={false}
-            rowKey={(record) => record.fishId}
-            summary={() => (
-              <Table.Summary>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell index={0} colSpan={3}>
-                    <strong style={{ float: "right" }}>Total Price:</strong>
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={1}>
-                    <strong>
-                      {calculateTotalPrice().toLocaleString()} VND
-                    </strong>
-                  </Table.Summary.Cell>
-                </Table.Summary.Row>
-              </Table.Summary>
-            )}
-          />
-          <div style={{ marginTop: "20px", textAlign: "right" }}>
-            <Radio.Group
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              value={paymentMethod}
-              style={{ marginRight: "20px" }}
-            >
-              <Radio value="VnPay">VnPay</Radio>
-              <Radio value="bankTransfer" disabled>
-                Bank Transfer
-              </Radio>
-            </Radio.Group>
-            <Button type="primary" onClick={handlePlaceOrder}>
-              Place Order
+          <div
+            style={{
+              background: "#fff",
+              padding: "50px",
+              borderRadius: "10px",
+              marginBottom: "24px",
+              border: "1px solid",
+              fontSize: "16px",
+            }}
+          >
+            <h2>Billing Information</h2>
+            <div>
+              <p>
+                <strong>Name:</strong> {user.fullName}
+              </p>
+              <p>
+                <strong>Phone Number:</strong>{" "}
+                {user.phoneNumber || "Not provided"}
+              </p>
+              <p>
+                <strong>Address:</strong> {user.address}
+              </p>
+            </div>
+            <Button type="primary" onClick={showModal}>
+              Edit Address
             </Button>
           </div>
         </Col>
+        <Col span={12}>
+          <div
+            style={{
+              background: "#fff",
+              padding: "24px",
+              borderRadius: "10px",
+              border: "1px solid",
+            }}
+          >
+            <h2>Order Summary</h2>
+            <Table
+              columns={columns}
+              dataSource={cart.orderLines}
+              pagination={false}
+              rowKey={(record) => record.fishId}
+              summary={() => (
+                <Table.Summary>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} colSpan={3}>
+                      <strong style={{ float: "right" }}>Total Price:</strong>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>
+                      <strong>
+                        {calculateTotalPrice().toLocaleString()} VND
+                      </strong>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </Table.Summary>
+              )}
+            />
+            <div style={{ marginTop: "20px", textAlign: "right" }}>
+              <Radio.Group
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                value={paymentMethod}
+                style={{ marginRight: "20px" }}
+              >
+                <Radio value="VnPay">VnPay</Radio>
+                <Radio value="bankTransfer" disabled>
+                  Bank Transfer
+                </Radio>
+              </Radio.Group>
+              <Button type="primary" size="large" onClick={processVnPayPayment}>
+                Place Order
+              </Button>
+            </div>
+          </div>
+        </Col>
       </Row>
+
       <Modal
         title="Edit Address"
         visible={isModalVisible}
