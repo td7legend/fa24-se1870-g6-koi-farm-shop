@@ -15,80 +15,13 @@ import {
 } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import axios from "axios";
-import BreadcrumbItem from "antd/es/breadcrumb/BreadcrumbItem";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
 
-// Demo data
-const demoOrders = [
-  {
-    orderId: 1001,
-    status: 0,
-    totalAmount: 1350000,
-    totalTax: 135000,
-    totalDiscount: 0,
-    customerId: 1,
-    orderLines: [
-      {
-        fishId: 1,
-        fishName: "Koi Carp",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 2,
-        unitPrice: 500000,
-        totalPrice: 1000000,
-      },
-      {
-        fishId: 2,
-        fishName: "Goldfish",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 1,
-        unitPrice: 350000,
-        totalPrice: 350000,
-      },
-    ],
-  },
-  {
-    orderId: 1002,
-    status: 2,
-    totalAmount: 2800000,
-    totalTax: 280000,
-    totalDiscount: 100000,
-    customerId: 2,
-    orderLines: [
-      {
-        fishId: 3,
-        fishName: "Arowana",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 1,
-        unitPrice: 2800000,
-        totalPrice: 2800000,
-      },
-    ],
-  },
-  {
-    orderId: 1003,
-    status: 3,
-    totalAmount: 750000,
-    totalTax: 75000,
-    totalDiscount: 50000,
-    customerId: 1,
-    orderLines: [
-      {
-        fishId: 4,
-        fishName: "Guppy",
-        imageUrl:
-          "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-        quantity: 5,
-        unitPrice: 150000,
-        totalPrice: 750000,
-      },
-    ],
-  },
-];
+const config = {
+  API_ROOT: "https://localhost:44366/api",
+};
 
 const OrderDetailsPage = () => {
   const location = useLocation();
@@ -106,20 +39,26 @@ const OrderDetailsPage = () => {
           navigate("/order-history");
           return;
         }
-        // Simulating API call
-        // const response = await axios.get(`YOUR_API_ENDPOINT_HERE/${orderId}`);
-        // setOrder(response.data);
 
-        const demoOrder = demoOrders.find((o) => o.orderId === orderId);
-        if (demoOrder) {
-          setOrder(demoOrder);
-        } else {
-          message.error("Order not found");
-          navigate("/order-history");
+        const token = localStorage.getItem("token");
+        if (!token) {
+          message.error("No authentication token found. Please log in.");
+          navigate("/login");
+          return;
         }
+
+        const response = await axios.get(
+          `${config.API_ROOT}/orders/${orderId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setOrder(response.data);
       } catch (error) {
         console.error("Error fetching order details:", error);
         message.error("Failed to fetch order details");
+        navigate("/order-history");
       } finally {
         setLoading(false);
       }
@@ -131,26 +70,21 @@ const OrderDetailsPage = () => {
   if (loading) return <Spin size="large" />;
   if (!order) return null;
 
-  const totalPrice = order.orderLines.reduce(
-    (sum, line) => sum + line.totalPrice,
-    0
-  );
-
   const columns = [
     {
       title: "PRODUCT",
       dataIndex: "fishName",
       key: "product",
-      render: (_, record) => (
+      render: (fishName, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <Image
-            src={record.imageUrl}
-            alt={record.fishName}
+            src={record.imageUrl || "/api/placeholder/80/80"}
+            alt={fishName || "Fish"}
             width={80}
             height={80}
             style={{ marginRight: 16 }}
           />
-          {record.fishName}
+          {fishName || "Unknown Fish"}
         </div>
       ),
     },
@@ -193,8 +127,8 @@ const OrderDetailsPage = () => {
           Back to List
         </Button>
         <Title level={3}>
-          Order Details • {new Date(order.orderId * 1000).toLocaleDateString()}{" "}
-          • {order.orderLines.length} Products
+          Order Details • {new Date(order.orderDate).toLocaleDateString()} •{" "}
+          {order.orderLines.length} Products
         </Title>
 
         <Row gutter={24}>
@@ -226,7 +160,7 @@ const OrderDetailsPage = () => {
                 </Col>
                 <Col span={12}>
                   <Text>
-                    {totalPrice.toLocaleString("vi-VN", {
+                    {order.totalAmount.toLocaleString("vi-VN", {
                       style: "currency",
                       currency: "VND",
                     })}
