@@ -11,6 +11,7 @@ import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
 import LoginSuccess from "./pages/Login/LoginSuccess";
 import ErrorPage from "./components/error";
+import { useEffect } from "react";
 import Contact from "./pages/contact";
 import AboutUs from "./pages/about-us";
 import FAQsPage from "./pages/faqs";
@@ -63,6 +64,10 @@ function App() {
       element: <ForgotPassword />,
     },
   ]);
+  useEffect(() => {
+    // Đảm bảo sự kiện lắng nghe chỉ được thêm một lần khi component mount
+    return () => window.removeEventListener("message", () => {});
+  }, []);
 
   return <RouterProvider router={router} />;
 }

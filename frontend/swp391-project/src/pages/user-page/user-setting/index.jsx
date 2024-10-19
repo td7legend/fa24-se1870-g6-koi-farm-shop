@@ -5,7 +5,7 @@ import uploadFile from "../../../utils/upload/upload";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.scss";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -15,6 +15,9 @@ import {
   faCog,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../../store/actions/authActions";
+import { Modal } from "antd"; // Import Modal từ Ant Design
 
 const DEFAULT_AVATAR =
   "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg";
@@ -32,13 +35,15 @@ const UserSetting = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [accountForm, setAccountForm] = useState({});
   const [addressForm, setAddressForm] = useState({});
   const [passwordForm, setPasswordForm] = useState({});
   const [fileList, setFileList] = useState([]);
   const [previewImage, setPreviewImage] = useState("");
-
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -139,6 +144,15 @@ const UserSetting = () => {
       toast.error(`Failed to update Password: ${error.message}`);
     }
   };
+  const confirmLogout = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setShowConfirmation(false); // Đóng hộp thoại xác nhận
+    navigate("/login"); // Điều hướng đến trang đăng nhập
+  };
 
   // if (loading) {
   //   return <div className="loading-spinner">Loading...</div>;
@@ -182,7 +196,8 @@ const UserSetting = () => {
             <li className="active">
               <FontAwesomeIcon icon={faCog} /> Setting
             </li>
-            <li onClick={() => navigate("/logout")}>
+
+            <li onClick={confirmLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout
             </li>
           </ul>
@@ -408,6 +423,35 @@ const UserSetting = () => {
         </main>
       </div>
       <ToastContainer />
+
+      {/* Modal xác nhận đăng xuất */}
+      <Modal
+        title="Confirm Logout?"
+        visible={showConfirmation}
+        onOk={handleLogout}
+        onCancel={() => setShowConfirmation(false)}
+        okText="Log out"
+        cancelText="Cancel"
+        footer={[
+          <Button
+            key="back"
+            onClick={() => setShowConfirmation(false)}
+            style={{ backgroundColor: "red#C0C0C0", color: "black" }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleLogout}
+            style={{ backgroundColor: "#bbab6f", color: "white" }}
+          >
+            Confirm
+          </Button>,
+        ]}
+      >
+        <p>Are you sure you want to logout?</p>
+      </Modal>
     </div>
   );
 };

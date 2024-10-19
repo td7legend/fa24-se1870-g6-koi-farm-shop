@@ -43,3 +43,6 @@ export const login = (token) => async (dispatch) => {
     });
   }
 };
+export const logout = () => ({
+  type: actionTypes.LOGOUT,
+});

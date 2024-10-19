@@ -1,7 +1,7 @@
 import emailjs from "@emailjs/browser";
 export const initEmailJS = () => {
   emailjs.init({
-    publicKey: "b5nNZsxlo2zNKVzi_",
+    publicKey: "6qSihg-gFvCTpw5Be",
     blockHeadless: true,
     blockList: {
       list: ["foo@emailjs.com", "bar@emailjs.com"],
