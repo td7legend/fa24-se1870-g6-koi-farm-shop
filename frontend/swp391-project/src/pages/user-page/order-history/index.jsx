@@ -2,17 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Table, Typography, Space, message, Breadcrumb, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 const { Title } = Typography;
 
 const config = {
   API_ROOT: "https://localhost:44366/api",
-};
-
-const OrderStatus = {
-  Paid: 1,
-  Cancelled: 2,
-  Shipping: 3,
-  Completed: 4,
 };
 
 const OrderHistoryPage = () => {
@@ -21,15 +15,17 @@ const OrderHistoryPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData();
+    fetchOrders();
   }, []);
 
-  const fetchData = async () => {
+  const fetchOrders = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) {
         message.error("No authentication token found. Please log in.");
+        // Optionally, redirect to login page
+        // navigate('/login');
         return;
       }
 
@@ -40,43 +36,33 @@ const OrderHistoryPage = () => {
         }
       );
 
-      const allOrders = response.data;
-      const filteredOrders = allOrders.filter(
-        (order) => order.status !== OrderStatus.InCart
-      );
-      const processedOrders = filteredOrders.map((order) => ({
+      const processedOrders = response.data.map((order) => ({
         ...order,
         key: order.orderId,
-        totalPrice: order.totalAmount,
-        orderLines: order.orderLines || [],
       }));
+
+      console.log("Processed orders:", processedOrders); // For debugging
 
       setOrders(processedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
-      if (error.response && error.response.status === 401) {
-        message.error("Unauthorized access. Please log in again.");
-      } else {
-        message.error("Failed to fetch orders. Please try again.");
-      }
+      message.error("Failed to fetch orders. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const getStatusTag = (status) => {
-    const statusConfig = {
-      [OrderStatus.Paid]: { color: "green", text: "Paid" },
-      [OrderStatus.Cancelled]: { color: "red", text: "Cancelled" },
-      [OrderStatus.Shipping]: { color: "blue", text: "Shipping" },
-      [OrderStatus.Completed]: { color: "purple", text: "Completed" },
-    };
-
-    const { color, text } = statusConfig[status] || {
-      color: "default",
-      text: "Unknown",
-    };
-    return <Tag color={color}>{text}</Tag>;
+    switch (status) {
+      case 1:
+        return <Tag color="green">Paid</Tag>;
+      case 2:
+        return <Tag color="blue">Shipping</Tag>;
+      case 3:
+        return <Tag color="purple">Completed</Tag>;
+      default:
+        return <Tag color="default">Unknown</Tag>;
+    }
   };
 
   const columns = [
@@ -93,7 +79,7 @@ const OrderHistoryPage = () => {
     },
     {
       title: "TOTAL",
-      dataIndex: "totalPrice",
+      dataIndex: "totalAmount",
       key: "total",
       render: (total, record) =>
         `${(total || 0).toLocaleString("vi-VN", {
