@@ -1,0 +1,14 @@
+.success-container {
+  .card {
+    background-color: #fffaf0;
+    .button {
+      color: #bbab6f;
+      border-color: #bbab6f;
+      &:hover {
+        background-color: #ddd;
+        border-color: #bbab6f;
+        color: #bbab6f;
+      }
+    }
+  }
+}

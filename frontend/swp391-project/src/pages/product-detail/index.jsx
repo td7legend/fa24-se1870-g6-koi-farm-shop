@@ -18,6 +18,8 @@ import {
 import "./index.scss";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 const { Text } = Typography;
 
@@ -144,8 +146,13 @@ function ProductDetail() {
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
-            <Breadcrumb className="breadcrumb">
-              <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+            <Breadcrumb className="breadcrumb" separator=">">
+              <Breadcrumb.Item href="/">
+                <FontAwesomeIcon
+                  icon={faHome}
+                  className="icon"
+                ></FontAwesomeIcon>
+              </Breadcrumb.Item>
               <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
               <Breadcrumb.Item>
                 <Link to={`/breed/${product.breed}`}>{product.breed}</Link>

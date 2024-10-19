@@ -9,7 +9,11 @@ import {
   message,
   Spin,
 } from "antd";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
+import "./index.scss";
+import { toast } from "react-toastify";
 
 const config = {
   API_ROOT: "https://localhost:44366/api",
@@ -33,7 +37,7 @@ const Cart = () => {
     try {
       const token = getAuthToken();
       if (!token) {
-        message.error("No authentication token found. Please log in.");
+        toast.error("No authentication token found. Please log in.");
         return;
       }
 
@@ -51,7 +55,7 @@ const Cart = () => {
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
-      // message.error("Failed to fetch cart data. Please try again later.");
+      // toast.error("Failed to fetch cart data. Please try again later.");
     }
   };
 
@@ -61,9 +65,7 @@ const Cart = () => {
       setFishes(response.data);
     } catch (error) {
       console.error("Error fetching fishes:", error);
-      message.error(
-        "Failed to fetch fish data. Some prices may be unavailable."
-      );
+      toast.error("Failed to fetch fish data. Some prices may be unavailable.");
     } finally {
       setLoading(false);
     }
@@ -86,7 +88,7 @@ const Cart = () => {
     try {
       const token = getAuthToken();
       if (!token) {
-        message.error("No authentication token found. Please log in.");
+        toast.error("No authentication token found. Please log in.");
         return;
       }
 
@@ -101,12 +103,12 @@ const Cart = () => {
       );
 
       fetchCart(); // Refresh cart after update
-      message.success(
+      toast.success(
         isRemove ? "Fish removed from cart" : "Cart updated successfully"
       );
     } catch (error) {
       console.error("Error updating cart:", error);
-      message.error("Failed to update cart. Please try again.");
+      toast.error("Failed to update cart. Please try again.");
     }
   };
 
@@ -144,12 +146,18 @@ const Cart = () => {
       title: "Quantity",
       key: "quantity",
       render: (_, record) => (
-        <div>
-          <Button onClick={() => handleDecreaseQuantity(record.fishId)}>
+        <div className="quantity-input">
+          <Button
+            className="button"
+            onClick={() => handleDecreaseQuantity(record.fishId)}
+          >
             -
           </Button>
           <span style={{ margin: "0 10px" }}>{record.quantity}</span>
-          <Button onClick={() => handleIncreaseQuantity(record.fishId)}>
+          <Button
+            className="button"
+            onClick={() => handleIncreaseQuantity(record.fishId)}
+          >
             +
           </Button>
         </div>
@@ -167,7 +175,12 @@ const Cart = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button onClick={() => handleRemoveItem(record.fishId)}>Remove</Button>
+        <Button
+          className="button"
+          onClick={() => handleRemoveItem(record.fishId)}
+        >
+          Remove
+        </Button>
       ),
     },
   ];
@@ -180,56 +193,65 @@ const Cart = () => {
     <>
       <Col span={24}>
         <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+          <Breadcrumb className="breadcrumb" separator=">">
+            <Breadcrumb.Item href="/">
+              <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+            </Breadcrumb.Item>
             <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
             <Breadcrumb.Item>Cart</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
-      <Card
-        title="Cart"
-        style={{
-          width: "100%",
-          maxWidth: 800,
-          margin: "20px auto",
-          padding: "20px",
-        }}
-      >
-        {cart && cart.orderLines && cart.orderLines.length > 0 ? (
-          <>
-            <Table
-              dataSource={cart.orderLines}
-              columns={columns}
-              pagination={false}
-            />
-            <div
-              style={{ textAlign: "right", margin: "5px 0", padding: "5px" }}
-            >
-              <p style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
-                Total Price: {calculateTotalPrice().toLocaleString()} VND
-              </p>
-              <Button
-                size="large"
-                onClick={() => (window.location.href = "/products")}
-                style={{ marginRight: 10 }}
+      <div className="cart-container">
+        <Card
+          className="card"
+          title="Cart"
+          style={{
+            width: "100%",
+            maxWidth: 800,
+            margin: "20px auto",
+            padding: "20px",
+          }}
+        >
+          {cart && cart.orderLines && cart.orderLines.length > 0 ? (
+            <>
+              <Table
+                className="table"
+                dataSource={cart.orderLines}
+                columns={columns}
+                pagination={false}
+              />
+              <div
+                style={{ textAlign: "right", margin: "5px 0", padding: "5px" }}
               >
-                Back to Shop
-              </Button>
-              <Button
-                href="/checkout"
-                type="primary"
-                size="large"
-                style={{ width: 200 }}
-              >
-                Checkout
-              </Button>
-            </div>
-          </>
-        ) : (
-          <p>Your cart is empty.</p>
-        )}
-      </Card>
+                <p
+                  style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}
+                >
+                  Total Price: {calculateTotalPrice().toLocaleString()} VND
+                </p>
+                <Button
+                  className="button"
+                  size="large"
+                  onClick={() => (window.location.href = "/products")}
+                  style={{ marginRight: 10 }}
+                >
+                  Back to Shop
+                </Button>
+                <Button
+                  className="button"
+                  href="/checkout"
+                  size="large"
+                  style={{ width: 200 }}
+                >
+                  Checkout
+                </Button>
+              </div>
+            </>
+          ) : (
+            <p>Your cart is empty.</p>
+          )}
+        </Card>
+      </div>
     </>
   );
 };

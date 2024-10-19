@@ -1,265 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
-  Form,
-  Input,
-  Button,
-  Modal,
-  message,
-  Avatar,
-  Upload,
   Card,
   Typography,
-  Space,
   Spin,
   Table,
   Breadcrumb,
+  Avatar,
+  Row,
+  Col,
+  message,
+  Button,
+  Modal,
 } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import {
-  PlusOutlined,
-  EditOutlined,
-  SaveOutlined,
-  CloseOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+  faHome,
+  faClipboardList,
+  faTag,
+  faShoppingCart,
+  faCog,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import uploadFile from "../../../utils/upload/upload";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../store/actions/authActions";
+import { toast, ToastContainer } from "react-toastify";
+import "./index.scss";
+const config = {
+  API_ROOT: "https://localhost:44366/api",
+};
 
 const { Title, Text } = Typography;
 const DEFAULT_AVATAR =
   "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg";
 
 const UserDashboard = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm();
-  const [editingField, setEditingField] = useState(null);
-  const [inputValue, setInputValue] = useState("");
-  const [isModified, setIsModified] = useState(false);
-  const [fileList, setFileList] = useState([]);
-  const [previewImage, setPreviewImage] = useState("");
-  const [isModifiedImage, setIsModifiedImage] = useState(false);
   const [orderHistory, setOrderHistory] = useState([]);
-
+  const [showConfirmation, setShowConfirmation] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `https://66ffa8eb4da5bd2375516c72.mockapi.io/User_Information?userID=${id}`
-        );
-        if (response.data.length > 0) {
-          const userInfo = response.data[0];
-          setUser(userInfo);
-          form.setFieldsValue(userInfo);
-          setPreviewImage(userInfo.avatar_path || DEFAULT_AVATAR);
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("No authentication token found. Please log in.");
+        navigate("/login");
+        return;
+      }
 
-          setOrderHistory([
-            {
-              orderId: 1001,
-              status: 1,
-              totalAmount: 1350000,
-              totalTax: 135000,
-              totalDiscount: 0,
-              customerId: 1,
-              orderLines: [
-                {
-                  fishId: 1,
-                  fishName: "Koi Carp",
-                  imageUrl:
-                    "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-                  quantity: 2,
-                  unitPrice: 500000,
-                  totalPrice: 1000000,
-                },
-                {
-                  fishId: 2,
-                  fishName: "Goldfish",
-                  imageUrl:
-                    "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-                  quantity: 1,
-                  unitPrice: 350000,
-                  totalPrice: 350000,
-                },
-              ],
-            },
-            {
-              orderId: 1002,
-              status: 2,
-              totalAmount: 2800000,
-              totalTax: 280000,
-              totalDiscount: 100000,
-              customerId: 2,
-              orderLines: [
-                {
-                  fishId: 3,
-                  fishName: "Arowana",
-                  imageUrl:
-                    "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-                  quantity: 1,
-                  unitPrice: 2800000,
-                  totalPrice: 2800000,
-                },
-              ],
-            },
-            {
-              orderId: 1003,
-              status: 3,
-              totalAmount: 750000,
-              totalTax: 75000,
-              totalDiscount: 50000,
-              customerId: 1,
-              orderLines: [
-                {
-                  fishId: 4,
-                  fishName: "Guppy",
-                  imageUrl:
-                    "https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2013/07/page/Yamatonishiki_03.18.2024-scaled.jpg",
-                  quantity: 5,
-                  unitPrice: 150000,
-                  totalPrice: 750000,
-                },
-              ],
-            },
-          ]);
-        }
+      try {
+        const userResponse = await axios.get(
+          `${config.API_ROOT}/customers/my-info`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setUser(userResponse.data);
+
+        const ordersResponse = await axios.get(
+          `${config.API_ROOT}/orders/order-history`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const sortedOrders = ordersResponse.data
+          .sort((a, b) => b.orderId - a.orderId)
+          .slice(0, 5);
+        setOrderHistory(sortedOrders);
       } catch (error) {
-        message.error("Error fetching user data");
+        toast.error("Error fetching data:", error);
+        if (error.response && error.response.status === 401) {
+          toast.error("Authentication failed. Please log in again.");
+          navigate("/login");
+        } else {
+          toast.error(
+            "An error occurred while fetching data. Please try again later."
+          );
+        }
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
-  }, [id, form]);
+  }, [navigate]);
 
-  const handleEditClick = (field) => {
-    setEditingField(field);
-    setInputValue(user[field] || "");
-  };
-
-  const isValidEmail = (email) => {
-    const re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const isValidPhoneNumber = (phone) => {
-    return /^\d{10}$/.test(phone);
-  };
-
-  const handleSaveClick = (field) => {
-    if (inputValue.trim() === "") {
-      message.error("Please enter a value before saving.");
-      return;
-    }
-
-    if (field === "email" && !isValidEmail(inputValue)) {
-      message.error("Please enter a valid email address.");
-      return;
-    }
-
-    if (field === "phone" && !isValidPhoneNumber(inputValue)) {
-      message.error("Please enter a valid 10-digit phone number.");
-      return;
-    }
-
-    setUser({ ...user, [field]: inputValue });
-    setEditingField(null);
-    setIsModified(true);
-  };
-
-  const handleCancelClick = () => {
-    setEditingField(null);
-    setInputValue("");
-  };
-
-  const handleAvatarChange = async ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-    if (newFileList.length > 0) {
-      const file = newFileList[0].originFileObj;
-      const preview = await getBase64(file);
-      setPreviewImage(preview);
-      setIsModifiedImage(true);
-    } else {
-      setPreviewImage(user.avatar_path || DEFAULT_AVATAR);
-      setIsModifiedImage(false);
-    }
-  };
-
-  const onFinish = async () => {
-    Modal.confirm({
-      title: "Confirm Changes",
-      content: "Are you sure you want to save these changes?",
-      onOk: async () => {
-        try {
-          setLoading(true);
-          if (isModifiedImage && fileList.length > 0) {
-            const file = fileList[0].originFileObj;
-            const url = await uploadFile(file);
-            user.avatar_path = url;
-          }
-          await axios.put(
-            `https://66ffa8eb4da5bd2375516c72.mockapi.io/User_Information/${user.id}`,
-            user
-          );
-          message.success("User information updated successfully!");
-          setIsModified(false);
-          setIsModifiedImage(false);
-          setPreviewImage(user.avatar_path || DEFAULT_AVATAR);
-        } catch (error) {
-          message.error("Failed to update user information");
-        } finally {
-          setLoading(false);
-        }
-      },
-    });
-  };
-
-  const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-
-  const renderField = (label, field, editable = true) => (
-    <Form.Item label={<Text strong>{label}</Text>} style={{ marginBottom: 24 }}>
-      {editingField === field ? (
-        <Space.Compact style={{ width: "100%" }}>
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            style={{ width: "calc(100% - 96px)" }}
-          />
-          <Button
-            icon={<SaveOutlined />}
-            onClick={() => handleSaveClick(field)}
-            type="primary"
-          >
-            Save
-          </Button>
-          <Button icon={<CloseOutlined />} onClick={handleCancelClick}>
-            Cancel
-          </Button>
-        </Space.Compact>
-      ) : (
-        <Space>
-          <Text>{user[field]}</Text>
-          {editable && (
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => handleEditClick(field)}
-              type="link"
-            >
-              Edit
-            </Button>
-          )}
-        </Space>
-      )}
-    </Form.Item>
+  const renderUserInfo = (label, value) => (
+    <Row style={{ marginBottom: 16 }}>
+      <Col span={8}>
+        <Text strong>{label}:</Text>
+      </Col>
+      <Col span={16}>
+        <Text>{value}</Text>
+      </Col>
+    </Row>
   );
 
   const columns = [
@@ -269,23 +108,26 @@ const UserDashboard = () => {
       key: "orderId",
       render: (orderId) => `#${orderId}`,
     },
-    { title: "DATE", dataIndex: "date", key: "date" },
+    {
+      title: "DATE",
+      dataIndex: "orderDate",
+      key: "date",
+      render: (date) => new Date(date).toLocaleDateString(),
+    },
     {
       title: "TOTAL",
       dataIndex: "totalAmount",
       key: "total",
-      render: (total, record) =>
-        `${total.toLocaleString("vi-VN", {
+      render: (total) =>
+        total.toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
-        })} (${record.orderLines.length} Products)`,
+        }),
     },
     {
       title: "STATUS",
       dataIndex: "status",
       key: "status",
-      render: (status) =>
-        ["Processing", "Shipping", "Completed"][status - 1] || "Unknown",
     },
     {
       title: "ACTION",
@@ -303,60 +145,83 @@ const UserDashboard = () => {
     },
   ];
 
-  if (loading) {
-    return <Spin size="large" />;
-  }
+  const confirmLogout = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setShowConfirmation(false); // Đóng hộp thoại xác nhận
+    navigate("/"); // Điều hướng đến trang đăng nhập
+  };
 
   return (
-    <div>
+    <div className="user-dashboard-container">
       <div className="breadcrumb-container">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item>User Dashboard</Breadcrumb.Item>
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon
+              icon={faHome}
+              style={{
+                marginRight: "8px",
+                verticalAlign: "middle",
+                marginBottom: "5px",
+              }}
+            />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Account</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            User Dashboard
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+
+      <div className="layout-container">
+        <aside className="settings-sider">
+          <h4>Navigation</h4>
+          <ul className="settings-menu">
+            <li className="active">
+              <FontAwesomeIcon icon={faHome} /> Dashboard
+            </li>
+            <li onClick={() => navigate("/order-history")}>
+              <FontAwesomeIcon icon={faClipboardList} /> Order History
+            </li>
+            <li onClick={() => navigate("/promotion")}>
+              <FontAwesomeIcon icon={faTag} /> Promotion
+            </li>
+            <li onClick={() => navigate("/cart")}>
+              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+            </li>
+            <li onClick={() => navigate("/user-setting/:id")}>
+              <FontAwesomeIcon icon={faCog} /> Setting
+            </li>
+
+            <li onClick={confirmLogout}>
+              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+            </li>
+          </ul>
+        </aside>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}></div>
         <Card style={{ marginBottom: 24 }}>
-          <Form form={form} layout="vertical" onFinish={onFinish}>
-            <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
-              User Profile
-            </Title>
+          <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
+            User Profile
+          </Title>
 
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <Avatar
-                src={previewImage || DEFAULT_AVATAR}
-                size={128}
-                icon={<UserOutlined />}
-              />
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                beforeUpload={() => false}
-                onChange={handleAvatarChange}
-              >
-                <Button icon={<PlusOutlined />} size="small" shape="circle" />
-              </Upload>
-            </div>
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <Avatar
+              src={user.avatar_path || DEFAULT_AVATAR}
+              size={128}
+              icon={<UserOutlined />}
+            />
+          </div>
 
-            {renderField("Full Name", "fullName")}
-            {renderField("Address", "address")}
-            {renderField("Email", "email")}
-            {renderField("Phone", "phone")}
-            {renderField("Total Points", "totalPoints", false)}
-            {renderField("Points Available", "pointAvailable", false)}
-            {renderField("Points Used", "pointUsed", false)}
-
-            <Form.Item style={{ marginTop: 24 }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                disabled={!(isModified || isModifiedImage)}
-                block
-              >
-                Save Changes
-              </Button>
-            </Form.Item>
-          </Form>
+          {renderUserInfo("Full Name", user.fullName)}
+          {renderUserInfo("Address", user.address)}
+          {renderUserInfo("Email", user.email)}
+          {renderUserInfo("Phone", user.phoneNumber)}
+          {renderUserInfo("Total Points", user.tier)}
+          {renderUserInfo("Points Available", user.pointAvailable)}
+          {renderUserInfo("Points Used", user.usedPoint)}
         </Card>
 
         <Card>
@@ -374,6 +239,36 @@ const UserDashboard = () => {
           </div>
         </Card>
       </div>
+      <ToastContainer />
+
+      {/* Modal xác nhận đăng xuất */}
+      <Modal
+        title="Confirm Logout?"
+        visible={showConfirmation}
+        onOk={handleLogout}
+        onCancel={() => setShowConfirmation(false)}
+        okText="Log out"
+        cancelText="Cancel"
+        footer={[
+          <Button
+            key="back"
+            onClick={() => setShowConfirmation(false)}
+            style={{ backgroundColor: "red#C0C0C0", color: "black" }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleLogout}
+            style={{ backgroundColor: "#bbab6f", color: "white" }}
+          >
+            Confirm
+          </Button>,
+        ]}
+      >
+        <p>Are you sure you want to logout?</p>
+      </Modal>
     </div>
   );
 };

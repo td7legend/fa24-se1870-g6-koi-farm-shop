@@ -32,6 +32,8 @@ public class OrderService : IOrderService
             OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
             {
                 FishId = ol.FishId,
+                FishName = ol.FishName,
+                ImageUrl = ol.ImageUrl,
                 Quantity = ol.Quantity,
                 UnitPrice = ol.UnitPrice,
                 TotalPrice = ol.TotalPrice

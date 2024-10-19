@@ -5,6 +5,8 @@ import "./index.scss"; // Import CSS để điều chỉnh layout
 import { Link } from "react-router-dom";
 import { Breadcrumb, Col } from "antd";
 import ImageFrame from "../../components/home/ImageFrame";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 const AllFishPage = () => {
   const [allFish, setAllFish] = useState([]);
@@ -62,8 +64,10 @@ const AllFishPage = () => {
     <div>
       <Col span={24}>
         <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+          <Breadcrumb className="breadcrumb" separator=">">
+            <Breadcrumb.Item href="/">
+              <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+            </Breadcrumb.Item>
             <Breadcrumb.Item>Product List</Breadcrumb.Item>
           </Breadcrumb>
         </div>
