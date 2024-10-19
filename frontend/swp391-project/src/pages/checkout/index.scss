@@ -8,6 +8,23 @@
     justify-content: space-around;
     flex-wrap: wrap;
     font-family: "Lora";
+    .button {
+      color: #bbab6f;
+      border-color: #bbab6f;
+      &:hover {
+        background-color: #ddd;
+        border-color: #bbab6f;
+        color: #bbab6f;
+      }
+    }
+
+    p {
+      word-wrap: break-word; // Đảm bảo nội dung sẽ ngắt dòng khi không đủ chỗ.
+      overflow-wrap: break-word; // Tương tự như wordWrap, nó xử lý các từ dài không có dấu cách và buộc chúng phải xuống dòng.
+      word-break: break-word; // hoặc break-all nếu vẫn chưa ngắt dòng
+      white-space: normal; //Giúp văn bản tự động xuống dòng.
+    }
+
     p,
     h2 {
       font-family: serif;
@@ -44,20 +61,12 @@
 
       .ant-radio-group {
         margin-right: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: end;
         .ant-radio-button-wrapper {
           border-radius: 4px;
           padding: 10px;
-        }
-      }
-
-      .ant-btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        padding: 10px 30px;
-        font-size: 16px;
-        &:hover {
-          background-color: #0056b3;
-          border-color: #0056b3;
         }
       }
     }
@@ -74,15 +83,6 @@
         font-size: 16px;
         margin-bottom: 10px;
         color: #555;
-      }
-
-      .ant-btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        &:hover {
-          background-color: #0056b3;
-          border-color: #0056b3;
-        }
       }
     }
   }

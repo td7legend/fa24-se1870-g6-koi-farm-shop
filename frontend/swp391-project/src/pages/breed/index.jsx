@@ -15,6 +15,8 @@ import {
 } from "antd";
 import Search from "antd/es/transfer/search";
 import "./index.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 const BreedFishPage = () => {
   const { breedName } = useParams(); // Lấy breed từ URL
   const [breedFish, setBreedFish] = useState([]);
@@ -139,8 +141,10 @@ const BreedFishPage = () => {
     <div className="breed-page-container">
       <Col span={24}>
         <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+          <Breadcrumb className="breadcrumb" separator=">">
+            <Breadcrumb.Item href="/">
+              <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+            </Breadcrumb.Item>
             <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
             <Breadcrumb.Item>{breedName}</Breadcrumb.Item>
           </Breadcrumb>
