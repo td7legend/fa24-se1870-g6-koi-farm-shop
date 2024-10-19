@@ -140,9 +140,9 @@ const UserSetting = () => {
     }
   };
 
-  if (loading) {
-    return <div className="loading-spinner">Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div className="loading-spinner">Loading...</div>;
+  // }
 
   return (
     <div className="user-settings-layout">
