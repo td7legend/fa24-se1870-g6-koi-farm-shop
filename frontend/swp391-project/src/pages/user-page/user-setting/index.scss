@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap");
+
+.user-settings-layout {
+  background-color: #fffaf0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .breadcrumb-container {
+    .breadcrumb-page {
+      color: #bbab6f;
+    }
+  }
+  .layout-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+  }
+
+  .settings-sider {
+    width: 250px;
+    background-color: #fffaf0;
+    padding: 15px;
+    border: 1px solid #000;
+    border-radius: 10px;
+    height: auto;
+
+    h4 {
+      font-family: "Lora", serif;
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .settings-menu {
+      list-style: none;
+      padding: 0;
+
+      li {
+        display: flex;
+        align-items: center; /* Căn giữa theo chiều dọc */
+        justify-content: flex-start; /* Căn trái */
+        padding: 12px;
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        color: #333;
+        background-color: #fffaf0;
+        border-radius: 8px;
+        border: none;
+        gap: 10px; /* Khoảng cách giữa icon và văn bản */
+        height: 50px; /* Đặt chiều cao đồng đều cho tất cả li */
+        line-height: 50px; /* Đặt line-height bằng chiều cao của li */
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &.active {
+          background-color: #bbab6f;
+          color: white;
+        }
+      }
+
+      i {
+        color: #9b8e5e;
+        font-size: 20px; /* Điều chỉnh kích thước icon nếu cần */
+        line-height: 1; /* Đảm bảo rằng icon không có khoảng cách thêm bên dưới */
+      }
+    }
+  }
+
+  .settings-content {
+    width: 100%;
+    max-width: 800px;
+    padding: 0 20px;
+
+    .settings-card {
+      background-color: #fffaf0;
+      border-radius: 10px;
+      border: 1px solid #000;
+      padding: 20px;
+      margin-bottom: 20px;
+
+      h4 {
+        font-family: "Lora", serif;
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #4c4c4c;
+        font-weight: 600;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+
+        .form-row {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .form-column {
+          flex: 1;
+
+          label {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 5px;
+          }
+
+          input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #000;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: #fffaf0;
+
+            &:focus {
+              outline: none;
+              border-color: #bbab6f;
+            }
+          }
+        }
+
+        button {
+          align-self: flex-start;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 20px;
+          background-color: #bbab6f;
+          color: white;
+          font-size: 14px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #9b8e5e;
+          }
+        }
+      }
+    }
+
+    .avatar-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 100px;
+
+      .avatar {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 2px solid #000;
+      }
+
+      .change-image-label {
+        margin-top: 10px;
+        padding: 12px 12px;
+        background-color: #fffaf0;
+        color: #bbab6f;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: 1px solid #bbab6f;
+        font-family: sans-serif;
+        font-size: 12px;
+        width: 140px;
+        text-align: center;
+      }
+
+      .change-image-label:hover {
+        background-color: #bbab6f;
+        color: white;
+      }
+
+      input[type="file"] {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.user-settings-layout,
+.user-settings-layout * {
+  font-family: sans-serif;
+}
+
+.user-settings-layout h4 {
+  font-family: "Lora", serif;
+}

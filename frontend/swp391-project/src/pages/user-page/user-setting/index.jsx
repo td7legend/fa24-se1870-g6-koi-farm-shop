@@ -1,28 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Form,
-  Input,
-  Button,
-  Avatar,
-  Upload,
-  Card,
-  Typography,
-  Spin,
-  Breadcrumb,
-  Layout,
-  Menu,
-  Row,
-  Col,
-} from "antd";
-import { PlusOutlined, UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import uploadFile from "../../../utils/upload/upload";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./index.scss";
+import { Breadcrumb } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHome,
+  faClipboardList,
+  faTag,
+  faShoppingCart,
+  faCog,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
-const { Title, Text } = Typography;
-const { Sider, Content } = Layout;
 const DEFAULT_AVATAR =
   "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg";
 
@@ -40,12 +33,9 @@ const UserSetting = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
-
-  // Sử dụng các Form riêng biệt cho từng phần
-  const [accountForm] = Form.useForm();
-  const [addressForm] = Form.useForm();
-  const [passwordForm] = Form.useForm();
-
+  const [accountForm, setAccountForm] = useState({});
+  const [addressForm, setAddressForm] = useState({});
+  const [passwordForm, setPasswordForm] = useState({});
   const [fileList, setFileList] = useState([]);
   const [previewImage, setPreviewImage] = useState("");
 
@@ -59,8 +49,8 @@ const UserSetting = () => {
         if (response.data.length > 0) {
           const userInfo = response.data[0];
           setUser(userInfo);
-          accountForm.setFieldsValue(userInfo);
-          addressForm.setFieldsValue(userInfo);
+          setAccountForm(userInfo);
+          setAddressForm(userInfo);
           setPreviewImage(userInfo.avatar_path || DEFAULT_AVATAR);
         }
       } catch (error) {
@@ -70,18 +60,14 @@ const UserSetting = () => {
       }
     };
     fetchData();
-  }, [id, accountForm, addressForm]);
+  }, [id]);
 
-  const handleAvatarChange = async ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-    if (newFileList.length > 0) {
-      const file = newFileList[0].originFileObj;
-      try {
-        const preview = await getBase64(file);
-        setPreviewImage(preview);
-      } catch (error) {
-        toast.error("Failed to preview avatar");
-      }
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files[0];
+    setFileList([file]);
+    if (file) {
+      const preview = await getBase64(file);
+      setPreviewImage(preview);
     } else {
       setPreviewImage(user.avatar_path || DEFAULT_AVATAR);
     }
@@ -89,7 +75,7 @@ const UserSetting = () => {
 
   const handleUploadAvatar = async () => {
     if (fileList.length === 0) return null;
-    const file = fileList[0].originFileObj;
+    const file = fileList[0];
     try {
       const url = await uploadFile(file);
       return url;
@@ -101,8 +87,6 @@ const UserSetting = () => {
 
   const saveAccountInfo = async () => {
     try {
-      const values = await accountForm.validateFields();
-
       let avatarUrl = user.avatar_path;
       if (fileList.length > 0) {
         avatarUrl = await handleUploadAvatar();
@@ -110,7 +94,7 @@ const UserSetting = () => {
 
       const updatedUser = {
         ...user,
-        ...values,
+        ...accountForm,
         avatar_path: avatarUrl,
       };
 
@@ -119,11 +103,9 @@ const UserSetting = () => {
         updatedUser
       );
 
-      // Cập nhật trạng thái user trong component mà không cần reload trang
       setUser(updatedUser);
       toast.success("Account Info updated successfully!");
 
-      // Sau khi cập nhật xong, xóa fileList
       setFileList([]);
     } catch (error) {
       toast.error(`Failed to update Account Info: ${error.message}`);
@@ -132,12 +114,9 @@ const UserSetting = () => {
 
   const saveAddressInfo = async () => {
     try {
-      const values = await addressForm.validateFields();
-      setLoading(true);
-
       const updatedUser = {
         ...user,
-        ...values,
+        ...addressForm,
       };
 
       await axios.put(
@@ -148,270 +127,288 @@ const UserSetting = () => {
       toast.success("Address Info updated successfully!");
     } catch (error) {
       toast.error(`Failed to update Address Info: ${error.message}`);
-    } finally {
-      setLoading(false);
     }
   };
 
   const savePasswordInfo = async () => {
     try {
-      const values = await passwordForm.validateFields();
-      setLoading(true);
-
-      // Thêm logic thay đổi mật khẩu tại backend
-
+      // Add password update API logic here
       toast.success("Password updated successfully!");
-      passwordForm.resetFields();
+      setPasswordForm({});
     } catch (error) {
       toast.error(`Failed to update Password: ${error.message}`);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const renderField = (
-    formInstance,
-    label,
-    field,
-    rules,
-    type = "text",
-    readOnly = false
-  ) => (
-    <Form.Item
-      form={formInstance}
-      label={<Text strong>{label}</Text>}
-      style={{ marginBottom: 24 }}
-      name={field}
-      rules={rules}
-      hasFeedback
-    >
-      {type === "password" ? (
-        <Input.Password readOnly={readOnly} />
-      ) : (
-        <Input readOnly={readOnly} />
-      )}
-    </Form.Item>
-  );
-
   if (loading) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "20%" }}>
-        <Spin size="large" />
-      </div>
-    );
+    return <div className="loading-spinner">Loading...</div>;
   }
 
   return (
-    <Layout>
-      <Sider width={200} className="site-layout-background">
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["setting"]}
-          style={{ height: "100%", borderRight: 0 }}
-        >
-          <Menu.Item key="dashboard" onClick={() => navigate("/dashboard")}>
-            Dashboard
-          </Menu.Item>
-          <Menu.Item
-            key="orderHistory"
-            onClick={() => navigate("/orderhistory")}
-          >
-            Order History
-          </Menu.Item>
-          <Menu.Item key="promotion" onClick={() => navigate("/promotion")}>
-            Promotion
-          </Menu.Item>
-          <Menu.Item
-            key="shoppingCart"
-            onClick={() => navigate("/shoppingcart")}
-          >
-            Shopping Cart
-          </Menu.Item>
-          <Menu.Item key="setting">Setting</Menu.Item>
-          <Menu.Item key="logout" onClick={() => navigate("/logout")}>
-            Logout
-          </Menu.Item>
-        </Menu>
-      </Sider>
+    <div className="user-settings-layout">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=" > ">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon
+              icon={faHome}
+              style={{
+                marginRight: "8px",
+                verticalAlign: "middle",
+                marginBottom: "5px",
+              }}
+            />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Account</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">Setting</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
 
-      <Layout style={{ padding: "0 24px 24px" }}>
-        <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item>Product List</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
+      <div className="layout-container">
+        <aside className="settings-sider">
+          <h4>Navigation</h4>
+          <ul className="settings-menu">
+            <li onClick={() => navigate("/user-dashboard/:id")}>
+              <FontAwesomeIcon icon={faHome} /> Dashboard
+            </li>
+            <li onClick={() => navigate("/order-history")}>
+              <FontAwesomeIcon icon={faClipboardList} /> Order History
+            </li>
+            <li onClick={() => navigate("/promotion")}>
+              <FontAwesomeIcon icon={faTag} /> Promotion
+            </li>
+            <li onClick={() => navigate("/cart")}>
+              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+            </li>
+            <li className="active">
+              <FontAwesomeIcon icon={faCog} /> Setting
+            </li>
+            <li onClick={() => navigate("/logout")}>
+              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+            </li>
+          </ul>
+        </aside>
 
-        <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
-          {/* Account Settings Section */}
-          <Card style={{ marginBottom: 24 }}>
-            <Title level={4}>Account Settings</Title>
-            <Form form={accountForm} layout="vertical">
-              <Row>
-                <Col span={18}>
-                  {renderField(accountForm, "Full Name", "fullName", [
-                    { required: true, message: "Full name is required" },
-                    {
-                      min: 3,
-                      message: "Full name must be at least 3 characters long",
-                    },
-                  ])}
-                  {renderField(accountForm, "Email", "email", [
-                    { required: true, message: "Email is required" },
-                    { type: "email", message: "Please enter a valid email" },
-                  ])}
-                  {renderField(accountForm, "Phone", "phone", [
-                    { required: true, message: "Phone number is required" },
-                    {
-                      pattern: /^[0-9]{10}$/,
-                      message: "Phone must be 10 digits",
-                    },
-                  ])}
-                  {/* Read-only Points Fields */}
-                  {renderField(
-                    accountForm,
-                    "Total Points",
-                    "totalPoints",
-                    [],
-                    "text",
-                    true
-                  )}
-                  {renderField(
-                    accountForm,
-                    "Points Available",
-                    "pointAvailable",
-                    [],
-                    "text",
-                    true
-                  )}
-                  {renderField(
-                    accountForm,
-                    "Points Used",
-                    "pointUsed",
-                    [],
-                    "text",
-                    true
-                  )}
-                </Col>
-                <Col span={6} style={{ textAlign: "center" }}>
-                  <Avatar
-                    src={previewImage || DEFAULT_AVATAR}
-                    size={128}
-                    icon={<UserOutlined />}
+        <main className="settings-content">
+          <div className="settings-card">
+            <h4>Account Settings</h4>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                saveAccountInfo();
+              }}
+            >
+              <div className="form-row">
+                <div className="form-column">
+                  <label>Full Name</label>
+                  <input
+                    type="text"
+                    value={accountForm.fullName || ""}
+                    onChange={(e) =>
+                      setAccountForm({
+                        ...accountForm,
+                        fullName: e.target.value,
+                      })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <Upload
-                    fileList={fileList}
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    value={accountForm.email || ""}
+                    onChange={(e) =>
+                      setAccountForm({ ...accountForm, email: e.target.value })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                  <label>Phone</label>
+                  <input
+                    type="text"
+                    value={accountForm.phone || ""}
+                    onChange={(e) =>
+                      setAccountForm({ ...accountForm, phone: e.target.value })
+                    }
+                    required
+                    pattern="^[0-9]{10}$"
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                  <label>Total Points</label>
+                  <input
+                    type="text"
+                    value={accountForm.totalPoints || ""}
+                    readOnly
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                  <label>Points Available</label>
+                  <input
+                    type="text"
+                    value={accountForm.pointAvailable || ""}
+                    readOnly
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                  <label>Points Used</label>
+                  <input
+                    type="text"
+                    value={accountForm.pointUsed || ""}
+                    readOnly
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+                <div className="form-column avatar-section">
+                  <img src={previewImage} alt="Avatar" className="avatar" />
+                  <label htmlFor="avatar-upload" className="change-image-label">
+                    Change Image
+                  </label>
+                  <input
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/*"
                     onChange={handleAvatarChange}
-                    beforeUpload={() => false} // Prevent auto-upload
-                    showUploadList={false} // Hide the default upload preview list
-                  >
-                    <Button icon={<PlusOutlined />}>Change Image</Button>{" "}
-                    {/* Button only */}
-                  </Upload>
-                </Col>
-              </Row>
+                    style={{ display: "none" }}
+                  />
+                </div>
+              </div>
+              <button type="submit">Save Change</button>
+            </form>
+          </div>
 
-              <Button type="primary" onClick={saveAccountInfo}>
-                Save Change
-              </Button>
-            </Form>
-          </Card>
+          {/* Address Info */}
+          <div className="settings-card">
+            <h4>Address Settings</h4>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                saveAddressInfo();
+              }}
+            >
+              <div className="form-row">
+                <div className="form-column">
+                  <label>Address</label>
+                  <input
+                    type="text"
+                    value={addressForm.address || ""}
+                    onChange={(e) =>
+                      setAddressForm({
+                        ...addressForm,
+                        address: e.target.value,
+                      })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+                <div className="form-column">
+                  <label>District</label>
+                  <input
+                    type="text"
+                    value={addressForm.district || ""}
+                    onChange={(e) =>
+                      setAddressForm({
+                        ...addressForm,
+                        district: e.target.value,
+                      })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-column">
+                  <label>City</label>
+                  <input
+                    type="text"
+                    value={addressForm.city || ""}
+                    onChange={(e) =>
+                      setAddressForm({ ...addressForm, city: e.target.value })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+                <div className="form-column">
+                  <label>Ward</label>
+                  <input
+                    type="text"
+                    value={addressForm.ward || ""}
+                    onChange={(e) =>
+                      setAddressForm({ ...addressForm, ward: e.target.value })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+              </div>
+              <button type="submit">Save Change</button>
+            </form>
+          </div>
 
-          {/* Address Section */}
-          <Card style={{ marginBottom: 24 }}>
-            <Title level={4}>Address</Title>
-            <Form form={addressForm} layout="vertical">
-              <Row gutter={16}>
-                <Col span={12}>
-                  {renderField(addressForm, "Address", "address", [
-                    { required: true, message: "Address is required" },
-                  ])}
-                </Col>
-                <Col span={12}>
-                  {renderField(addressForm, "Ward", "ward", [
-                    { required: true, message: "Ward is required" },
-                  ])}
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  {renderField(addressForm, "District", "district", [
-                    { required: true, message: "District is required" },
-                  ])}
-                </Col>
-                <Col span={12}>
-                  {renderField(addressForm, "City", "city", [
-                    { required: true, message: "City is required" },
-                  ])}
-                </Col>
-              </Row>
-              <Button type="primary" onClick={saveAddressInfo}>
-                Save Change
-              </Button>
-            </Form>
-          </Card>
-
-          {/* Change Password Section */}
-          <Card>
-            <Title level={4}>Change Password</Title>
-            <Form form={passwordForm} layout="vertical">
-              {renderField(
-                passwordForm,
-                "Current Password",
-                "currentPassword",
-                [
-                  {
-                    required: true,
-                    message: "Please enter your current password",
-                  },
-                ],
-                "password"
-              )}
-              {renderField(
-                passwordForm,
-                "New Password",
-                "newPassword",
-                [
-                  { required: true, message: "Please enter a new password" },
-                  {
-                    pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
-                    message:
-                      "Password must include at least 8 characters, 1 uppercase letter, 1 number, and 1 special character",
-                  },
-                ],
-                "password"
-              )}
-              {renderField(
-                passwordForm,
-                "Confirm New Password",
-                "confirmNewPassword",
-                [
-                  {
-                    required: true,
-                    message: "Please confirm your new password",
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (!value || getFieldValue("newPassword") === value) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        new Error("Passwords do not match")
-                      );
-                    },
-                  }),
-                ],
-                "password"
-              )}
-              <Button type="primary" onClick={savePasswordInfo}>
-                Change Password
-              </Button>
-            </Form>
-          </Card>
-        </Content>
-      </Layout>
+          {/* Password Settings */}
+          <div className="settings-card">
+            <h4>Password Settings</h4>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                savePasswordInfo();
+              }}
+            >
+              <div className="form-row">
+                <div className="form-column">
+                  <label>Current Password</label>
+                  <input
+                    type="password"
+                    value={passwordForm.currentPassword || ""}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        currentPassword: e.target.value,
+                      })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-column">
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    value={passwordForm.newPassword || ""}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        newPassword: e.target.value,
+                      })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+                <div className="form-column">
+                  <label>Confirm Password</label>
+                  <input
+                    type="password"
+                    value={passwordForm.confirmPassword || ""}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        confirmPassword: e.target.value,
+                      })
+                    }
+                    required
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                </div>
+              </div>
+              <button type="submit">Change Password</button>
+            </form>
+          </div>
+        </main>
+      </div>
       <ToastContainer />
-    </Layout>
+    </div>
   );
 };
 
