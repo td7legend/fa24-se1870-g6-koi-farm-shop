@@ -1,75 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Table, Typography, Space, message, Breadcrumb } from "antd";
+import { Table, Typography, Space, message, Breadcrumb, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 const { Title } = Typography;
+import "./index.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+const config = {
+  API_ROOT: "https://localhost:44366/api",
+};
 
-// Demo data
-const demoOrders = [
-  {
-    orderId: 1001,
-    status: 1,
-    totalAmount: 1350000,
-    totalTax: 135000,
-    totalDiscount: 0,
-    customerId: 1,
-    orderLines: [
-      {
-        fishId: 1,
-        fishName: "Koi Carp",
-        imageUrl: "/api/placeholder/80/80",
-        quantity: 2,
-        unitPrice: 500000,
-        totalPrice: 1000000,
-      },
-      {
-        fishId: 2,
-        fishName: "Goldfish",
-        imageUrl: "/api/placeholder/80/80",
-        quantity: 1,
-        unitPrice: 350000,
-        totalPrice: 350000,
-      },
-    ],
-  },
-  {
-    orderId: 1002,
-    status: 2,
-    totalAmount: 2800000,
-    totalTax: 280000,
-    totalDiscount: 100000,
-    customerId: 2,
-    orderLines: [
-      {
-        fishId: 3,
-        fishName: "Arowana",
-        imageUrl: "/api/placeholder/80/80",
-        quantity: 1,
-        unitPrice: 2800000,
-        totalPrice: 2800000,
-      },
-    ],
-  },
-  {
-    orderId: 1003,
-    status: 3,
-    totalAmount: 750000,
-    totalTax: 75000,
-    totalDiscount: 50000,
-    customerId: 1,
-    orderLines: [
-      {
-        fishId: 4,
-        fishName: "Guppy",
-        imageUrl: "/api/placeholder/80/80",
-        quantity: 5,
-        unitPrice: 150000,
-        totalPrice: 750000,
-      },
-    ],
-  },
-];
+const OrderStatus = {
+  Paid: 1,
+  Cancelled: 2,
+  Shipping: 3,
+  Completed: 4,
+};
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState([]);
@@ -77,57 +23,91 @@ const OrderHistoryPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        // Simulating API call
-        // const response = await axios.get('YOUR_API_ENDPOINT_HERE');
-        // const filteredOrders = response.data.filter(order => order.status !== 0);
-        const filteredOrders = demoOrders.filter((order) => order.status !== 0);
-        const processedOrders = filteredOrders.map((order) => ({
-          ...order,
-          key: order.orderId,
-          totalPrice: order.orderLines.reduce(
-            (sum, line) => sum + line.totalPrice,
-            0
-          ),
-        }));
-        setOrders(processedOrders);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-        message.error("Failed to fetch orders");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
+    fetchData();
   }, []);
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        message.error("No authentication token found. Please log in.");
+        return;
+      }
+
+      const response = await axios.get(
+        `${config.API_ROOT}/orders/order-history`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const allOrders = response.data;
+      const filteredOrders = allOrders.filter(
+        (order) => order.status !== OrderStatus.InCart
+      );
+      const processedOrders = filteredOrders.map((order) => ({
+        ...order,
+        key: order.orderId,
+        totalPrice: order.totalAmount,
+        orderLines: order.orderLines || [],
+      }));
+
+      setOrders(processedOrders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      if (error.response && error.response.status === 401) {
+        message.error("Unauthorized access. Please log in again.");
+      } else {
+        message.error("Failed to fetch orders. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusTag = (status) => {
+    const statusConfig = {
+      [OrderStatus.Paid]: { color: "green", text: "Paid" },
+      [OrderStatus.Cancelled]: { color: "red", text: "Cancelled" },
+      [OrderStatus.Shipping]: { color: "blue", text: "Shipping" },
+      [OrderStatus.Completed]: { color: "purple", text: "Completed" },
+    };
+
+    const { color, text } = statusConfig[status] || {
+      color: "default",
+      text: "Unknown",
+    };
+    return <Tag color={color}>{text}</Tag>;
+  };
+
   const columns = [
-    { title: "ORDER ID", dataIndex: "orderId", key: "orderId" },
+    {
+      title: "ORDER ID",
+      dataIndex: "orderId",
+      key: "orderId",
+    },
     {
       title: "DATE",
-      dataIndex: "orderId",
+      dataIndex: "orderDate",
       key: "date",
-      render: (orderId) => new Date(orderId * 1000).toLocaleDateString(), // Simulating date from orderId
+      render: (date) => (date ? new Date(date).toLocaleDateString() : "N/A"),
     },
     {
       title: "TOTAL",
       dataIndex: "totalPrice",
       key: "total",
       render: (total, record) =>
-        `${total.toLocaleString("vi-VN", {
+        `${(total || 0).toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
-        })} (${record.orderLines.length} Products)`,
+        })} (${record.orderLines?.length || 0} Products)`,
     },
     {
       title: "STATUS",
       dataIndex: "status",
       key: "status",
-      render: (status) =>
-        ["Processing", "Shipping", "Delivered"][status - 1] || "Unknown",
+      render: (status) => getStatusTag(status),
     },
     {
       title: "ACTION",
@@ -148,9 +128,11 @@ const OrderHistoryPage = () => {
   return (
     <div>
       <div className="breadcrumb-container">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/user_info/user">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/user-dashboard/:id">
             User Dashboard
           </Breadcrumb.Item>
           <Breadcrumb.Item>Order History</Breadcrumb.Item>
@@ -158,17 +140,20 @@ const OrderHistoryPage = () => {
       </div>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Title level={2}>Order History</Title>
-        <Table
-          columns={columns}
-          dataSource={orders}
-          loading={loading}
-          pagination={{
-            total: orders.length,
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-          }}
-        />
+        <div className="order-history-container">
+          <Table
+            className="order-history-table"
+            columns={columns}
+            dataSource={orders}
+            loading={loading}
+            pagination={{
+              total: orders.length,
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: false,
+            }}
+          />
+        </div>
       </Space>
     </div>
   );

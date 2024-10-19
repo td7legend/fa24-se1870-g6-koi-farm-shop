@@ -1,13 +1,20 @@
 import { Breadcrumb, Col, Row } from "antd";
 import "./index.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 function AboutUs() {
   return (
     <div>
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
-            <Breadcrumb className="breadcrumb">
-              <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+            <Breadcrumb className="breadcrumb" separator=">">
+              <Breadcrumb.Item href="/">
+                <FontAwesomeIcon
+                  icon={faHome}
+                  className="icon"
+                ></FontAwesomeIcon>
+              </Breadcrumb.Item>
               <Breadcrumb.Item>About Us</Breadcrumb.Item>
             </Breadcrumb>
           </div>

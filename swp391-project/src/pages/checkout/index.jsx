@@ -15,7 +15,7 @@ import {
 } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import "./index.scss";
 const config = {
   API_ROOT: "https://localhost:44366/api",
 };
@@ -285,7 +285,7 @@ const Checkout = () => {
       </Col>
       <div className="check-out-container">
         <Row className="check-out-form">
-          <Col className="form-left" span={12}>
+          <Col className="form-left">
             <h2>Order Summary</h2>
             <Table
               className="table"
@@ -314,24 +314,26 @@ const Checkout = () => {
                 value={paymentMethod}
                 style={{ marginRight: "20px" }}
               >
-                <Radio value="VnPay">VnPay</Radio>
+                <Radio value="VnPay">
+                  <img src="src/images/vn-pay.png" alt="" width={50} />
+                </Radio>
                 <Radio value="bankTransfer" disabled>
                   Bank Transfer
                 </Radio>
+                <Button className="button" onClick={handlePlaceOrder}>
+                  Place Order
+                </Button>
               </Radio.Group>
-              <Button type="primary" onClick={handlePlaceOrder}>
-                Place Order
-              </Button>
             </div>
           </Col>
-          <Col className="form-right" span={12}>
+          <Col className="form-right">
             <div style={{ padding: "20px", border: "1px solid #f0f0f0" }}>
               <h2>Billing Information</h2>
               <p>Name: {user.fullName}</p>
               <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
               <p>Email: {user.email || "Not provided"}</p>
               <p>Address: {user.address}</p>
-              <Button type="primary" onClick={showModal}>
+              <Button className="button" onClick={showModal}>
                 Edit Address
               </Button>
             </div>
@@ -351,7 +353,7 @@ const Checkout = () => {
             label="Address"
             rules={[{ required: true, message: "Please input your address!" }]}
           >
-            <Input.TextArea rows={4} />
+            <Input.TextArea autoSize={{ minRows: 4, maxRows: 6 }} />
           </Form.Item>
         </Form>
       </Modal>

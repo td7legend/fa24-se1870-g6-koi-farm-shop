@@ -47,7 +47,7 @@ const ProductCard = ({ fish }) => {
                 Size: {fish.size} cm
               </Tag>
             </div>
-            <p>Price: ${fish.price}</p>
+            <p>Price: {fish.price} VND</p>
           </div>
 
           <Button
