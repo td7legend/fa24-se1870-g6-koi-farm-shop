@@ -1,9 +1,9 @@
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb, Button, Col, Row } from "antd";
 import { Link } from "react-router-dom"; // Import Link for navigation
 import "./index.scss";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 function FAQsPage() {
   const faqData = [
@@ -65,8 +65,13 @@ function FAQsPage() {
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
-            <Breadcrumb className="breadcrumb">
-              <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+            <Breadcrumb className="breadcrumb" separator=">">
+              <Breadcrumb.Item href="/">
+                <FontAwesomeIcon
+                  icon={faHome}
+                  className="icon"
+                ></FontAwesomeIcon>
+              </Breadcrumb.Item>
               <Breadcrumb.Item>FAQs</Breadcrumb.Item>
             </Breadcrumb>
           </div>

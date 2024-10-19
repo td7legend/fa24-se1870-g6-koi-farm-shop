@@ -7,6 +7,7 @@ import {
   faEnvelope,
   faLocationDot,
   faPhone,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "antd/es/form/Form";
 
@@ -16,8 +17,13 @@ function Contact() {
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
-            <Breadcrumb className="breadcrumb">
-              <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+            <Breadcrumb className="breadcrumb" separator=">">
+              <Breadcrumb.Item href="/">
+                <FontAwesomeIcon
+                  icon={faHome}
+                  className="icon"
+                ></FontAwesomeIcon>
+              </Breadcrumb.Item>
               <Breadcrumb.Item>Contact</Breadcrumb.Item>
             </Breadcrumb>
           </div>

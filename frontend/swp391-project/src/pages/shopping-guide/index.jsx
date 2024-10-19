@@ -1,15 +1,21 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import "./index.scss";
-import { Breadcrumb, Button, Col, Row } from "antd";
+import { Breadcrumb, Col, Row } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 function ShoppingGuidePage() {
   return (
     <div>
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
-            <Breadcrumb className="breadcrumb">
-              <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+            <Breadcrumb className="breadcrumb" separator=">">
+              <Breadcrumb.Item href="/">
+                <FontAwesomeIcon
+                  icon={faHome}
+                  className="icon"
+                ></FontAwesomeIcon>
+              </Breadcrumb.Item>
               <Breadcrumb.Item>Shopping Guide</Breadcrumb.Item>
             </Breadcrumb>
           </div>

@@ -1,0 +1,21 @@
+.order-detail-container {
+  box-sizing: border-box;
+  padding: 20px;
+  .ant-steps-item-icon {
+    background-color: #bbab6f;
+  }
+  .card {
+    background-color: #fffaf0;
+    border: 1px solid #ccc;
+  }
+  .ant-table-thead > tr > th {
+    background-color: #fffaf0;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px;
+  }
+
+  .ant-table-tbody > tr > td {
+    background-color: #fffaf0;
+  }
+}

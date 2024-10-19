@@ -106,7 +106,7 @@ const Header = () => {
             </Link>
           ) : (
             <Link
-              to={`/user-dashboard/${userData.userId}`}
+              to={`/user-setting/${userData.userId}`}
               className="register__sign__in"
             >
               <FontAwesomeIcon icon={faUser} className="fa__icon" />

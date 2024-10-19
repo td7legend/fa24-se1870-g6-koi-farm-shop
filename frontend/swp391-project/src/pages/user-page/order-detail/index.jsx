@@ -15,9 +15,10 @@ import {
 } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 const { Title, Text } = Typography;
 const { Step } = Steps;
+import "./index.scss";
 
 const config = {
   API_ROOT: "https://localhost:44366/api",
@@ -35,14 +36,14 @@ const OrderDetailsPage = () => {
         setLoading(true);
         const orderId = location.state?.orderId;
         if (!orderId) {
-          message.error("Order ID not provided");
+          toast.error("Order ID not provided");
           navigate("/order-history");
           return;
         }
 
         const token = localStorage.getItem("token");
         if (!token) {
-          message.error("No authentication token found. Please log in.");
+          toast.error("No authentication token found. Please log in.");
           navigate("/login");
           return;
         }
@@ -57,7 +58,7 @@ const OrderDetailsPage = () => {
         setOrder(response.data);
       } catch (error) {
         console.error("Error fetching order details:", error);
-        message.error("Failed to fetch order details");
+        toast.error("Failed to fetch order details");
         navigate("/order-history");
       } finally {
         setLoading(false);
@@ -117,98 +118,101 @@ const OrderDetailsPage = () => {
           <Breadcrumb.Item>Order Detail</Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <Card style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <Button
-          type="link"
-          icon={<ArrowLeftOutlined />}
-          onClick={() => navigate("/order-history")}
-          style={{ marginBottom: 16, color: "#D4B57E" }}
-        >
-          Back to List
-        </Button>
-        <Title level={3}>
-          Order Details • {new Date(order.orderDate).toLocaleDateString()} •{" "}
-          {order.orderLines.length} Products
-        </Title>
+      <div className="order-detail-container">
+        <Card className="card" style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <Button
+            type="link"
+            icon={<ArrowLeftOutlined />}
+            onClick={() => navigate("/order-history")}
+            style={{ marginBottom: 16, color: "#D4B57E" }}
+          >
+            Back to List
+          </Button>
+          <Title level={3}>
+            Order Details • {new Date(order.orderDate).toLocaleDateString()} •{" "}
+            {order.orderLines.length} Products
+          </Title>
 
-        <Row gutter={24}>
-          <Col span={16}>
-            <Card title="ORDER SUMMARY" bordered={false}>
-              <Row>
-                <Col span={12}>
-                  <Text strong>ORDER ID:</Text>
-                </Col>
-                <Col span={12}>
-                  <Text>#{order.orderId}</Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <Text strong>STATUS:</Text>
-                </Col>
-                <Col span={12}>
-                  <Text>
-                    {["Processing", "Shipping", "Delivered"][
-                      order.status - 1
-                    ] || "Unknown"}
-                  </Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <Text strong>TOTAL AMOUNT:</Text>
-                </Col>
-                <Col span={12}>
-                  <Text>
-                    {order.totalAmount.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <Text strong>TOTAL TAX:</Text>
-                </Col>
-                <Col span={12}>
-                  <Text>
-                    {order.totalTax.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <Text strong>TOTAL DISCOUNT:</Text>
-                </Col>
-                <Col span={12}>
-                  <Text>
-                    {order.totalDiscount.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })}
-                  </Text>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-        </Row>
+          <Row gutter={24}>
+            <Col span={16}>
+              <Card className="card" title="ORDER SUMMARY" bordered={false}>
+                <Row>
+                  <Col span={12}>
+                    <Text strong>ORDER ID:</Text>
+                  </Col>
+                  <Col span={12}>
+                    <Text>#{order.orderId}</Text>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <Text strong>STATUS:</Text>
+                  </Col>
+                  <Col span={12}>
+                    <Text>
+                      {["Processing", "Shipping", "Delivered"][
+                        order.status - 1
+                      ] || "Unknown"}
+                    </Text>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <Text strong>TOTAL AMOUNT:</Text>
+                  </Col>
+                  <Col span={12}>
+                    <Text>
+                      {order.totalAmount.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </Text>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <Text strong>TOTAL TAX:</Text>
+                  </Col>
+                  <Col span={12}>
+                    <Text>
+                      {order.totalTax.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </Text>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <Text strong>TOTAL DISCOUNT:</Text>
+                  </Col>
+                  <Col span={12}>
+                    <Text>
+                      {order.totalDiscount.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </Text>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          </Row>
 
-        <Steps current={order.status - 1} style={{ margin: "24px 0" }}>
-          <Step title="Processing" />
-          <Step title="Shipped" />
-          <Step title="Delivered" />
-        </Steps>
+          <Steps current={order.status - 1} style={{ margin: "24px 0" }}>
+            <Step className="step" title="Processing" />
+            <Step className="step" title="Shipped" />
+            <Step className="step" title="Delivered" />
+          </Steps>
 
-        <Table
-          columns={columns}
-          dataSource={order.orderLines}
-          pagination={false}
-        />
-      </Card>
+          <Table
+            className="table"
+            columns={columns}
+            dataSource={order.orderLines}
+            pagination={false}
+          />
+        </Card>
+      </div>
     </div>
   );
 };

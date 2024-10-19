@@ -3,7 +3,9 @@ import { Table, Typography, Space, message, Breadcrumb, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const { Title } = Typography;
-
+import "./index.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 const config = {
   API_ROOT: "https://localhost:44366/api",
 };
@@ -126,9 +128,11 @@ const OrderHistoryPage = () => {
   return (
     <div>
       <div className="breadcrumb-container">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/user_info/user">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/user-dashboard/:id">
             User Dashboard
           </Breadcrumb.Item>
           <Breadcrumb.Item>Order History</Breadcrumb.Item>
@@ -136,17 +140,20 @@ const OrderHistoryPage = () => {
       </div>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Title level={2}>Order History</Title>
-        <Table
-          columns={columns}
-          dataSource={orders}
-          loading={loading}
-          pagination={{
-            total: orders.length,
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-          }}
-        />
+        <div className="order-history-container">
+          <Table
+            className="order-history-table"
+            columns={columns}
+            dataSource={orders}
+            loading={loading}
+            pagination={{
+              total: orders.length,
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: false,
+            }}
+          />
+        </div>
       </Space>
     </div>
   );
