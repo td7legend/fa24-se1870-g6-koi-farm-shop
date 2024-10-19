@@ -155,6 +155,10 @@ const UserSetting = () => {
     navigate("/"); // Điều hướng đến trang đăng nhập
   };
 
+  // if (loading) {
+  //   return <div className="loading-spinner">Loading...</div>;
+  // }
+
   return (
     <div className="user-settings-layout">
       <div className="breadcrumb-container">
