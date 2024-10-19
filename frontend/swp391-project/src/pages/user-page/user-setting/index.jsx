@@ -144,6 +144,7 @@ const UserSetting = () => {
       toast.error(`Failed to update Password: ${error.message}`);
     }
   };
+
   const confirmLogout = () => {
     setShowConfirmation(true);
   };
@@ -151,7 +152,7 @@ const UserSetting = () => {
   const handleLogout = () => {
     dispatch(logout());
     setShowConfirmation(false); // Đóng hộp thoại xác nhận
-    navigate("/login"); // Điều hướng đến trang đăng nhập
+    navigate("/"); // Điều hướng đến trang đăng nhập
   };
 
   // if (loading) {
