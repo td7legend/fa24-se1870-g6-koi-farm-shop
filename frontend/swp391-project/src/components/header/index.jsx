@@ -7,13 +7,49 @@ import {
   faGlobe,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons"; // Import the necessary icons
-import { Link } from "react-router-dom"; // Import Link component from React Router
+import { Link, useNavigate } from "react-router-dom"; // Import Link component from React Router
 import logo from "../../images/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { AES, enc } from "crypto-js";
+import config from "../../config/config";
+import axios from "axios";
+import { logout } from "../../store/actions/authActions";
 const Header = () => {
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
   const [language, setLanguage] = useState("English"); // State for language
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth); // Thêm role vào useSelector
+  const decryptedToken = token
+    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
+    : null;
+  const decryptedRole = role
+    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
+    : 0;
+  const [userData, setUserData] = useState({});
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      console.log("decryptedToken", decryptedToken);
+      try {
+        const response = await axios.get(
+          `${config.API_ROOT}customers/my-info`,
+          {
+            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+          }
+        );
+        console.log("response", response);
+        if (response?.data !== null) {
+          setUserData(response.data);
+        }
+      } catch (error) {
+        dispatch(logout());
+      }
+    };
+    decryptedToken && fetchUser();
+  }, [decryptedToken, dispatch, navigate]);
+  console.log("userData", userData);
   const handleScroll = () => {
     if (window.scrollY > 100) {
       // Thay đổi giá trị này tùy thuộc vào khi nào bạn muốn gắn nav
@@ -63,10 +99,20 @@ const Header = () => {
 
         {/* User Options */}
         <div className="user__options">
-          <Link to="/login" className="register__sign__in">
-            <FontAwesomeIcon icon={faUser} className="fa__icon" /> Register/Sign
-            in
-          </Link>
+          {!isLoggedIn ? (
+            <Link to="/login" className="register__sign__in">
+              <FontAwesomeIcon icon={faUser} className="fa__icon" />{" "}
+              Register/Sign in
+            </Link>
+          ) : (
+            <Link
+              to={`/user-dashboard/${userData.userId}`}
+              className="register__sign__in"
+            >
+              <FontAwesomeIcon icon={faUser} className="fa__icon" />
+              {userData.fullName}
+            </Link>
+          )}
           <Link to="/cart" className="cart">
             <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" /> Your
             Cart

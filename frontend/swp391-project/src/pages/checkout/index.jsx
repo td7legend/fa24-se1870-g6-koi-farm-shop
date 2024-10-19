@@ -14,13 +14,8 @@ import {
   Spin,
 } from "antd";
 import axios from "axios";
-<<<<<<< HEAD
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.scss";
-=======
-import { useNavigate } from "react-router-dom";
-
->>>>>>> 4dac1e921f3dd1c61b2a02f6abce18eadd45adc8
 const config = {
   API_ROOT: "https://localhost:44366/api",
 };
@@ -270,66 +265,6 @@ const Checkout = () => {
 
   return (
     <div>
-<<<<<<< HEAD
-      <Col span={24}>
-        <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
-            <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
-            <Breadcrumb.Item>Checkout</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </Col>
-      <div className="check-out-container">
-        <Row className="check-out-form">
-          <Col className="form-left">
-            <h2>Order Summary</h2>
-            <Table
-              className="table"
-              columns={columns}
-              dataSource={cart.orderLines}
-              pagination={false}
-              rowKey={(record) => record.fishId}
-              summary={() => (
-                <Table.Summary>
-                  <Table.Summary.Row>
-                    <Table.Summary.Cell index={0} colSpan={3}>
-                      <strong style={{ float: "right" }}>Total Price:</strong>
-                    </Table.Summary.Cell>
-                    <Table.Summary.Cell index={1}>
-                      <strong>
-                        {calculateTotalPrice().toLocaleString()} VND
-                      </strong>
-                    </Table.Summary.Cell>
-                  </Table.Summary.Row>
-                </Table.Summary>
-              )}
-            />
-            <div style={{ marginTop: "20px", textAlign: "right" }}>
-              <Radio.Group
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                value={paymentMethod}
-                style={{ marginRight: "20px" }}
-              >
-                <Radio value="VnPay">VnPay</Radio>
-                <Radio value="bankTransfer" disabled>
-                  Bank Transfer
-                </Radio>
-              </Radio.Group>
-              <Button type="primary" onClick={handlePlaceOrder}>
-                Place Order
-              </Button>
-            </div>
-          </Col>
-          <Col className="form-right">
-            <h2>Billing Information</h2>
-            <div>
-              <p>Name: {user.fullName}</p>
-              <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
-              <p>Email: {user.email || "Not provided"}</p>
-              <p>Address: {user.address}</p>
-=======
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb">
           <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
@@ -362,16 +297,10 @@ const Checkout = () => {
               <p>
                 <strong>Address:</strong> {user.address}
               </p>
->>>>>>> 4dac1e921f3dd1c61b2a02f6abce18eadd45adc8
             </div>
             <Button type="primary" onClick={showModal}>
               Edit Address
             </Button>
-<<<<<<< HEAD
-          </Col>
-        </Row>
-      </div>
-=======
           </div>
         </Col>
         <Col span={12}>
@@ -423,7 +352,6 @@ const Checkout = () => {
         </Col>
       </Row>
 
->>>>>>> 4dac1e921f3dd1c61b2a02f6abce18eadd45adc8
       <Modal
         title="Edit Address"
         visible={isModalVisible}

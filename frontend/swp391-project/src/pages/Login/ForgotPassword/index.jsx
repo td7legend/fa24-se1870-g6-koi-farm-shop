@@ -23,6 +23,7 @@ const ForgotPassword = () => {
   const [isVerified, setIsVerified] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpMessage, setOtpMessage] = useState("");
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => {
@@ -120,15 +121,21 @@ const ForgotPassword = () => {
     }
   };
 
-  const handleResetPass = async () => {
+  const handleResetPass = async (e) => {
+    e.preventDefault(); // Ngăn chặn form submit mặc định
+
+    setError(""); // Reset error message
+
     if (!validatePassword(password)) {
-      setError("Password does not meet the criteria.");
-      return;
+      setError(
+        "Password must be at least 6 characters long, contain an uppercase letter, a number, and a special character."
+      );
+      return; // Dừng xử lý tiếp theo nếu có lỗi
     }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
-      return;
+      return; // Dừng xử lý tiếp theo nếu có lỗi
     }
 
     try {
@@ -155,11 +162,19 @@ const ForgotPassword = () => {
     }
   };
 
-  const verifyOtp = async () => {
-    if (otpInput === otp && Date.now() < otpExpiry) {
+  const verifyOtp = () => {
+    if (Date.now() > otpExpiry) {
+      setOtpMessage("OTP has expired. Please request a new one.");
+      return;
+    }
+
+    if (otpInput === otp) {
       toast.success("OTP verified successfully!");
       setOtpModalOpen(false);
       setIsVerified(true);
+      setOtpMessage("");
+    } else {
+      setOtpMessage("Invalid OTP. Please try again.");
     }
   };
 
@@ -168,6 +183,7 @@ const ForgotPassword = () => {
       try {
         await generateAndSendOtp();
         toast.success("New OTP sent successfully!");
+        setOtpMessage(""); // Reset the OTP message
       } catch (error) {
         toast.error("Cannot send new OTP: " + error.message);
       }
@@ -216,7 +232,7 @@ const ForgotPassword = () => {
                     Resend OTP
                   </button>
                 </div>
-                {error && <p className="error-message">{error}</p>}
+                {otpMessage && <p className="otp-message">{otpMessage}</p>}
               </div>
             ) : isVerified ? (
               <div className="inputPassword">

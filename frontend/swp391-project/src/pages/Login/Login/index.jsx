@@ -193,7 +193,6 @@ const LoginPage = () => {
   const [isOtpModalOpen, setOtpModalOpen] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
-  const [LoginGoogleMessage, setLoginGoogleMessage] = useState("");
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -291,7 +290,6 @@ const LoginPage = () => {
   };
 
   const api_register = `${config.API_ROOT}auth/register`;
-
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -312,12 +310,23 @@ const LoginPage = () => {
 
     setError("");
     try {
+      const response = await axios.get(`${config.API_ROOT}auth/check-email`, {
+        params: { email: email },
+      });
+      const data = response.data;
+      console.log(data);
+
+      // Nếu tài khoản chưa tồn tại, tiếp tục gửi OTP
       await generateAndSendOtp();
       toast.success("OTP sent successfully!");
-
       setOtpModalOpen(true);
     } catch (error) {
-      toast.error("Cannot send OTP: " + error.message);
+      console.log(error);
+      const message = error.response.data;
+      if (message === "Email already exists.") {
+        toast.error(message);
+      }
+      toast.error("Đã xảy ra lỗi khi kiểm tra tài khoản: " + error.message);
     }
   };
 
@@ -376,81 +385,19 @@ const LoginPage = () => {
 
   const handleLoginGoogle = async () => {
     try {
-      // Bước 1: Gọi API để lấy URL xác thực Google
       const response = await axios.get(LoginGoogle_api);
-      const authUrl = response.data.url;
-      console.log("Auth URL:", authUrl);
 
-      if (authUrl) {
-        // Bước 2: Mở một popup để thực hiện đăng nhập
-        const popup = window.open(authUrl, "_blank", "width=500,height=600");
-
-        if (!popup) {
-          console.error("Không thể mở popup. Vui lòng cho phép popup.");
-          return;
-        }
-
-        // Bước 3: Theo dõi popup và kiểm tra URL
-        const popupInterval = setInterval(() => {
-          try {
-            // Kiểm tra URL trong popup để lấy token
-            const currentUrl = popup.location.href;
-
-            // Nếu URL chứa token (ví dụ: callback?token=xyz), chúng ta sẽ lấy token
-            if (currentUrl.includes("token")) {
-              const urlParams = new URLSearchParams(popup.location.search);
-              const token = urlParams.get("token");
-              if (token) {
-                console.log("Token nhận được:", token);
-                localStorage.setItem("authToken", token);
-                // Đóng popup sau khi lấy token
-                popup.close();
-                clearInterval(popupInterval);
-                // Redirect về trang chủ của bạn
-                setLoginGoogleMessage("Login successful");
-                window.location.href = `/LoginSuccess/${token}`; // Cập nhật với đường dẫn đúng
-              }
-            }
-          } catch (error) {
-            setLoginGoogleMessage("Login Failed!");
-            // Lỗi này thường xảy ra khi popup chưa sẵn sàng hoặc thuộc miền khác
-          }
-
-          // Đóng popup nếu người dùng tắt nó
-          if (popup.closed) {
-            clearInterval(popupInterval);
-            console.log("Popup đã đóng.");
-          }
-        }, 500); // Kiểm tra mỗi 500ms
-
-        // Bước 4: Kiểm tra nếu đã nhận được token từ URL
-        const tokenFromUrl = new URLSearchParams(window.location.search).get(
-          "token"
-        );
-        if (tokenFromUrl) {
-          console.log("Token nhận được từ URL callback:", tokenFromUrl);
-          localStorage.setItem("authToken", tokenFromUrl);
-          // Redirect về trang chủ của bạn
-          window.location.href = `/LoginSuccess/${tokenFromUrl}`;
-        }
+      const url = response.data.url;
+      if (url) {
+        window.location.href = url;
+        toast.success("Login successful");
+      } else {
+        toast.error("Failed to get login URL: " + error.message);
       }
     } catch (error) {
-      console.error("Có lỗi xảy ra khi bắt đầu đăng nhập Google:", error);
-      setLoginGoogleMessage("Login Failed!");
+      toast.error("An error occurred: " + error.message);
     }
   };
-  useEffect(() => {
-    if (LoginGoogleMessage === null) {
-      console.log(LoginGoogleMessage);
-    }
-
-    if (LoginGoogleMessage === "Login successful") {
-      toast.success(`${LoginGoogleMessage}`);
-    }
-    if (LoginGoogleMessage === "Login Failed!") {
-      toast.error(`${LoginGoogleMessage}`);
-    }
-  }, []);
   return (
     <div className="page__container">
       <Main
