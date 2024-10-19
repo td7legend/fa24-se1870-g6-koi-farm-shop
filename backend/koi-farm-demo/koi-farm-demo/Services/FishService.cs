@@ -38,6 +38,7 @@ namespace koi_farm_demo.Services
                 Batch = fishCreateDto.Batch ?? false,
                 FishTypeId = fishCreateDto.FishTypeId,
                 ImageUrl = fishCreateDto.ImageUrl,
+                Quantity = fishCreateDto.Quantity
             };
 
             await _fishRepository.AddAsync(fish);
