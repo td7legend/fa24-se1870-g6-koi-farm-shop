@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import uploadFile from "../../../utils/upload/upload";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.scss";
-import { Breadcrumb, Button } from "antd";
+import { Breadcrumb, Button, Modal } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -15,143 +14,252 @@ import {
   faCog,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
-import { Modal } from "antd"; // Import Modal từ Ant Design
-
-const DEFAULT_AVATAR =
-  "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg";
-
-const getBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+const config = {
+  API_ROOT: "https://localhost:44366/api",
 };
+const DEFAULT_AVATAR =
+  "https://ih1.redbubble.net/image.3771768892.4974/flat,750x,075,f-pad,750x1000,f8f8f8.jpg";
 
 const UserSetting = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState({});
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [accountForm, setAccountForm] = useState({});
-  const [addressForm, setAddressForm] = useState({});
-  const [passwordForm, setPasswordForm] = useState({});
-  const [fileList, setFileList] = useState([]);
-  const [previewImage, setPreviewImage] = useState("");
+  const [userForm, setUserForm] = useState({
+    fullName: "",
+    phoneNumber: "",
+    address: "",
+    tier: 0,
+    pointAvailable: 0,
+    usedPoint: 0,
+    accommodatePoint: 0,
+  });
+  const [initialUserForm, setInitialUserForm] = useState({});
+  const [isUserFormChanged, setIsUserFormChanged] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [isPasswordFormChanged, setIsPasswordFormChanged] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `https://66ffa8eb4da5bd2375516c72.mockapi.io/User_Information?userID=${id}`
-        );
-        if (response.data.length > 0) {
-          const userInfo = response.data[0];
-          setUser(userInfo);
-          setAccountForm(userInfo);
-          setAddressForm(userInfo);
-          setPreviewImage(userInfo.avatar_path || DEFAULT_AVATAR);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          toast.error("No authentication token found. Please log in.");
+          navigate("/login");
+          return;
         }
+
+        const response = await axios.get(
+          `${config.API_ROOT}/customers/my-info`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const userInfo = response.data;
+        console.log("User Info received from API:", userInfo);
+        const formData = {
+          fullName: userInfo.fullName || "",
+          phoneNumber: userInfo.phoneNumber || "",
+          address: userInfo.address || "",
+          tier: userInfo.tier || 0,
+          pointAvailable: userInfo.pointAvailable || 0,
+          usedPoint: userInfo.usedPoint || 0,
+          accommodatePoint: userInfo.accommodatePoint || 0,
+        };
+        setUserForm(formData);
+        setInitialUserForm(formData);
       } catch (error) {
-        toast.error("Error fetching user data");
+        console.error("Error fetching user data:", error);
+        if (error.response && error.response.status === 401) {
+          toast.error("Authentication failed. Please log in again.");
+          navigate("/login");
+        } else {
+          toast.error(
+            "An error occurred while fetching data. Please try again later."
+          );
+        }
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [id]);
+  }, [navigate]);
 
-  const handleAvatarChange = async (event) => {
-    const file = event.target.files[0];
-    setFileList([file]);
-    if (file) {
-      const preview = await getBase64(file);
-      setPreviewImage(preview);
+  useEffect(() => {
+    const hasChanged =
+      JSON.stringify(userForm) !== JSON.stringify(initialUserForm);
+    setIsUserFormChanged(hasChanged);
+  }, [userForm, initialUserForm]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "phoneNumber") {
+      const phoneNumber = value.replace(/\D/g, "").slice(0, 10);
+      setUserForm((prev) => ({ ...prev, [name]: phoneNumber }));
     } else {
-      setPreviewImage(user.avatar_path || DEFAULT_AVATAR);
+      setUserForm((prev) => ({
+        ...prev,
+        [name]:
+          name === "tier" ||
+          name === "pointAvailable" ||
+          name === "usedPoint" ||
+          name === "accommodatePoint"
+            ? Number(value)
+            : value,
+      }));
     }
   };
 
-  const handleUploadAvatar = async () => {
-    if (fileList.length === 0) return null;
-    const file = fileList[0];
-    try {
-      const url = await uploadFile(file);
-      return url;
-    } catch (error) {
-      toast.error("Failed to upload avatar");
-      throw error;
-    }
+  const handlePasswordInputChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setIsPasswordFormChanged(true);
   };
 
-  const saveAccountInfo = async () => {
+  const handleValidationErrors = (errors) => {
+    Object.entries(errors).forEach(([field, messages]) => {
+      messages.forEach((message) => {
+        toast.error(`${field}: ${message}`);
+      });
+    });
+  };
+
+  const validateForm = () => {
+    if (!userForm.fullName.trim()) {
+      toast.error("Name is required");
+      return false;
+    }
+    if (userForm.phoneNumber.length !== 10) {
+      toast.error("Phone number must be 10 digits");
+      return false;
+    }
+    if (!userForm.address.trim()) {
+      toast.error("Address is required");
+      return false;
+    }
+    return true;
+  };
+
+  const saveUserInfo = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
     try {
-      let avatarUrl = user.avatar_path;
-      if (fileList.length > 0) {
-        avatarUrl = await handleUploadAvatar();
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("No authentication token found. Please log in.");
+        navigate("/login");
+        return;
       }
 
       const updatedUser = {
-        ...user,
-        ...accountForm,
-        avatar_path: avatarUrl,
+        name: userForm.fullName,
+        phone: userForm.phoneNumber,
+        address: userForm.address,
       };
 
-      await axios.put(
-        `https://66ffa8eb4da5bd2375516c72.mockapi.io/User_Information/${user.id}`,
-        updatedUser
+      await axios.put(`${config.API_ROOT}/customers/my-info`, updatedUser, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      toast.success("User information updated successfully!");
+      setInitialUserForm(userForm);
+      setIsUserFormChanged(false);
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.status === 400 &&
+        error.response.data.errors
+      ) {
+        handleValidationErrors(error.response.data.errors);
+      } else {
+        toast.error(`Failed to update user information: ${error.message}`);
+      }
+    }
+  };
+
+  const savePasswordInfo = async (e) => {
+    e.preventDefault();
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("No authentication token found. Please log in.");
+        navigate("/login");
+        return;
+      }
+
+      const response = await axios.post(
+        `${config.API_ROOT}/auth/change-password`,
+        {
+          oldPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
-      setUser(updatedUser);
-      toast.success("Account Info updated successfully!");
-
-      setFileList([]);
+      if (response.status === 200) {
+        toast.success("Password changed successfully!");
+        setPasswordForm({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+        setIsPasswordFormChanged(false);
+      }
     } catch (error) {
-      toast.error(`Failed to update Account Info: ${error.message}`);
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            toast.error("Old password is incorrect. Please try again.");
+            break;
+          case 400:
+            if (error.response.data.errors) {
+              handleValidationErrors(error.response.data.errors);
+            } else {
+              toast.error(
+                "Invalid input. Please check your entries and try again."
+              );
+            }
+            break;
+          default:
+            toast.error(
+              `Failed to change password: ${
+                error.response.data.message || "Unknown error occurred"
+              }`
+            );
+        }
+      } else {
+        toast.error(`An error occurred: ${error.message}`);
+      }
     }
   };
 
-  const saveAddressInfo = async () => {
-    try {
-      const updatedUser = {
-        ...user,
-        ...addressForm,
-      };
-
-      await axios.put(
-        `https://66ffa8eb4da5bd2375516c72.mockapi.io/User_Information/${user.id}`,
-        updatedUser
-      );
-      setUser(updatedUser);
-      toast.success("Address Info updated successfully!");
-    } catch (error) {
-      toast.error(`Failed to update Address Info: ${error.message}`);
-    }
-  };
-
-  const savePasswordInfo = async () => {
-    try {
-      // Add password update API logic here
-      toast.success("Password updated successfully!");
-      setPasswordForm({});
-    } catch (error) {
-      toast.error(`Failed to update Password: ${error.message}`);
-    }
-  };
   const confirmLogout = () => {
     setShowConfirmation(true);
   };
 
   const handleLogout = () => {
     dispatch(logout());
-    setShowConfirmation(false); // Đóng hộp thoại xác nhận
-    navigate("/"); // Điều hướng đến trang đăng nhập
+    setShowConfirmation(false);
+    navigate("/");
   };
 
   if (loading) {
@@ -196,7 +304,6 @@ const UserSetting = () => {
             <li className="active">
               <FontAwesomeIcon icon={faCog} /> Setting
             </li>
-
             <li onClick={confirmLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout
             </li>
@@ -205,181 +312,92 @@ const UserSetting = () => {
 
         <main className="settings-content">
           <div className="settings-card">
-            <h4>Account Settings</h4>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                saveAccountInfo();
-              }}
-            >
+            <h4>User Information</h4>
+            <form onSubmit={saveUserInfo}>
               <div className="form-row">
                 <div className="form-column">
                   <label>Full Name</label>
                   <input
                     type="text"
-                    value={accountForm.fullName || ""}
-                    onChange={(e) =>
-                      setAccountForm({
-                        ...accountForm,
-                        fullName: e.target.value,
-                      })
-                    }
+                    name="fullName"
+                    value={userForm.fullName}
+                    onChange={handleInputChange}
                     required
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Email</label>
+                  <label>Phone Number</label>
                   <input
-                    type="email"
-                    value={accountForm.email || ""}
-                    onChange={(e) =>
-                      setAccountForm({ ...accountForm, email: e.target.value })
-                    }
+                    type="tel"
+                    name="phoneNumber"
+                    value={userForm.phoneNumber}
+                    onChange={handleInputChange}
                     required
+                    placeholder="Enter 10 digit number"
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Phone</label>
+                  <label>Address</label>
                   <input
                     type="text"
-                    value={accountForm.phone || ""}
-                    onChange={(e) =>
-                      setAccountForm({ ...accountForm, phone: e.target.value })
-                    }
+                    name="address"
+                    value={userForm.address}
+                    onChange={handleInputChange}
                     required
-                    pattern="^[0-9]{10}$"
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Total Points</label>
+                  <label>Tier</label>
                   <input
-                    type="text"
-                    value={accountForm.totalPoints || ""}
+                    type="number"
+                    name="tier"
+                    value={userForm.tier}
                     readOnly
                     style={{ backgroundColor: "#fffaf0" }}
                   />
                   <label>Points Available</label>
                   <input
-                    type="text"
-                    value={accountForm.pointAvailable || ""}
+                    type="number"
+                    name="pointAvailable"
+                    value={userForm.pointAvailable}
                     readOnly
                     style={{ backgroundColor: "#fffaf0" }}
                   />
                   <label>Points Used</label>
                   <input
-                    type="text"
-                    value={accountForm.pointUsed || ""}
+                    type="number"
+                    name="usedPoint"
+                    value={userForm.usedPoint}
+                    readOnly
+                    style={{ backgroundColor: "#fffaf0" }}
+                  />
+                  <label>Accommodate Point</label>
+                  <input
+                    type="number"
+                    name="accommodatePoint"
+                    value={userForm.accommodatePoint}
                     readOnly
                     style={{ backgroundColor: "#fffaf0" }}
                   />
                 </div>
                 <div className="form-column avatar-section">
-                  <img src={previewImage} alt="Avatar" className="avatar" />
-                  <label htmlFor="avatar-upload" className="change-image-label">
-                    Change Image
-                  </label>
-                  <input
-                    id="avatar-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarChange}
-                    style={{ display: "none" }}
-                  />
+                  <img src={DEFAULT_AVATAR} alt="Avatar" className="avatar" />
                 </div>
               </div>
-              <button type="submit">Save Change</button>
+              <button type="submit" disabled={!isUserFormChanged}>
+                Save Changes
+              </button>
             </form>
           </div>
 
-          {/* Address Info */}
-          <div className="settings-card">
-            <h4>Address Settings</h4>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                saveAddressInfo();
-              }}
-            >
-              <div className="form-row">
-                <div className="form-column">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    value={addressForm.address || ""}
-                    onChange={(e) =>
-                      setAddressForm({
-                        ...addressForm,
-                        address: e.target.value,
-                      })
-                    }
-                    required
-                    style={{ backgroundColor: "#fffaf0" }}
-                  />
-                </div>
-                <div className="form-column">
-                  <label>District</label>
-                  <input
-                    type="text"
-                    value={addressForm.district || ""}
-                    onChange={(e) =>
-                      setAddressForm({
-                        ...addressForm,
-                        district: e.target.value,
-                      })
-                    }
-                    required
-                    style={{ backgroundColor: "#fffaf0" }}
-                  />
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-column">
-                  <label>City</label>
-                  <input
-                    type="text"
-                    value={addressForm.city || ""}
-                    onChange={(e) =>
-                      setAddressForm({ ...addressForm, city: e.target.value })
-                    }
-                    required
-                    style={{ backgroundColor: "#fffaf0" }}
-                  />
-                </div>
-                <div className="form-column">
-                  <label>Ward</label>
-                  <input
-                    type="text"
-                    value={addressForm.ward || ""}
-                    onChange={(e) =>
-                      setAddressForm({ ...addressForm, ward: e.target.value })
-                    }
-                    required
-                    style={{ backgroundColor: "#fffaf0" }}
-                  />
-                </div>
-              </div>
-              <button type="submit">Save Change</button>
-            </form>
-          </div>
-
-          {/* Password Settings */}
           <div className="settings-card">
             <h4>Password Settings</h4>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                savePasswordInfo();
-              }}
-            >
+            <form onSubmit={savePasswordInfo}>
               <div className="form-row">
                 <div className="form-column">
                   <label>Current Password</label>
                   <input
                     type="password"
-                    value={passwordForm.currentPassword || ""}
-                    onChange={(e) =>
-                      setPasswordForm({
-                        ...passwordForm,
-                        currentPassword: e.target.value,
-                      })
-                    }
+                    name="currentPassword"
+                    value={passwordForm.currentPassword}
+                    onChange={handlePasswordInputChange}
                     required
                     style={{ backgroundColor: "#fffaf0" }}
                   />
@@ -390,13 +408,9 @@ const UserSetting = () => {
                   <label>New Password</label>
                   <input
                     type="password"
-                    value={passwordForm.newPassword || ""}
-                    onChange={(e) =>
-                      setPasswordForm({
-                        ...passwordForm,
-                        newPassword: e.target.value,
-                      })
-                    }
+                    name="newPassword"
+                    value={passwordForm.newPassword}
+                    onChange={handlePasswordInputChange}
                     required
                     style={{ backgroundColor: "#fffaf0" }}
                   />
@@ -405,26 +419,23 @@ const UserSetting = () => {
                   <label>Confirm Password</label>
                   <input
                     type="password"
-                    value={passwordForm.confirmPassword || ""}
-                    onChange={(e) =>
-                      setPasswordForm({
-                        ...passwordForm,
-                        confirmPassword: e.target.value,
-                      })
-                    }
+                    name="confirmPassword"
+                    value={passwordForm.confirmPassword}
+                    onChange={handlePasswordInputChange}
                     required
                     style={{ backgroundColor: "#fffaf0" }}
                   />
                 </div>
               </div>
-              <button type="submit">Change Password</button>
+              <button type="submit" disabled={!isPasswordFormChanged}>
+                Change Password
+              </button>
             </form>
           </div>
         </main>
       </div>
       <ToastContainer />
 
-      {/* Modal xác nhận đăng xuất */}
       <Modal
         title="Confirm Logout?"
         visible={showConfirmation}
@@ -436,7 +447,7 @@ const UserSetting = () => {
           <Button
             key="back"
             onClick={() => setShowConfirmation(false)}
-            style={{ backgroundColor: "red#C0C0C0", color: "black" }}
+            style={{ backgroundColor: "#C0C0C0", color: "black" }}
           >
             Cancel
           </Button>,

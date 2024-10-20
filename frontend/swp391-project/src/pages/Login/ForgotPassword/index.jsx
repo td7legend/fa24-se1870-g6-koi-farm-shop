@@ -35,7 +35,7 @@ const ForgotPassword = () => {
   const sendOtpEmail = async (otp) => {
     try {
       await emailjs
-        .send("service_a1o085u", "template_skx3wjf", {
+        .send("service_ewtf80l", "template_90p3nrh", {
           user_email: email,
           message: `OTP to change your account's password is ${otp},The otp code will expire within 2 minutes`,
           reply_to: "goldenkoi.vn@gmail.com",

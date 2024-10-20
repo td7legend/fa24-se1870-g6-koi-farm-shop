@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap");
-.user-history-container {
+
+.user-dashboard-container {
   background-color: #fffaf0;
   min-height: 100vh;
   display: flex;
@@ -196,27 +197,4 @@
 
 .user-settings-layout h4 {
   font-family: "Lora", serif;
-}
-
-.order-history-container {
-  box-sizing: border-box;
-  padding: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .order-history-table {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  .ant-table-thead > tr > th {
-    background-color: #fffaf0;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 16px;
-  }
-
-  .ant-table-tbody > tr > td {
-    background-color: #fffaf0;
-  }
 }

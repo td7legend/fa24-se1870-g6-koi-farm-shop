@@ -10,7 +10,6 @@ import {
   Image,
   Button,
   Spin,
-  message,
   Breadcrumb,
 } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
@@ -71,11 +70,16 @@ const OrderDetailsPage = () => {
   if (loading) return <Spin size="large" />;
   if (!order) return null;
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? "N/A" : date.toLocaleDateString();
+  };
+
   const columns = [
     {
-      title: "PRODUCT",
+      title: "FISH",
       dataIndex: "fishName",
-      key: "product",
+      key: "fish",
       render: (fishName, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <Image
@@ -129,8 +133,8 @@ const OrderDetailsPage = () => {
             Back to List
           </Button>
           <Title level={3}>
-            Order Details • {new Date(order.orderDate).toLocaleDateString()} •{" "}
-            {order.orderLines.length} Products
+            Order Details • {formatDate(order.orderDate)} •{" "}
+            {order.orderLines.length} Fish
           </Title>
 
           <Row gutter={24}>
