@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace koi_farm_demo.Migrations
 {
     /// <inheritdoc />
-    public partial class createdb : Migration
+    public partial class updatedatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

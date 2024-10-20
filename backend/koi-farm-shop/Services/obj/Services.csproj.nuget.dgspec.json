@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj": {}
+    "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj": {}
   },
   "projects": {
-    "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj": {
+    "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj",
+        "projectUniqueName": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj",
         "projectName": "Repository",
-        "projectPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj",
-        "packagesPath": "C:\\Users\\td7le\\.nuget\\packages\\",
-        "outputPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\obj\\",
+        "projectPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\td7le\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -61,21 +61,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj": {
+    "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj",
+        "projectUniqueName": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj",
         "projectName": "Services",
-        "projectPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj",
-        "packagesPath": "C:\\Users\\td7le\\.nuget\\packages\\",
-        "outputPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\obj\\",
+        "projectPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\td7le\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -90,8 +90,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj": {
-                "projectPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj"
+              "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj": {
+                "projectPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Repository\\Repository.csproj"
               }
             }
           }
@@ -126,7 +126,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

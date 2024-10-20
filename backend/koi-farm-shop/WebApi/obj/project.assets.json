@@ -462,19 +462,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\td7le\\.nuget\\packages\\": {}
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\WebApi\\WebApi.csproj",
+      "projectUniqueName": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\WebApi\\WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\WebApi\\WebApi.csproj",
-      "packagesPath": "C:\\Users\\td7le\\.nuget\\packages\\",
-      "outputPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\WebApi\\obj\\",
+      "projectPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\WebApi\\WebApi.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\td7le\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -489,8 +489,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj": {
-              "projectPath": "D:\\SWP391\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj"
+            "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj": {
+              "projectPath": "C:\\Workspace\\SWP391-project\\fa24-se1870-g6-koi-farm-shop\\backend\\koi-farm-shop\\Services\\Services.csproj"
             }
           }
         }
@@ -534,7 +534,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
