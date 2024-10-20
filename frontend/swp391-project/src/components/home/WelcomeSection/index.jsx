@@ -1,25 +1,24 @@
-import Picture1 from "../../../images/picture-3.png";
-import Picture2 from "../../../images/picture-1.png";
-import "./index.scss";
+import Picture1 from "../../../images/picture-3.png"; // Đảm bảo đường dẫn đúng
+import Picture2 from "../../../images/picture-1.png"; // Đảm bảo đường dẫn đúng
+import "./index.scss"; // Đảm bảo SCSS được nhập đúng
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules"; // Chỉ import Autoplay và Pagination
 import "swiper/css";
 import "swiper/css/pagination";
-import "swiper/css/navigation";
-function WelcomSestion() {
+
+function WelcomeSection() {
   return (
     <section className="welcome__section">
       <div className="welcome__content">
         <Swiper
-          spaceBetween={100} // Khoảng cách giữa các slide
-          slidesPerView={1} // Số lượng slide hiển thị mỗi lần
+          spaceBetween={0}
+          slidesPerView={1}
           autoplay={{
             delay: 3000,
             disableOnInteraction: false,
           }}
-          pagination={{ clickable: true }} // Hiển thị các nút điều hướng
-          navigation // Hiển thị nút trái phải điều hướng
-          modules={[Autoplay, Pagination, Navigation]}
+          pagination={{ clickable: true }}
+          modules={[Autoplay, Pagination]}
           className="mySwiper"
         >
           <SwiperSlide>
@@ -29,6 +28,7 @@ function WelcomSestion() {
             <img src={Picture2} alt="Koi Fish 2" className="welcome__image" />
           </SwiperSlide>
         </Swiper>
+
         <div className="welcome__text">
           <h1>Welcome to Golden Koi</h1>
           <p>
@@ -46,4 +46,4 @@ function WelcomSestion() {
   );
 }
 
-export default WelcomSestion;
+export default WelcomeSection;
