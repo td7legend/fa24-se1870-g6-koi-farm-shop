@@ -1,46 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductCard from "../Product";
 import "./index.scss";
-import Picture from "../../../images/picture-3.png";
+import axios from "axios";
+import config from "../../../config/config";
 
 const RecentlyAdded = () => {
-  const products = [
-    { image: Picture, name: "Koi Fish 1", price: 25 },
-    { image: Picture, name: "Koi Fish 2", price: 30 },
-    { image: Picture, name: "Koi Fish 3", price: 35 },
-    { image: Picture, name: "Koi Fish 4", price: 40 },
-    { image: Picture, name: "Koi Fish 5", price: 50 },
-    { image: Picture, name: "Koi Fish 6", price: 55 },
-    { image: Picture, name: "Koi Fish 7", price: 60 },
-    { image: Picture, name: "Koi Fish 8", price: 65 },
-  ];
-
-  const itemsPerPage = 4; // Number of products to show at once
+  const [newFishes, setNewFishes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [fade, setFade] = useState("");
+  const [fade, setFade] = useState(""); // For CSS animations
+  const itemsPerPage = 4; // Number of products to show at once
+  const itemsToShow = 8; // Number of products to fetch
+
+  const fetchRecentlyAdded = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}fishs`);
+      // Only take the last 8 items and reverse them
+      setNewFishes(response.data.slice(-itemsToShow).reverse());
+    } catch (error) {
+      console.error("Error fetching fishs:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecentlyAdded();
+  }, []);
 
   const nextProducts = () => {
-    setFade("fade__out"); // Start fade-out effect
+    setFade("fade__out");
     setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex + itemsPerPage < products.length
-          ? prevIndex + itemsPerPage
-          : 0
-      );
-      setFade("fade__in"); // Start fade-in effect
-    }, 300); // Duration of the fade-out animation
+      setCurrentIndex((prevIndex) => (prevIndex + itemsPerPage) % itemsToShow);
+      setFade("fade__in");
+    }, 300); // Match the CSS transition duration
   };
 
   const prevProducts = () => {
-    setFade("fade__out"); // Start fade-out effect
+    setFade("fade__out");
     setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex - itemsPerPage >= 0
-          ? prevIndex - itemsPerPage
-          : Math.floor(products.length / itemsPerPage) * itemsPerPage
+      setCurrentIndex(
+        (prevIndex) => (prevIndex - itemsPerPage + itemsToShow) % itemsToShow
       );
-      setFade("fade__in"); // Start fade-in effect
-    }, 300); // Duration of the fade-out animation
+      setFade("fade__in");
+    }, 300); // Match the CSS transition duration
   };
 
   return (
@@ -51,10 +51,10 @@ const RecentlyAdded = () => {
           &lt;
         </button>
         <div className={`products__display ${fade}`}>
-          {products
+          {newFishes
             .slice(currentIndex, currentIndex + itemsPerPage)
-            .map((product, index) => (
-              <ProductCard key={index} product={product} />
+            .map((newFish, index) => (
+              <ProductCard key={index} product={newFish} />
             ))}
         </div>
         <button className="nav__button right" onClick={nextProducts}>
