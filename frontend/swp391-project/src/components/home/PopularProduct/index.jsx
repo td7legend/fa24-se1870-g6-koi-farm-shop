@@ -45,7 +45,7 @@ const PopularProduct = () => {
 
   return (
     <section className="popular__product">
-      <h2>Popular Products</h2>
+      <h2>POPULAR PRODUCTS</h2>
       <div className="popular__product__grid">
         <button className="nav__button left" onClick={prevProducts}>
           &lt;

@@ -45,7 +45,7 @@ const RecentlyAdded = () => {
 
   return (
     <section className="recently__added">
-      <h2>New Fish</h2>
+      <h2>NEW FISH</h2>
       <div className="product__grid__wrapper">
         <button className="nav__button left" onClick={prevProducts}>
           &lt;

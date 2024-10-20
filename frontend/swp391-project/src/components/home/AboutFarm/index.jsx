@@ -1,36 +1,20 @@
-import { Link } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/autoplay";
 import "./index.scss";
-import Picture1 from "../../../images/picture-3.png";
-import Picture2 from "../../../images/picture-1.png";
 
 const AboutFarm = () => {
-  const images = [
-    { src: Picture1, alt: "Farm Image 1", link: "/about-farm/1" },
-    { src: Picture2, alt: "Farm Image 2", link: "/about-farm/2" },
-    { src: Picture1, alt: "Farm Image 3", link: "/about-farm/3" },
-  ];
-
   return (
     <section className="about__farm">
-      <h2>About Our Farm</h2>
-      <Swiper
-        spaceBetween={50}
-        slidesPerView={1}
-        loop={true}
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
-        className="mySwiper"
-      >
-        {images.map((image, index) => (
-          <SwiperSlide key={index}>
-            <Link to={image.link} className="farm__image">
-              <img src={image.src} alt={image.alt} />
-            </Link>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <h2>ABOUT OUR FARM</h2>
+      <div className="farm__video">
+        <iframe
+          width="100%"
+          height="500"
+          src="https://www.youtube.com/embed/A1d52Epeu_Q"
+          title="Koi Fish Farm Tour"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      </div>
     </section>
   );
 };
