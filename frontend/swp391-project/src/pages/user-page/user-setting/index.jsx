@@ -151,7 +151,7 @@ const UserSetting = () => {
   const handleLogout = () => {
     dispatch(logout());
     setShowConfirmation(false); // Đóng hộp thoại xác nhận
-    navigate("/login"); // Điều hướng đến trang đăng nhập
+    navigate("/"); // Điều hướng đến trang đăng nhập
   };
 
   if (loading) {

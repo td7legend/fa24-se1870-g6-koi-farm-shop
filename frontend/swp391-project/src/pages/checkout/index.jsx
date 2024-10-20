@@ -177,7 +177,7 @@ const Checkout = () => {
           if (paymentStatus) {
             handlePaymentSuccess();
           } else {
-            message.error("Payment was not successful. Please try again.");
+            message.error("Payment was not. Please try again.");
           }
           popup.close();
         }
