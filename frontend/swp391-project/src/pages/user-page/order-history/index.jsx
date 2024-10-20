@@ -35,6 +35,7 @@ const OrderHistoryPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showConfirmation, setShowConfirmation] = useState(false);
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -74,14 +75,14 @@ const OrderHistoryPage = () => {
 
   const getStatusTag = (status) => {
     switch (status) {
-      case 1:
+      case "Paid":
         return <Tag color="green">Paid</Tag>;
-      case 2:
+      case "Shipping":
         return <Tag color="blue">Shipping</Tag>;
-      case 3:
+      case "Completed":
         return <Tag color="purple">Completed</Tag>;
       default:
-        return <Tag color="default">Unknown</Tag>;
+        return <Tag color="default">{status || "Unknown"}</Tag>;
     }
   };
 
@@ -90,6 +91,7 @@ const OrderHistoryPage = () => {
       title: "ORDER ID",
       dataIndex: "orderId",
       key: "orderId",
+      render: (orderId) => `#${orderId}`,
     },
     {
       title: "DATE",
@@ -101,11 +103,11 @@ const OrderHistoryPage = () => {
       title: "TOTAL",
       dataIndex: "totalAmount",
       key: "total",
-      render: (total, record) =>
-        `${(total || 0).toLocaleString("vi-VN", {
+      render: (total) =>
+        (total || 0).toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
-        })} (${record.orderLines?.length || 0} Products)`,
+        }),
     },
     {
       title: "STATUS",
@@ -128,6 +130,7 @@ const OrderHistoryPage = () => {
       ),
     },
   ];
+
   const confirmLogout = () => {
     setShowConfirmation(true);
   };
@@ -168,7 +171,6 @@ const OrderHistoryPage = () => {
             <li onClick={() => navigate("/user-setting/:id")}>
               <FontAwesomeIcon icon={faCog} /> Setting
             </li>
-
             <li onClick={confirmLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout
             </li>
@@ -194,7 +196,6 @@ const OrderHistoryPage = () => {
       </div>
       <ToastContainer />
 
-      {/* Modal xác nhận đăng xuất */}
       <Modal
         title="Confirm Logout?"
         visible={showConfirmation}
@@ -206,7 +207,7 @@ const OrderHistoryPage = () => {
           <Button
             key="back"
             onClick={() => setShowConfirmation(false)}
-            style={{ backgroundColor: "red#C0C0C0", color: "black" }}
+            style={{ backgroundColor: "#C0C0C0", color: "black" }}
           >
             Cancel
           </Button>,

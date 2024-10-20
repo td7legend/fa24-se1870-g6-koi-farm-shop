@@ -12,6 +12,7 @@ import {
   message,
   Button,
   Modal,
+  Tag,
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import {
@@ -72,6 +73,8 @@ const UserDashboard = () => {
           .sort((a, b) => b.orderId - a.orderId)
           .slice(0, 5);
         setOrderHistory(sortedOrders);
+        console.log("Raw orders data:", ordersResponse.data); // Debugging log
+        console.log("Processed orders:", sortedOrders); // Debugging log
       } catch (error) {
         toast.error("Error fetching data:", error);
         if (error.response && error.response.status === 401) {
@@ -101,6 +104,19 @@ const UserDashboard = () => {
     </Row>
   );
 
+  const getStatusTag = (status) => {
+    switch (status) {
+      case "Paid":
+        return <Tag color="green">Paid</Tag>;
+      case "Shipping":
+        return <Tag color="blue">Shipping</Tag>;
+      case "Completed":
+        return <Tag color="purple">Completed</Tag>;
+      default:
+        return <Tag color="default">{status || "Unknown"}</Tag>;
+    }
+  };
+
   const columns = [
     {
       title: "ORDER ID",
@@ -128,6 +144,7 @@ const UserDashboard = () => {
       title: "STATUS",
       dataIndex: "status",
       key: "status",
+      render: (status) => getStatusTag(status),
     },
     {
       title: "ACTION",
