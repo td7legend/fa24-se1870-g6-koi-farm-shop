@@ -48,7 +48,7 @@ const LatestNews = () => {
   const [fade, setFade] = useState("");
 
   const nextNews = () => {
-    setFade("fade__out"); // Start fade-out effect
+    setFade("fade__out");
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>
         prevIndex + itemsPerPage < newsItems.length

@@ -16,6 +16,7 @@
     justify-content: center;
     gap: 30px;
     width: 100%;
+    padding: 30px;
   }
 
   .settings-sider {
@@ -68,8 +69,8 @@
 
       i {
         color: #9b8e5e;
-        font-size: 20px; /* Điều chỉnh kích thước icon nếu cần */
-        line-height: 1; /* Đảm bảo rằng icon không có khoảng cách thêm bên dưới */
+        font-size: 20px;
+        line-height: 1;
       }
     }
   }
@@ -186,6 +187,34 @@
       input[type="file"] {
         font-size: 14px;
       }
+    }
+  }
+
+  .user-form {
+    .user-information {
+      p {
+        cursor: pointer;
+        color: #bbab6f;
+      }
+    }
+    .card {
+      background-color: #fffaf0;
+    }
+    .ant-table {
+      background-color: #fffaf0;
+    }
+    .ant-table-cell {
+      background-color: #fffaf0;
+    }
+    .ant-card-body {
+      border-radius: 10px;
+      background-color: #fffaf0;
+      height: fit-content;
+      width: 700px;
+      border: 1px solid #000;
+    }
+    .ant-card-bordered {
+      border: none;
     }
   }
 }

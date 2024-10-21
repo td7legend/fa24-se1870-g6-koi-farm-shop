@@ -8,6 +8,7 @@ import {
   Tag,
   Button,
   Modal,
+  Card,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -154,7 +155,6 @@ const OrderHistoryPage = () => {
       </div>
       <div className="layout-container">
         <aside className="settings-sider">
-          <h4>Navigation</h4>
           <ul className="settings-menu">
             <li onClick={() => navigate("/user-dashboard/:id")}>
               <FontAwesomeIcon icon={faHome} /> Dashboard
@@ -176,9 +176,11 @@ const OrderHistoryPage = () => {
             </li>
           </ul>
         </aside>
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
-          <Title level={2}>Order History</Title>
-          <div className="order-history-container">
+        <div style={{ maxWidth: 1200 }}></div>
+
+        <div className="order-history-container">
+          <Card className="card">
+            <Title level={3}>Order History</Title>
             <Table
               className="order-history-table"
               columns={columns}
@@ -191,10 +193,9 @@ const OrderHistoryPage = () => {
                 showQuickJumper: false,
               }}
             />
-          </div>
-        </Space>
+          </Card>
+        </div>
       </div>
-      <ToastContainer />
 
       <Modal
         title="Confirm Logout?"

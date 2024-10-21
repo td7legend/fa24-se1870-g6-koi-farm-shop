@@ -1,18 +1,83 @@
 import { useState } from "react";
-import ProductCard from "../Product";
+import ProductCard from "../../product-card";
 import "./index.scss";
 import Picture from "../../../images/picture-3.png";
 
 const PopularProduct = () => {
   const products = [
-    { image: Picture, name: "Popular Koi 1", price: 25 },
-    { image: Picture, name: "Popular Koi 2", price: 30 },
-    { image: Picture, name: "Popular Koi 3", price: 35 },
-    { image: Picture, name: "Popular Koi 4", price: 40 },
-    { image: Picture, name: "Popular Koi 5", price: 50 },
-    { image: Picture, name: "Popular Koi 6", price: 55 },
-    { image: Picture, name: "Popular Koi 7", price: 60 },
-    { image: Picture, name: "Popular Koi 8", price: 65 },
+    {
+      id: 1,
+      img_path: Picture,
+      name: "Koi Fish 1",
+      price: 25,
+      origin: "Japan",
+      size: 30,
+      description: "A beautiful koi fish with vibrant colors.",
+    },
+    {
+      id: 2,
+      img_path: Picture,
+      name: "Koi Fish 2",
+      price: 30,
+      origin: "Japan",
+      size: 35,
+      description:
+        "A striking koi fish with unique patterns. A striking koi fish with unique patterns. A striking koi fish with unique patterns. A striking koi fish with unique patterns.",
+    },
+    {
+      id: 3,
+      img_path: Picture,
+      name: "Koi Fish 3",
+      price: 35,
+      origin: "Japan",
+      size: 40,
+      description: "An elegant koi fish with smooth scales.",
+    },
+    {
+      id: 4,
+      img_path: Picture,
+      name: "Koi Fish 4",
+      price: 40,
+      origin: "Japan",
+      size: 25,
+      description: "A graceful koi fish with bold patterns.",
+    },
+    {
+      id: 5,
+      img_path: Picture,
+      name: "Koi Fish 5",
+      price: 50,
+      origin: "Japan",
+      size: 50,
+      description: "A majestic koi fish with a radiant glow.",
+    },
+    {
+      id: 6,
+      img_path: Picture,
+      name: "Koi Fish 6",
+      price: 55,
+      origin: "Japan",
+      size: 45,
+      description: "A koi fish with delicate fins and a serene presence.",
+    },
+    {
+      id: 7,
+      img_path: Picture,
+      name: "Koi Fish 7",
+      price: 60,
+      origin: "Japan",
+      size: 55,
+      description: "A koi fish with remarkable color transitions.",
+    },
+    {
+      id: 8,
+      img_path: Picture,
+      name: "Koi Fish 8",
+      price: 65,
+      origin: "Japan",
+      size: 60,
+      description: "A stunning koi fish with flawless features.",
+    },
   ];
 
   const itemsPerPage = 4;
@@ -50,11 +115,13 @@ const PopularProduct = () => {
         <button className="nav__button left" onClick={prevProducts}>
           &lt;
         </button>
-        <div className={`popular_products__display ${fade}`}>
+        <div className={`popular__products__display ${fade}`}>
           {products
             .slice(currentIndex, currentIndex + itemsPerPage)
             .map((product, index) => (
-              <ProductCard key={index} product={product} />
+              <div className="product__container" key={index}>
+                <ProductCard fish={product} />
+              </div>
             ))}
         </div>
         <button className="nav__button right" onClick={nextProducts}>

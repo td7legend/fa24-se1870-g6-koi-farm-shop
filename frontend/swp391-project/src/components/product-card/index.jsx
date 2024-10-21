@@ -4,7 +4,6 @@ import { Tag, Button, notification } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 
 const ProductCard = ({ fish }) => {
-  // Add breed as a prop;
   const handleAddToCart = () => {
     notification.open({
       message: "Fish added to cart",
@@ -15,51 +14,26 @@ const ProductCard = ({ fish }) => {
   };
 
   return (
-    <Link to={`/products/${fish.id}`} className="link">
+    <Link to={`/products/${fish.id}`} className="product-card-wrapper">
       <div className="product-card">
         <div className="image">
-          <img src={fish.img_path} alt="name" />
+          <img src={fish.img_path} alt={fish.name} />
         </div>
         <div className="info-container">
           <div className="info">
             <h2>{fish.name}</h2>
+            <p className="description">{fish.description}</p>
             <div className="tag">
-              {/* <p>Origin: {fish.origin} </p> */}
-              <Tag
-                style={{
-                  fontSize: 10,
-                  padding: "2px 2px",
-                  borderRadius: 50,
-                }}
-                color="blue"
-              >
-                {fish.origin}
-              </Tag>
-              {/* <p>Size: {fish.size} cm</p> */}
-              <Tag
-                style={{
-                  fontSize: 10,
-                  padding: "2px 2px",
-                  borderRadius: 50,
-                }}
-                color="blue"
-              >
-                Size: {fish.size} cm
-              </Tag>
+              <div className="tag-item-origin">{fish.origin}</div>
+              <div className="tag-item-size">Size: {fish.size} cm</div>
             </div>
-            <p>Price: {fish.price} VND</p>
+            <p className="price">Price: {fish.price} VND</p>
           </div>
 
           <Button
             className="add-to-cart"
             icon={<ShoppingCartOutlined />}
             onClick={handleAddToCart}
-            style={{
-              fontSize: 10,
-              height: 50,
-              padding: "8px 16px",
-              borderRadius: 20,
-            }}
           >
             Add to Cart
           </Button>

@@ -16,6 +16,7 @@
     justify-content: center;
     gap: 30px;
     width: 100%;
+    padding: 30px;
   }
 
   .settings-sider {
@@ -40,8 +41,8 @@
 
       li {
         display: flex;
-        align-items: center; /* Căn giữa theo chiều dọc */
-        justify-content: flex-start; /* Căn trái */
+        align-items: center;
+        justify-content: flex-start;
         padding: 12px;
         margin-bottom: 10px;
         font-size: 16px;
@@ -51,9 +52,9 @@
         background-color: #fffaf0;
         border-radius: 8px;
         border: none;
-        gap: 10px; /* Khoảng cách giữa icon và văn bản */
-        height: 50px; /* Đặt chiều cao đồng đều cho tất cả li */
-        line-height: 50px; /* Đặt line-height bằng chiều cao của li */
+        gap: 10px;
+        height: 50px;
+        line-height: 50px;
         transition: all 0.3s;
 
         &:hover {
@@ -68,8 +69,8 @@
 
       i {
         color: #9b8e5e;
-        font-size: 20px; /* Điều chỉnh kích thước icon nếu cần */
-        line-height: 1; /* Đảm bảo rằng icon không có khoảng cách thêm bên dưới */
+        font-size: 20px;
+        line-height: 1;
       }
     }
   }

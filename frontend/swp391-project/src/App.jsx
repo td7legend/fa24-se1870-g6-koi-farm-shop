@@ -42,19 +42,19 @@ function App() {
         { path: "/user-dashboard/:id", element: <UserDashboard /> },
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
-        { path: "/error-page", element: <ErrorPage /> },
         { path: "/contact", element: <Contact /> },
         { path: "/about-us", element: <AboutUs /> },
         { path: "/faqs-page", element: <FAQsPage /> },
         { path: "/policy-page", element: <PolicyPage /> },
         { path: "/shopping-guide", element: <ShoppingGuidePage /> },
+        // Thêm route cho trang lỗi 404
+        { path: "*", element: <ErrorPage /> }, // Route này sẽ khớp với mọi đường dẫn không xác định
       ],
     },
     {
       path: "/LoginSuccess/:token",
       element: <LoginSuccess />,
     },
-
     {
       path: "/login",
       element: <Login />,
@@ -64,6 +64,7 @@ function App() {
       element: <ForgotPassword />,
     },
   ]);
+
   useEffect(() => {
     // Đảm bảo sự kiện lắng nghe chỉ được thêm một lần khi component mount
     return () => window.removeEventListener("message", () => {});

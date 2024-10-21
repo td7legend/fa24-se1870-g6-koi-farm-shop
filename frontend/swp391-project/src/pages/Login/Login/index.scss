@@ -28,19 +28,31 @@ $border-color_1: #fff;
     z-index: 5;
   }
 }
-/* Hover effect cho nút Google */
-/* Biểu tượng Google */
+
 .page__container {
   font-family: $font-family_2;
   background-color: $background-color_1;
-  background-image: url("src/images/background-image.png");
-  background-size: 700px;
-  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   height: 100vh;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("src/images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    background-blend-mode: overlay;
+    filter: blur(5px);
+    opacity: 0.2;
+  }
 }
 
 .container {

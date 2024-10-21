@@ -1,6 +1,7 @@
 import Picture1 from "../../../images/background.png";
 import Picture2 from "../../../images/background-1.png";
 import Picture3 from "../../../images/background-2.png";
+import Picture4 from "../../../images/background-3.png";
 import "./index.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -22,7 +23,7 @@ function WelcomeSection() {
             spaceBetween={0}
             slidesPerView={1}
             autoplay={{
-              delay: 3000,
+              delay: 5000,
               disableOnInteraction: false,
             }}
             pagination={{ clickable: true }}
@@ -30,13 +31,16 @@ function WelcomeSection() {
             className="mySwiper"
           >
             <SwiperSlide>
-              <img src={Picture1} alt="Koi Fish 1" className="welcome__image" />
+              <img src={Picture4} alt="Koi Fish 1" className="welcome__image" />
             </SwiperSlide>
             <SwiperSlide>
-              <img src={Picture2} alt="Koi Fish 2" className="welcome__image" />
+              <img src={Picture3} alt="Koi Fish 2" className="welcome__image" />
             </SwiperSlide>
             <SwiperSlide>
-              <img src={Picture3} alt="Koi Fish 3" className="welcome__image" />
+              <img src={Picture2} alt="Koi Fish 3" className="welcome__image" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={Picture1} alt="Koi Fish 3" className="welcome__image" />
             </SwiperSlide>
           </Swiper>
         </div>

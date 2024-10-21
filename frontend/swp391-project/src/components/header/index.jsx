@@ -97,6 +97,15 @@ const Header = () => {
 
         {/* User Options */}
         <div className="user__options">
+          <div className="language" onClick={toggleDropdown}>
+            <FontAwesomeIcon icon={faGlobe} className="fa__icon" /> {language}
+          </div>
+
+          <Link to="/cart" className="cart">
+            <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" /> Your
+            Cart
+          </Link>
+
           {!isLoggedIn ? (
             <Link to="/login" className="register__sign__in">
               <FontAwesomeIcon icon={faUser} className="fa__icon" />{" "}
@@ -111,13 +120,6 @@ const Header = () => {
               {userData.fullName}
             </Link>
           )}
-          <Link to="/cart" className="cart">
-            <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" /> Your
-            Cart
-          </Link>
-          <div className="language" onClick={toggleDropdown}>
-            <FontAwesomeIcon icon={faGlobe} className="fa__icon" /> {language}
-          </div>
 
           {/* Language Dropdown */}
           {isDropdownOpen && (
@@ -150,7 +152,7 @@ const Header = () => {
             </li>
             <li className="dropdown">
               <Link to="/products">
-                Product
+                Fish
                 <ul className="dropdown-menu">
                   <li className="menu-item">
                     <Link to="/breed/Ogon">Ogon</Link>

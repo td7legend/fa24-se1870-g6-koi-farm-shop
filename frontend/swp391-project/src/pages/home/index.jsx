@@ -80,8 +80,8 @@ const Home = () => {
           </div>
           <iframe
             width="560"
-            height="315"
-            src="https://www.youtube.com/embed/OeuhPo4AgkI"
+            height="500"
+            src="https://www.youtube.com/embed/OeuhPo4AgkI?autoplay=1&mute=1&vq=hd1080"
             title="Ogon Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -111,8 +111,8 @@ const Home = () => {
         <div className="demo">
           <iframe
             width="560"
-            height="315"
-            src="https://www.youtube.com/embed/rVFfO95KxRk"
+            height="500"
+            src="https://www.youtube.com/embed/rVFfO95KxRk?autoplay=1&mute=1&vq=hd1080"
             title="Ochiba Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -155,8 +155,8 @@ const Home = () => {
           </div>
           <iframe
             width="560"
-            height="315"
-            src="https://www.youtube.com/embed/TjEWSEm6MI4"
+            height="500"
+            src="https://www.youtube.com/embed/TjEWSEm6MI4?autoplay=1&mute=1&vq=hd1080"
             title="Kohaku Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -186,8 +186,8 @@ const Home = () => {
         <div className="demo">
           <iframe
             width="560"
-            height="315"
-            src="https://www.youtube.com/embed/ySxJcBmKvsM"
+            height="500"
+            src="https://www.youtube.com/embed/ySxJcBmKvsM?autoplay=1&mute=1&vq=hd1080"
             title="Kujaku Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

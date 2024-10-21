@@ -287,7 +287,6 @@ const UserSetting = () => {
 
       <div className="layout-container">
         <aside className="settings-sider">
-          <h4>Navigation</h4>
           <ul className="settings-menu">
             <li onClick={() => navigate("/user-dashboard/:id")}>
               <FontAwesomeIcon icon={faHome} /> Dashboard

@@ -108,9 +108,6 @@ function Consignment() {
         setFileListFishImage([]);
         setFileListFishCertificate([]);
 
-        // console.log(values.fish_image.file.originFileObj);
-        // console.log(values.fish_certificate.file.originFileObj);
-
         const url_image = await uploadFile(
           values.fish_image.file.originFileObj
         );
@@ -142,13 +139,15 @@ function Consignment() {
   };
 
   return (
-    <div>
+    <div className="consignment-container">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
           <Breadcrumb.Item href="/">
             <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Consignment</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            Consignment
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="consignment">
