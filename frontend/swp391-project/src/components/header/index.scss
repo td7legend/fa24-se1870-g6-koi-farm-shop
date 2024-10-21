@@ -108,7 +108,7 @@
 
   &__menu {
     padding-top: 20px;
-    position: relative; /* Thanh menu sẽ chỉ cố định khi người dùng cuộn */
+    position: relative;
     z-index: 1001;
 
     &.fixed {
@@ -155,11 +155,10 @@
       }
 
       .dropdown-menu {
-        /* Ẩn menu con (dropdown) ban đầu */
         width: 150px;
         height: fit-content;
         text-align: start;
-        top: 150%; /* Đặt dropdown ngay bên dưới phần tử cha */
+        top: 150%;
         left: 0;
         display: block;
         position: absolute;
@@ -169,25 +168,24 @@
         border-radius: 5px;
         border: 1px solid #ccc;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        opacity: 0; /* Khởi tạo độ mờ cho menu */
-        visibility: hidden; /* Ẩn menu */
-        transition: opacity 0.3s ease, visibility 0.3s ease; /* Thêm hiệu ứng chuyển động */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
 
         .menu-item {
-          /* Định dạng từng mục trong dropdown */
           padding: 10px 20px;
-          transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền */
-          border-bottom: 1px solid #ddd; /* Đường kẻ ngăn cách giữa các mục */
+          transition: background-color 0.3s ease;
+          border-bottom: 1px solid #ddd;
           &:hover {
-            background-color: #f0f0f0; /* Màu nền khi hover */
-            cursor: pointer; /* Đổi con trỏ khi hover */
+            background-color: #f0f0f0;
+            cursor: pointer;
             a {
               color: #bbab6f;
             }
           }
         }
         .menu-item:last-child {
-          border-bottom: none; /* Không hiển thị đường kẻ cho mục cuối cùng */
+          border-bottom: none;
         }
         a {
           text-decoration: none;
@@ -195,40 +193,49 @@
         }
       }
       .dropdown:hover .dropdown-menu {
-        /* Hiển thị dropdown khi hover vào .dropdown */
-        opacity: 1; /* Đặt độ mờ về 1 */
-        visibility: visible; /* Đặt chế độ hiển thị về visible */
+        opacity: 1;
+        visibility: visible;
       }
       .dropdown {
-        /* Định dạng để dropdown nằm dưới mục "Product" */
         position: relative;
       }
     }
   }
 
   .language {
-    cursor: pointer; // Change cursor to pointer when hovering over the language label
+    cursor: pointer;
+    position: relative;
     color: #bbab6f;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: white;
+    }
+
+    .fa__icon {
+      margin-right: 8px;
+    }
   }
 
   .language__dropdown {
     position: absolute;
-    top: 60px; // Adjust as necessary
-    right: 20px; // Align with the user options
-    background-color: #fff; // Background color
-    border: 1px solid #ccc; // Border
-    border-radius: 5px; // Rounded corners
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Shadow for depth
+    top: 100px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 
     div {
       padding: 10px 15px;
-      cursor: pointer; // Change cursor to pointer on dropdown items
-      color: #bbab6f; // Text color
+      cursor: pointer;
+      color: #bbab6f;
 
       &:hover {
-        background-color: #bbab6f; // Change background color to #bbab6f on hover
-        color: white; // Optional: Change text color for better contrast
+        background-color: #bbab6f;
+        color: white;
       }
     }
   }
