@@ -136,7 +136,7 @@ public class KoiFarmDbContext : DbContext
         {
             entity.HasKey(e => e.CertificationId);
             entity.Property(e => e.Description).IsRequired();
-            entity.Property(e => e.IssueDate).IsRequired();
+            //entity.Property(e => e.Url).IsRequired();
 
             entity.HasOne(e => e.Fish)
                   .WithMany()
@@ -145,40 +145,40 @@ public class KoiFarmDbContext : DbContext
         });
 
         
-        modelBuilder.Entity<Consignment>(entity =>
-        {
-            entity.HasKey(e => e.ConsignmentId);
-            entity.Property(e => e.StartDate).IsRequired();
-            entity.Property(e => e.EndDate).IsRequired();
-            entity.Property(e => e.Amount).IsRequired();
-            entity.Property(e => e.Status).IsRequired();
+        //modelBuilder.Entity<Consignment>(entity =>
+        //{
+        //    entity.HasKey(e => e.ConsignmentId);
+        //    entity.Property(e => e.StartDate).IsRequired();
+        //    entity.Property(e => e.EndDate).IsRequired();
+        //    entity.Property(e => e.Amount).IsRequired();
+        //    entity.Property(e => e.Status).IsRequired();
 
             
-            entity.HasOne(e => e.Staff)
-                  .WithMany(s => s.Consignments)  
-                  .HasForeignKey(e => e.StaffId)  
-                  .OnDelete(DeleteBehavior.Cascade);
-        });
+        //    entity.HasOne(e => e.Staff)
+        //          .WithMany(s => s.Consignments)  
+        //          .HasForeignKey(e => e.StaffId)  
+        //          .OnDelete(DeleteBehavior.Cascade);
+        //});
 
 
         
-        modelBuilder.Entity<ConsignmentLine>(entity =>
-        {
-            entity.HasKey(e => e.ConsignmentLineId);
-            entity.Property(e => e.Quantity).IsRequired();
-            entity.Property(e => e.UnitPrice).IsRequired();
-            entity.Property(e => e.TotalPrice).IsRequired();
+        //modelBuilder.Entity<ConsignmentLine>(entity =>
+        //{
+        //    entity.HasKey(e => e.ConsignmentLineId);
+        //    entity.Property(e => e.Quantity).IsRequired();
+        //    entity.Property(e => e.UnitPrice).IsRequired();
+        //    entity.Property(e => e.TotalPrice).IsRequired();
 
-            entity.HasOne(e => e.Consignment)
-                  .WithMany(e => e.ConsignmentLines)
-                  .HasForeignKey(e => e.ConsignmentId)
-                  .OnDelete(DeleteBehavior.Cascade);
+        //    entity.HasOne(e => e.Consignment)
+        //          .WithMany(e => e.ConsignmentLines)
+        //          .HasForeignKey(e => e.ConsignmentId)
+        //          .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(e => e.Fish)
-                  .WithMany()
-                  .HasForeignKey(e => e.FishId)
-                  .OnDelete(DeleteBehavior.Restrict);
-        });
+        //    entity.HasOne(e => e.Fish)
+        //          .WithMany()
+        //          .HasForeignKey(e => e.FishId)
+        //          .OnDelete(DeleteBehavior.Restrict);
+        //});
 
         
         modelBuilder.Entity<Rating>(entity =>
