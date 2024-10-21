@@ -56,6 +56,11 @@ namespace koi_farm_demo.Repositories
             _context.Fish.Update(fish);
             await _context.SaveChangesAsync();
         }
+        public async Task<Fish> GetByConsignmentLineId(int consignmentLineId)
+        {
+            return await _context.Fish
+                .FirstOrDefaultAsync(f => f.ConsignmentLineId == consignmentLineId);
+        }
 
     }
 }
