@@ -50,7 +50,7 @@ namespace koi_farm_demo.Controllers
             try
             {
                 var currentManagerId = GetCurrentUserId(); 
-                await _userService.AddStaffAsync(model.Username, model.Password, model.Staff, currentManagerId);
+                await _userService.AddStaffAsync(model.Email, model.Password, model.Staff, currentManagerId);
                 return Ok("Staff added successfully.");
             }
             catch (UnauthorizedAccessException ex)
