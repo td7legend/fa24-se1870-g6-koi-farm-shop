@@ -15,7 +15,7 @@ import axios from "axios";
 import { faHome, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
-
+import "./index.scss";
 const { Title } = Typography;
 
 const config = {

@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
-import Header from "../header";
-import Footer from "../footer";
+import Header from "../../header";
+import Footer from "../../footer";
 import { useEffect } from "react";
 
 function Layout() {

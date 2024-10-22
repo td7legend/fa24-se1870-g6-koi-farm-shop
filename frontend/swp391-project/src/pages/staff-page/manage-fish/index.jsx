@@ -22,7 +22,8 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import { PlusOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
-import uploadFile from "../../utils/upload/upload";
+// import uploadFile from "../../../utils/upload";
+import "./index.scss";
 
 const { Title } = Typography;
 const { Option } = Select;

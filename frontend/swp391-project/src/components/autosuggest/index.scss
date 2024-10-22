@@ -41,7 +41,7 @@
 
 .react-autosuggest__input--focused {
   outline: none;
-  border-color: #bbab6f;
+  border-color: #fff;
 }
 
 .react-autosuggest__suggestions-container {
@@ -87,5 +87,5 @@
   right: 0;
   bottom: 0;
   background-color: transparent;
-  z-index: 999; /* Đảm bảo overlay ở dưới thanh tìm kiếm nhưng trên tất cả các phần tử khác */
+  z-index: 999;
 }

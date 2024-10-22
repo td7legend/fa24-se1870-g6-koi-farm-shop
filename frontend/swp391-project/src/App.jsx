@@ -2,7 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Consignment from "./pages/consignment/consignment-page";
 import ConsignmentCare from "./pages/consignment/consignment-care";
 import ConsignmentSell from "./pages/consignment/consignment-sell";
-import Layout from "./components/layout/layout";
+import UserLayout from "./components/layout/user-layout";
+import StaffLayout from "./components/layout/staff-layout";
 import HomePage from "./pages/home";
 import AllFishPage from "./pages/all-fish";
 import BreedFishPage from "./pages/breed";
@@ -28,13 +29,14 @@ import BatchFishFilter from "./components/BatchFishFilter/BatchFishFilter";
 
 import StaffOrderManagement from "./pages/staff-page/manage-order";
 import StaffFishManagement from "./pages/staff-page/manage-fish";
-import FishTypeManagement from "./pages/staff-page/manage-fishtype";
+import StaffFishTypeManagement from "./pages/staff-page/manage-fishtype";
 import ConsignmentView from "./pages/user-page/consignment-history";
+
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />,
+      element: <UserLayout />,
       children: [
         { path: "/", element: <HomePage /> },
         { path: "/products", element: <AllFishPage /> },
@@ -52,26 +54,14 @@ function App() {
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
         { path: "/consignment-history", element: <ConsignmentView /> },
-        {
-          path: "/staff-dashboard/order-management",
-          element: <StaffOrderManagement />,
-        },
-        {
-          path: "/staff-dashboard/fish-management",
-          element: <StaffFishManagement />,
-        },
-        {
-          path: "/staff-dashboard/fishtype-management",
-          element: <FishTypeManagement />,
-        },
         { path: "/contact", element: <Contact /> },
         { path: "/about-us", element: <AboutUs /> },
         { path: "/faqs-page", element: <FAQsPage /> },
         { path: "/policy-page", element: <PolicyPage /> },
         { path: "/shopping-guide", element: <ShoppingGuidePage /> },
         { path: "/batch-fish", element: <BatchFishFilter /> },
-        // Thêm route cho trang lỗi 404
-        { path: "*", element: <ErrorPage /> }, // Route này sẽ khớp với mọi đường dẫn không xác định
+
+        { path: "*", element: <ErrorPage /> },
       ],
     },
     {
@@ -86,10 +76,18 @@ function App() {
       path: "/forgot-password",
       element: <ForgotPassword />,
     },
+    {
+      path: "/staff-dashboard",
+      element: <StaffLayout />,
+      children: [
+        { path: "order-management", element: <StaffOrderManagement /> },
+        { path: "fish-management", element: <StaffFishManagement /> },
+        { path: "fishtype-management", element: <StaffFishTypeManagement /> },
+      ],
+    },
   ]);
 
   useEffect(() => {
-    // Đảm bảo sự kiện lắng nghe chỉ được thêm một lần khi component mount
     return () => window.removeEventListener("message", () => {});
   }, []);
 

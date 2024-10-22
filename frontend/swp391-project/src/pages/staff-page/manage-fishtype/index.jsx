@@ -17,14 +17,14 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import { PlusOutlined } from "@ant-design/icons";
-
+import "./index.scss";
 const { Title } = Typography;
 
 const config = {
   API_ROOT: "https://localhost:44366/api",
 };
 
-const FishTypeManagement = () => {
+const StaffFishTypeManagement = () => {
   const [fishTypes, setFishTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -163,7 +163,7 @@ const FishTypeManagement = () => {
   );
 
   return (
-    <div className="fish-type-management">
+    <div className="staff-fish-type-management">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
           <Breadcrumb.Item>
@@ -207,4 +207,4 @@ const FishTypeManagement = () => {
   );
 };
 
-export default FishTypeManagement;
+export default StaffFishTypeManagement;

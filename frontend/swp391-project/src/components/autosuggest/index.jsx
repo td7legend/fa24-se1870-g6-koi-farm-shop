@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
 import config from "../../config/config";
-import "./AutoSuggest.scss";
+import "./index.scss";
 
 const EnhancedSearchBar = () => {
   const [value, setValue] = useState("");
@@ -61,7 +61,7 @@ const EnhancedSearchBar = () => {
   };
 
   const inputProps = {
-    placeholder: "Tìm kiếm cá",
+    placeholder: "Search Fish",
     value,
     onChange: onChange,
   };
@@ -81,7 +81,7 @@ const EnhancedSearchBar = () => {
         onSuggestionSelected={onSuggestionSelected}
       />
       <button onClick={handleSearch} style={{ margin: "0" }}>
-        Tìm kiếm
+        Search
       </button>
     </div>
   );

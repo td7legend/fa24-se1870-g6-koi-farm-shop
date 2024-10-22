@@ -14,7 +14,8 @@ import { AES, enc } from "crypto-js";
 import config from "../../config/config";
 import axios from "axios";
 import { logout } from "../../store/actions/authActions";
-import EnhancedSearchBar from "../autosuggest/AutoSuggest";
+import EnhancedSearchBar from "../autosuggest";
+
 const Header = () => {
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -185,4 +186,3 @@ const Header = () => {
 };
 
 export default Header;
-
