@@ -1,0 +1,188 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+
+.check-out-container {
+  padding: 40px;
+
+  .check-out-form {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    font-family: "Lora", sans-serif;
+
+    .button {
+      color: #bbab6f;
+      border-color: #bbab6f;
+      background-color: #fffaf0;
+      padding: 12px 25px; /* Tăng kích thước padding cho button */
+      font-size: 16px; /* Tăng cỡ chữ cho nút */
+      border-radius: 6px; /* Bo góc cho nút */
+      transition: all 0.3s ease; /* Hiệu ứng mượt mà khi hover */
+
+      &:hover {
+        background-color: #ddd;
+        border-color: #bbab6f;
+        color: #bbab6f;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng mờ khi hover */
+      }
+    }
+
+    .button-main {
+      color: #fffaf0;
+      border-color: #bbab6f;
+      background-color: #bbab6f;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #ddd;
+        border-color: #bbab6f;
+        color: #bbab6f;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    p {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      font-size: 16px; /* Cỡ chữ dễ đọc */
+      line-height: 1.6; /* Tăng khoảng cách giữa các dòng */
+    }
+
+    h2 {
+      color: #bbab6f;
+      font-size: 28px; /* Tăng cỡ chữ cho tiêu đề */
+      margin-bottom: 20px;
+    }
+
+    .form-left,
+    .form-right {
+      background-color: #fffaf0;
+      padding: 30px;
+      border-radius: 35px;
+      border: 2px solid #e0e0e0; /* Viền nhẹ */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bóng mờ cho form */
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Bóng mờ khi hover */
+      }
+    }
+
+    .form-left {
+      background-color: #fffaf0;
+      width: 1000px;
+
+      h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .ant-table-cell {
+        background-color: #fffaf0;
+      }
+
+      .ant-table {
+        border-radius: 5px;
+        overflow: hidden;
+        font-family: sans-serif;
+      }
+
+      .ant-table-summary {
+        font-weight: bold;
+      }
+
+      .ant-radio-group {
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+
+        .ant-radio-button-wrapper {
+          border-radius: 4px;
+          padding: 10px;
+        }
+      }
+    }
+
+    .form-right {
+      flex-wrap: wrap;
+      width: 400px;
+
+      h2 {
+        font-family: sans-serif;
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-family: sans-serif;
+        font-size: 15px;
+        color: #000000;
+      }
+
+      .information-item {
+        margin-bottom: 5px;
+        line-height: 1.5;
+        .item-tittle {
+          display: inline-block;
+          font-weight: bold;
+          vertical-align: top;
+          margin-right: 5px;
+        }
+
+        p {
+          display: inline-block;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+          vertical-align: top;
+        }
+      }
+    }
+  }
+
+  /* Định dạng bảng */
+  .ant-table {
+    border: 1px solid #333;
+    background-color: #fffaf0; /* Màu nền nhẹ hơn */
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: #fffaf0;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px;
+    text-align: center;
+    border-left: 1px solid #333;
+    border-bottom: 1px solid #333;
+    color: #333;
+  }
+
+  .ant-table-tbody > tr > td {
+    border-top: none;
+    background-color: #fffaf0;
+    border-bottom: 1px solid #333;
+    color: #555; /* Màu chữ nhẹ hơn cho nội dung bảng */
+    padding: 14px;
+  }
+
+  .ant-table th,
+  .ant-table td {
+    border-left: 1px solid #333;
+    text-align: center;
+  }
+
+  .ant-table th:first-child,
+  .ant-table td:first-child {
+    border-left: none;
+  }
+
+  .ant-table th:last-child,
+  .ant-table td:last-child {
+    border-right: none;
+  }
+}

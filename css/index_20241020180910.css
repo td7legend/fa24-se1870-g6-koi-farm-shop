@@ -1,0 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+.check-out-container {
+  padding: 40px;
+  border-radius: 10px;
+}
+.check-out-container .check-out-form {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  font-family: "Lora";
+}
+.check-out-container .check-out-form .button {
+  color: #bbab6f;
+  border-color: #bbab6f;
+}
+.check-out-container .check-out-form .button:hover {
+  background-color: #ddd;
+  border-color: #bbab6f;
+  color: #bbab6f;
+}
+.check-out-container .check-out-form p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+.check-out-container .check-out-form p,
+.check-out-container .check-out-form h2 {
+  font-family: serif;
+  color: #bbab6f;
+}
+.check-out-container .check-out-form .form-left,
+.check-out-container .check-out-form .form-right {
+  background-color: #fffaf0;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+.check-out-container .check-out-form .form-left {
+  background-color: #fffaf0;
+  width: 1000px;
+}
+.check-out-container .check-out-form .form-left h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.check-out-container .check-out-form .form-left .ant-table-cell {
+  background-color: #fffaf0;
+}
+.check-out-container .check-out-form .form-left .ant-table {
+  border-radius: 5px;
+  overflow: hidden;
+  font-family: serif;
+}
+.check-out-container .check-out-form .form-left .ant-table-summary {
+  font-weight: bold;
+}
+.check-out-container .check-out-form .form-left .ant-radio-group {
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+.check-out-container .check-out-form .form-left .ant-radio-group .ant-radio-button-wrapper {
+  border-radius: 4px;
+  padding: 10px;
+}
+.check-out-container .check-out-form .form-right {
+  flex-wrap: wrap;
+  width: 400px;
+}
+.check-out-container .check-out-form .form-right h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.check-out-container .check-out-form .form-right p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #555;
+}

@@ -1,0 +1,108 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+.cart-container {
+  font-family: "Lora", sans-serif;
+  box-sizing: border-box;
+  padding: 10px;
+  /* Loại bỏ đường viền bên dưới chữ Cart */
+  /* Định dạng viền ngoài cho bảng */
+}
+.cart-container .card {
+  background-color: #fffaf0;
+  padding: 30px;
+  border-radius: 35px;
+  border: 2px solid #e0e0e0; /* Viền nhẹ */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bóng mờ cho form */
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+.cart-container .card:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Bóng mờ khi hover */
+}
+.cart-container .card .button {
+  color: #bbab6f;
+  border-color: #bbab6f;
+  background-color: #fffaf0;
+}
+.cart-container .card .button:hover {
+  background-color: #ddd;
+  border-color: #bbab6f;
+  color: #bbab6f;
+}
+.cart-container .card .button-main {
+  color: #fffaf0;
+  border-color: #bbab6f;
+  background-color: #bbab6f;
+}
+.cart-container .card .button-main:hover {
+  background-color: #ddd;
+  border-color: #bbab6f;
+  color: #bbab6f;
+}
+.cart-container .ant-card-head {
+  border-bottom: none;
+}
+.cart-container .ant-table-thead > tr > th {
+  background-color: #fffaf0;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px;
+  text-align: center;
+  border: none;
+  border-left: 1px solid #333; /* Viền cho các cột */
+}
+.cart-container .ant-table-tbody > tr > td {
+  border-top: 1px solid #333;
+  background-color: #fffaf0;
+}
+.cart-container .ant-table {
+  border-top: 1px solid #333; /* Đường viền trên */
+  border-left: 1px solid #333; /* Đường viền trái */
+  border-right: 1px solid #333; /* Đường viền phải */
+  border-bottom: 1px solid #333; /* Đường viền dưới */
+}
+.cart-container .ant-table th,
+.cart-container .ant-table td {
+  border-left: 1px solid #333; /* Viền cho các cột */
+  text-align: center;
+}
+.cart-container .ant-table th:first-child,
+.cart-container .ant-table td:first-child {
+  border-left: none; /* Không viền cột đầu tiên */
+}
+.cart-container .ant-table th:last-child,
+.cart-container .ant-table td:last-child {
+  border-right: none; /* Không viền cột cuối cùng */
+}
+
+.quantity-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  padding: 5px;
+  gap: 5px; /* Tăng khoảng cách giữa các nút và số lượng */
+  background-color: #fffaf0;
+  border-radius: 6px;
+  border: 1px solid #333; /* Viền nhẹ cho input */
+}
+.quantity-input .button {
+  width: 35px;
+  height: 35px;
+  background-color: #bbab6f;
+  border: none;
+  color: #fffaf0;
+  border-radius: 4px;
+  font-size: 18px;
+  transition: all 0.3s ease; /* Hiệu ứng mượt mà khi hover */
+}
+.quantity-input .button:hover {
+  background-color: #ddd;
+  color: #bbab6f;
+}
+.quantity-input span {
+  display: inline-block;
+  width: 40px; /* Chiều rộng cố định cho thẻ span */
+  text-align: center; /* Canh giữa số lượng */
+  color: #333;
+}
