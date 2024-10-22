@@ -27,6 +27,7 @@ import PaymentSuccess from "./pages/checkout/success";
 import StaffOrderManagement from "./pages/staff-page/manage-order";
 import StaffFishManagement from "./pages/staff-page/manage-fish";
 import FishTypeManagement from "./pages/staff-page/manage-fishtype";
+import ConsignmentView from "./pages/user-page/consignment-history";
 function App() {
   const router = createBrowserRouter([
     {
@@ -48,6 +49,7 @@ function App() {
         { path: "/user-dashboard/:id", element: <UserDashboard /> },
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
+        { path: "/consignment-history", element: <ConsignmentView /> },
         {
           path: "/staff-dashboard/order-management",
           element: <StaffOrderManagement />,
