@@ -99,5 +99,24 @@ namespace koi_farm_demo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet]
+        [SwaggerOperation(Summary = "Retrieve all orders in the system with status other than InCart")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _orderService.GetAllOrdersWithStatusAsync();
+                if (orders == null || !orders.Any())
+                {
+                    return NotFound("No orders found.");
+                }
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
