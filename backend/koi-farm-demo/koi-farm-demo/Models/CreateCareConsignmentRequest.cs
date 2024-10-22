@@ -3,7 +3,6 @@
     public class CreateCareConsignmentRequest
     {
         public decimal CareFee { get; set; }
-        public int StaffId { get; set; }
         public int CustomerId { get; set; }
         public string Note { get; set; }
         public List<ConsignmentLineRequest> ConsignmentLines { get; set; }

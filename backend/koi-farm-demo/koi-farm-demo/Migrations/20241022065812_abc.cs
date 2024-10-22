@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace koi_farm_demo.Migrations
 {
     /// <inheritdoc />
-    public partial class createdb : Migration
+    public partial class abc : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -128,7 +128,8 @@ namespace koi_farm_demo.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FishId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,22 +223,30 @@ namespace koi_farm_demo.Migrations
                     ConsignmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CareFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AgreedPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    StaffId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Consignments", x => x.ConsignmentId);
                     table.ForeignKey(
+                        name: "FK_Consignments_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Consignments_Staffs_StaffId",
                         column: x => x.StaffId,
                         principalTable: "Staffs",
-                        principalColumn: "StaffId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "StaffId");
                 });
 
             migrationBuilder.CreateTable(
@@ -274,9 +283,10 @@ namespace koi_farm_demo.Migrations
                     ConsignmentLineId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ConsignmentId = table.Column<int>(type: "int", nullable: false),
-                    FishId = table.Column<int>(type: "int", nullable: false),
+                    FishType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CertificationUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     TotalPrice = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -288,12 +298,28 @@ namespace koi_farm_demo.Migrations
                         principalTable: "Consignments",
                         principalColumn: "ConsignmentId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FishCare",
+                columns: table => new
+                {
+                    FishCareId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FishType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsignmentId = table.Column<int>(type: "int", nullable: false),
+                    HealthStatus = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CareDetails = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FishCare", x => x.FishCareId);
                     table.ForeignKey(
-                        name: "FK_ConsignmentLines_Fish_FishId",
-                        column: x => x.FishId,
-                        principalTable: "Fish",
-                        principalColumn: "FishId",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_FishCare_Consignments_ConsignmentId",
+                        column: x => x.ConsignmentId,
+                        principalTable: "Consignments",
+                        principalColumn: "ConsignmentId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -307,9 +333,9 @@ namespace koi_farm_demo.Migrations
                 column: "ConsignmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConsignmentLines_FishId",
-                table: "ConsignmentLines",
-                column: "FishId");
+                name: "IX_Consignments_CustomerId",
+                table: "Consignments",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Consignments_StaffId",
@@ -326,6 +352,11 @@ namespace koi_farm_demo.Migrations
                 name: "IX_Fish_FishTypeId",
                 table: "Fish",
                 column: "FishTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FishCare_ConsignmentId",
+                table: "FishCare",
+                column: "ConsignmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LoyaltyPoints_CustomerId",
@@ -367,6 +398,9 @@ namespace koi_farm_demo.Migrations
 
             migrationBuilder.DropTable(
                 name: "ConsignmentLines");
+
+            migrationBuilder.DropTable(
+                name: "FishCare");
 
             migrationBuilder.DropTable(
                 name: "LoyaltyPoints");

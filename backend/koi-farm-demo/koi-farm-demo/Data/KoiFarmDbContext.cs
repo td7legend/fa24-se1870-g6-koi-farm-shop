@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using koi_farm_demo.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class KoiFarmDbContext : DbContext
 {
@@ -136,7 +137,7 @@ public class KoiFarmDbContext : DbContext
         {
             entity.HasKey(e => e.CertificationId);
             entity.Property(e => e.Description).IsRequired();
-            //entity.Property(e => e.Url).IsRequired();
+            entity.Property(e => e.Url).IsRequired();
 
             entity.HasOne(e => e.Fish)
                   .WithMany()
@@ -144,7 +145,7 @@ public class KoiFarmDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        
+
         //modelBuilder.Entity<Consignment>(entity =>
         //{
         //    entity.HasKey(e => e.ConsignmentId);
@@ -153,7 +154,7 @@ public class KoiFarmDbContext : DbContext
         //    entity.Property(e => e.Amount).IsRequired();
         //    entity.Property(e => e.Status).IsRequired();
 
-            
+
         //    entity.HasOne(e => e.Staff)
         //          .WithMany(s => s.Consignments)  
         //          .HasForeignKey(e => e.StaffId)  
@@ -161,7 +162,7 @@ public class KoiFarmDbContext : DbContext
         //});
 
 
-        
+
         //modelBuilder.Entity<ConsignmentLine>(entity =>
         //{
         //    entity.HasKey(e => e.ConsignmentLineId);
@@ -179,8 +180,62 @@ public class KoiFarmDbContext : DbContext
         //          .HasForeignKey(e => e.FishId)
         //          .OnDelete(DeleteBehavior.Restrict);
         //});
+        modelBuilder.Entity<Consignment>(entity =>
+        {
+            entity.HasKey(e => e.ConsignmentId);
+            entity.Property(e => e.StartDate).IsRequired();
+            entity.Property(e => e.EndDate); // Nullable
+            entity.Property(e => e.CareFee).IsRequired();
+            entity.Property(e => e.AgreedPrice).IsRequired();
+            entity.Property(e => e.Price).IsRequired();
+            entity.Property(e => e.Note).HasMaxLength(500);
+            entity.Property(e => e.Status).IsRequired();
+            entity.Property(e => e.Type).IsRequired();
 
-        
+            // Quan hệ với bảng Staff (nullable foreign key)
+
+            // Quan hệ với bảng Customer
+            entity.HasOne<Customer>()
+                  .WithMany(c => c.Consignments)
+                  .HasForeignKey(e => e.CustomerId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Cấu hình bảng ConsignmentLine
+        modelBuilder.Entity<ConsignmentLine>(entity =>
+        {
+            entity.HasKey(e => e.ConsignmentLineId);
+            entity.Property(e => e.FishType).IsRequired();
+            entity.Property(e => e.Quantity).IsRequired();
+            entity.Property(e => e.ImageUrl).HasMaxLength(200);
+            entity.Property(e => e.CertificationUrl).HasMaxLength(200);
+            entity.Property(e => e.TotalPrice).IsRequired();
+
+            // Quan hệ với bảng Consignment
+            entity.HasOne(e => e.Consignment)
+                  .WithMany(e => e.ConsignmentLines)
+                  .HasForeignKey(e => e.ConsignmentId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Cấu hình bảng FishCare
+        modelBuilder.Entity<FishCare>(entity =>
+        {
+            entity.HasKey(e => e.FishCareId);
+            entity.Property(e => e.FishType).IsRequired();
+            entity.Property(e => e.HealthStatus).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.CareDetails).HasMaxLength(500);
+
+            // Quan hệ với bảng Consignment
+            entity.HasOne<Consignment>()
+          .WithMany()
+          .HasForeignKey(e => e.ConsignmentId)
+          .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Other entity configurations...
+
+
         modelBuilder.Entity<Rating>(entity =>
         {
             entity.HasKey(e => e.RatingId);

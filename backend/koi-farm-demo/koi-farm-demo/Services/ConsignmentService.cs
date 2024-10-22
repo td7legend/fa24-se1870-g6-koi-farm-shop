@@ -25,7 +25,6 @@ namespace koi_farm_demo.Services
                 AgreedPrice = request.AgreedPrice,
                 Type = ConsignmentType.Sale,
                 Status = ConsignmentStatus.Pending,
-                StaffId = null,
                 CustomerId = request.CustomerId,
                 Note = request.Note,
                 ConsignmentLines = request.ConsignmentLines.Select(line => new ConsignmentLine
@@ -52,7 +51,6 @@ namespace koi_farm_demo.Services
                 AgreedPrice = 0,
                 Type = ConsignmentType.Care,
                 Status = ConsignmentStatus.Pending,
-                StaffId = null,
                 CustomerId = request.CustomerId,
                 Note = request.Note,
                 ConsignmentLines = request.ConsignmentLines.Select(line => new ConsignmentLine

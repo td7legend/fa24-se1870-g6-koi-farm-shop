@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace koi_farm_demo.Migrations
 {
     [DbContext(typeof(KoiFarmDbContext))]
-    [Migration("20241014172510_create db")]
-    partial class createdb
+    [Migration("20241022065812_abc")]
+    partial class abc
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,10 @@ namespace koi_farm_demo.Migrations
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CertificationId");
 
                     b.HasIndex("FishId");
@@ -57,16 +61,27 @@ namespace koi_farm_demo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConsignmentId"));
 
-                    b.Property<decimal>("Amount")
+                    b.Property<decimal>("AgreedPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<decimal>("CareFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("StaffId")
+                    b.Property<int?>("StaffId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -79,6 +94,8 @@ namespace koi_farm_demo.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ConsignmentId");
+
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("StaffId");
 
@@ -93,11 +110,22 @@ namespace koi_farm_demo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConsignmentLineId"));
 
+                    b.Property<string>("CertificationUrl")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<int>("ConsignmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FishId")
-                        .HasColumnType("int");
+                    b.Property<string>("FishType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -105,14 +133,9 @@ namespace koi_farm_demo.Migrations
                     b.Property<int>("TotalPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("UnitPrice")
-                        .HasColumnType("int");
-
                     b.HasKey("ConsignmentLineId");
 
                     b.HasIndex("ConsignmentId");
-
-                    b.HasIndex("FishId");
 
                     b.ToTable("ConsignmentLines");
                 });
@@ -415,6 +438,38 @@ namespace koi_farm_demo.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("koi_farm_demo.Models.FishCare", b =>
+                {
+                    b.Property<int>("FishCareId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FishCareId"));
+
+                    b.Property<string>("CareDetails")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("ConsignmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FishType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HealthStatus")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("FishCareId");
+
+                    b.HasIndex("ConsignmentId");
+
+                    b.ToTable("FishCare");
+                });
+
             modelBuilder.Entity("Certification", b =>
                 {
                     b.HasOne("Fish", "Fish")
@@ -428,13 +483,15 @@ namespace koi_farm_demo.Migrations
 
             modelBuilder.Entity("Consignment", b =>
                 {
-                    b.HasOne("Staff", "Staff")
+                    b.HasOne("Customer", null)
                         .WithMany("Consignments")
-                        .HasForeignKey("StaffId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Staff");
+                    b.HasOne("Staff", null)
+                        .WithMany("Consignments")
+                        .HasForeignKey("StaffId");
                 });
 
             modelBuilder.Entity("ConsignmentLine", b =>
@@ -445,15 +502,7 @@ namespace koi_farm_demo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fish", "Fish")
-                        .WithMany()
-                        .HasForeignKey("FishId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Consignment");
-
-                    b.Navigation("Fish");
                 });
 
             modelBuilder.Entity("Customer", b =>
@@ -547,6 +596,15 @@ namespace koi_farm_demo.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("koi_farm_demo.Models.FishCare", b =>
+                {
+                    b.HasOne("Consignment", null)
+                        .WithMany()
+                        .HasForeignKey("ConsignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Consignment", b =>
                 {
                     b.Navigation("ConsignmentLines");
@@ -554,6 +612,8 @@ namespace koi_farm_demo.Migrations
 
             modelBuilder.Entity("Customer", b =>
                 {
+                    b.Navigation("Consignments");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Ratings");
