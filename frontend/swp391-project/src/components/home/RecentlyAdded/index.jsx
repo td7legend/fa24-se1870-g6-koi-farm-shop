@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import ProductCard from "../Product";
+import React, { useState, useEffect } from "react";
+import ProductCard from "../../product-card";
 import "./index.scss";
 import axios from "axios";
 import config from "../../../config/config";
@@ -57,6 +57,7 @@ const RecentlyAdded = () => {
               <ProductCard key={index} product={newFish} />
             ))}
         </div>
+
         <button className="nav__button right" onClick={nextProducts}>
           &gt;
         </button>

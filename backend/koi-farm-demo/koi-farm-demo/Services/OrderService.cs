@@ -28,6 +28,8 @@ public class OrderService : IOrderService
             TotalAmount = order.TotalAmount,
             TotalTax = order.TotalTax,
             TotalDiscount = order.TotalDiscount,
+            Address = order.Address,
+            OrderDate = order.OrderDate,
             CustomerId = order.CustomerId,
             OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
             {
@@ -238,6 +240,40 @@ public class OrderService : IOrderService
         var orders = await _orderRepository.GetOrderHistoryByCustomerIdAsync(customerId);
         return orders.Any(order => order.OrderLines.Any(ol => ol.FishId == fishId));
     }
+    public async Task UpdateOrderStatusAsync(int orderId, OrderStatus status)
+    {
+        var order = await _orderRepository.GetByIdAsync(orderId);
+        if (order == null)
+        {
+            throw new Exception("Order not found");
+        }
 
+        order.Status = status;
+        await _orderRepository.UpdateAsync(order);
+    }
+    public async Task<List<OrderDTO>> GetAllOrdersWithStatusAsync()
+    {
+        var orders = await _orderRepository.GetAllOrdersWithStatusAsync();
+
+        return orders.Select(order => new OrderDTO
+        {
+            OrderId = order.OrderId,
+            Status = order.Status,
+            TotalAmount = order.TotalAmount,
+            OrderDate = order.OrderDate ?? DateTime.Now,
+            TotalTax = order.TotalTax,
+            TotalDiscount = order.TotalDiscount,
+            CustomerId = order.CustomerId,
+            OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
+            {
+                FishId = ol.FishId,
+                FishName = ol.Fish.Name,
+                ImageUrl = ol.Fish.ImageUrl,
+                Quantity = ol.Quantity,
+                UnitPrice = ol.UnitPrice,
+                TotalPrice = ol.TotalPrice
+            }).ToList()
+        }).ToList();
+    }
 
 }

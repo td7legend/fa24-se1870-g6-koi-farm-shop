@@ -7,6 +7,17 @@ import { Breadcrumb, Col } from "antd";
 import ImageFrame from "../../components/home/ImageFrame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import ogonImage from "../../images/ogon.jpg";
+import ochibaImage from "../../images/ochiba.jpg";
+import kujakuImage from "../../images/kujaku.jpg";
+import kohakuImage from "../../images/kohaku.jpg";
+
+const fishImages = {
+  Ogon: ogonImage,
+  Ochiba: ochibaImage,
+  Kujaku: kujakuImage,
+  kohaku: kohakuImage,
+};
 
 const AllFishPage = () => {
   const [allFish, setAllFish] = useState([]);
@@ -15,40 +26,37 @@ const AllFishPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
 
-  const itemsPerPage = 4; // Số lượng sản phẩm mỗi trang
+  const itemsPerPage = 4;
 
-  // Fetch tất cả dữ liệu về cá
   const fetchAllFish = async () => {
     const response = await axios.get(
       "https://66fe08fb699369308956d74e.mockapi.io/KoiProduct"
     );
     const fishData = response.data;
     setAllFish(fishData);
-    categorizeFishByBreed(fishData); // Phân loại cá theo thuộc tính breed
+    categorizeFishByBreed(fishData);
   };
 
-  // Hàm phân loại cá theo thuộc tính breed
   const categorizeFishByBreed = (fishData) => {
     const breedMap = fishData.reduce((acc, fish) => {
-      const breed = fish.breed; // Lấy thuộc tính breed từ API
+      const breed = fish.breed;
       if (!acc[breed]) {
-        acc[breed] = []; // Khởi tạo mảng cho breed mới
+        acc[breed] = [];
       }
-      acc[breed].push(fish); // Gom cá theo từng breed
+      acc[breed].push(fish);
       return acc;
     }, {});
-    setFishByBreed(breedMap); // Lưu lại danh sách cá đã phân loại
+    setFishByBreed(breedMap);
 
-    // Khởi tạo trang hiện tại cho mỗi breed
     const initialPageState = {};
     Object.keys(breedMap).forEach((breed) => {
-      initialPageState[breed] = 1; // Bắt đầu từ trang 1 cho mỗi breed
+      initialPageState[breed] = 1;
     });
     setCurrentPage(initialPageState);
   };
 
   useEffect(() => {
-    fetchAllFish(); // Fetch dữ liệu về cá khi component được mount
+    fetchAllFish();
   }, []);
 
   useEffect(() => {
@@ -61,6 +69,12 @@ const AllFishPage = () => {
   const handlePageChange = (breed, direction) => {
     setCurrentPage((prevState) => {
       const newPage = prevState[breed] + direction;
+      if (
+        newPage < 1 ||
+        newPage > Math.ceil(fishByBreed[breed].length / itemsPerPage)
+      ) {
+        return prevState;
+      }
       return {
         ...prevState,
         [breed]: newPage,
@@ -74,14 +88,16 @@ const AllFishPage = () => {
   };
 
   return (
-    <div>
+    <div className="all-fish-page-container">
       <Col span={24}>
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
             <Breadcrumb.Item href="/">
               <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>Product List</Breadcrumb.Item>
+            <Breadcrumb.Item className="breadcrumb-page">
+              Product List
+            </Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
@@ -97,11 +113,17 @@ const AllFishPage = () => {
         const endIndex = startIndex + itemsPerPage;
         const fishToDisplay = breedFish.slice(startIndex, endIndex);
 
+        const imageSrc = fishImages[breed] || "default_image_link";
+
         return (
-          <div key={breed}>
-            <ImageFrame />
-            <Link to={`/breed/${breed}`}>
-              <div className="breed-link">{breed}</div>
+          <div
+            key={breed}
+            className="all-fish-page fade-in-section"
+            style={{ marginBottom: "50px" }}
+          >
+            <ImageFrame imageSrc={imageSrc} />
+            <Link to={`/breed/${breed}`} className="breed-link">
+              <h2 className="breed-title">{breed}</h2>
             </Link>
             <div className="fish-list">
               <button
@@ -111,9 +133,15 @@ const AllFishPage = () => {
               >
                 &lt;
               </button>
+
               {fishToDisplay.map((fish) => (
-                <ProductCard fish={fish} key={fish.id} />
+                <ProductCard
+                  fish={fish}
+                  key={fish.id}
+                  className="product-card"
+                />
               ))}
+
               <button
                 className="nav__button right"
                 onClick={() => handlePageChange(breed, 1)}

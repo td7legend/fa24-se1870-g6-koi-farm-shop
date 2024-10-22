@@ -210,7 +210,6 @@ const UserDashboard = () => {
 
       <div className="layout-container">
         <aside className="settings-sider">
-          <h4>Navigation</h4>
           <ul className="settings-menu">
             <li className="active">
               <FontAwesomeIcon icon={faHome} /> Dashboard
@@ -233,45 +232,63 @@ const UserDashboard = () => {
             </li>
           </ul>
         </aside>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}></div>
-        <Card style={{ marginBottom: 24 }}>
-          <Title level={2} style={{ textAlign: "center", marginBottom: 24 }}>
-            User Profile
-          </Title>
+        <div style={{ maxWidth: 1200 }}></div>
+        <div className="user-form">
+          <div className="user-information">
+            <Card style={{ marginBottom: 24 }}>
+              {/* <Title
+                level={2}
+                style={{ textAlign: "center", marginBottom: 24 }}
+              >
+                User Profile
+              </Title> */}
 
-          <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <Avatar
-              src={user.avatar_path || DEFAULT_AVATAR}
-              size={128}
-              icon={<UserOutlined />}
-            />
+              <Row gutter={16}>
+                <Col span={16}>
+                  {renderUserInfo("Full Name", user.fullName)}
+                  {renderUserInfo("Address", user.address)}
+                  {renderUserInfo("Email", user.email)}
+                  {renderUserInfo("Phone", user.phoneNumber)}
+                  {renderUserInfo("Total Points", user.tier)}
+                  {renderUserInfo("Points Available", user.pointAvailable)}
+                  {renderUserInfo("Points Used", user.usedPoint)}
+                </Col>
+
+                <Col span={8} style={{ textAlign: "center" }}>
+                  <Avatar
+                    src={user.avatar_path || DEFAULT_AVATAR}
+                    size={128}
+                    icon={<UserOutlined />}
+                  />
+                  <p
+                    onClick={() => navigate("/user-setting/:id")}
+                    style={{ marginTop: "20px" }}
+                  >
+                    Edit Profile
+                  </p>
+                </Col>
+              </Row>
+            </Card>
           </div>
 
-          {renderUserInfo("Full Name", user.fullName)}
-          {renderUserInfo("Address", user.address)}
-          {renderUserInfo("Email", user.email)}
-          {renderUserInfo("Phone", user.phoneNumber)}
-          {renderUserInfo("Total Points", user.tier)}
-          {renderUserInfo("Points Available", user.pointAvailable)}
-          {renderUserInfo("Points Used", user.usedPoint)}
-        </Card>
-
-        <Card>
-          <Title level={3}>Recent Order History</Title>
-          <Table
-            columns={columns}
-            dataSource={orderHistory}
-            pagination={false}
-            rowKey="orderId"
-          />
-          <div style={{ textAlign: "right", marginTop: 16 }}>
-            <Link to="/order-history" style={{ color: "#D4B57E" }}>
-              View All Orders
-            </Link>
+          <div className="recent-order">
+            <Card className="card">
+              <Title level={3}>Recent Order History</Title>
+              <Table
+                columns={columns}
+                dataSource={orderHistory}
+                pagination={false}
+                rowKey="orderId"
+              />
+              <div style={{ textAlign: "right", marginTop: 16 }}>
+                <Link to="/order-history" style={{ color: "#D4B57E" }}>
+                  View All Orders
+                </Link>
+              </div>
+            </Card>
           </div>
-        </Card>
+        </div>
       </div>
-      <ToastContainer />
 
       {/* Modal xác nhận đăng xuất */}
       <Modal

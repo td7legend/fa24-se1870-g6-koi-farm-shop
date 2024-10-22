@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap");
+
 .user-history-container {
   background-color: #fffaf0;
   min-height: 100vh;
@@ -15,6 +16,7 @@
     justify-content: center;
     gap: 30px;
     width: 100%;
+    padding: 30px;
   }
 
   .settings-sider {
@@ -67,8 +69,8 @@
 
       i {
         color: #9b8e5e;
-        font-size: 20px; /* Điều chỉnh kích thước icon nếu cần */
-        line-height: 1; /* Đảm bảo rằng icon không có khoảng cách thêm bên dưới */
+        font-size: 20px;
+        line-height: 1;
       }
     }
   }
@@ -200,14 +202,29 @@
 
 .order-history-container {
   box-sizing: border-box;
-  padding: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  .order-history-table {
-    width: 100%;
-    border: 1px solid #ccc;
+  .card {
+    background-color: #fffaf0;
+    width: 700px;
+    height: fit-content;
     border-radius: 5px;
+  }
+  .ant-card-body {
+    border-radius: 10px;
+    background-color: #fffaf0;
+    height: fit-content;
+    width: 800px;
+    border: 1px solid #000;
+  }
+
+  .ant-table {
+    background-color: #fffaf0;
+  }
+
+  .ant-card-bordered {
+    border: none;
   }
   .ant-table-thead > tr > th {
     background-color: #fffaf0;
@@ -215,7 +232,20 @@
     font-weight: 600;
     padding: 16px;
   }
-
+  .ant-pagination {
+    .ant-pagination-item-active {
+      border-color: #bbab6f;
+    }
+    a {
+      border-radius: 5px;
+      color: #bbab6f;
+      border-color: #bbab6f;
+      &:hover {
+        color: #bbab6f;
+        background-color: #ddd;
+      }
+    }
+  }
   .ant-table-tbody > tr > td {
     background-color: #fffaf0;
   }

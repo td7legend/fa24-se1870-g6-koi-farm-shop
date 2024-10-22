@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import ProductCard from "../Product";
+import { useState, useEffect } from "react";
+import ProductCard from "../../product-card";
 import "./index.scss";
 import Picture from "../../../images/picture-3.png";
 import config from "../../../config/config";

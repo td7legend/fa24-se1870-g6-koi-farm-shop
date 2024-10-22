@@ -93,4 +93,13 @@ public class OrderRepository : IOrderRepository
             .Where(o => o.CustomerId == customerId && o.Status != OrderStatus.InCart)
             .ToListAsync();
     }
+    public async Task<List<Order>> GetAllOrdersWithStatusAsync()
+    {
+        return await _context.Orders
+            .Include(o => o.OrderLines)
+            .ThenInclude(ol => ol.Fish)
+            .Where(o => o.Status != OrderStatus.InCart) 
+            .ToListAsync();
+    }
+
 }

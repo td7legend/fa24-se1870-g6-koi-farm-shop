@@ -2,7 +2,7 @@
 .latest__news {
   position: relative;
   text-align: center;
-  padding: 40px 0;
+  padding: 60px 0;
 
   &::before {
     content: "";
@@ -47,6 +47,7 @@
 
       .news__card {
         width: 350px;
+        height: 400px;
         text-decoration: none;
         text-align: center;
         color: inherit;

@@ -1,5 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Consignment from "./pages/consignment";
+import Consignment from "./pages/consignment/consignment-page";
+import ConsignmentCare from "./pages/consignment/consignment-care";
+import ConsignmentSell from "./pages/consignment/consignment-sell";
 import Layout from "./components/layout/layout";
 import HomePage from "./pages/home";
 import AllFishPage from "./pages/all-fish";
@@ -35,6 +37,8 @@ function App() {
         { path: "/products/:id", element: <ProductDetail /> },
         { path: "/breed/:id", element: <ProductDetail /> },
         { path: "/consignment", element: <Consignment /> },
+        { path: "/consignment/care", element: <ConsignmentCare /> },
+        { path: "/consignment/sell", element: <ConsignmentSell /> },
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
         { path: "/checkout/success", element: <PaymentSuccess /> },
@@ -42,19 +46,19 @@ function App() {
         { path: "/user-dashboard/:id", element: <UserDashboard /> },
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
-        { path: "/error-page", element: <ErrorPage /> },
         { path: "/contact", element: <Contact /> },
         { path: "/about-us", element: <AboutUs /> },
         { path: "/faqs-page", element: <FAQsPage /> },
         { path: "/policy-page", element: <PolicyPage /> },
         { path: "/shopping-guide", element: <ShoppingGuidePage /> },
+        // Thêm route cho trang lỗi 404
+        { path: "*", element: <ErrorPage /> }, // Route này sẽ khớp với mọi đường dẫn không xác định
       ],
     },
     {
       path: "/LoginSuccess/:token",
       element: <LoginSuccess />,
     },
-
     {
       path: "/login",
       element: <Login />,
@@ -64,6 +68,7 @@ function App() {
       element: <ForgotPassword />,
     },
   ]);
+
   useEffect(() => {
     // Đảm bảo sự kiện lắng nghe chỉ được thêm một lần khi component mount
     return () => window.removeEventListener("message", () => {});

@@ -17,6 +17,7 @@
         Task UpdateQuantityAsync(int id, int quantity);
         Task<Fish> GetByIdAsync(int id);
         Task UpdateFishAsync(Fish fish);
+        Task<Fish> GetByConsignmentLineId(int consignmentLineId);
     }
 }
 

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace koi_farm_demo
 {
@@ -102,6 +103,8 @@ namespace koi_farm_demo
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<IRatingService, RatingService>();
             builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+            builder.Services.AddScoped<IConsignmentService, ConsignmentService>();
+            builder.Services.AddScoped<IConsignmentRepository, ConsignmentRepository>();
             // Đăng ký các dịch vụ Customer
             builder.Services.AddAuthorization(options =>
             {

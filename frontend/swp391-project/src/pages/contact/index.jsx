@@ -9,11 +9,17 @@ import {
   faPhone,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFacebook,
+  faInstagram,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
+
 import { useForm } from "antd/es/form/Form";
 
 function Contact() {
   return (
-    <div>
+    <div className="contact-page">
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
@@ -24,7 +30,9 @@ function Contact() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>Contact</Breadcrumb.Item>
+              <Breadcrumb.Item className="breadcrumb-page">
+                Contact
+              </Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>
@@ -45,18 +53,25 @@ function Contact() {
               <FontAwesomeIcon icon={faEnvelope} className="icon" />
               Email: goldenkoi.vn@gmail.com
             </p>
+            <div className="social-media">
+              <Link to="#" aria-label="Facebook">
+                <FontAwesomeIcon icon={faFacebook} />
+              </Link>
+              <Link to="#" aria-label="Instagram">
+                <FontAwesomeIcon icon={faInstagram} />
+              </Link>
+              <Link href="#" aria-label="Twitter">
+                <FontAwesomeIcon icon={faTwitter} />
+              </Link>
+            </div>
           </div>
           <div className="line"></div>
+
           <div className="contact-information-right">
             <div className="information-map">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.609941530484!2d106.80730807451795!3d10.841132857997918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752731176b07b1%3A0xb752b24b379bae5e!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBGUFQgVFAuIEhDTQ!5e0!3m2!1svi!2s!4v1729146539832!5m2!1svi!2s"
-                width={650}
-                height={400}
-                style={{ border: 0 }}
-                allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
           </div>
