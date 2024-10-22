@@ -11,7 +11,13 @@ namespace koi_farm_demo.Repositories
         {
             _context = context;
         }
-
+        public async Task<IEnumerable<Consignment>> GetConsignmentsByCustomerIdAsync(int customerId)
+        {
+            return await _context.Consignments
+                .Where(c => c.CustomerId == customerId)
+                .Include(c => c.ConsignmentLines) // Bao gồm các dòng ký gửi
+                .ToListAsync();
+        }
         public async Task<Consignment> GetByIdAsync(int id)
         {
             return await _context.Consignments.Include(c => c.ConsignmentLines).FirstOrDefaultAsync(c => c.ConsignmentId == id);

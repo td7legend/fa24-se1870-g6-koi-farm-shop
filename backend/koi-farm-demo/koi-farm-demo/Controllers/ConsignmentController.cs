@@ -15,7 +15,12 @@ namespace koi_farm_demo.Controllers
         {
             _consignmentService = consignmentService;
         }
-
+        [HttpGet("customer/{customerId}")]
+        public async Task<IActionResult> GetConsignmentsByCustomerId(int customerId)
+        {
+            var consignments = await _consignmentService.GetConsignmentsByCustomerIdAsync(customerId);
+            return Ok(consignments);
+        }
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSaleConsignment([FromBody] CreateConsignmentRequest request)
         {
