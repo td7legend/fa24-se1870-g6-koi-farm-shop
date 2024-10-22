@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using koi_farm_demo.Data;
+using Microsoft.EntityFrameworkCore;
 
 public class OrderRepository : IOrderRepository
 {
@@ -9,11 +10,41 @@ public class OrderRepository : IOrderRepository
         _context = context;
     }
 
-    public async Task<Order> GetOrderByIdAsync(int id)
+    public async Task<OrderDTO> GetOrderByIdAsync(int orderId)
     {
-        return await _context.Orders
-            .Include(o => o.OrderLines)
-            .FirstOrDefaultAsync(o => o.OrderId == id);
+        var order = await _context.Orders
+        .Include(o => o.OrderLines)
+        .ThenInclude(ol => ol.Fish)
+        .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+        if (order == null)
+        {
+            throw new Exception("Order not found");
+        }
+
+        // Mapping Order to DTO
+        var orderDto = new OrderDTO
+        {
+            OrderId = order.OrderId,
+            Status = order.Status,
+            TotalAmount = order.TotalAmount,
+            OrderDate = order.OrderDate ?? DateTime.Now,
+            TotalTax = order.TotalTax,
+            TotalDiscount = order.TotalDiscount,
+            Address = order.Address,
+            CustomerId = order.CustomerId,
+            OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
+            {
+                FishId = ol.FishId,
+                FishName = ol.Fish.Name,       
+                ImageUrl = ol.Fish.ImageUrl,   
+                Quantity = ol.Quantity,
+                UnitPrice = ol.UnitPrice,      
+                TotalPrice = ol.TotalPrice     
+            }).ToList()
+        };
+
+        return orderDto;
     }
 
     public async Task<Order> GetByIdAsync(int orderId)
@@ -39,5 +70,27 @@ public class OrderRepository : IOrderRepository
     {
         _context.Orders.Remove(order);
         await _context.SaveChangesAsync();
+    }
+    public async Task<List<Order>> GetOrdersByCustomerIdAsync(int customerId)
+    {
+        return await _context.Orders
+            .Include(o => o.OrderLines)
+            .ThenInclude(ol => ol.Fish)
+            .Where(o => o.CustomerId == customerId)
+            .ToListAsync();
+    }
+    public async Task<Order> GetInCartOrderByCustomerIdAsync(int customerId)
+    {
+        return await _context.Orders
+            .Include(o => o.OrderLines)
+            .FirstOrDefaultAsync(o => o.CustomerId == customerId && o.Status == OrderStatus.InCart);
+    }
+    public async Task<List<Order>> GetOrderHistoryByCustomerIdAsync(int customerId)
+    {
+        return await _context.Orders
+            .Include(o => o.OrderLines)
+            .ThenInclude(ol => ol.Fish)
+            .Where(o => o.CustomerId == customerId && o.Status != OrderStatus.InCart)
+            .ToListAsync();
     }
 }

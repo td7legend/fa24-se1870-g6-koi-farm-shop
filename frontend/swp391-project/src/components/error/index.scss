@@ -1,0 +1,47 @@
+@import "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap";
+.error__page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  background-color: #fffaf0; 
+
+  .error__image {
+    width: 50%; 
+    max-width: 600px; /* Giới hạn kích thước tối đa */
+    margin-bottom: 20px; /* Khoảng cách dưới */
+  }
+
+  .error__content {
+    text-align: center; /* Canh giữa nội dung */
+    color: #333; /* Màu chữ */
+  }
+
+  .error__title {
+    font-size: 48px; /* Kích thước chữ tiêu đề */
+    margin-bottom: 16px; /* Khoảng cách dưới tiêu đề */
+    font-family: "Lora", serif;
+  }
+
+  .error__message {
+    font-size: 24px; /* Kích thước chữ mô tả */
+    margin-bottom: 24px; /* Khoảng cách dưới mô tả */
+    font-family: sans-serif;
+  }
+
+  .error__button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff; /* Màu chữ nút */
+    background-color: #bbab6f; /* Màu nền nút */
+    text-decoration: none; /* Bỏ gạch chân */
+    border-radius: 20px; /* Bo góc nút */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
+    font-family: sans-serif;
+    &:hover {
+      background-color: #a89963; /* Màu nền khi hover */
+    }
+  }
+}

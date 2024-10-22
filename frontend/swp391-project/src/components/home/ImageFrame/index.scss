@@ -1,13 +1,11 @@
 .image-frame {
-  margin: 20px 0; /* Adjust margin as needed */
-  text-align: center; /* Center the image */
-}
+  margin: 20px 0;
+  text-align: center;
 
-.image-frame img {
-  width: 100%; /* Make the image responsive */
-  object-fit: cover;
-  height: 100%;
-  max-height: 100px;
-  border: 2px solid #bbab6f; /* Example border color */
-  border-radius: 8px; /* Rounded corners */
+  img {
+    width: 100%;
+    object-fit: cover;
+    height: 100%;
+    max-height: 200px;
+  }
 }

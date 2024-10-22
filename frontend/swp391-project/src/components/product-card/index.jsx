@@ -4,7 +4,6 @@ import { Tag, Button, notification } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 
 const ProductCard = ({ fish }) => {
-  // Add breed as a prop;
   const handleAddToCart = () => {
     notification.open({
       message: "Fish added to cart",
@@ -15,32 +14,29 @@ const ProductCard = ({ fish }) => {
   };
 
   return (
-    <Link to={`/products/${fish.id}`} className="link">
+    <Link to={`/products/${fish.id}`} className="product-card-wrapper">
       <div className="product-card">
         <div className="image">
-          <img src={fish.img_path} alt="name" />
+          <img src={fish.img_path} alt={fish.name} />
         </div>
         <div className="info-container">
           <div className="info">
             <h2>{fish.name}</h2>
-            <p>Size: {fish.size} cm</p>
-            <p>Origin: {fish.origin}</p>
-            <p>Price: ${fish.price}</p>
+            <p className="description">{fish.description}</p>
+            <div className="tag">
+              <div className="tag-item-origin">{fish.origin}</div>
+              <div className="tag-item-size">Size: {fish.size} cm</div>
+            </div>
+            <p className="price">Price: {fish.price} VND</p>
           </div>
-          <div className="button">
-            <Button
-              icon={<ShoppingCartOutlined />}
-              onClick={handleAddToCart}
-              style={{
-                fontSize: 10,
-                height: 50,
-                padding: "8px 16px",
-                borderRadius: 20,
-              }}
-            >
-              Add to Cart
-            </Button>
-          </div>
+
+          <Button
+            className="add-to-cart"
+            icon={<ShoppingCartOutlined />}
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </Button>
         </div>
       </div>
     </Link>

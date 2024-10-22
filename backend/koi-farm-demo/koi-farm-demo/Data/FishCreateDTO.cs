@@ -13,7 +13,8 @@
         public long? Price { get; set; } // Có thể là null
         public bool? Batch { get; set; } // Có thể là null
         public int FishTypeId { get; set; }  // Khóa ngoại liên kết với bảng FishType //                           
-        
+        public int Quantity { get; set; }
+        public string? ImageUrl { get; set; }
     }
 
 }

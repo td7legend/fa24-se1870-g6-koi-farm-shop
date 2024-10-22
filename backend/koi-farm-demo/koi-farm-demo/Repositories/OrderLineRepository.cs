@@ -13,7 +13,6 @@ public class OrderLineRepository : IOrderLineRepository
 
     public async Task AddAsync(OrderLine orderLine, OrderLineCreateDTO orderLineCreateDto)
     {
-        // Kiểm tra xem orderLine đã tồn tại chưa
         var existingOrderLine = await _context.OrderLines
             .FirstOrDefaultAsync(ol => ol.OrderId == orderLine.OrderId && ol.FishId == orderLineCreateDto.FishId);
 
@@ -44,6 +43,40 @@ public class OrderLineRepository : IOrderLineRepository
     public async Task DeleteAsync(OrderLine orderLine)
     {
         _context.OrderLines.Remove(orderLine);
+        await _context.SaveChangesAsync();
+    }
+    public async Task<OrderLine> GetOrderLineByFishId(int fishId,int orderId)
+    {
+        return await _context.OrderLines.SingleOrDefaultAsync(OrderLine => OrderLine.FishId == fishId && OrderLine.OrderId == orderId);
+    }
+
+    public async Task UpdateAsync(UpdateCartDTO orderLineUpdateData, int orderId)
+    {
+        // Lấy dòng sản phẩm từ order line dựa trên fishId và orderId
+        var orderLine = await GetOrderLineByFishId(orderLineUpdateData.FishId, orderId);
+        if (orderLine == null)
+        {
+            throw new Exception("Order line not found.");
+        }
+        if (orderLineUpdateData.IsAdd)
+        {
+            orderLine.Quantity += 1;  
+        }
+        else
+        {
+            if (orderLine.Quantity > 1)
+            {
+                orderLine.Quantity -= 1;  
+            }
+            else
+            {
+                _context.OrderLines.Remove(orderLine);
+            }
+        }
+        if (_context.Entry(orderLine).State != EntityState.Deleted)
+        {
+            _context.OrderLines.Update(orderLine);
+        }
         await _context.SaveChangesAsync();
     }
 }
