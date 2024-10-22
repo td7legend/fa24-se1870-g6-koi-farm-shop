@@ -79,5 +79,25 @@ namespace koi_farm_demo.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpPatch("{orderId}/status")]
+        [Authorize]
+        [SwaggerOperation(Summary = "Update the status of an order")]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, [FromBody] OrderStatus status)
+        {
+            if (status == null)
+            {
+                return BadRequest("Invalid status data.");
+            }
+
+            try
+            {
+                await _orderService.UpdateOrderStatusAsync(orderId, status);
+                return Ok("Order status updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

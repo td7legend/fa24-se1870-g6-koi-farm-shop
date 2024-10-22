@@ -238,6 +238,16 @@ public class OrderService : IOrderService
         var orders = await _orderRepository.GetOrderHistoryByCustomerIdAsync(customerId);
         return orders.Any(order => order.OrderLines.Any(ol => ol.FishId == fishId));
     }
+    public async Task UpdateOrderStatusAsync(int orderId, OrderStatus status)
+    {
+        var order = await _orderRepository.GetByIdAsync(orderId);
+        if (order == null)
+        {
+            throw new Exception("Order not found");
+        }
 
+        order.Status = status;
+        await _orderRepository.UpdateAsync(order);
+    }
 
 }
