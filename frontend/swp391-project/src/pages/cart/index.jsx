@@ -14,36 +14,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import "./index.scss";
 import { toast } from "react-toastify";
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import { useSelector } from "react-redux";
+import config from "../../config/config";
+import { AES, enc } from "crypto-js";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
   const [fishes, setFishes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const decryptedToken = token
+    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
+    : null;
+  const decryptedRole = role
+    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
+    : 0;
 
   useEffect(() => {
     fetchCart();
     fetchFishes();
   }, []);
 
-  const getAuthToken = () => {
-    return localStorage.getItem("token");
-  };
-
   const fetchCart = async () => {
     try {
-      const token = getAuthToken();
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         return;
       }
 
-      const response = await axios.get(`${config.API_ROOT}/cart`, {
+      const response = await axios.get(`${config.API_ROOT}cart`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${decryptedToken ?? null}`,
         },
       });
 
@@ -61,7 +62,7 @@ const Cart = () => {
 
   const fetchFishes = async () => {
     try {
-      const response = await axios.get(`${config.API_ROOT}/fishs`);
+      const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
       console.error("Error fetching fishes:", error);
@@ -86,18 +87,17 @@ const Cart = () => {
 
   const updateCart = async (fishId, isAdd, isRemove) => {
     try {
-      const token = getAuthToken();
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         return;
       }
 
       await axios.patch(
-        `${config.API_ROOT}/carts`,
+        `${config.API_ROOT}carts`,
         { fishId, isAdd, isRemove },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${decryptedToken ?? null}`,
           },
         }
       );

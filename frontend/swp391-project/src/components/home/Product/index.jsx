@@ -3,7 +3,7 @@ import "./index.scss";
 import CurrencyFormatter from "../../currency";
 const ProductCard = ({ product }) => {
   return (
-    <Link to={`/product/${product.name}`} className="product-card">
+    <Link to={`/products/${product.fishId}`} className="product-card">
       <img
         src={product.imageUrl}
         alt={product.name}

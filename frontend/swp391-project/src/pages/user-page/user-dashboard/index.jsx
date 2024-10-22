@@ -25,13 +25,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { logout } from "../../../store/actions/authActions";
+import { useDispatch, useSelector } from "react-redux";
+import { getEmailFromToken, logout } from "../../../store/actions/authActions";
 import { toast, ToastContainer } from "react-toastify";
 import "./index.scss";
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import { AES, enc } from "crypto-js";
+import config from "../../../config/config";
+import { jwtDecode } from "jwt-decode";
 
 const { Title, Text } = Typography;
 const DEFAULT_AVATAR =
@@ -44,10 +44,17 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [orderHistory, setOrderHistory] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const decryptedToken = token
+    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
+    : null;
+  const decryptedRole = role
+    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
+    : 0;
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -56,17 +63,17 @@ const UserDashboard = () => {
 
       try {
         const userResponse = await axios.get(
-          `${config.API_ROOT}/customers/my-info`,
+          `${config.API_ROOT}customers/my-info`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
           }
         );
         setUser(userResponse.data);
 
         const ordersResponse = await axios.get(
-          `${config.API_ROOT}/orders/order-history`,
+          `${config.API_ROOT}orders/order-history`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
           }
         );
         const sortedOrders = ordersResponse.data
@@ -87,6 +94,14 @@ const UserDashboard = () => {
         }
       } finally {
         setLoading(false);
+      }
+      try {
+        const email = jwtDecode(decryptedToken).userId;
+        console.log(decryptedToken);
+        user.email = email;
+        console.log(email);
+      } catch (error) {
+        console.log("Error: ", error.message);
       }
     };
 

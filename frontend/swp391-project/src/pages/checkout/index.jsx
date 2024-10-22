@@ -16,9 +16,9 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import { AES, enc } from "crypto-js";
+import config from "../../config/config";
+import { useSelector } from "react-redux";
 
 const Checkout = () => {
   const [form] = Form.useForm();
@@ -29,29 +29,34 @@ const Checkout = () => {
   const [fishes, setFishes] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState("VnPay");
   const [loading, setLoading] = useState(true);
-
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const decryptedToken = token
+    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
+    : null;
+  const decryptedRole = role
+    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
+    : 0;
   useEffect(() => {
     fetchData();
+    console.log("user", user);
   }, []);
-
   const fetchData = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      if (!token) {
+      if (!isLoggedIn) {
         message.error("No authentication token found. Please log in.");
         navigate("/login"); // Redirect to login if token is not available
         return;
       }
 
       const [userResponse, cartResponse, fishesResponse] = await Promise.all([
-        axios.get(`${config.API_ROOT}/customers/my-info`, {
-          headers: { Authorization: `Bearer ${token}` },
+        axios.get(`${config.API_ROOT}customers/my-info`, {
+          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
         }),
-        axios.get(`${config.API_ROOT}/cart`, {
-          headers: { Authorization: `Bearer ${token}` },
+        axios.get(`${config.API_ROOT}cart`, {
+          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
         }),
-        axios.get(`${config.API_ROOT}/fishs`),
+        axios.get(`${config.API_ROOT}fishs`),
       ]);
 
       setUser(userResponse.data);
@@ -138,14 +143,14 @@ const Checkout = () => {
         orderType: "01",
         amount: calculateTotalPrice(),
         orderDescription: `Payment for Order`,
-        name: user.fullName,
+        name: String(user.fullName),
       };
-
+      console.log(paymentData);
       const response = await axios.post(
-        `${config.API_ROOT}/payments`,
+        `${config.API_ROOT}payments`,
         paymentData,
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
         }
       );
 
@@ -179,7 +184,6 @@ const Checkout = () => {
           } else {
             message.error("Payment was not. Please try again.");
           }
-          popup.close();
         }
       } catch (error) {
         // Handle cross-origin error
@@ -206,7 +210,6 @@ const Checkout = () => {
 
   const completeOrder = async () => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("No authentication token found.");
       }
@@ -231,10 +234,10 @@ const Checkout = () => {
       };
 
       const response = await axios.post(
-        `${config.API_ROOT}/orders/pay`,
+        `${config.API_ROOT}orders/pay`,
         orderData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
         }
       );
 
@@ -270,6 +273,11 @@ const Checkout = () => {
   if (!user || !cart || fishes.length === 0) {
     return <div>No active cart found or user information unavailable.</div>;
   }
+
+  const fullName = user.fullName ? String(user.fullName) : "Unknown User"; // Nếu không có fullName, sử dụng giá trị mặc định
+
+  console.log(typeof user.fullName); // Kiểm tra kiểu dữ liệu
+  console.log(user.fullName);
 
   return (
     <div>
@@ -329,7 +337,7 @@ const Checkout = () => {
           <Col className="form-right">
             <div style={{ padding: "20px", border: "1px solid #f0f0f0" }}>
               <h2>Billing Information</h2>
-              <p>Name: {user.fullName}</p>
+              <p>Name: {fullName}</p>
               <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
               <p>Email: {user.email || "Not provided"}</p>
               <p>Address: {user.address}</p>

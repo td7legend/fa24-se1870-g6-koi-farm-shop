@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "../../components/product-card";
 import "./index.scss"; // Import CSS để điều chỉnh layout
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Breadcrumb, Col } from "antd";
 import ImageFrame from "../../components/home/ImageFrame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,7 +11,9 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 const AllFishPage = () => {
   const [allFish, setAllFish] = useState([]);
   const [fishByBreed, setFishByBreed] = useState({});
-  const [currentPage, setCurrentPage] = useState({}); // Lưu trữ trang hiện tại cho từng breed
+  const [currentPage, setCurrentPage] = useState({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
 
   const itemsPerPage = 4; // Số lượng sản phẩm mỗi trang
 
@@ -49,6 +51,12 @@ const AllFishPage = () => {
     fetchAllFish(); // Fetch dữ liệu về cá khi component được mount
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const query = params.get("search");
+    setSearchQuery(query || "");
+  }, [location.search]);
+
   // Hàm điều khiển chuyển trang
   const handlePageChange = (breed, direction) => {
     setCurrentPage((prevState) => {
@@ -58,6 +66,11 @@ const AllFishPage = () => {
         [breed]: newPage,
       };
     });
+  };
+
+  const filterFishBySearch = (fish) => {
+    if (!searchQuery) return true;
+    return fish.name.toLowerCase().includes(searchQuery.toLowerCase());
   };
 
   return (
@@ -72,15 +85,16 @@ const AllFishPage = () => {
           </Breadcrumb>
         </div>
       </Col>
-      {/* Hiển thị cá theo từng loại breed */}
-      {Object.keys(fishByBreed).map((breed) => {
-        const breedFish = fishByBreed[breed];
-        const currentPageForBreed = currentPage[breed] || 1;
 
-        // Tính toán start và end index cho phân trang
+      {searchQuery && <h2>Search results for: {searchQuery}</h2>}
+
+      {Object.keys(fishByBreed).map((breed) => {
+        const breedFish = fishByBreed[breed].filter(filterFishBySearch);
+        if (breedFish.length === 0) return null;
+
+        const currentPageForBreed = currentPage[breed] || 1;
         const startIndex = (currentPageForBreed - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-
         const fishToDisplay = breedFish.slice(startIndex, endIndex);
 
         return (
@@ -89,7 +103,6 @@ const AllFishPage = () => {
             <Link to={`/breed/${breed}`}>
               <div className="breed-link">{breed}</div>
             </Link>
-            {/* Liên kết tới trang breed */} {/* Tên loại breed */}
             <div className="fish-list">
               <button
                 className="nav__button left"

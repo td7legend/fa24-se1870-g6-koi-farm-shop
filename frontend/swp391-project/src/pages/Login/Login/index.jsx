@@ -8,6 +8,7 @@ import emailjs from "@emailjs/browser";
 import config from "../../../config/config";
 import { ToastContainer, toast } from "react-toastify"; // Import Toast components
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for styling
+import { useSelector } from "react-redux";
 
 const Main = ({
   active,
@@ -43,12 +44,8 @@ const Main = ({
           {!isOtpModalOpen ? (
             <>
               <h1>Create Account</h1>
-              <div className="social-icons">
-                <button type="button" className="google-btn">
-                  <FontAwesomeIcon icon={faGooglePlusG} />
-                </button>
-              </div>
-              <span>or use your email for registration</span>
+
+              <span> Use your email for registration</span>
               <input
                 type="text"
                 placeholder="Name"
@@ -83,7 +80,7 @@ const Main = ({
             <div className="otp-section">
               <h2>Input OTP</h2>
               <label htmlFor="otpInput">
-                Please enter the OTP sent to your email.
+                Please enter the OTP sent to `${email}`
               </label>
               <input
                 id="otpInput"
@@ -193,6 +190,15 @@ const LoginPage = () => {
   const [isOtpModalOpen, setOtpModalOpen] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Kiểm tra xem đã có token đăng nhập hay chưa
+    if (isLoggedIn) {
+      // Nếu đã đăng nhập, điều hướng về trang chủ
+      navigate("/home", { replace: true });
+    }
+  }, [navigate]);
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -216,7 +222,10 @@ const LoginPage = () => {
       toast.error("Please enter a valid email address.");
       return;
     }
-
+    if (!validatePassword(password)) {
+      toast.error("Please enter a valid password.");
+      return;
+    }
     setError("");
     const loginAPI = `${config.API_ROOT}auth/login`;
 
@@ -233,14 +242,14 @@ const LoginPage = () => {
 
       const data = response.data;
       if (data.token) {
-        navigate(`/LoginSuccess/${data.token}`);
+        navigate(`/LoginSuccess/${data.token}`, { replace: true });
         localStorage.setItem("token", data.token);
         toast.success("Login successful");
       } else {
         toast.error(data.message || "Invalid login credentials.");
       }
     } catch (error) {
-      toast.error("An error occurred: " + error.message);
+      toast.error("Incorrect email or password, " + error.message);
     }
   };
 
@@ -390,7 +399,6 @@ const LoginPage = () => {
       const url = response.data.url;
       if (url) {
         window.location.href = url;
-        toast.success("Login successful");
       } else {
         toast.error("Failed to get login URL: " + error.message);
       }
@@ -426,6 +434,7 @@ const LoginPage = () => {
         remainingTime={remainingTime}
         isResendDisabled={isResendDisabled}
       />
+      <ToastContainer />
     </div>
   );
 };

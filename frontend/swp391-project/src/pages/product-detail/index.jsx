@@ -20,43 +20,72 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
+import config from "../../config/config";
+import { AES, enc } from "crypto-js";
 
 const { Text } = Typography;
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
 
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
+
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [fishes, setFishes] = useState([]);
+  const [fishTypes, setFishTypes] = useState([]);
+  const [currentFishTypes, setCurrentFishTypes] = useState({});
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const decryptedToken = token
+    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
+    : null;
+  const decryptedRole = role
+    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
+    : 0;
 
   useEffect(() => {
-    fetchProduct();
+    console.log("Current ID:", id);
+    if (id) {
+      fetchProduct();
+    } else {
+      console.error("Invalid ID");
+    }
     fetchFishes();
+    getFishTypes();
+    getCurrentFishTypes();
   }, [id]);
 
   const fetchProduct = async () => {
+    console.log("Fetching product with ID:", id); // Log ID để kiểm tra
     try {
-      const response = await fetch(
-        `https://66fe08fb699369308956d74e.mockapi.io/KoiProduct/${id}`
-      );
-      const data = await response.json();
-      setProduct(data);
+      const response = await axios.get(`${config.API_ROOT}fishs/${id}`);
+      console.log("API response:", response.data); // Log phản hồi từ API
+      if (response.data) {
+        setProduct(response.data);
+        console.log("New product set to:", response.data); // Log giá trị mới được thiết lập
+      } else {
+        console.error("No product data received");
+      }
     } catch (error) {
       console.error("Error fetching product:", error);
       message.error("Failed to fetch product data.");
     }
   };
 
+  // Thêm useEffect để theo dõi sự thay đổi của product
+  useEffect(() => {
+    console.log("Updated product:", product);
+    if (product && product.fishTypeId) {
+      getCurrentFishTypes(); // Gọi hàm này sau khi product đã được cập nhật
+    }
+    decryptedToken;
+  }, [product, decryptedToken]);
+
   const fetchFishes = async () => {
     try {
-      const response = await axios.get(`${config.API_ROOT}/fishs`);
+      const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
       console.error("Error fetching fishes:", error);
@@ -71,18 +100,11 @@ function ProductDetail() {
 
   const fetchCart = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        message.error("Please log in to view your cart.");
-        return;
-      }
-
-      const response = await axios.get(`${config.API_ROOT}/cart`, {
+      const response = await axios.get(`${config.API_ROOT}cart`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${decryptedToken ?? null}`,
         },
       });
-
       if (response.data && response.data.length > 0) {
         setCartItems(response.data[0].orderLines || []);
       }
@@ -95,21 +117,20 @@ function ProductDetail() {
   async function handleAddToCart() {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         message.error("Please log in to add items to your cart.");
         return;
       }
 
       const response = await axios.post(
-        `${config.API_ROOT}/carts`,
+        `${config.API_ROOT}carts`,
         {
           fishId: parseInt(id),
           quantity: quantity,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${decryptedToken ?? null}`,
             "Content-Type": "application/json",
           },
         }
@@ -140,6 +161,26 @@ function ProductDetail() {
   if (!product.name) {
     return <div>Loading...</div>;
   }
+  async function getFishTypes() {
+    try {
+      const response = await axios.get(`${config.API_ROOT}fishtypes`);
+      setFishTypes(response.data);
+    } catch (error) {
+      console.log("Error: ", error.message);
+    }
+  }
+  function getCurrentFishTypes() {
+    if (fishTypes.length > 0 && product.fishTypeId) {
+      const temp = fishTypes.filter(
+        (fishType) => fishType.fishTypeId === product.fishTypeId
+      );
+      setCurrentFishTypes(temp[0] || null); // Nếu không tìm thấy, đặt là null
+    } else {
+      console.error(
+        "No fish types available or product does not have fishTypeId"
+      );
+    }
+  }
 
   return (
     <div>
@@ -155,9 +196,11 @@ function ProductDetail() {
               </Breadcrumb.Item>
               <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to={`/breed/${product.breed}`}>{product.breed}</Link>
+                <Link to={`/breed/${currentFishTypes.name}`}>
+                  {currentFishTypes.name}
+                </Link>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>{product.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{product?.name}</Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>
@@ -167,7 +210,7 @@ function ProductDetail() {
           <Col span={10}>
             <Carousel>
               <div>
-                <Image src={product.img_path} alt={product.name} />
+                <Image src={product.imageUrl} alt={product?.name} />
               </div>
             </Carousel>
           </Col>
@@ -179,7 +222,7 @@ function ProductDetail() {
 
               <div className="product-info">
                 <p>
-                  <span>Breed:</span> {product.breed}
+                  <span>Breed:</span> {currentFishTypes.name}
                 </p>
                 <p>
                   <span>Age:</span> {product.age}

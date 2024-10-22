@@ -14,11 +14,10 @@ import {
   faCog,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import { AES, enc } from "crypto-js";
+import config from "../../../config/config";
 const DEFAULT_AVATAR =
   "https://ih1.redbubble.net/image.3771768892.4974/flat,750x,075,f-pad,750x1000,f8f8f8.jpg";
 
@@ -44,12 +43,19 @@ const UserSetting = () => {
   });
   const [isPasswordFormChanged, setIsPasswordFormChanged] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const decryptedToken = token
+    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
+    : null;
+  const decryptedRole = role
+    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
+    : 0;
   useEffect(() => {
+    console.log("token ", token);
     const fetchData = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
+
         if (!token) {
           toast.error("No authentication token found. Please log in.");
           navigate("/login");
@@ -57,9 +63,9 @@ const UserSetting = () => {
         }
 
         const response = await axios.get(
-          `${config.API_ROOT}/customers/my-info`,
+          `${config.API_ROOT}customers/my-info`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
           }
         );
         const userInfo = response.data;
@@ -89,8 +95,8 @@ const UserSetting = () => {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [navigate]);
+    decryptedToken && fetchData();
+  }, [decryptedToken, dispatch, navigate]);
 
   useEffect(() => {
     const hasChanged =
@@ -155,7 +161,6 @@ const UserSetting = () => {
     if (!validateForm()) return;
 
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -168,8 +173,8 @@ const UserSetting = () => {
         address: userForm.address,
       };
 
-      await axios.put(`${config.API_ROOT}/customers/my-info`, updatedUser, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.put(`${config.API_ROOT}customers/my-info`, updatedUser, {
+        headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
       });
 
       toast.success("User information updated successfully!");
@@ -197,7 +202,6 @@ const UserSetting = () => {
     }
 
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -205,13 +209,13 @@ const UserSetting = () => {
       }
 
       const response = await axios.post(
-        `${config.API_ROOT}/auth/change-password`,
+        `${config.API_ROOT}auth/change-password`,
         {
           oldPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword,
         },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
         }
       );
 

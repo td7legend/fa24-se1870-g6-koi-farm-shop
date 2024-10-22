@@ -14,6 +14,7 @@ import { AES, enc } from "crypto-js";
 import config from "../../config/config";
 import axios from "axios";
 import { logout } from "../../store/actions/authActions";
+import EnhancedSearchBar from "../autosuggest/AutoSuggest";
 const Header = () => {
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -21,7 +22,8 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
-
+  const [fishes, setFishes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const decryptedToken = token
     ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
     : null;
@@ -32,7 +34,6 @@ const Header = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      console.log("decryptedToken", decryptedToken);
       try {
         const response = await axios.get(
           `${config.API_ROOT}customers/my-info`,
@@ -46,6 +47,12 @@ const Header = () => {
         }
       } catch (error) {
         dispatch(logout());
+      }
+      try {
+        const response = await axios.get(`${config.API_ROOT}fishs`);
+        setFishes(response.data);
+      } catch (error) {
+        console.log("error", error);
       }
     };
     decryptedToken && fetchUser();
@@ -83,16 +90,8 @@ const Header = () => {
             <img src={logo} alt="Golden Koi" />
           </Link>
         </div>
-
         <div className="search__bar">
-          <div className="search__input__container">
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className="search__icon"
-            />
-            <input type="text" placeholder="Search" />
-          </div>
-          <button type="button">Search</button>
+          <EnhancedSearchBar />
         </div>
 
         {/* User Options */}
@@ -184,3 +183,4 @@ const Header = () => {
 };
 
 export default Header;
+

@@ -1,46 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "../Product";
 import "./index.scss";
 import Picture from "../../../images/picture-3.png";
+import config from "../../../config/config";
+import axios from "axios";
 
 const PopularProduct = () => {
-  const products = [
-    { image: Picture, name: "Popular Koi 1", price: 25 },
-    { image: Picture, name: "Popular Koi 2", price: 30 },
-    { image: Picture, name: "Popular Koi 3", price: 35 },
-    { image: Picture, name: "Popular Koi 4", price: 40 },
-    { image: Picture, name: "Popular Koi 5", price: 50 },
-    { image: Picture, name: "Popular Koi 6", price: 55 },
-    { image: Picture, name: "Popular Koi 7", price: 60 },
-    { image: Picture, name: "Popular Koi 8", price: 65 },
-  ];
+  const [products, setProducts] = useState([]);
 
   const itemsPerPage = 4;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState("");
+  // sài tạm mốt co api thi update
+  const fetchPopularProducts = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}fishs`);
+      const data = response.data;
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching popular products:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchPopularProducts();
+  }, []);
   const nextProducts = () => {
     setFade("fade__out");
     setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex + itemsPerPage < products.length
-          ? prevIndex + itemsPerPage
-          : 0
-      );
+      setCurrentIndex((prevIndex) => {
+        const newIndex = (prevIndex + itemsPerPage) % products.length;
+        return newIndex;
+      });
       setFade("fade__in");
-    }, 300);
+    }, 300); // Match the CSS transition duration
   };
 
   const prevProducts = () => {
     setFade("fade__out");
     setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex - itemsPerPage >= 0
-          ? prevIndex - itemsPerPage
-          : Math.floor(products.length / itemsPerPage) * itemsPerPage
-      );
+      setCurrentIndex((prevIndex) => {
+        const newIndex =
+          (prevIndex - itemsPerPage + products.length) % products.length;
+        return newIndex;
+      });
       setFade("fade__in");
-    }, 300);
+    }, 300); // Match the CSS transition duration
   };
 
   return (
@@ -50,11 +55,14 @@ const PopularProduct = () => {
         <button className="nav__button left" onClick={prevProducts}>
           &lt;
         </button>
-        <div className={`popular_products__display ${fade}`}>
+        <div
+          className={`products__display ${fade}`}
+          style={{ display: "flex", gap: "30px" }}
+        >
           {products
             .slice(currentIndex, currentIndex + itemsPerPage)
-            .map((product, index) => (
-              <ProductCard key={index} product={product} />
+            .map((topFish, index) => (
+              <ProductCard key={index} product={topFish} />
             ))}
         </div>
         <button className="nav__button right" onClick={nextProducts}>
