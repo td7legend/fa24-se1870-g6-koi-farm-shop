@@ -106,12 +106,6 @@ namespace koi_farm_demo
             builder.Services.AddScoped<IConsignmentService, ConsignmentService>();
             builder.Services.AddScoped<IConsignmentRepository, ConsignmentRepository>();
             // Đăng ký các dịch vụ Customer
-            builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-             {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            });
             builder.Services.AddAuthorization(options =>
             {
             });
