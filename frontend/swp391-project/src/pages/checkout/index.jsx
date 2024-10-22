@@ -181,6 +181,7 @@ const Checkout = () => {
           const paymentStatus = popup.location.href.includes("/payment/True");
           if (paymentStatus) {
             handlePaymentSuccess();
+            popup.close();
           } else {
             message.error("Payment was not. Please try again.");
           }
