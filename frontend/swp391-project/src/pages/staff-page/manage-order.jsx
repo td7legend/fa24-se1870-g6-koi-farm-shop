@@ -75,10 +75,9 @@ const StaffOrderManagement = () => {
     }
   };
 
-  const updateOrderStatus = async (orderId, currentStatus) => {
+  const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const token = localStorage.getItem("token");
-      const newStatus = currentStatus === 1 ? 3 : 4;
 
       await axios.patch(
         `${config.API_ROOT}/orders/${orderId}/status`,
@@ -124,20 +123,6 @@ const StaffOrderManagement = () => {
     }
   };
 
-  const getStatusActionButton = (status, orderId) => {
-    if (status === 4) return null;
-
-    return (
-      <Button
-        type="primary"
-        onClick={() => updateOrderStatus(orderId, status)}
-        style={{ backgroundColor: "#bbab6f" }}
-      >
-        {status === 1 ? "Start Shipping" : "Mark Complete"}
-      </Button>
-    );
-  };
-
   const columns = [
     {
       title: "ORDER ID",
@@ -179,7 +164,24 @@ const StaffOrderManagement = () => {
           >
             View Details
           </Button>
-          {getStatusActionButton(record.status, record.orderId)}
+          {record.status !== 2 && record.status !== 4 && (
+            <Button
+              type="primary"
+              onClick={() => updateOrderStatus(record.orderId, 4)}
+              style={{ backgroundColor: "#52c41a" }}
+            >
+              Complete
+            </Button>
+          )}
+          {record.status === 1 && (
+            <Button
+              type="primary"
+              danger
+              onClick={() => updateOrderStatus(record.orderId, 2)}
+            >
+              Cancel
+            </Button>
+          )}
         </Space>
       ),
     },
@@ -188,22 +190,40 @@ const StaffOrderManagement = () => {
   const OrderDetailsModal = () => (
     <Modal
       title={`Order Details #${selectedOrder?.orderId}`}
-      visible={isModalVisible}
+      open={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
       footer={[
         <Button key="close" onClick={() => setIsModalVisible(false)}>
           Close
         </Button>,
-        selectedOrder?.status !== 4 && (
+        selectedOrder?.status === 1 && (
           <Button
-            key="update"
+            key="cancel"
             type="primary"
-            onClick={() =>
-              updateOrderStatus(selectedOrder.orderId, selectedOrder.status)
-            }
-            style={{ backgroundColor: "#bbab6f" }}
+            danger
+            onClick={() => updateOrderStatus(selectedOrder.orderId, 2)}
           >
-            {selectedOrder?.status === 1 ? "Start Shipping" : "Mark Complete"}
+            Cancel Order
+          </Button>
+        ),
+        selectedOrder?.status === 1 && (
+          <Button
+            key="ship"
+            type="primary"
+            onClick={() => updateOrderStatus(selectedOrder.orderId, 3)}
+            style={{ backgroundColor: "#1890ff" }}
+          >
+            Start Shipping
+          </Button>
+        ),
+        selectedOrder?.status === 3 && (
+          <Button
+            key="complete"
+            type="primary"
+            onClick={() => updateOrderStatus(selectedOrder.orderId, 4)}
+            style={{ backgroundColor: "#52c41a" }}
+          >
+            Complete Order
           </Button>
         ),
       ].filter(Boolean)}
