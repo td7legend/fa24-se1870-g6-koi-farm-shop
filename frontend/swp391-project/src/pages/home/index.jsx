@@ -1,22 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import WelcomeSection from "../../components/home/WelcomeSection";
-import RecentlyAdded from "../../components/home/RecentlyAdded"; // Fixed spelling
+import RecentlyAdded from "../../components/home/RecentlyAdded";
 import LatestNews from "../../components/home/LatestNews";
 import PopularProduct from "../../components/home/PopularProduct";
 import AboutFarm from "../../components/home/AboutFarm";
-import ImageFrame from "../../components/home/ImageFrame";
 import "./index.scss";
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState({
     welcome: false,
-    demo1: false, // Đổi tên cho dễ quản lý
+    ogon: false,
+    ochiba: false,
+    kohaku: false,
+    kujaku: false,
     recentlyAdded: false,
-    demo2: false, // Đổi tên cho dễ quản lý
     latestNews: false,
-    demo3: false, // Đổi tên cho dễ quản lý
     popularProduct: false,
-    demo4: false, // Đổi tên cho dễ quản lý
     aboutFarm: false,
   });
 
@@ -26,7 +25,7 @@ const Home = () => {
     const observerOptions = {
       root: null,
       rootMargin: "0px",
-      threshold: 0.1, // Trigger when 10% of the target is visible
+      threshold: 0.1,
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -34,12 +33,12 @@ const Home = () => {
         if (entry.isIntersecting) {
           setIsVisible((prev) => ({
             ...prev,
-            [entry.target.dataset.component]: true, // Set to true when in view
+            [entry.target.dataset.component]: true,
           }));
         } else {
           setIsVisible((prev) => ({
             ...prev,
-            [entry.target.dataset.component]: false, // Set to false when out of view
+            [entry.target.dataset.component]: false,
           }));
         }
       });
@@ -64,14 +63,30 @@ const Home = () => {
         <WelcomeSection />
       </div>
 
-      {/* Phần demo đầu tiên */}
+      {/* Section 1: Ogon */}
       <div
-        ref={(el) => (sectionsRef.current.demo1 = el)}
-        data-component="demo1"
-        className={`component ${isVisible.demo1 ? "animate" : "hidden"}`}
+        ref={(el) => (sectionsRef.current.ogon = el)}
+        data-component="ogon"
+        className={`component ogon ${isVisible.ogon ? "animate" : "hidden"}`}
       >
         <div className="demo">
-          <div className="content"></div>
+          <div className="content" style={{ textAlign: "right" }}>
+            <h2>Ogon Koi Fish</h2>
+            <p>
+              The Ogon koi fish is known for its stunning golden color and shiny
+              appearance. This variety symbolizes prosperity and is a favorite
+              among koi enthusiasts.
+            </p>
+          </div>
+          <iframe
+            width="560"
+            height="500"
+            src="https://www.youtube.com/embed/OeuhPo4AgkI?autoplay=1&mute=1&vq=hd1080"
+            title="Ogon Koi Fish"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
         </div>
       </div>
 
@@ -85,14 +100,31 @@ const Home = () => {
         <RecentlyAdded />
       </div>
 
-      {/* Phần demo thứ hai */}
+      {/* Section 2: Ochiba */}
       <div
-        ref={(el) => (sectionsRef.current.demo2 = el)}
-        data-component="demo2"
-        className={`component ${isVisible.demo2 ? "animate" : "hidden"}`}
+        ref={(el) => (sectionsRef.current.ochiba = el)}
+        data-component="ochiba"
+        className={`component ochiba ${
+          isVisible.ochiba ? "animate" : "hidden"
+        }`}
       >
         <div className="demo">
-          <div className="content"></div>
+          <iframe
+            width="560"
+            height="500"
+            src="https://www.youtube.com/embed/rVFfO95KxRk?autoplay=1&mute=1&vq=hd1080"
+            title="Ochiba Koi Fish"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+          <div className="content">
+            <h2>Ochiba Koi Fish</h2>
+            <p>
+              The Ochiba koi fish is appreciated for its unique blue-gray body
+              with orange patterns. It's a beautiful addition to any pond.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -104,14 +136,32 @@ const Home = () => {
         <LatestNews />
       </div>
 
-      {/* Phần demo thứ ba */}
+      {/* Section 3: Kohaku */}
       <div
-        ref={(el) => (sectionsRef.current.demo3 = el)}
-        data-component="demo3"
-        className={`component ${isVisible.demo3 ? "animate" : "hidden"}`}
+        ref={(el) => (sectionsRef.current.kohaku = el)}
+        data-component="kohaku"
+        className={`component kohaku ${
+          isVisible.kohaku ? "animate" : "hidden"
+        }`}
       >
         <div className="demo">
-          <div className="content"></div>
+          <div className="content" style={{ textAlign: "right" }}>
+            <h2>Kohaku Koi Fish</h2>
+            <p>
+              The Kohaku is one of the most popular koi varieties, known for its
+              striking red and white coloration. It represents luck and
+              prosperity.
+            </p>
+          </div>
+          <iframe
+            width="560"
+            height="500"
+            src="https://www.youtube.com/embed/TjEWSEm6MI4?autoplay=1&mute=1&vq=hd1080"
+            title="Kohaku Koi Fish"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
         </div>
       </div>
 
@@ -125,14 +175,31 @@ const Home = () => {
         <PopularProduct />
       </div>
 
-      {/* Phần demo thứ tư */}
+      {/* Section 4: Kujaku */}
       <div
-        ref={(el) => (sectionsRef.current.demo4 = el)}
-        data-component="demo4"
-        className={`component ${isVisible.demo4 ? "animate" : "hidden"}`}
+        ref={(el) => (sectionsRef.current.kujaku = el)}
+        data-component="kujaku"
+        className={`component kujaku ${
+          isVisible.kujaku ? "animate" : "hidden"
+        }`}
       >
         <div className="demo">
-          <div className="content"></div>
+          <iframe
+            width="560"
+            height="500"
+            src="https://www.youtube.com/embed/ySxJcBmKvsM?autoplay=1&mute=1&vq=hd1080"
+            title="Kujaku Koi Fish"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+          <div className="content">
+            <h2>Kujaku Koi Fish</h2>
+            <p>
+              The Kujaku is known for its stunning patterns and colors, making
+              it a striking presence in any koi pond.
+            </p>
+          </div>
         </div>
       </div>
 

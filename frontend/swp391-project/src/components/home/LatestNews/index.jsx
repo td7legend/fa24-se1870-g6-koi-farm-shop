@@ -48,32 +48,32 @@ const LatestNews = () => {
   const [fade, setFade] = useState("");
 
   const nextNews = () => {
-    setFade("fade__out"); // Start fade-out effect
+    setFade("fade__out");
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>
         prevIndex + itemsPerPage < newsItems.length
           ? prevIndex + itemsPerPage
           : 0
       );
-      setFade("fade__in"); // Start fade-in effect
-    }, 300); // Duration of the fade-out animation
+      setFade("fade__in");
+    }, 300);
   };
 
   const prevNews = () => {
-    setFade("fade__out"); // Start fade-out effect
+    setFade("fade__out");
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>
         prevIndex - itemsPerPage >= 0
           ? prevIndex - itemsPerPage
           : Math.floor(newsItems.length / itemsPerPage) * itemsPerPage
       );
-      setFade("fade__in"); // Start fade-in effect
-    }, 300); // Duration of the fade-out animation
+      setFade("fade__in");
+    }, 300);
   };
 
   return (
     <section className="latest__news">
-      <h2>Latest News</h2>
+      <h2>LATEST NEWS</h2>
       <div className="news__grid">
         <button className="nav__button left" onClick={prevNews}>
           &lt;

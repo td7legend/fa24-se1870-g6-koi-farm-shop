@@ -1,10 +1,24 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import React, { StrictMode, useEffect } from "react";
+import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./main.scss";
+import reduxStore from "./redux.js";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { initEmailJS } from "./config/emailjsConfig.js";
+import { ToastContainer } from "react-toastify";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+const { store, persistor } = reduxStore();
+const root = ReactDOM.createRoot(document.getElementById("root"));
+initEmailJS();
+
+root.render(
+  <Provider store={store}>
+    <PersistGate persistor={persistor} loading={null}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+      <ToastContainer />
+    </PersistGate>
+  </Provider>
 );

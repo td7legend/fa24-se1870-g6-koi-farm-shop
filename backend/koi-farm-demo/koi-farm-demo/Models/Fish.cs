@@ -15,6 +15,7 @@
     public FishType FishType { get; set; }
     public ICollection<OrderLine> OrderLines { get; set; }
     public int Quantity { get; set; }
+    public string ImageUrl { get; set; }
 }
 
 public enum FishGender

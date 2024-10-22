@@ -2,13 +2,7 @@
 .popular__product {
   position: relative;
   text-align: center;
-  padding: 40px 0;
-  background-color: #fffaf0;
-  background-image: url("../../../images/background.png");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  padding: 60px 0;
 
   &::before {
     content: "";
@@ -17,19 +11,23 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(187, 171, 111, 0.1); // Màu phủ mờ nhẹ
-    backdrop-filter: blur(10px); // Hiệu ứng kính mờ
+    background-image: url("src/images/background-1.png");
+    background-size: cover;
+    background-position: center;
     z-index: 1;
+    background-color: rgba(255, 255, 255, 0.5);
+    filter: blur(5px);
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   h2 {
     font-family: "Lora";
     font-size: 32px;
-    color: #bbab6f;
+    color: #5e5638;
     margin-bottom: 30px;
     position: relative;
     z-index: 2;
-    -webkit-text-stroke: 0.3px white;
     text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
   }
 
@@ -41,23 +39,20 @@
     gap: 10px;
     z-index: 2;
 
-    .popular_products__display {
+    .popular__products__display {
       display: flex;
       gap: 30px;
-      opacity: 1;
-      transform: translateX(0);
-      transition: opacity 0.3s ease, transform 0.5s ease;
+      transition: opacity 0.3s ease;
+      position: relative;
       z-index: 2;
     }
 
     &.fade__out {
       opacity: 0;
-      transform: translateX(-100%); // Di chuyển sản phẩm ra ngoài khi fade out
     }
 
     &.fade__in {
       opacity: 1;
-      transform: translateX(0); // Di chuyển sản phẩm vào lại khi fade in
     }
 
     .nav__button {
@@ -79,15 +74,14 @@
       }
 
       &.left {
-        margin-right: 10px; // Khoảng cách giữa nút và sản phẩm bên trái
+        margin-right: 10px;
       }
 
       &.right {
-        margin-left: 10px; // Khoảng cách giữa nút và sản phẩm bên phải
+        margin-left: 10px;
       }
     }
 
-    // Khi hover vào phần sản phẩm, nút điều hướng sẽ hiện lên
     &:hover .nav__button {
       opacity: 1;
     }

@@ -1,5 +1,7 @@
 ﻿using koi_farm_demo.Repositories; // Add this line
 using koi_farm_demo.Services; // Add this line
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -25,6 +27,9 @@ namespace koi_farm_demo
             var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
             builder.Services.AddAuthentication(options =>
             {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
                 options.DefaultAuthenticateScheme = "JwtBearer";
                 options.DefaultChallengeScheme = "JwtBearer";
             })
@@ -46,12 +51,38 @@ namespace koi_farm_demo
                 options.ClientSecret = builder.Configuration["GoogleOAuth:ClientSecret"];
                 options.SaveTokens = true; // Lưu token để có thể truy cập sau này
                 // Chuyển hướng người dùng đến một URL sau khi đăng nhập thành công
-                options.CallbackPath = "/api/user/login/google/callback"; // Đặt callback path cho Google
             });
 
             // Đăng ký Swagger
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\n\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\""
+                });
+
+                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+            });
 
             // Đăng ký các dịch vụ Fish
             builder.Services.AddScoped<IFishRepository, FishRepository>();
@@ -68,13 +99,14 @@ namespace koi_farm_demo
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IRatingService, RatingService>();
+            builder.Services.AddScoped<IRatingRepository, RatingRepository>();
             // Đăng ký các dịch vụ Customer
             builder.Services.AddAuthorization(options =>
             {
-                // Configure your authorization options here if needed
             });
-
-            // Đăng ký các dịch vụ Staff
+            builder.Services.AddHttpClient();
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddCors(options =>
@@ -87,6 +119,13 @@ namespace koi_farm_demo
                                .AllowAnyHeader();
                     });
             });
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             // Add controllers
             builder.Services.AddControllers();
 
@@ -98,10 +137,10 @@ namespace koi_farm_demo
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseRouting();
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
-
+            app.UseSession();
             // Sử dụng Authentication và Authorization
             app.UseAuthentication();
             app.UseAuthorization();

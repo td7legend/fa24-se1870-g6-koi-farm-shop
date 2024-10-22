@@ -1,15 +1,8 @@
-@import "https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap";
 .recently__added {
   position: relative;
   text-align: center;
   padding: 40px 0;
-  background-image: url("../../../images/background.png");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
 
-  // Lớp phủ kính mờ
   &::before {
     content: "";
     position: absolute;
@@ -17,20 +10,24 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(187, 171, 111, 0.1); // Màu phủ mờ nhẹ
-    backdrop-filter: blur(8px); // Hiệu ứng kính mờ
+    background-image: url("src/images/background.png");
+    background-size: cover;
+    background-position: center;
     z-index: 1;
+    background-color: rgba(255, 255, 255, 0.5);
+    filter: blur(5px);
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   h2 {
     font-family: "Lora";
     font-size: 32px;
-    color: #bbab6f;
+    color: #5e5638;
     margin-bottom: 30px;
     position: relative;
     z-index: 2;
     text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    -webkit-text-stroke: 0.3px white;
   }
 
   .product__grid__wrapper {
@@ -70,7 +67,7 @@
     position: relative;
     opacity: 0;
     z-index: 2;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); // Bóng cho nút bấm để tạo cảm giác nổi lên
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 
     &:hover {
       opacity: 0.8;

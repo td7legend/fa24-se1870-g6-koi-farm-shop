@@ -1,34 +1,50 @@
-import Picture1 from "../../../images/picture-3.png";
-import Picture2 from "../../../images/picture-1.png";
+import Picture1 from "../../../images/background.png";
+import Picture2 from "../../../images/background-1.png";
+import Picture3 from "../../../images/background-2.png";
+import Picture4 from "../../../images/background-3.png";
 import "./index.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-function WelcomSestion() {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFish,
+  faWater,
+  faSeedling,
+  faHandshake,
+} from "@fortawesome/free-solid-svg-icons";
+
+function WelcomeSection() {
   return (
     <section className="welcome__section">
       <div className="welcome__content">
-        <Swiper
-          spaceBetween={100} // Khoảng cách giữa các slide
-          slidesPerView={1} // Số lượng slide hiển thị mỗi lần
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          pagination={{ clickable: true }} // Hiển thị các nút điều hướng
-          navigation // Hiển thị nút trái phải điều hướng
-          modules={[Autoplay, Pagination, Navigation]}
-          className="mySwiper"
-        >
-          <SwiperSlide>
-            <img src={Picture1} alt="Koi Fish 1" className="welcome__image" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src={Picture2} alt="Koi Fish 2" className="welcome__image" />
-          </SwiperSlide>
-        </Swiper>
+        <div className="mySwiper">
+          <Swiper
+            spaceBetween={0}
+            slidesPerView={1}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            pagination={{ clickable: true }}
+            modules={[Autoplay]}
+            className="mySwiper"
+          >
+            <SwiperSlide>
+              <img src={Picture4} alt="Koi Fish 1" className="welcome__image" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={Picture3} alt="Koi Fish 2" className="welcome__image" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={Picture2} alt="Koi Fish 3" className="welcome__image" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src={Picture1} alt="Koi Fish 3" className="welcome__image" />
+            </SwiperSlide>
+          </Swiper>
+        </div>
+
         <div className="welcome__text">
           <h1>Welcome to Golden Koi</h1>
           <p>
@@ -41,9 +57,30 @@ function WelcomSestion() {
             garden.
           </p>
         </div>
+
+        <div className="welcome__additional-info">
+          <ul>
+            <li>
+              <FontAwesomeIcon icon={faFish} className="icon" /> Premium Quality
+              Koi Fish
+            </li>
+            <li>
+              <FontAwesomeIcon icon={faWater} className="icon" /> Expertly
+              Selected and Nurtured
+            </li>
+            <li>
+              <FontAwesomeIcon icon={faSeedling} className="icon" /> Tranquil
+              Pond Solutions
+            </li>
+            <li>
+              <FontAwesomeIcon icon={faHandshake} className="icon" /> Visit Us
+              for Exclusive Offers
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
   );
 }
 
-export default WelcomSestion;
+export default WelcomeSection;
