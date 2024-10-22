@@ -47,7 +47,6 @@ namespace koi_farm_demo.Controllers
             await _fishService.AddFishAsync(fishCreateDto);
             return CreatedAtAction(nameof(GetFish), new { id = fishCreateDto.Name }, fishCreateDto); // Có thể điều chỉnh để trả về đối tượng Fish phù hợp.
         }
-        [Authorize(Roles = "Manager")]
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Delete a fish by its ID")]
         public async Task<IActionResult> DeleteFish(int id)
