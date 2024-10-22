@@ -28,6 +28,8 @@ public class OrderService : IOrderService
             TotalAmount = order.TotalAmount,
             TotalTax = order.TotalTax,
             TotalDiscount = order.TotalDiscount,
+            Address = order.Address,
+            OrderDate = order.OrderDate,
             CustomerId = order.CustomerId,
             OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
             {
