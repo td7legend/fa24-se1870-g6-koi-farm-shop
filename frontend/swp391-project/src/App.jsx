@@ -24,6 +24,7 @@ import OrderDetailsPage from "./pages/user-page/order-detail";
 import OrderHistoryPage from "./pages/user-page/order-history";
 import UserDashboard from "./pages/user-page/user-dashboard";
 import PaymentSuccess from "./pages/checkout/success";
+import BatchFishFilter from "./components/BatchFishFilter/BatchFishFilter";
 
 function App() {
   const router = createBrowserRouter([
@@ -51,6 +52,7 @@ function App() {
         { path: "/faqs-page", element: <FAQsPage /> },
         { path: "/policy-page", element: <PolicyPage /> },
         { path: "/shopping-guide", element: <ShoppingGuidePage /> },
+        { path: "/batch-fish", element: <BatchFishFilter /> },
         // Thêm route cho trang lỗi 404
         { path: "*", element: <ErrorPage /> }, // Route này sẽ khớp với mọi đường dẫn không xác định
       ],
