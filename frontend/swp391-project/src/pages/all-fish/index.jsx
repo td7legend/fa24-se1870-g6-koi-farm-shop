@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import ProductCard from "../../components/product-card";
 import "./index.scss"; // Import CSS để điều chỉnh layout
 import { Link, useLocation } from "react-router-dom";
 import { Breadcrumb, Col } from "antd";
@@ -11,6 +10,7 @@ import ogonImage from "../../images/ogon.jpg";
 import ochibaImage from "../../images/ochiba.jpg";
 import kujakuImage from "../../images/kujaku.jpg";
 import kohakuImage from "../../images/kohaku.jpg";
+import ProductCard from "../../components/product-card";
 
 const fishImages = {
   Ogon: ogonImage,

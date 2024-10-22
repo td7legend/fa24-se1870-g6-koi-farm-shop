@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import ProductCard from "../../product-card";
 import "./index.scss";
 import axios from "axios";
 import config from "../../../config/config";
+import ProductCard from "../Product";
 
 const RecentlyAdded = () => {
   const [newFishes, setNewFishes] = useState([]);

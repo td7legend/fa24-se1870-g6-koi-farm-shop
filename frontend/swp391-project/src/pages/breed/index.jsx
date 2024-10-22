@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import ProductCard from "../../components/product-card";
 import {
   Breadcrumb,
   Col,
@@ -17,6 +16,7 @@ import Search from "antd/es/transfer/search";
 import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import ProductCard from "../../components/product-card";
 const BreedFishPage = () => {
   const { breedName } = useParams(); // Lấy breed từ URL
   const [breedFish, setBreedFish] = useState([]);
