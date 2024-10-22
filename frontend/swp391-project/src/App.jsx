@@ -1,5 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Consignment from "./pages/consignment";
+import Consignment from "./pages/consignment/consignment-page";
+import ConsignmentCare from "./pages/consignment/consignment-care";
+import ConsignmentSell from "./pages/consignment/consignment-sell";
 import Layout from "./components/layout/layout";
 import HomePage from "./pages/home";
 import AllFishPage from "./pages/all-fish";
@@ -35,6 +37,8 @@ function App() {
         { path: "/products/:id", element: <ProductDetail /> },
         { path: "/breed/:id", element: <ProductDetail /> },
         { path: "/consignment", element: <Consignment /> },
+        { path: "/consignment/care", element: <ConsignmentCare /> },
+        { path: "/consignment/sell", element: <ConsignmentSell /> },
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
         { path: "/checkout/success", element: <PaymentSuccess /> },
