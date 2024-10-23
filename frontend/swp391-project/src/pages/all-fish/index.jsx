@@ -65,6 +65,15 @@ const AllFishPage = () => {
     setSearchQuery(query || "");
   }, [location.search]);
 
+  useEffect(() => {
+    const sections = document.querySelectorAll(".fade-in-section");
+    sections.forEach((section, index) => {
+      setTimeout(() => {
+        section.classList.add("visible");
+      }, index * 200);
+    });
+  }, [allFish]);
+
   // Hàm điều khiển chuyển trang
   const handlePageChange = (breed, direction) => {
     setCurrentPage((prevState) => {

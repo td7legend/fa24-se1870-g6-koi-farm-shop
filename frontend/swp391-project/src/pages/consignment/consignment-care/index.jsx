@@ -29,7 +29,7 @@ function ConsignmentCare() {
   const [formVariable] = useForm();
   const [showDateFields, setShowDateFields] = useState(false);
   const [customerId, setCustomerId] = useState(null);
-
+  
   useEffect(() => {
     fetchCustomerInfo();
   }, []);
@@ -39,6 +39,7 @@ function ConsignmentCare() {
       const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
+        navigation("/login");
         return;
       }
 
