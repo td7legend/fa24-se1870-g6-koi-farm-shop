@@ -4,8 +4,7 @@
   font-family: "Lato", sans-serif;
   font-weight: 1000;
   position: relative;
-
-  z-index: 1; /* Đảm bảo header ở dưới thanh tìm kiếm khi cần thiết */
+  z-index: 1000;
 
   &::before {
     content: "";

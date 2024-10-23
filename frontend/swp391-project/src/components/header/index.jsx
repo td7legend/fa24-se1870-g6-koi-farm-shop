@@ -151,7 +151,7 @@ const Header = () => {
               <Link to="/">Home</Link>
             </li>
             <li className="dropdown">
-              <Link to="/products">
+              <Link to="/fish-page">
                 Fish
                 <ul className="dropdown-menu">
                   <li className="menu-item">

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import "./index.scss";
 import { Tag, Button, notification } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import CurrencyFormatter from "../currency";
 
 const ProductCard = ({ fish }) => {
   const handleAddToCart = () => {
@@ -14,7 +15,7 @@ const ProductCard = ({ fish }) => {
   };
 
   return (
-    <Link to={`/products/${fish.id}`} className="product-card-wrapper">
+    <Link to={`/fish/${fish.id}`} className="product-card-wrapper">
       <div className="product-card">
         <div className="image">
           <img src={fish.img_path} alt={fish.name} />
@@ -27,7 +28,9 @@ const ProductCard = ({ fish }) => {
               <div className="tag-item-origin">{fish.origin}</div>
               <div className="tag-item-size">Size: {fish.size} cm</div>
             </div>
-            <p className="price">Price: {fish.price} VND</p>
+            <p className="price">
+              Price: <CurrencyFormatter amount={fish.price} />
+            </p>
           </div>
 
           <Button

@@ -10,19 +10,20 @@ import {
   Select,
   Slider,
   Tag,
-  TreeSelect,
+  Button,
 } from "antd";
 import Search from "antd/es/transfer/search";
-import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import ProductCard from "../../components/product-card";
+import "./index.scss";
+import Image from "../../images/ogon.jpg";
 const BreedFishPage = () => {
-  const { breedName } = useParams(); // Lấy breed từ URL
+  const { breedName } = useParams();
   const [breedFish, setBreedFish] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(20);
   const [sortOrder, setSortOrder] = useState("");
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -31,62 +32,43 @@ const BreedFishPage = () => {
   useEffect(() => {
     const fetchBreedFish = async () => {
       try {
-        // Giả sử API của bạn hỗ trợ lọc theo breed như query parameter
         const response = await axios.get(
           `https://66fe08fb699369308956d74e.mockapi.io/KoiProduct?breed=${breedName}`
         );
-        setBreedFish(response.data); // Lưu danh sách cá của breed
+        setBreedFish(response.data);
       } catch (error) {
         console.error("Error fetching breed fish:", error);
       }
     };
 
-    fetchBreedFish(); // Fetch dữ liệu khi component được mount
+    fetchBreedFish();
   }, [breedName]);
+
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSortChange = (value) => {
     setSortOrder(value);
     setCurrentPage(1);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleOriginChange = (value) => {
-    setSelectedOrigins(value);
-    setCurrentPage(1);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleSizeChange = (value) => {
-    setSelectedSizes(value);
-    setCurrentPage(1);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
+  const toggleSelection = (value, selectedArray, setSelectedArray) => {
+    if (selectedArray.includes(value)) {
+      setSelectedArray(selectedArray.filter((item) => item !== value));
+    } else {
+      setSelectedArray([...selectedArray, value]);
+    }
   };
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
     setCurrentPage(1);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
   const sizes = [...new Set(breedFish.map((Fish) => Fish.size))];
-
-  const originTreeData = origins.map((breed) => ({
-    title: breed,
-    value: breed,
-    key: breed,
-  }));
-
-  const sizeTreeData = sizes.map((size) => ({
-    title: size,
-    value: size,
-    key: size,
-  }));
 
   const filteredFishs =
     searchQuery === ""
@@ -106,7 +88,7 @@ const BreedFishPage = () => {
           return (
             Fish.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
             (selectedOrigins.length === 0 ||
-              selectedOrigins.includes(Fish.breed)) &&
+              selectedOrigins.includes(Fish.origin)) &&
             (selectedSizes.length === 0 || selectedSizes.includes(Fish.size)) &&
             Fish.price >= priceRange[0] &&
             Fish.price <= priceRange[1]
@@ -134,127 +116,155 @@ const BreedFishPage = () => {
 
   const handleChangPagination = (page) => {
     setCurrentPage(page);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="breed-page-container">
-      <Col span={24}>
-        <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb" separator=">">
-            <Breadcrumb.Item href="/">
-              <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
-            <Breadcrumb.Item>{breedName}</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </Col>
-      <h1>{breedName}</h1> {/* Hiển thị tên breed */}
-      <Row className="row-container">
-        <Col className="left-side">
-          <div className="product-list-filter">
-            <div className="search-container">
-              <h1>Filter</h1>
-              <Search
-                type="search"
-                value={searchQuery}
-                onChange={handleSearch}
-                placeholder="Search fish by name"
-              ></Search>
-            </div>
-            <div className="filter-container">
-              <div className="breed-filter">
-                <TreeSelect
-                  className="tree-select"
-                  treeData={originTreeData}
-                  value={selectedOrigins}
-                  onChange={handleOriginChange}
-                  multiple
-                  placeholder="Select origin"
-                />
+    <div className="bread-page">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/fish-page">Fish List</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {breedName}
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+      <div className="breed-page-container">
+        <Col span={24}></Col>
+        <h1>{breedName}</h1>
+        <Row className="row-container">
+          <Col className="left-side">
+            <div className="product-list-filter">
+              <div className="search-container">
+                <h1>Filter</h1>
+                <Search
+                  type="search"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  placeholder="Search fish by name"
+                ></Search>
               </div>
-              <div className="size-filter">
-                <TreeSelect
-                  className="tree-select"
-                  treeData={sizeTreeData}
-                  value={selectedSizes}
-                  onChange={handleSizeChange}
-                  multiple
-                  placeholder="Select size"
-                />
-              </div>
-              <div className="price-filter">
-                <Slider
-                  range
-                  min={100000}
-                  max={100000000}
-                  defaultValue={[100000, 100000000]}
-                  value={priceRange}
-                  onChange={handlePriceChange}
-                />
-                <div className="price-range">
-                  <span style={{ fontSize: 16 }}>
-                    Price: ${priceRange[0]} - ${priceRange[1]}
-                  </span>
+              <hr className="divider" />
+              <div className="filter-container">
+                <div className="breed-filter">
+                  <h3>Origin</h3>
+                  <div className="button-group">
+                    {origins.map((origin) => (
+                      <Button
+                        key={origin}
+                        className={`filter-button ${
+                          selectedOrigins.includes(origin) ? "selected" : ""
+                        }`}
+                        onClick={() =>
+                          toggleSelection(
+                            origin,
+                            selectedOrigins,
+                            setSelectedOrigins
+                          )
+                        }
+                      >
+                        {origin}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <hr className="divider" />
+                <div className="size-filter">
+                  <h3>Size</h3>
+                  <div className="button-group">
+                    {sizes.map((size) => (
+                      <Button
+                        key={size}
+                        className={`filter-button ${
+                          selectedSizes.includes(size) ? "selected" : ""
+                        }`}
+                        onClick={() =>
+                          toggleSelection(size, selectedSizes, setSelectedSizes)
+                        }
+                      >
+                        {size}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <hr className="divider" />
+                <div className="price-filter">
+                  <Slider
+                    range
+                    min={100000}
+                    max={100000000}
+                    defaultValue={[100000, 100000000]}
+                    value={priceRange}
+                    onChange={handlePriceChange}
+                  />
+                  <div className="price-range">
+                    <span style={{ fontSize: 16 }}>
+                      Price: ${priceRange[0]} - ${priceRange[1]}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Col>
-        <Col className="right-side">
-          <div className="banner">
-            <img
-              src="https://img.freepik.com/premium-photo/set-koi-carps_933530-3237.jpg"
-              alt="banner"
-            />
-          </div>
-          <div className="sort-container">
-            <div>Sort By</div>
-            <Select
-              value={sortOrder}
-              onChange={handleSortChange}
-              style={{ width: 200 }}
-            >
-              <Select.Option value="price-asc">
-                Price (Low to High)
-              </Select.Option>
-              <Select.Option value="price-desc">
-                Price (High to Low)
-              </Select.Option>
-            </Select>
-          </div>
-          <div className="filter-tags">
-            {selectedOrigins.length > 0 && (
-              <Tag
-                style={{
-                  fontSize: 16,
-                  padding: "8px 16px",
-                  borderRadius: 5,
-                }}
-                color="blue"
-                closable
-                onClose={() => setSelectedOrigins([])}
-              >
-                Breed: {selectedOrigins.join(", ")}
-              </Tag>
-            )}
-            {selectedSizes.length > 0 && (
-              <Tag
-                style={{
-                  fontSize: 16,
-                  padding: "8px 16px",
-                  borderRadius: 5,
-                }}
-                color="blue"
-                closable
-                onClose={() => setSelectedSizes([])}
-              >
-                Size: {selectedSizes.join(", ")}
-              </Tag>
-            )}
-            {priceRange[0] !== 0 ||
-              (priceRange[1] !== 100 && (
+          </Col>
+          <Col className="right-side">
+            <div className="banner">
+              <img src={Image} alt="banner" />
+            </div>
+            <div className="top-controls">
+              <div className="pagination">
+                <Pagination
+                  current={currentPage}
+                  pageSize={pageSize}
+                  total={filteredFishs.length}
+                  onChange={handleChangPagination}
+                />
+              </div>
+              <div className="sort-container">
+                <div>Sort By</div>
+                <Select
+                  value={sortOrder}
+                  onChange={handleSortChange}
+                  style={{ width: 200 }}
+                >
+                  <Select.Option value="price-asc">
+                    Price (Low to High)
+                  </Select.Option>
+                  <Select.Option value="price-desc">
+                    Price (High to Low)
+                  </Select.Option>
+                </Select>
+              </div>
+            </div>
+
+            <div className="filter-tags">
+              {selectedOrigins.length > 0 && (
+                <Tag closable onClose={() => setSelectedOrigins([])}>
+                  Origin: {selectedOrigins.join(", ")}
+                </Tag>
+              )}
+              {selectedSizes.length > 0 && (
+                <Tag closable onClose={() => setSelectedSizes([])}>
+                  Size: {selectedSizes.join(", ")}
+                </Tag>
+              )}
+              {priceRange[0] !== 0 ||
+                (priceRange[1] !== 100 && (
+                  <Tag
+                    style={{
+                      fontSize: 16,
+                      padding: "8px 16px",
+                      borderRadius: 5,
+                    }}
+                    color="blue"
+                    closable
+                    onClose={() => setPriceRange([0, 100])}
+                  >
+                    Price: ${priceRange[0]} - ${priceRange[1]}
+                  </Tag>
+                ))}
+              {searchQuery !== "" && (
                 <Tag
                   style={{
                     fontSize: 16,
@@ -263,43 +273,23 @@ const BreedFishPage = () => {
                   }}
                   color="blue"
                   closable
-                  onClose={() => setPriceRange([0, 100])}
+                  onClose={() => setSearchQuery("")}
                 >
-                  Price: ${priceRange[0]} - ${priceRange[1]}
+                  Search: {searchQuery}
                 </Tag>
-              ))}
-            {searchQuery !== "" && (
-              <Tag
-                style={{
-                  fontSize: 16,
-                  padding: "8px 16px",
-                  borderRadius: 5,
-                }}
-                color="blue"
-                closable
-                onClose={() => setSearchQuery("")}
-              >
-                Search: {searchQuery}
-              </Tag>
-            )}
-          </div>
+              )}
+            </div>
 
-          <div className="fish-list-breed">
-            {paginatedFishs.map((fish) => (
-              <ProductCard key={fish.id} fish={fish} />
-            ))}
-          </div>
-          <div className="pagination">
-            <Pagination
-              current={currentPage}
-              pageSize={pageSize}
-              total={filteredFishs.length}
-              onChange={handleChangPagination}
-            />
-          </div>
-          <FloatButton.BackTop />
-        </Col>
-      </Row>
+            <div className="fish-list-breed">
+              {paginatedFishs.map((fish) => (
+                <ProductCard key={fish.id} fish={fish} />
+              ))}
+            </div>
+
+            <FloatButton.BackTop />
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 };
