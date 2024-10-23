@@ -24,7 +24,7 @@ const config = {
   API_ROOT: "https://localhost:44366/api",
 };
 
-const StaffFishTypeManagement = () => {
+const FishTypeManagement = () => {
   const [fishTypes, setFishTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -174,32 +174,34 @@ const StaffFishTypeManagement = () => {
         </Breadcrumb>
       </div>
 
-      <Card className="card">
-        <div className="flex justify-between items-center mb-4">
-          <Title level={3}>Fish Type Management</Title>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setIsModalVisible(true)}
-            style={{ backgroundColor: "#bbab6f" }}
-          >
-            Add New Fish Type
-          </Button>
-        </div>
+      <div className="fish-type-container">
+        <Card className="card">
+          <div className="flex justify-between items-center mb-4">
+            <Title level={3}>Fish Type Management</Title>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalVisible(true)}
+              style={{ backgroundColor: "#bbab6f" }}
+            >
+              Add New Fish Type
+            </Button>
+          </div>
 
-        <Table
-          className="fish-type-table"
-          columns={columns}
-          dataSource={fishTypes}
-          loading={loading}
-          pagination={{
-            total: fishTypes.length,
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-          }}
-        />
-      </Card>
+          <Table
+            className="fish-type-table"
+            columns={columns}
+            dataSource={fishTypes}
+            loading={loading}
+            pagination={{
+              total: fishTypes.length,
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: false,
+            }}
+          />
+        </Card>
+      </div>
 
       <AddFishTypeModal />
       <ToastContainer />
@@ -207,4 +209,4 @@ const StaffFishTypeManagement = () => {
   );
 };
 
-export default StaffFishTypeManagement;
+export default FishTypeManagement;
