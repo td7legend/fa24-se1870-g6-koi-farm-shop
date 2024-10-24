@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ToastContainer } from "react-toastify"; // Import ToastContainer
+import { ToastContainer } from "react-toastify";
 import Consignment from "./pages/consignment/consignment-page";
 import ConsignmentCare from "./pages/consignment/consignment-care";
 import ConsignmentSell from "./pages/consignment/consignment-sell";

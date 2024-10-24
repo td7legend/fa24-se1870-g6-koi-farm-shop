@@ -53,12 +53,12 @@ const EnhancedSearchBar = () => {
   };
 
   const onSuggestionSelected = (event, { suggestion }) => {
-    navigate(`/products/${suggestion.fishId}`);
+    navigate(`/fish/${suggestion.fishId}`);
   };
 
   const handleSearch = () => {
     if (value.trim()) {
-      navigate(`/products?search=${encodeURIComponent(value.trim())}`);
+      navigate(`/fish-page?search=${encodeURIComponent(value.trim())}`);
     }
   };
 
