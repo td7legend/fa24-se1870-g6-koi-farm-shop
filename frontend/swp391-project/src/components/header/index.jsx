@@ -20,7 +20,8 @@ import axios from "axios";
 import { logout } from "../../store/actions/authActions";
 import EnhancedSearchBar from "../autosuggest";
 import { Drawer, List, Button, Typography, message } from "antd";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const { Text } = Typography;
 
 const Header = () => {
@@ -111,9 +112,14 @@ const Header = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
+  const handleCartClick = () => {
+    toast.error("Login to see your cart");
+    // navigate("/login");
+  };
+
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
-      const price = getFishPrice(item.fishId); // getFishPrice is now accessible here
+      const price = getFishPrice(item.fishId);
       return total + price * item.quantity;
     }, 0);
   };
@@ -137,7 +143,7 @@ const Header = () => {
           </div>
 
           {!isLoggedIn ? (
-            <div className="cart">
+            <div className="cart" onClick={handleCartClick}>
               <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" />{" "}
               Your Cart
             </div>

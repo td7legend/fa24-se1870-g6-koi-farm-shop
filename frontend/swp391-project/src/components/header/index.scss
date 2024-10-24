@@ -153,13 +153,14 @@
 
       .fa__icon {
         margin-right: 8px;
+        font-size: 18px;
       }
 
       ul {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 220px;
+        gap: 180px;
         font-size: 18px;
         li {
           list-style: none;
@@ -269,6 +270,9 @@
     color: #bbab6f;
     transition: background-color 0.3s ease, color 0.3s ease;
 
+    .fa__icon {
+      margin-right: 8px;
+    }
     &:hover {
       color: white;
       cursor: pointer;
