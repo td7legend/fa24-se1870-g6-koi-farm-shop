@@ -36,8 +36,9 @@ const ProductCard = ({ fish, onCompare }) => {
             <h2>{fish.name}</h2>
             <p className="description">{fish.description}</p>
             <div className="tag">
-              <div className="tag-item-origin">{fish.origin}</div>
+              <div className="tag-item-origin">Origin: {fish.origin}</div>
               <div className="tag-item-size">Size: {fish.size} cm</div>
+              <div className="tag-item-age">Age: {fish.age} year</div>
             </div>
             <p className="price">
               Price: <CurrencyFormatter amount={fish.price} />

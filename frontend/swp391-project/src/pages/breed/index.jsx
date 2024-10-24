@@ -11,6 +11,7 @@ import {
   Slider,
   Tag,
   Button,
+  Input, // <-- Add Input from antd for price inputs
 } from "antd";
 import Search from "antd/es/transfer/search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,7 +33,10 @@ const BreedFishPage = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedAges, setSelectedAges] = useState([]); // <-- Add state for selected ages
   const [priceRange, setPriceRange] = useState([100000, 100000000]);
+  const [minPrice, setMinPrice] = useState(100000); // <-- Add state for manual price input
+  const [maxPrice, setMaxPrice] = useState(100000000);
 
   useEffect(() => {
     const fetchBreedFish = async () => {
@@ -72,6 +76,11 @@ const BreedFishPage = () => {
     setCurrentPage(1);
   };
 
+  const handleManualPriceChange = () => {
+    setPriceRange([minPrice, maxPrice]);
+    setCurrentPage(1);
+  };
+
   const fishImages = {
     Ogon: ogonImage,
     Ochiba: ochibaImage,
@@ -83,6 +92,7 @@ const BreedFishPage = () => {
 
   const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
   const sizes = [...new Set(breedFish.map((Fish) => Fish.size))];
+  const ages = [...new Set(breedFish.map((Fish) => Fish.age))]; // <-- Collect unique ages
 
   const filteredFishs =
     searchQuery === ""
@@ -96,6 +106,10 @@ const BreedFishPage = () => {
             return selectedSizes.includes(Fish.size);
           })
           .filter((Fish) => {
+            if (selectedAges.length === 0) return true;
+            return selectedAges.includes(Fish.age); // <-- Filter by age
+          })
+          .filter((Fish) => {
             return Fish.price >= priceRange[0] && Fish.price <= priceRange[1];
           })
       : breedFish.filter((Fish) => {
@@ -104,6 +118,7 @@ const BreedFishPage = () => {
             (selectedOrigins.length === 0 ||
               selectedOrigins.includes(Fish.origin)) &&
             (selectedSizes.length === 0 || selectedSizes.includes(Fish.size)) &&
+            (selectedAges.length === 0 || selectedAges.includes(Fish.age)) && // <-- Filter by age
             Fish.price >= priceRange[0] &&
             Fish.price <= priceRange[1]
           );
@@ -204,6 +219,25 @@ const BreedFishPage = () => {
                   </div>
                 </div>
                 <hr className="divider" />
+                <div className="age-filter">
+                  <h3>Age</h3>
+                  <div className="button-group">
+                    {ages.map((age) => (
+                      <Button
+                        key={age}
+                        className={`filter-button ${
+                          selectedAges.includes(age) ? "selected" : ""
+                        }`}
+                        onClick={() =>
+                          toggleSelection(age, selectedAges, setSelectedAges)
+                        }
+                      >
+                        {age} years
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <hr className="divider" />
                 <div className="price-filter">
                   <Slider
                     range
@@ -217,6 +251,43 @@ const BreedFishPage = () => {
                     <span style={{ fontSize: 16 }}>
                       Price: ${priceRange[0]} - ${priceRange[1]}
                     </span>
+                  </div>
+                  <div className="price-inputs">
+                    <Input
+                      type="number"
+                      placeholder="Min Price"
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(Number(e.target.value))}
+                      style={{
+                        marginTop: 10,
+                        marginRight: 8,
+                        width: "47%",
+                        borderRadius: "10px",
+                        border: "1px solid #bbab6f",
+                      }}
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Max Price"
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(Number(e.target.value))}
+                      style={{
+                        width: "47%",
+                        borderRadius: "10px",
+                        border: "1px solid #bbab6f",
+                      }}
+                    />
+                    <Button
+                      type="primary"
+                      onClick={handleManualPriceChange}
+                      style={{
+                        marginTop: 8,
+                        borderRadius: "10px",
+                        backgroundColor: "#bbab6f",
+                      }}
+                    >
+                      Apply
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -261,6 +332,11 @@ const BreedFishPage = () => {
               {selectedSizes.length > 0 && (
                 <Tag closable onClose={() => setSelectedSizes([])}>
                   Size: {selectedSizes.join(", ")}
+                </Tag>
+              )}
+              {selectedAges.length > 0 && (
+                <Tag closable onClose={() => setSelectedAges([])}>
+                  Age: {selectedAges.join(", ")} years
                 </Tag>
               )}
               {priceRange[0] !== 0 ||

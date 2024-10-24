@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
 import config from "../../config/config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons"; // Import icon search
 import "./index.scss";
 
 const EnhancedSearchBar = () => {
@@ -80,7 +82,11 @@ const EnhancedSearchBar = () => {
         inputProps={inputProps}
         onSuggestionSelected={onSuggestionSelected}
       />
-      <button onClick={handleSearch} style={{ margin: "0" }}>
+      <button
+        onClick={handleSearch}
+        style={{ margin: "0", display: "flex", alignItems: "center" }}
+      >
+        <FontAwesomeIcon icon={faSearch} style={{ marginRight: "5px" }} />
         Search
       </button>
     </div>

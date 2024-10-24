@@ -150,11 +150,16 @@
 
     .nav__links {
       z-index: 3;
+
+      .fa__icon {
+        margin-right: 8px;
+      }
+
       ul {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 100px;
+        gap: 220px;
         font-size: 18px;
         li {
           list-style: none;

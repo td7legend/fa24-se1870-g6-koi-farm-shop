@@ -5,6 +5,11 @@ import {
   faUser,
   faShoppingCart,
   faGlobe,
+  faHome,
+  faFish,
+  faBlog,
+  faInfoCircle,
+  faHandHoldingUsd,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
@@ -185,11 +190,13 @@ const Header = () => {
         <nav className="nav__links">
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">
+                <FontAwesomeIcon icon={faHome} className="fa__icon" /> Home
+              </Link>
             </li>
             <li className="dropdown">
               <Link to="/fish-page">
-                Fish
+                <FontAwesomeIcon icon={faFish} className="fa__icon" /> Fish
                 <ul className="dropdown-menu">
                   <li className="menu-item">
                     <Link to="/breed/Ogon">Ogon</Link>
@@ -207,13 +214,21 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link to="/blog">Blog</Link>
+              <Link to="/blog">
+                <FontAwesomeIcon icon={faBlog} className="fa__icon" /> Blog
+              </Link>
             </li>
             <li>
-              <Link to="/about-us">About Us</Link>
+              <Link to="/about-us">
+                <FontAwesomeIcon icon={faInfoCircle} className="fa__icon" />{" "}
+                About Us
+              </Link>
             </li>
             <li>
-              <Link to="/consignment">Consignment</Link>
+              <Link to="/consignment">
+                <FontAwesomeIcon icon={faHandHoldingUsd} className="fa__icon" />{" "}
+                Consignment
+              </Link>
             </li>
           </ul>
         </nav>
