@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import Consignment from "./pages/consignment/consignment-page";
 import ConsignmentCare from "./pages/consignment/consignment-care";
 import ConsignmentSell from "./pages/consignment/consignment-sell";
@@ -32,6 +33,8 @@ import StaffFishManagement from "./pages/staff-page/manage-fish";
 import StaffFishTypeManagement from "./pages/staff-page/manage-fishtype";
 import ConsignmentView from "./pages/user-page/consignment-history";
 
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -39,9 +42,9 @@ function App() {
       element: <UserLayout />,
       children: [
         { path: "/", element: <HomePage /> },
-        { path: "/products", element: <AllFishPage /> },
+        { path: "/fish-page", element: <AllFishPage /> },
         { path: "/breed/:breedName", element: <BreedFishPage /> },
-        { path: "/products/:id", element: <ProductDetail /> },
+        { path: "/fish/:id", element: <ProductDetail /> },
         { path: "/breed/:id", element: <ProductDetail /> },
         { path: "/consignment", element: <Consignment /> },
         { path: "/consignment/care", element: <ConsignmentCare /> },
@@ -91,7 +94,12 @@ function App() {
     return () => window.removeEventListener("message", () => {});
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </>
+  );
 }
 
 export default App;

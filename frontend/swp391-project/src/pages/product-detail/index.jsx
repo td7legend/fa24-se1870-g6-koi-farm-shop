@@ -23,6 +23,7 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import config from "../../config/config";
 import { AES, enc } from "crypto-js";
+import CurrencyFormatter from "../../components/currency";
 
 const { Text } = Typography;
 
@@ -169,12 +170,18 @@ function ProductDetail() {
       console.log("Error: ", error.message);
     }
   }
+
+  const capitalizeFirstLetter = (string) => {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   function getCurrentFishTypes() {
     if (fishTypes.length > 0 && product.fishTypeId) {
       const temp = fishTypes.filter(
         (fishType) => fishType.fishTypeId === product.fishTypeId
       );
-      setCurrentFishTypes(temp[0] || null); // Nếu không tìm thấy, đặt là null
+      setCurrentFishTypes(temp[0] || null);
     } else {
       console.error(
         "No fish types available or product does not have fishTypeId"
@@ -194,10 +201,10 @@ function ProductDetail() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
+              <Breadcrumb.Item href="/fish-page">Fish List</Breadcrumb.Item>
               <Breadcrumb.Item>
                 <Link to={`/breed/${currentFishTypes.name}`}>
-                  {currentFishTypes.name}
+                  {capitalizeFirstLetter(currentFishTypes.name)}
                 </Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>{product?.name}</Breadcrumb.Item>
@@ -217,7 +224,9 @@ function ProductDetail() {
           <Col span={14}>
             <div className="info-container">
               <h1>{product.name}</h1>
-              <h2>{product.price} VND</h2>
+              <h2>
+                Price: <CurrencyFormatter amount={product.price} />
+              </h2>
               <Rate allowHalf defaultValue={5} />
 
               <div className="product-info">

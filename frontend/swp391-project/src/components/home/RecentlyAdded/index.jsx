@@ -30,7 +30,7 @@ const RecentlyAdded = () => {
     setTimeout(() => {
       setCurrentIndex((prevIndex) => (prevIndex + itemsPerPage) % itemsToShow);
       setFade("fade__in");
-    }, 300); // Match the CSS transition duration
+    }, 300);
   };
 
   const prevProducts = () => {
@@ -40,7 +40,7 @@ const RecentlyAdded = () => {
         (prevIndex) => (prevIndex - itemsPerPage + itemsToShow) % itemsToShow
       );
       setFade("fade__in");
-    }, 300); // Match the CSS transition duration
+    }, 300);
   };
 
   return (

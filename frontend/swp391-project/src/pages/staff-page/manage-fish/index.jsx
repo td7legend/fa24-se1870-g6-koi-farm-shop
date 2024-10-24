@@ -22,9 +22,8 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import { PlusOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
-// import uploadFile from "../../../utils/upload";
+import uploadFile from "../../../utils/upload/upload";
 import "./index.scss";
-
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -127,7 +126,8 @@ const StaffFishManagement = () => {
         size: parseInt(values.size),
         class: values.class,
         foodRequirement: parseInt(values.foodRequirement),
-        overallRating: parseInt(values.overallRating),
+        // overallRating: parseInt(values.overallRating),
+        overallRating: "5",
         price: parseInt(values.price),
         batch: true,
         fishTypeId: parseInt(values.fishTypeId),
@@ -268,7 +268,7 @@ const StaffFishManagement = () => {
             type="link"
             icon={<EyeOutlined />}
             onClick={() => showDetails(record)}
-            style={{ color: "#1890ff" }}
+            style={{ color: "#D4B57E" }}
           >
             Details
           </Button>
@@ -276,14 +276,14 @@ const StaffFishManagement = () => {
             type="link"
             icon={<EditOutlined />}
             onClick={() => showQuantityModal(record)}
-            style={{ color: "#52c41a" }}
+            style={{ backgroundColor: "#52c41a" }}
           >
             Update Quantity
           </Button>
           <Button
             type="link"
             onClick={() => handleDelete(record.fishId)}
-            style={{ color: "#ff4d4f" }}
+            style={{ backgroundColor: "#ff4d4f" }}
           >
             Delete
           </Button>
@@ -383,13 +383,13 @@ const StaffFishManagement = () => {
           <InputNumber style={{ width: "100%" }} min={0} />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="overallRating"
           label="Overall Rating"
           rules={[{ required: true, message: "Please enter rating" }]}
         >
           <InputNumber style={{ width: "100%" }} min={0} max={5} />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           name="quantity"
@@ -580,32 +580,33 @@ const StaffFishManagement = () => {
         </Breadcrumb>
       </div>
 
-      <Card className="card">
-        <div className="flex justify-between items-center mb-4">
-          <Title level={3}>Fish Management</Title>
-          <Button
-            type="primary"
-            onClick={() => setIsModalVisible(true)}
-            style={{ backgroundColor: "#bbab6f" }}
-          >
-            Add New Fish
-          </Button>
-        </div>
+      <div className="manage-fish-container">
+        <Card className="card">
+          <div className="flex justify-between items-center mb-4">
+            <Title level={3}>Fish Management</Title>
+            <Button
+              type="primary"
+              onClick={() => setIsModalVisible(true)}
+              style={{ backgroundColor: "#bbab6f" }}
+            >
+              Add New Fish
+            </Button>
+          </div>
 
-        <Table
-          className="fish-management-table"
-          columns={columns}
-          dataSource={fishes}
-          loading={loading}
-          pagination={{
-            total: fishes.length,
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-          }}
-        />
-      </Card>
-
+          <Table
+            className="fish-management-table"
+            columns={columns}
+            dataSource={fishes}
+            loading={loading}
+            pagination={{
+              total: fishes.length,
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: false,
+            }}
+          />
+        </Card>
+      </div>
       <AddFishModal />
       <FishDetailsModal />
       <UpdateQuantityModal />

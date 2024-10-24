@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./index.scss";
-import { Button, notification } from "antd";
+import {Tag, Button, notification } from "antd";
 import { ShoppingCartOutlined, SwapOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBalanceScale } from "@fortawesome/free-solid-svg-icons";
@@ -26,7 +26,7 @@ const ProductCard = ({ fish, onCompare }) => {
   };
 
   return (
-    <Link to={`/products/${fish.id}`} className="product-card-wrapper">
+    <Link to={`/fish/${fish.id}`} className="product-card-wrapper">
       <div className="product-card">
         <div className="image">
           <img src={fish.img_path} alt={fish.name} />

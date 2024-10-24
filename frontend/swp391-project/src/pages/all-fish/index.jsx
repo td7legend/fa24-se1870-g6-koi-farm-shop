@@ -77,7 +77,6 @@ const AllFishPage = () => {
     });
   }, [allFish]);
 
-  // Hàm điều khiển chuyển trang
   const handlePageChange = (breed, direction) => {
     setCurrentPage((prevState) => {
       const newPage = prevState[breed] + direction;
