@@ -1,17 +1,28 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import "./index.scss";
-import { Tag, Button, notification } from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import {Tag, Button, notification } from "antd";
+import { ShoppingCartOutlined, SwapOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBalanceScale } from "@fortawesome/free-solid-svg-icons";
 import CurrencyFormatter from "../currency";
 
-const ProductCard = ({ fish }) => {
-  const handleAddToCart = () => {
+const ProductCard = ({ fish, onCompare }) => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
     notification.open({
       message: "Fish added to cart",
       description: `${fish.name} has been added to your cart`,
       placement: "topRight",
       duration: 2,
     });
+  };
+
+  const handleCompare = (e) => {
+    e.preventDefault();
+    if (onCompare) {
+      onCompare(fish);
+    }
   };
 
   return (
@@ -32,14 +43,24 @@ const ProductCard = ({ fish }) => {
               Price: <CurrencyFormatter amount={fish.price} />
             </p>
           </div>
-
-          <Button
-            className="add-to-cart"
-            icon={<ShoppingCartOutlined />}
-            onClick={handleAddToCart}
-          >
-            Add to Cart
-          </Button>
+          <div className="button-container">
+            <Button
+              className="add-to-cart"
+              icon={<ShoppingCartOutlined />}
+              onClick={handleAddToCart}
+            >
+              Add to Cart
+            </Button>
+            {onCompare && (
+              <Button
+                className="compare"
+                icon={<FontAwesomeIcon icon={faBalanceScale} />}
+                onClick={handleCompare}
+              >
+                Compare
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </Link>

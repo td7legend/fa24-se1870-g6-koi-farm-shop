@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./index.scss"; // Import CSS để điều chỉnh layout
 import { Link, useLocation } from "react-router-dom";
@@ -11,6 +11,7 @@ import ochibaImage from "../../images/ochiba.jpg";
 import kujakuImage from "../../images/kujaku.jpg";
 import kohakuImage from "../../images/kohaku.jpg";
 import ProductCard from "../../components/product-card";
+import CompareModal from "../../components/compareModel/CompareModal";
 
 const fishImages = {
   Ogon: ogonImage,
@@ -25,6 +26,8 @@ const AllFishPage = () => {
   const [currentPage, setCurrentPage] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
+  const [isCompareModalVisible, setIsCompareModalVisible] = useState(false);
+  const [selectedFishForCompare, setSelectedFishForCompare] = useState(null);
 
   const itemsPerPage = 4;
 
@@ -95,6 +98,11 @@ const AllFishPage = () => {
     return fish.name.toLowerCase().includes(searchQuery.toLowerCase());
   };
 
+  const handleCompare = (fish) => {
+    setSelectedFishForCompare(fish);
+    setIsCompareModalVisible(true);
+  };
+
   return (
     <div className="all-fish-page-form">
       <Col span={24}>
@@ -149,21 +157,27 @@ const AllFishPage = () => {
                     fish={fish}
                     key={fish.id}
                     className="product-card"
+                  onCompare={handleCompare}
                   />
                 ))}
 
-                <button
-                  className="nav__button right"
-                  onClick={() => handlePageChange(breed, 1)}
-                  disabled={endIndex >= breedFish.length}
-                >
-                  &gt;
-                </button>
-              </div>
+              <button
+                className="nav__button right"
+                onClick={() => handlePageChange(breed, 1)}
+                disabled={endIndex >= breedFish.length}
+              >
+                &gt;
+              </button>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
+      <CompareModal
+        isVisible={isCompareModalVisible}
+        onClose={() => setIsCompareModalVisible(false)}
+        initialFish={selectedFishForCompare}
+        allFish={allFish}
+      />
     </div>
   );
 };
