@@ -28,6 +28,7 @@ $large-border-radius: 20px;
     opacity: 0.2;
     z-index: 1;
     pointer-events: none;
+    filter: blur(5px);
   }
 
   .fade-in-section {

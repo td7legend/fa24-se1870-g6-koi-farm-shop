@@ -61,7 +61,7 @@ function FAQsPage() {
   ];
 
   return (
-    <div>
+    <div className="faqs-page">
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
@@ -82,22 +82,16 @@ function FAQsPage() {
         <h1 className="faqs-title">Golden Koi - Frequently Asked Questions</h1>
 
         <div className="faq-content">
-          <div className="faq-items">
-            {faqData.map((faq, index) => (
-              <div key={index} className="faq-item">
-                <div className="faq-question">
-                  <FontAwesomeIcon
-                    icon={faQuestionCircle}
-                    className="faq-icon"
-                  />
-                  {faq.question}
-                </div>
-                <div className="faq-answer">{faq.answer}</div>
+          {faqData.map((faq, index) => (
+            <div key={index} className="faq-item">
+              <div className="faq-question">
+                <FontAwesomeIcon icon={faQuestionCircle} className="faq-icon" />
+                {faq.question}
               </div>
-            ))}
-          </div>
+              <div className="faq-answer">{faq.answer}</div>
+            </div>
+          ))}
 
-          {/* Link to Shopping Guide */}
           <div className="shopping-guide-link">
             <h2>Need more information?</h2>
             <Link to="/shopping-guide">

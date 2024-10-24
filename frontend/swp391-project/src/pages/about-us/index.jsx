@@ -26,11 +26,11 @@ function AboutUs() {
           <div className="section introduction">
             <h2>Introduce</h2>
             <p>
-              Welcome to Golden Koi Farm, where we bring you high quality Koi
+              Welcome to Golden Koi Farm, where we bring you high-quality Koi
               fish and dedicated care services. With many years of experience in
               the field of Koi breeding and trading, we are proud to be a
               trusted destination for Koi enthusiasts nationwide. Golden Koi
-              hopes to spread the love for Koi fish to all those who have, are
+              hopes to spread the love for Koi fish to all those who have, are,
               and are about to play Koi fish. After more than 10 years of
               construction and development, Golden Koi has defined the main
               business areas to realize its mission: supplying Japanese Koi
@@ -95,6 +95,41 @@ function AboutUs() {
               the best products and services to our customers, while actively
               participating in community activities to promote Koi fish culture
               in the country.
+            </p>
+          </div>
+
+          <div className="section core-values">
+            <h3>Core Values</h3>
+            <p>
+              At Golden Koi Farm, our core values are:
+              <ul>
+                <li>
+                  Quality: We ensure the highest standards in our Koi fish.
+                </li>
+                <li>
+                  Trust: We build lasting relationships with our customers.
+                </li>
+                <li>
+                  Innovation: We continually improve our methods and services.
+                </li>
+                <li>
+                  Community: We actively support local communities and
+                  initiatives.
+                </li>
+              </ul>
+            </p>
+          </div>
+
+          <div className="section customer-benefits">
+            <h3>Why Choose Us?</h3>
+            <p>
+              Choosing Golden Koi Farm means you are guaranteed:
+              <ul>
+                <li>Expert advice from our knowledgeable team.</li>
+                <li>A wide selection of healthy Koi fish.</li>
+                <li>Reliable after-sales service and support.</li>
+                <li>Access to exclusive Koi products and accessories.</li>
+              </ul>
             </p>
           </div>
 
