@@ -1,6 +1,6 @@
 # Golden Koi
 
-![Golden Koi Logo](link-to-your-logo-image)  <!-- Thay thế bằng đường dẫn đến hình ảnh logo của bạn -->
+![Golden Koi Logo]([link-to-your-logo-image](https://firebasestorage.googleapis.com/v0/b/move-management-4fb2c.appspot.com/o/379128395d441b9667fb5156f1bbc970.png?alt=media&token=bb8dc2b6-2551-46e3-bf68-903798945e0d))  <!-- Thay thế bằng đường dẫn đến hình ảnh logo của bạn -->
 
 ## Giới thiệu
 Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá koi, mang đến trải nghiệm người dùng tuyệt vời với thiết kế hiện đại và giao diện thân thiện. Ứng dụng được xây dựng bằng **ReactJS**, **C#**, và **MySQL** để đảm bảo hiệu suất cao và khả năng mở rộng.
