@@ -154,9 +154,9 @@ const AllFishPage = () => {
 
                 {fishToDisplay.map((fish) => (
                   <ProductCard
+                    className="product-card"
                     fish={fish}
                     key={fish.id}
-                    className="product-card"
                     onCompare={handleCompare}
                   />
                 ))}
