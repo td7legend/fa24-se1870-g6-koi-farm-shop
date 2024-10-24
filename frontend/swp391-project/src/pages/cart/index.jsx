@@ -102,7 +102,7 @@ const Cart = () => {
         }
       );
 
-      fetchCart(); // Refresh cart after update
+      fetchCart();
       toast.success(
         isRemove ? "Fish removed from cart" : "Cart updated successfully"
       );
@@ -139,8 +139,11 @@ const Cart = () => {
     {
       title: "Price",
       key: "price",
-      render: (_, record) =>
-        `${getFishPrice(record.fishId).toLocaleString()} VND`,
+      render: (_, record) => (
+        <span style={{ whiteSpace: "nowrap" }}>
+          {`${getFishPrice(record.fishId).toLocaleString()} VND`}
+        </span>
+      ),
     },
     {
       title: "Quantity",
@@ -148,15 +151,17 @@ const Cart = () => {
       render: (_, record) => (
         <div className="quantity-input">
           <Button
-            className="button"
+            className="button-quantity"
             onClick={() => handleDecreaseQuantity(record.fishId)}
+            style={{ border: "none" }}
           >
             -
           </Button>
           <span style={{ margin: "0 10px" }}>{record.quantity}</span>
           <Button
-            className="button"
+            className="button-quantity"
             onClick={() => handleIncreaseQuantity(record.fishId)}
+            style={{ border: "none" }}
           >
             +
           </Button>
@@ -166,17 +171,20 @@ const Cart = () => {
     {
       title: "Total",
       key: "total",
-      render: (_, record) =>
-        `${(
-          getFishPrice(record.fishId) * record.quantity
-        ).toLocaleString()} VND`,
+      render: (_, record) => (
+        <span style={{ whiteSpace: "nowrap" }}>
+          {`${(
+            getFishPrice(record.fishId) * record.quantity
+          ).toLocaleString()} VND`}
+        </span>
+      ),
     },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Button
-          className="button"
+          className="button-main"
           onClick={() => handleRemoveItem(record.fishId)}
         >
           Remove
@@ -225,7 +233,7 @@ const Cart = () => {
                 style={{ textAlign: "right", margin: "5px 0", padding: "5px" }}
               >
                 <p
-                  style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}
+                  style={{ fontSize: 15, fontWeight: "bold", marginBottom: 10 }}
                 >
                   Total Price: {calculateTotalPrice().toLocaleString()} VND
                 </p>
@@ -238,7 +246,7 @@ const Cart = () => {
                   Back to Shop
                 </Button>
                 <Button
-                  className="button"
+                  className="button-main"
                   href="/checkout"
                   size="large"
                   style={{ width: 200 }}
