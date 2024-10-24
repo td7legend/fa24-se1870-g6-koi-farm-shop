@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./index.scss"; // Import CSS để điều chỉnh layout
+import "./index.scss";
 import { Link, useLocation } from "react-router-dom";
 import { Breadcrumb, Col } from "antd";
-import ImageFrame from "../../components/home/ImageFrame"; // Giữ nguyên import
+import ImageFrame from "../../components/home/ImageFrame";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import ogonImage from "../../images/ogon.jpg";
@@ -157,27 +157,28 @@ const AllFishPage = () => {
                     fish={fish}
                     key={fish.id}
                     className="product-card"
-                  onCompare={handleCompare}
+                    onCompare={handleCompare}
                   />
                 ))}
 
-              <button
-                className="nav__button right"
-                onClick={() => handlePageChange(breed, 1)}
-                disabled={endIndex >= breedFish.length}
-              >
-                &gt;
-              </button>
+                <button
+                  className="nav__button right"
+                  onClick={() => handlePageChange(breed, 1)}
+                  disabled={endIndex >= breedFish.length}
+                >
+                  &gt;
+                </button>
+              </div>
             </div>
-          </div>
-        );
-      })}
-      <CompareModal
-        isVisible={isCompareModalVisible}
-        onClose={() => setIsCompareModalVisible(false)}
-        initialFish={selectedFishForCompare}
-        allFish={allFish}
-      />
+          );
+        })}
+        <CompareModal
+          isVisible={isCompareModalVisible}
+          onClose={() => setIsCompareModalVisible(false)}
+          initialFish={selectedFishForCompare}
+          allFish={allFish}
+        />
+      </div>
     </div>
   );
 };
