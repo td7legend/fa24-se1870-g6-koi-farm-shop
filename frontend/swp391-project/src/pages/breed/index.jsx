@@ -17,7 +17,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import ProductCard from "../../components/product-card";
 import "./index.scss";
-import Image from "../../images/ogon.jpg";
+import ogonImage from "../../images/ogon.jpg";
+import ochibaImage from "../../images/ochiba.jpg";
+import kujakuImage from "../../images/kujaku.jpg";
+import kohakuImage from "../../images/kohaku.jpg";
+import ImageFrame from "../../components/home/ImageFrame";
+
 const BreedFishPage = () => {
   const { breedName } = useParams();
   const [breedFish, setBreedFish] = useState([]);
@@ -66,6 +71,15 @@ const BreedFishPage = () => {
     setPriceRange(value);
     setCurrentPage(1);
   };
+
+  const fishImages = {
+    Ogon: ogonImage,
+    Ochiba: ochibaImage,
+    Kujaku: kujakuImage,
+    kohaku: kohakuImage,
+  };
+
+  const imageSrc = fishImages[breedName] || "default_image_link";
 
   const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
   const sizes = [...new Set(breedFish.map((Fish) => Fish.size))];
@@ -210,7 +224,7 @@ const BreedFishPage = () => {
           </Col>
           <Col className="right-side">
             <div className="banner">
-              <img src={Image} alt="banner" />
+              <ImageFrame imageSrc={imageSrc} />
             </div>
             <div className="top-controls">
               <div className="pagination">
@@ -285,7 +299,6 @@ const BreedFishPage = () => {
                 <ProductCard key={fish.id} fish={fish} />
               ))}
             </div>
-
             <FloatButton.BackTop />
           </Col>
         </Row>

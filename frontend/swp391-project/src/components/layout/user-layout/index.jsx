@@ -2,7 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "../../header";
 import Footer from "../../footer";
 import { useEffect } from "react";
-
+import "../../breadcrumb-user/index.scss";
 function Layout() {
   const { pathname } = useLocation(); // Lấy đường dẫn hiện tại
 

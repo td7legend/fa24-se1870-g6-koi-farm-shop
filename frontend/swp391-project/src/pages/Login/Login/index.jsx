@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
 import emailjs from "@emailjs/browser";
 import config from "../../../config/config";
-import { ToastContainer, toast } from "react-toastify"; // Import Toast components
-import "react-toastify/dist/ReactToastify.css"; // Import the CSS for styling
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 
 const Main = ({
@@ -80,7 +80,7 @@ const Main = ({
             <div className="otp-section">
               <h2>Input OTP</h2>
               <label htmlFor="otpInput">
-                Please enter the OTP sent to `${email}`
+                Please enter the OTP sent to {email}
               </label>
               <input
                 id="otpInput"
@@ -359,14 +359,12 @@ const LoginPage = () => {
           }
         );
 
-        // Lấy responseBody từ response
         const responseBody = response.data;
         console.log("Response Body:", responseBody);
 
-        // Xử lý responseBody
         if (responseBody === "Customer registered successfully.") {
           toast.success("Registration successful!");
-          setActive(false); // Chuyển sang form đăng nhập
+          setActive(false);
         } else {
           toast.error("Registration failed. Please try again.");
         }

@@ -1,88 +1,113 @@
-/* index.scss */
+$breadcrumb-bg: #f0f2f5;
+$form-bg: #ffffff;
+$modal-border-radius: 8px;
+$text-color: #333;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$upload-bg: #f7f7f7;
+$upload-border: #d9d9d9;
+$hover-border-color: #40a9ff;
+$button-bg: #1890ff;
+$button-disabled-bg: #d9d9d9;
+$button-disabled-text: rgba(0, 0, 0, 0.25);
+$fish-item-border: #e0e0e0;
+$fish-item-bg: #f9f9f9;
 
-.breadcrumb-container {
-  background: #f0f2f5; /* Màu nền nhẹ cho breadcrumb */
-  padding: 10px 20px;
-  border-radius: 5px;
-  margin-bottom: 20px;
+@mixin border-radius($radius) {
+  border-radius: $radius;
 }
 
-.breadcrumb {
-  font-size: 16px;
-  font-weight: bold;
+.breadcrumb-container {
+  background: $breadcrumb-bg;
+  padding: 10px 20px;
+  @include border-radius(5px);
+  margin-bottom: 20px;
+
+  .breadcrumb {
+    font-size: 16px;
+    font-weight: bold;
+
+    .breadcrumb-page {
+      font-weight: normal;
+    }
+  }
+
+  .icon {
+    margin-right: 5px;
+  }
 }
 
 .consignment {
-  background: #ffffff; /* Màu nền trắng cho form */
-  border-radius: 8px; /* Bo góc cho form */
+  background: $form-bg;
+  @include border-radius(8px);
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho form */
-}
+  box-shadow: 0 2px 10px $shadow-color;
 
-.consignment__wrapper {
-  max-width: 800px; /* Giới hạn chiều rộng của form */
-  margin: 0 auto; /* Căn giữa form */
-}
+  &__wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
 
-h2 {
-  text-align: center; /* Căn giữa tiêu đề */
-  color: #333; /* Màu chữ tiêu đề */
-  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+  h2 {
+    text-align: center;
+    color: $text-color;
+    margin-bottom: 20px;
+  }
+
+  .form {
+    label {
+      font-weight: bold;
+    }
+  }
+
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
 }
 
 .fish-item {
-  border: 1px solid #e0e0e0; /* Viền xung quanh từng mục cá */
-  border-radius: 5px; /* Bo góc cho từng mục cá */
+  border: 1px solid $fish-item-border;
+  @include border-radius(5px);
   padding: 15px;
-  margin-bottom: 20px; /* Khoảng cách giữa các mục cá */
-  background: #f9f9f9; /* Màu nền nhẹ cho từng mục cá */
-}
+  margin-bottom: 20px;
+  background: $fish-item-bg;
 
-.fish-item h3 {
-  color: #444; /* Màu chữ cho tiêu đề từng mục cá */
-  margin-bottom: 10px; /* Khoảng cách dưới tiêu đề mục cá */
-}
-
-.ant-form-item {
-  margin-bottom: 16px; /* Khoảng cách giữa các trường */
+  h3 {
+    color: darken($text-color, 20%);
+    margin-bottom: 10px;
+  }
 }
 
 .ant-upload {
-  background: #f7f7f7; /* Màu nền cho upload */
-  border: 1px dashed #d9d9d9; /* Viền cho upload */
-  border-radius: 5px; /* Bo góc cho upload */
-  transition: border-color 0.3s; /* Hiệu ứng chuyển màu cho viền */
-}
+  background: $upload-bg;
+  border: 1px dashed $upload-border;
+  @include border-radius(5px);
+  transition: border-color 0.3s;
 
-.ant-upload:hover {
-  border-color: #40a9ff; /* Màu viền khi hover */
+  &:hover {
+    border-color: $hover-border-color;
+  }
 }
 
 button.ant-btn {
-  background-color: #1890ff; /* Màu nền cho nút */
-  border: none; /* Không có viền */
-  color: #fff; /* Màu chữ trắng */
-  transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+  background-color: $button-bg;
+  border: none;
+  color: #fff;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $hover-border-color;
+  }
+
+  &:disabled {
+    background-color: $button-disabled-bg;
+    color: $button-disabled-text;
+  }
 }
 
-button.ant-btn:hover {
-  background-color: #40a9ff; /* Màu nền khi hover */
-}
-
-button.ant-btn:disabled {
-  background-color: #d9d9d9; /* Màu nền cho nút bị vô hiệu hóa */
-  color: rgba(0, 0, 0, 0.25); /* Màu chữ cho nút bị vô hiệu hóa */
-}
-
-/* Modal */
 .ant-modal {
-  border-radius: 8px; /* Bo góc cho modal */
-}
-
-.ant-modal-header {
-  border-bottom: none; /* Ẩn viền dưới header modal */
-}
-
-.ant-modal-footer {
-  border-top: none; /* Ẩn viền trên footer modal */
+  @include border-radius($modal-border-radius);
+  .ant-modal-header,
+  .ant-modal-footer {
+    border: none;
+  }
 }

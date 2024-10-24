@@ -20,6 +20,15 @@ const Home = () => {
   });
 
   const sectionsRef = useRef({});
+  const videoSources = {
+    ogon: "https://www.youtube.com/embed/OeuhPo4AgkI?autoplay=1&mute=1&vq=hd1080",
+    ochiba:
+      "https://www.youtube.com/embed/rVFfO95KxRk?autoplay=1&mute=1&vq=hd1080",
+    kohaku:
+      "https://www.youtube.com/embed/TjEWSEm6MI4?autoplay=1&mute=1&vq=hd1080",
+    kujaku:
+      "https://www.youtube.com/embed/ySxJcBmKvsM?autoplay=1&mute=1&vq=hd1080",
+  };
 
   useEffect(() => {
     const observerOptions = {
@@ -30,15 +39,17 @@ const Home = () => {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        const componentName = entry.target.dataset.component;
+
         if (entry.isIntersecting) {
           setIsVisible((prev) => ({
             ...prev,
-            [entry.target.dataset.component]: true,
+            [componentName]: true,
           }));
         } else {
           setIsVisible((prev) => ({
             ...prev,
-            [entry.target.dataset.component]: false,
+            [componentName]: false,
           }));
         }
       });
@@ -79,13 +90,15 @@ const Home = () => {
             </p>
           </div>
           <iframe
+            key={isVisible.ogon ? videoSources.ogon : null} // Changing key forces reload
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/OeuhPo4AgkI?autoplay=1&mute=1&vq=hd1080"
+            src={isVisible.ogon ? videoSources.ogon : ""}
             title="Ogon Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
         </div>
       </div>
@@ -110,13 +123,15 @@ const Home = () => {
       >
         <div className="demo">
           <iframe
+            key={isVisible.ochiba ? videoSources.ochiba : null} // Changing key forces reload
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/rVFfO95KxRk?autoplay=1&mute=1&vq=hd1080"
+            src={isVisible.ochiba ? videoSources.ochiba : ""}
             title="Ochiba Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
           <div className="content">
             <h2>Ochiba Koi Fish</h2>
@@ -154,13 +169,15 @@ const Home = () => {
             </p>
           </div>
           <iframe
+            key={isVisible.kohaku ? videoSources.kohaku : null} // Changing key forces reload
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/TjEWSEm6MI4?autoplay=1&mute=1&vq=hd1080"
+            src={isVisible.kohaku ? videoSources.kohaku : ""}
             title="Kohaku Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
         </div>
       </div>
@@ -185,13 +202,15 @@ const Home = () => {
       >
         <div className="demo">
           <iframe
+            key={isVisible.kujaku ? videoSources.kujaku : null} // Changing key forces reload
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/ySxJcBmKvsM?autoplay=1&mute=1&vq=hd1080"
+            src={isVisible.kujaku ? videoSources.kujaku : ""}
             title="Kujaku Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
           <div className="content">
             <h2>Kujaku Koi Fish</h2>

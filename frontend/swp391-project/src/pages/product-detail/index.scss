@@ -1,99 +1,233 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
-.breadcrumb-container {
-  .breadcrumb {
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    max-width: 1200px;
-    margin: auto 0;
-    .breadcrumb-item {
-      margin-right: 20px;
-    }
 
-    .breadcrumb-item:last-child {
-      margin-right: 0;
-    }
-  }
-}
-.product-detail-container {
-  max-width: 1200px;
-  padding: 20px;
-  margin: 40px auto;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2);
-  border: 1px solid #ddd;
-  background-color: #fffaf0;
-  img {
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$border-color: #ddd;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$button-padding: 12px 24px;
+$card-padding: 15px;
+$element-spacing: 25px;
+$large-border-radius: 20px;
+
+.product-detail-page {
+  position: relative;
+  background-color: $background-color;
+  font-family: sans-serif;
+  padding-bottom: 40px;
+  z-index: 2;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 200px;
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-  .info-container {
-    height: 320px;
-    box-sizing: border-box;
-    font-family: "Lora", serif;
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      margin-bottom: 10px;
-    }
+    height: 100%;
+    background-image: url("../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    background-blend-mode: overlay;
+    filter: blur(5px);
+    opacity: 0.2;
   }
 
-  .product-info {
-    margin-bottom: 20px;
-    font-size: 25px;
-    gap: 10px;
-    p {
-      margin: 10px auto;
-    }
-    span {
-      font-weight: bold;
-      height: 15px;
-    }
-  }
-  .product-submit {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 50px;
-  }
-  .add-to-cart {
-    span {
-      color: #bbab6f;
-      font-size: 20px;
-    }
-    background-color: white;
-    margin: auto;
-    height: 40px;
-    width: 400px;
-  }
-  // .product-detail-container .quantity-selector {
-  //   display: flex;
-  //   align-items: center;
-  //   margin-bottom: 20px;
-  //   width: auto;
-  // }
-  // .product-detail-container .quantity-selector button {
-  //   width: 30px;
-  //   height: 30px;
-  //   border: none;
-  //   cursor: pointer;
-  //   border-radius: 20px;
-  // }
+  .breadcrumb-container {
+    margin-bottom: $element-spacing;
+    z-index: 2;
+    position: relative;
 
-  // .product-detail-container .quantity-selector span {
-  //   width: 30px;
-  //   height: 30px;
-  //   border: 1px solid #ddd;
-  //   text-align: center;
-  //   padding: 5px;
-  //   margin: 0 10px;
-  // }
+    .breadcrumb {
+      font-size: 16px;
+      font-family: sans-serif;
+
+      a {
+        color: $secondary-color;
+
+        &:hover {
+          color: $highlight-color;
+        }
+      }
+
+      .breadcrumb-page {
+        color: $primary-color;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .product-detail-container {
+    max-width: 1200px;
+    padding: 40px;
+    margin: 40px auto;
+    background-color: rgba(255, 250, 240, 0.9);
+    border-radius: $large-border-radius;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid $border-color;
+    z-index: 2;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: $large-border-radius;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-container {
+      font-family: "Lora", serif;
+
+      h1 {
+        margin-bottom: 10px;
+        color: $primary-color;
+        font-size: 36px;
+        font-weight: bold;
+      }
+
+      h2 {
+        margin-bottom: 10px;
+        color: $secondary-color;
+        font-size: 24px;
+        font-weight: normal;
+
+        .price {
+          font-weight: bold;
+          color: $highlight-color;
+          text-align: left;
+        }
+      }
+    }
+
+    .product-info {
+      margin-bottom: 30px;
+      font-size: 18px;
+      gap: 10px;
+
+      p {
+        margin: 5px auto;
+        font-size: 18px;
+      }
+
+      span {
+        font-weight: bold;
+        color: $text-color;
+      }
+    }
+
+    .product-submit {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .quantity-input {
+      font-size: 16px;
+      border: 1px solid #bbab6f;
+
+      &:focus,
+      &:focus-within {
+        box-shadow: 0 0 0 2px rgba(187, 171, 111, 0.1);
+      }
+    }
+
+    .add-to-cart {
+      span {
+        color: #fff;
+        font-size: 18px;
+      }
+      background-color: $primary-color;
+      border-radius: $large-border-radius;
+      transition: background-color 0.3s, color 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        background-color: #fff;
+        color: $highlight-color;
+        border: 1px solid $highlight-color;
+
+        span {
+          color: $highlight-color;
+        }
+      }
+    }
+
+    .tab-container {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 20px;
+      border-bottom: 2px solid #ddd;
+
+      .tab-item {
+        padding: 10px 20px;
+        cursor: pointer;
+        color: #666;
+        border-bottom: 2px solid transparent;
+        transition: border-color 0.3s;
+
+        &.active {
+          color: $primary-color;
+          border-bottom: 2px solid $primary-color;
+        }
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+
+    .product-description,
+    .product-ratings {
+      margin-top: 20px;
+      h3 {
+        font-size: 22px;
+        color: $secondary-color;
+      }
+    }
+  }
+
+  .drawer-container {
+    .ant-drawer-header {
+      background-color: $background-color;
+    }
+
+    .ant-drawer-body {
+      padding: $card-padding;
+
+      .ant-list-item {
+        padding: $element-spacing;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: $large-border-radius;
+        border: 1px solid $border-color;
+      }
+
+      .ant-list-item-meta-title {
+        color: $primary-color;
+      }
+
+      .ant-list-item-meta-description {
+        color: $text-color;
+      }
+
+      .total {
+        font-size: 18px;
+        font-weight: bold;
+        color: $text-color;
+      }
+
+      .checkout-button {
+        margin-top: 16px;
+
+        button {
+          border-radius: $large-border-radius;
+        }
+      }
+    }
+  }
 }

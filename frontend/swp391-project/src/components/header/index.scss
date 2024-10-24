@@ -110,7 +110,7 @@
     }
   }
 
-  &__menu {
+  .header__menu {
     padding-top: 20px;
     position: relative;
     z-index: 2;
@@ -257,6 +257,16 @@
         background-color: #bbab6f;
         color: white;
       }
+    }
+  }
+
+  .cart {
+    color: #bbab6f;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      color: white;
+      cursor: pointer;
     }
   }
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 import "./index.scss"; // Import CSS để điều chỉnh layout
 import { Link, useLocation } from "react-router-dom";
 import { Breadcrumb, Col } from "antd";
-import ImageFrame from "../../components/home/ImageFrame";
+import ImageFrame from "../../components/home/ImageFrame"; // Giữ nguyên import
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import ogonImage from "../../images/ogon.jpg";
@@ -96,12 +96,12 @@ const AllFishPage = () => {
   };
 
   return (
-    <div className="all-fish-page-container">
+    <div className="all-fish-page-form">
       <Col span={24}>
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
             <Breadcrumb.Item href="/">
-              <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+              <FontAwesomeIcon icon={faHome} className="icon" />
             </Breadcrumb.Item>
             <Breadcrumb.Item className="breadcrumb-page">
               Product List
@@ -109,58 +109,61 @@ const AllFishPage = () => {
           </Breadcrumb>
         </div>
       </Col>
+      <div className="all-fish-page-container">
+        {searchQuery && <h2>Search results for: {searchQuery}</h2>}
 
-      {searchQuery && <h2>Search results for: {searchQuery}</h2>}
+        {Object.keys(fishByBreed).map((breed) => {
+          const breedFish = fishByBreed[breed].filter(filterFishBySearch);
+          if (breedFish.length === 0) return null;
 
-      {Object.keys(fishByBreed).map((breed) => {
-        const breedFish = fishByBreed[breed].filter(filterFishBySearch);
-        if (breedFish.length === 0) return null;
+          const currentPageForBreed = currentPage[breed] || 1;
+          const startIndex = (currentPageForBreed - 1) * itemsPerPage;
+          const endIndex = startIndex + itemsPerPage;
+          const fishToDisplay = breedFish.slice(startIndex, endIndex);
 
-        const currentPageForBreed = currentPage[breed] || 1;
-        const startIndex = (currentPageForBreed - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const fishToDisplay = breedFish.slice(startIndex, endIndex);
+          const imageSrc = fishImages[breed] || "default_image_link";
 
-        const imageSrc = fishImages[breed] || "default_image_link";
+          return (
+            <div
+              key={breed}
+              className="all-fish-page fade-in-section"
+              style={{ marginBottom: "50px" }}
+            >
+              <div className="fish-banner">
+                <ImageFrame imageSrc={imageSrc} />
+              </div>
+              <Link to={`/breed/${breed}`} className="breed-link">
+                <h2 className="breed-title">{breed}</h2>
+              </Link>
+              <div className="fish-list">
+                <button
+                  className="nav__button left"
+                  onClick={() => handlePageChange(breed, -1)}
+                  disabled={currentPageForBreed === 1}
+                >
+                  &lt;
+                </button>
 
-        return (
-          <div
-            key={breed}
-            className="all-fish-page fade-in-section"
-            style={{ marginBottom: "50px" }}
-          >
-            <ImageFrame imageSrc={imageSrc} />
-            <Link to={`/breed/${breed}`} className="breed-link">
-              <h2 className="breed-title">{breed}</h2>
-            </Link>
-            <div className="fish-list">
-              <button
-                className="nav__button left"
-                onClick={() => handlePageChange(breed, -1)}
-                disabled={currentPageForBreed === 1}
-              >
-                &lt;
-              </button>
+                {fishToDisplay.map((fish) => (
+                  <ProductCard
+                    fish={fish}
+                    key={fish.id}
+                    className="product-card"
+                  />
+                ))}
 
-              {fishToDisplay.map((fish) => (
-                <ProductCard
-                  fish={fish}
-                  key={fish.id}
-                  className="product-card"
-                />
-              ))}
-
-              <button
-                className="nav__button right"
-                onClick={() => handlePageChange(breed, 1)}
-                disabled={endIndex >= breedFish.length}
-              >
-                &gt;
-              </button>
+                <button
+                  className="nav__button right"
+                  onClick={() => handlePageChange(breed, 1)}
+                  disabled={endIndex >= breedFish.length}
+                >
+                  &gt;
+                </button>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

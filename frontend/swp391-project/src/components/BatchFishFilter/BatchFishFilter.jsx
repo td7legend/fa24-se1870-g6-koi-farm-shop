@@ -4,7 +4,7 @@ import { Card, Col, Row, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import config from "../../config/config";
 import "./BatchFishFilter.scss";
-
+import picture from "../../images/breadcrumbs.jpg";
 const { Meta } = Card;
 
 const BatchFishFilter = () => {

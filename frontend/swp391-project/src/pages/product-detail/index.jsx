@@ -30,7 +30,6 @@ const { Text } = Typography;
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
@@ -38,6 +37,7 @@ function ProductDetail() {
   const [fishes, setFishes] = useState([]);
   const [fishTypes, setFishTypes] = useState([]);
   const [currentFishTypes, setCurrentFishTypes] = useState({});
+  const [activeTab, setActiveTab] = useState("description");
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   const decryptedToken = token
     ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
@@ -47,49 +47,36 @@ function ProductDetail() {
     : 0;
 
   useEffect(() => {
-    console.log("Current ID:", id);
     if (id) {
       fetchProduct();
-    } else {
-      console.error("Invalid ID");
     }
     fetchFishes();
-    getFishTypes();
-    getCurrentFishTypes();
   }, [id]);
 
+  useEffect(() => {
+    getFishTypes();
+  }, []);
+
+  useEffect(() => {
+    getCurrentFishTypes();
+  }, [product, fishTypes]);
+
   const fetchProduct = async () => {
-    console.log("Fetching product with ID:", id); // Log ID để kiểm tra
     try {
       const response = await axios.get(`${config.API_ROOT}fishs/${id}`);
-      console.log("API response:", response.data); // Log phản hồi từ API
       if (response.data) {
         setProduct(response.data);
-        console.log("New product set to:", response.data); // Log giá trị mới được thiết lập
-      } else {
-        console.error("No product data received");
       }
     } catch (error) {
-      console.error("Error fetching product:", error);
       message.error("Failed to fetch product data.");
     }
   };
-
-  // Thêm useEffect để theo dõi sự thay đổi của product
-  useEffect(() => {
-    console.log("Updated product:", product);
-    if (product && product.fishTypeId) {
-      getCurrentFishTypes(); // Gọi hàm này sau khi product đã được cập nhật
-    }
-    decryptedToken;
-  }, [product, decryptedToken]);
 
   const fetchFishes = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
-      console.error("Error fetching fishes:", error);
       message.error("Failed to fetch fish data.");
     }
   };
@@ -110,7 +97,6 @@ function ProductDetail() {
         setCartItems(response.data[0].orderLines || []);
       }
     } catch (error) {
-      console.error("Error fetching cart:", error);
       message.error("Failed to fetch cart data.");
     }
   };
@@ -140,28 +126,22 @@ function ProductDetail() {
       if (response.status === 200) {
         message.success(`Added ${quantity} of ${product.name} to cart`);
         await fetchCart();
-        setCartDrawerVisible(true);
+        // setCartDrawerVisible(true);
       } else {
         throw new Error("Failed to add item to cart");
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
       message.error("Failed to add item to cart. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
-      const price = getFishPrice(item.fishId);
-      return total + price * item.quantity;
-    }, 0);
+  const capitalizeFirstLetter = (string) => {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  if (!product.name) {
-    return <div>Loading...</div>;
-  }
   async function getFishTypes() {
     try {
       const response = await axios.get(`${config.API_ROOT}fishtypes`);
@@ -171,26 +151,23 @@ function ProductDetail() {
     }
   }
 
-  const capitalizeFirstLetter = (string) => {
-    if (!string) return "";
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
   function getCurrentFishTypes() {
     if (fishTypes.length > 0 && product.fishTypeId) {
       const temp = fishTypes.filter(
         (fishType) => fishType.fishTypeId === product.fishTypeId
       );
-      setCurrentFishTypes(temp[0] || null);
+      setCurrentFishTypes(temp[0] || { name: "" });
     } else {
-      console.error(
-        "No fish types available or product does not have fishTypeId"
-      );
+      setCurrentFishTypes({ name: "" });
     }
   }
 
+  if (!product.name) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div>
+    <div className="product-detail-page">
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
@@ -204,14 +181,17 @@ function ProductDetail() {
               <Breadcrumb.Item href="/fish-page">Fish List</Breadcrumb.Item>
               <Breadcrumb.Item>
                 <Link to={`/breed/${currentFishTypes.name}`}>
-                  {capitalizeFirstLetter(currentFishTypes.name)}
+                  {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
                 </Link>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>{product?.name}</Breadcrumb.Item>
+              <Breadcrumb.Item className="breadcrumb-page">
+                {product?.name}
+              </Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>
       </Row>
+
       <div className="product-detail-container">
         <Row gutter={16}>
           <Col span={10}>
@@ -221,17 +201,22 @@ function ProductDetail() {
               </div>
             </Carousel>
           </Col>
+
           <Col span={14}>
             <div className="info-container">
               <h1>{product.name}</h1>
               <h2>
-                Price: <CurrencyFormatter amount={product.price} />
+                Price:{" "}
+                <span className="price">
+                  <CurrencyFormatter amount={product.price} />
+                </span>
               </h2>
               <Rate allowHalf defaultValue={5} />
 
               <div className="product-info">
                 <p>
-                  <span>Breed:</span> {currentFishTypes.name}
+                  <span>Breed:</span>{" "}
+                  {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
                 </p>
                 <p>
                   <span>Age:</span> {product.age}
@@ -240,13 +225,15 @@ function ProductDetail() {
                   <span>Gender:</span> {product.gender}
                 </p>
               </div>
+
               <div className="product-submit">
                 <InputNumber
                   min={1}
                   max={100}
                   value={quantity}
                   onChange={(value) => setQuantity(value)}
-                  style={{ width: 150 }}
+                  style={{ width: 150, borderRadius: 10 }}
+                  className="quantity-input"
                 />
                 <Button
                   className="add-to-cart"
@@ -257,59 +244,55 @@ function ProductDetail() {
                     fontSize: 10,
                     padding: "8px 16px",
                     borderRadius: 20,
+                    border: "none",
                   }}
                   loading={loading}
                 >
                   Add to Cart
                 </Button>
               </div>
+
+              {/* Tab Box */}
+              <div className="tab-container">
+                <div
+                  className={`tab-item ${
+                    activeTab === "description" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("description")}
+                >
+                  Description
+                </div>
+                <div
+                  className={`tab-item ${
+                    activeTab === "rating" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("rating")}
+                >
+                  Rating
+                </div>
+              </div>
+
+              {/* Content Box */}
+              {activeTab === "description" && (
+                <div className="product-description">
+                  <h3>Description</h3>
+                  <p>
+                    {capitalizeFirstLetter(currentFishTypes.description) ||
+                      "No description available."}
+                  </p>
+                </div>
+              )}
+              {activeTab === "rating" && (
+                <div className="product-ratings">
+                  <h3>Customer Ratings</h3>
+                  <Rate allowHalf defaultValue={product.rating || 4.5} />
+                  <p>Rating: {product.rating || 4.5} / 5</p>
+                </div>
+              )}
             </div>
           </Col>
         </Row>
       </div>
-
-      <Drawer
-        title="Your Cart"
-        placement="right"
-        onClose={() => setCartDrawerVisible(false)}
-        visible={cartDrawerVisible}
-        width={400}
-      >
-        <List
-          itemLayout="horizontal"
-          dataSource={cartItems}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={<Image src={item.imageUrl} width={50} />}
-                title={item.fishName}
-                description={`Quantity: ${item.quantity}`}
-              />
-              <div>
-                <Text>
-                  {(getFishPrice(item.fishId) * item.quantity).toLocaleString()}{" "}
-                  VND
-                </Text>
-              </div>
-            </List.Item>
-          )}
-        />
-        <div style={{ marginTop: 16, textAlign: "right" }}>
-          <Text strong>Total: {calculateTotal().toLocaleString()} VND</Text>
-        </div>
-        <div style={{ textAlign: "right", marginTop: 16 }}>
-          <Button type="primary" onClick={() => setCartDrawerVisible(false)}>
-            Close
-          </Button>
-          <Button
-            type="primary"
-            style={{ marginLeft: 8 }}
-            onClick={() => (window.location.href = "/cart")}
-          >
-            View Full Cart
-          </Button>
-        </div>
-      </Drawer>
     </div>
   );
 }
