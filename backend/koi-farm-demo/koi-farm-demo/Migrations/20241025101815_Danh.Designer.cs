@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace koi_farm_demo.Migrations
 {
     [DbContext(typeof(KoiFarmDbContext))]
-    [Migration("20241022065812_abc")]
-    partial class abc
+    [Migration("20241025101815_Danh")]
+    partial class Danh
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -133,6 +133,9 @@ namespace koi_farm_demo.Migrations
                     b.Property<int>("TotalPrice")
                         .HasColumnType("int");
 
+                    b.Property<int>("UnitPrice")
+                        .HasColumnType("int");
+
                     b.HasKey("ConsignmentLineId");
 
                     b.HasIndex("ConsignmentId");
@@ -203,6 +206,11 @@ namespace koi_farm_demo.Migrations
 
                     b.Property<int?>("ConsignmentLineId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("FishTypeId")
                         .HasColumnType("int");
@@ -467,7 +475,7 @@ namespace koi_farm_demo.Migrations
 
                     b.HasIndex("ConsignmentId");
 
-                    b.ToTable("FishCare");
+                    b.ToTable("FishCares");
                 });
 
             modelBuilder.Entity("Certification", b =>
