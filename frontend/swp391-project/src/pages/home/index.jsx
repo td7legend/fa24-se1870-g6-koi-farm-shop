@@ -3,7 +3,7 @@ import WelcomeSection from "../../components/home/WelcomeSection";
 import RecentlyAdded from "../../components/home/RecentlyAdded";
 import LatestNews from "../../components/home/LatestNews";
 import PopularProduct from "../../components/home/PopularProduct";
-import AboutFarm from "../../components/home/AboutFarm";
+import OurService from "../../components/home/OurService";
 import "./index.scss";
 
 const Home = () => {
@@ -16,7 +16,7 @@ const Home = () => {
     recentlyAdded: false,
     latestNews: false,
     popularProduct: false,
-    aboutFarm: false,
+    ourService: false,
   });
 
   const sectionsRef = useRef({});
@@ -223,11 +223,11 @@ const Home = () => {
       </div>
 
       <div
-        ref={(el) => (sectionsRef.current.aboutFarm = el)}
-        data-component="aboutFarm"
-        className={`component ${isVisible.aboutFarm ? "animate" : "hidden"}`}
+        ref={(el) => (sectionsRef.current.ourService = el)}
+        data-component="ourService"
+        className={`component ${isVisible.ourService ? "animate" : "hidden"}`}
       >
-        <AboutFarm />
+        <OurService />
       </div>
     </div>
   );

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, Col, Row, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import config from "../../config/config";
 import "./BatchFishFilter.scss";
-import picture from "../../images/breadcrumbs.jpg";
 const { Meta } = Card;
 
 const BatchFishFilter = () => {
@@ -49,7 +48,7 @@ const BatchFishFilter = () => {
       <Row gutter={[16, 16]}>
         {batchFishes.map((fish) => (
           <Col xs={24} sm={12} md={8} lg={6} key={fish.fishId}>
-            <Link to={`/products/${fish.fishId}`}>
+            <Link to={`/fish/${fish.fishId}`}>
               <Card
                 hoverable
                 cover={<img alt={fish.name} src={fish.imageUrl} />}
