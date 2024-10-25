@@ -3,7 +3,7 @@ import axios from "axios";
 import { Card, Col, Row, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import config from "../../config/config";
-import "./BatchFishFilter.scss";
+import "./index.scss";
 const { Meta } = Card;
 
 const BatchFishFilter = () => {

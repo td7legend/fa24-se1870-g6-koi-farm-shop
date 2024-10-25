@@ -94,7 +94,13 @@ const Checkout = () => {
       dataIndex: "fishName",
       key: "fishName",
       render: (text, record) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            textTransform: "none",
+          }}
+        >
           <Image src={record.imageUrl} alt={text} width={50} />
           <span style={{ marginLeft: 10 }}>{text}</span>
         </div>
@@ -275,16 +281,16 @@ const Checkout = () => {
     return <div>No active cart found or user information unavailable.</div>;
   }
 
-  const fullName = user.fullName ? String(user.fullName) : "Unknown User"; // Nếu không có fullName, sử dụng giá trị mặc định
+  const fullName = user.fullName ? String(user.fullName) : "Unknown User";
 
-  console.log(typeof user.fullName); // Kiểm tra kiểu dữ liệu
+  console.log(typeof user.fullName);
   console.log(user.fullName);
 
   return (
     <div>
       <Col span={24}>
         <div className="breadcrumb-container">
-          <Breadcrumb className="breadcrumb">
+          <Breadcrumb className="breadcrumb" separator=">">
             <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
             <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
             <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
@@ -329,7 +335,7 @@ const Checkout = () => {
                 <Radio value="bankTransfer" disabled>
                   Bank Transfer
                 </Radio>
-                <Button className="button" onClick={handlePlaceOrder}>
+                <Button className="button-main" onClick={handlePlaceOrder}>
                   Place Order
                 </Button>
               </Radio.Group>
@@ -338,10 +344,22 @@ const Checkout = () => {
           <Col className="form-right">
             <div style={{ padding: "20px", border: "1px solid #f0f0f0" }}>
               <h2>Billing Information</h2>
-              <p>Name: {fullName}</p>
-              <p>Phone Number: {user.phoneNumber || "Not provided"}</p>
-              <p>Email: {user.email || "Not provided"}</p>
-              <p>Address: {user.address}</p>
+              <div className="information-item">
+                <p className="item-tittle ">Name:</p>
+                <p>{fullName}</p>
+              </div>
+              <div className="information-item">
+                <p className="item-tittle ">Phone Number:</p>
+                <p>{user.phoneNumber || "Not provided"}</p>
+              </div>
+              <div className="information-item">
+                <p className="item-tittle ">Email:</p>
+                <p>{user.email || "Not provided"}</p>
+              </div>
+              <div className="information-item">
+                <p className="item-tittle ">Address:</p>
+                <p> {user.address}</p>
+              </div>
               <Button className="button" onClick={showModal}>
                 Edit Address
               </Button>

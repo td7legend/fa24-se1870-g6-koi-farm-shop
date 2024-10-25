@@ -26,7 +26,7 @@ import OrderDetailsPage from "./pages/user-page/order-detail";
 import OrderHistoryPage from "./pages/user-page/order-history";
 import UserDashboard from "./pages/user-page/user-dashboard";
 import PaymentSuccess from "./pages/checkout/success";
-import BatchFishFilter from "./components/BatchFishFilter/BatchFishFilter";
+import BatchFishFilter from "./components/BatchFishFilter";
 
 import StaffOrderManagement from "./pages/staff-page/manage-order";
 import StaffFishManagement from "./pages/staff-page/manage-fish";
