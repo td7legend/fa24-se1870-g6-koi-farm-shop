@@ -1,4 +1,5 @@
-﻿using koi_farm_demo.Models;
+﻿using koi_farm_demo.Data;
+using koi_farm_demo.Models;
 using koi_farm_demo.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -70,11 +71,12 @@ namespace koi_farm_demo.Controllers
             }
         }
         [HttpPut("{id}/update-sale")]
-        public async Task<IActionResult> UpdateConsignmentForSale(int id, [FromQuery] decimal agreePrice, [FromBody] List<ConsignmentLine> updatedConsignmentLines)
+        public async Task<IActionResult> UpdateConsignmentForSale(int id, [FromQuery] decimal agreePrice, [FromBody] List<ConsignmentLineUpdateDto> updatedConsignmentLines)
         {
             await _consignmentService.UpdateConsignmentForSaleAsync(id, agreePrice, updatedConsignmentLines);
             return Ok("Consignment updated for sale successfully.");
         }
+
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllConsignment()
         {

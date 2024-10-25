@@ -1,4 +1,5 @@
-﻿using koi_farm_demo.Models;
+﻿using koi_farm_demo.Data;
+using koi_farm_demo.Models;
 using koi_farm_demo.Repositories;
 
 namespace koi_farm_demo.Services
@@ -219,7 +220,7 @@ namespace koi_farm_demo.Services
             await _consignmentRepository.UpdateAsync(consignment);
             await _consignmentRepository.SaveChangesAsync();
         }
-        public async Task UpdateConsignmentForSaleAsync(int consignmentId, decimal agreePrice, List<ConsignmentLine> updatedConsignmentLines)
+        public async Task UpdateConsignmentForSaleAsync(int consignmentId, decimal agreePrice, List<ConsignmentLineUpdateDto> updatedConsignmentLines)
         {
             // Lấy consignment từ database
             var consignment = await _consignmentRepository.GetByIdAsync(consignmentId);

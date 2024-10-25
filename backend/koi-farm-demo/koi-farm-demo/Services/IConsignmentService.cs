@@ -1,11 +1,12 @@
-﻿using koi_farm_demo.Models;
+﻿using koi_farm_demo.Data;
+using koi_farm_demo.Models;
 
 namespace koi_farm_demo.Services
     
 {
     public interface IConsignmentService
     {
-        Task UpdateConsignmentForSaleAsync(int consignmentId, decimal agreePrice, List<ConsignmentLine> updatedConsignmentLines);
+        Task UpdateConsignmentForSaleAsync(int consignmentId, decimal agreePrice, List<ConsignmentLineUpdateDto> updatedConsignmentLines);
         Task ReceiveConsignmentForSaleAsync(int consignmentId, decimal agreePrice);
         Task ReceiveConsignmentForCareAsync(int consignmentId, decimal careFee);
         Task<IEnumerable<Consignment>> GetConsignmentsByCustomerIdAsync(int customerId);
