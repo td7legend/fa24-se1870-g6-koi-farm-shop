@@ -19,6 +19,7 @@ namespace koi_farm_demo.Controllers
         [HttpGet("customer/{customerId}")]
         public async Task<IActionResult> GetConsignmentsByCustomerId(int customerId)
         {
+            await _consignmentService.CheckAndUpdateAllConsignmentStatusesAsync();
             var consignments = await _consignmentService.GetConsignmentsByCustomerIdAsync(customerId);
             return Ok(consignments);
         }
@@ -80,6 +81,7 @@ namespace koi_farm_demo.Controllers
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllConsignment()
         {
+            await _consignmentService.CheckAndUpdateAllConsignmentStatusesAsync();
             var consignments = await _consignmentService.GetAllConsignmentAsync();
             return Ok(consignments);
         }
