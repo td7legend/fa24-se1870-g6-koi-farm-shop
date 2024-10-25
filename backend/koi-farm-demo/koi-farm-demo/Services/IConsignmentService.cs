@@ -14,5 +14,6 @@ namespace koi_farm_demo.Services
         Task<Consignment> CreateCareConsignmentAsync(CreateCareConsignmentRequest request);
         Task UpdateConsignmentStatusAsync(int consignmentId, ConsignmentStatus status);
         Task UpdateAgreedPriceAndAddFishAsync(int consignmentId, long agreedPrice, List<FishDetails> fishDetails);
+        Task<IEnumerable<Consignment>> GetAllConsignmentAsync();
     }
 }

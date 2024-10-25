@@ -253,7 +253,10 @@ namespace koi_farm_demo.Services
             await _consignmentRepository.UpdateAsync(consignment);
             await _consignmentRepository.SaveChangesAsync();
         }
-
+        public async Task<IEnumerable<Consignment>> GetAllConsignmentAsync()
+        {
+            return await _consignmentRepository.GetAllAsync();
+        }
 
     }
 }
