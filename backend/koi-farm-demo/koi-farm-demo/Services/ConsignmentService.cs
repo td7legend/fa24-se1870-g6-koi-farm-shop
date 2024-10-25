@@ -78,7 +78,7 @@ namespace koi_farm_demo.Services
             await _consignmentRepository.SaveChangesAsync();
         }
 
-        public async Task ReceiveConsignmentForSaleAsync(int consignmentId)
+        public async Task ReceiveConsignmentForSaleAsync(int consignmentId, decimal agreePrice)
         {
             var consignment = await _consignmentRepository.GetByIdAsync(consignmentId);
             if (consignment == null)
@@ -87,26 +87,15 @@ namespace koi_farm_demo.Services
             if (consignment.Status != ConsignmentStatus.Confirmed)
                 throw new Exception("Consignment must be confirmed first.");
 
-            foreach (var line in consignment.ConsignmentLines)
-            {
-                var fish = new Fish
-                {
-                    Name = line.FishType,
-                    Price = line.TotalPrice,
-                    Quantity = line.Quantity,
-                    ImageUrl = line.ImageUrl,
-                    FishTypeId = 1,  
-                    ConsignmentLineId = line.ConsignmentLineId
-                };
-                
-            }
-
+            // Cập nhật giá bán (Agree Price) của consignment
+            consignment.AgreedPrice = agreePrice;
             consignment.Status = ConsignmentStatus.ListedForSale;
+
             await _consignmentRepository.UpdateAsync(consignment);
             await _consignmentRepository.SaveChangesAsync();
         }
 
-        public async Task ReceiveConsignmentForCareAsync(int consignmentId)
+        public async Task ReceiveConsignmentForCareAsync(int consignmentId, decimal careFee)
         {
             var consignment = await _consignmentRepository.GetByIdAsync(consignmentId);
             if (consignment == null)
@@ -115,20 +104,14 @@ namespace koi_farm_demo.Services
             if (consignment.Status != ConsignmentStatus.Confirmed)
                 throw new Exception("Consignment must be confirmed first.");
 
-            foreach (var line in consignment.ConsignmentLines)
-            {
-                var fishCare = new FishCare
-                {
-                    ConsignmentId = consignmentId,
-                    HealthStatus = "Healthy",
-                    CareDetails = "Initial care started"
-                };
-            }
-
+            // Cập nhật phí chăm sóc (Care Fee) của consignment
+            consignment.CareFee = careFee;
             consignment.Status = ConsignmentStatus.UnderCare;
+
             await _consignmentRepository.UpdateAsync(consignment);
             await _consignmentRepository.SaveChangesAsync();
         }
+
         public async Task UpdateAgreedPriceAndAddFishAsync(int consignmentId, long agreedPrice, List<FishDetails> fishDetails)
         {
             var consignment = await _consignmentRepository.GetByIdAsync(consignmentId);
@@ -175,7 +158,7 @@ namespace koi_farm_demo.Services
         {
 
             var consignments = await _consignmentRepository.GetAllWithLinesAsync(); 
-
+    
             foreach (var consignment in consignments)
             {
                 var allFishSold = true;
@@ -202,5 +185,75 @@ namespace koi_farm_demo.Services
         {
             return await _consignmentRepository.GetConsignmentsByCustomerIdAsync(customerId);
         }
+        public async Task UpdateConsignmentForSaleAsync(Consignment updatedConsignment)
+        {
+            // Lấy consignment từ database
+            var consignment = await _consignmentRepository.GetByIdAsync(updatedConsignment.ConsignmentId);
+            if (consignment == null)
+                throw new Exception("Consignment not found.");
+
+            // Kiểm tra điều kiện nếu consignment cần phải ở trạng thái Confirmed
+            if (consignment.Status != ConsignmentStatus.Confirmed)
+                throw new Exception("Consignment must be confirmed first.");
+
+            // Cập nhật các thuộc tính chính của consignment cho sale
+            consignment.AgreedPrice = updatedConsignment.AgreedPrice;
+            consignment.Status = ConsignmentStatus.ListedForSale;
+
+            // Cập nhật từng ConsignmentLine
+            foreach (var updatedLine in updatedConsignment.ConsignmentLines)
+            {
+                // Tìm consignment line tương ứng trong consignment hiện tại
+                var line = consignment.ConsignmentLines.FirstOrDefault(cl => cl.ConsignmentLineId == updatedLine.ConsignmentLineId);
+                if (line != null)
+                {
+                    // Cập nhật các thuộc tính của consignment line
+                    line.UnitPrice = updatedLine.UnitPrice;
+                    line.Quantity = updatedLine.Quantity;
+                    line.TotalPrice = updatedLine.TotalPrice;
+                    // Thêm các thuộc tính khác nếu cần thiết
+                }
+            }
+
+            // Lưu thay đổi vào database
+            await _consignmentRepository.UpdateAsync(consignment);
+            await _consignmentRepository.SaveChangesAsync();
+        }
+        public async Task UpdateConsignmentForSaleAsync(int consignmentId, decimal agreePrice, List<ConsignmentLine> updatedConsignmentLines)
+        {
+            // Lấy consignment từ database
+            var consignment = await _consignmentRepository.GetByIdAsync(consignmentId);
+            if (consignment == null)
+                throw new Exception("Consignment not found.");
+
+            // Kiểm tra điều kiện nếu consignment cần phải ở trạng thái Confirmed
+            if (consignment.Status != ConsignmentStatus.Confirmed)
+                throw new Exception("Consignment must be confirmed first.");
+
+            // Cập nhật giá bán và trạng thái của consignment
+            consignment.AgreedPrice = agreePrice;
+            consignment.Status = ConsignmentStatus.ListedForSale;
+
+            // Cập nhật từng ConsignmentLine dựa trên danh sách đầu vào
+            foreach (var updatedLine in updatedConsignmentLines)
+            {
+                // Tìm consignment line tương ứng
+                var line = consignment.ConsignmentLines.FirstOrDefault(cl => cl.ConsignmentLineId == updatedLine.ConsignmentLineId);
+                if (line != null)
+                {
+                    // Cập nhật các thuộc tính của consignment line
+                    line.UnitPrice = updatedLine.UnitPrice;
+                    line.Quantity = updatedLine.Quantity;
+                    line.TotalPrice = updatedLine.TotalPrice;
+                    // Thêm các thuộc tính khác nếu cần thiết
+                }
+            }
+
+            // Lưu thay đổi vào database
+            await _consignmentRepository.UpdateAsync(consignment);
+            await _consignmentRepository.SaveChangesAsync();
+        }
+
+
     }
 }

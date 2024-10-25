@@ -11,5 +11,6 @@ public class ConsignmentLine
     public int TotalPrice { get; set; }
     [JsonIgnore]
     public Consignment Consignment { get; set; }
+    public int UnitPrice { get; set; }
 
 }

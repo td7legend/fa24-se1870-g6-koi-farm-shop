@@ -26,5 +26,6 @@ public enum ConsignmentStatus
     ListedForSale = 3,   
     Sold = 4,            
     UnderCare = 5,       
-    CareCompleted = 6    
+    CareCompleted = 6,
+    Cancelled = 7
 }

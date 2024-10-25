@@ -17,6 +17,7 @@ public class KoiFarmDbContext : DbContext
     public DbSet<ConsignmentLine> ConsignmentLines { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<LoyaltyPoint> LoyaltyPoints { get; set; }
+    public DbSet<FishCare> FishCares { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
