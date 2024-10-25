@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace koi_farm_demo.Migrations
 {
     /// <inheritdoc />
-    public partial class abc : Migration
+    public partial class Danh : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,7 +59,8 @@ namespace koi_farm_demo.Migrations
                     Batch = table.Column<bool>(type: "bit", nullable: false),
                     FishTypeId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,7 +288,8 @@ namespace koi_farm_demo.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CertificationUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    TotalPrice = table.Column<int>(type: "int", nullable: false)
+                    TotalPrice = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -301,7 +303,7 @@ namespace koi_farm_demo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FishCare",
+                name: "FishCares",
                 columns: table => new
                 {
                     FishCareId = table.Column<int>(type: "int", nullable: false)
@@ -313,9 +315,9 @@ namespace koi_farm_demo.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FishCare", x => x.FishCareId);
+                    table.PrimaryKey("PK_FishCares", x => x.FishCareId);
                     table.ForeignKey(
-                        name: "FK_FishCare_Consignments_ConsignmentId",
+                        name: "FK_FishCares_Consignments_ConsignmentId",
                         column: x => x.ConsignmentId,
                         principalTable: "Consignments",
                         principalColumn: "ConsignmentId",
@@ -354,8 +356,8 @@ namespace koi_farm_demo.Migrations
                 column: "FishTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FishCare_ConsignmentId",
-                table: "FishCare",
+                name: "IX_FishCares_ConsignmentId",
+                table: "FishCares",
                 column: "ConsignmentId");
 
             migrationBuilder.CreateIndex(
@@ -400,7 +402,7 @@ namespace koi_farm_demo.Migrations
                 name: "ConsignmentLines");
 
             migrationBuilder.DropTable(
-                name: "FishCare");
+                name: "FishCares");
 
             migrationBuilder.DropTable(
                 name: "LoyaltyPoints");

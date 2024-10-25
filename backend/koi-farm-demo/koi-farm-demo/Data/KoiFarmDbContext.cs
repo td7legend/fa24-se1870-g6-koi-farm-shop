@@ -17,6 +17,7 @@ public class KoiFarmDbContext : DbContext
     public DbSet<ConsignmentLine> ConsignmentLines { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<LoyaltyPoint> LoyaltyPoints { get; set; }
+    public DbSet<FishCare> FishCares { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -115,7 +116,7 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.Batch).IsRequired();
             entity.Property(e => e.Quantity).IsRequired();
             entity.Property(e => e.ImageUrl).IsRequired();
-
+            entity.Property(e => e.Description).HasMaxLength(500);
 
             entity.HasOne(e => e.FishType)
                   .WithMany(e => e.Fishes) 
@@ -210,7 +211,7 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.ImageUrl).HasMaxLength(200);
             entity.Property(e => e.CertificationUrl).HasMaxLength(200);
             entity.Property(e => e.TotalPrice).IsRequired();
-
+            entity.Property(e => e.UnitPrice);
             // Quan hệ với bảng Consignment
             entity.HasOne(e => e.Consignment)
                   .WithMany(e => e.ConsignmentLines)
@@ -225,7 +226,7 @@ public class KoiFarmDbContext : DbContext
             entity.Property(e => e.FishType).IsRequired();
             entity.Property(e => e.HealthStatus).IsRequired().HasMaxLength(100);
             entity.Property(e => e.CareDetails).HasMaxLength(500);
-
+            
             // Quan hệ với bảng Consignment
             entity.HasOne<Consignment>()
           .WithMany()
