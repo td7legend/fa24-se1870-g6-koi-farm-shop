@@ -2,6 +2,7 @@
 {
     public interface IConsignmentRepository
     {
+
         Task<IEnumerable<Consignment>> GetConsignmentsByCustomerIdAsync(int customerId);
             Task<Consignment> GetByIdAsync(int id);
             Task<IEnumerable<Consignment>> GetAllAsync();

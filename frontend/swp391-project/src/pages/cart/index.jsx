@@ -14,12 +14,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import "./index.scss";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import config from "../../config/config";
 import { AES, enc } from "crypto-js";
+import { setCart } from "../../store/actions/cartAction";
 
 const Cart = () => {
-  const [cart, setCart] = useState(null);
+  const [cart, setCartNoneRedux] = useState(null);
   const [fishes, setFishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
@@ -29,7 +30,7 @@ const Cart = () => {
   const decryptedRole = role
     ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
     : 0;
-
+  const dispatch = useDispatch();
   useEffect(() => {
     fetchCart();
     fetchFishes();
@@ -49,9 +50,10 @@ const Cart = () => {
       });
 
       if (response.data && response.data.length > 0) {
-        setCart(response.data[0]);
+        setCartNoneRedux(response.data[0]);
+        dispatch(setCart(response.data[0].orderLines || []));
       } else {
-        setCart(null);
+        setCartNoneRedux(null);
         message.info("Your cart is empty.");
       }
     } catch (error) {

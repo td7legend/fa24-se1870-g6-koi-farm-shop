@@ -274,7 +274,9 @@ const ForgotPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <button type="submit">Submit</button>
+                <button type="submit" className="submit-button">
+                  Submit
+                </button>
                 {error && <p className="error-message">{error}</p>}
                 {successMessage && (
                   <p className="success-message">{successMessage}</p>
