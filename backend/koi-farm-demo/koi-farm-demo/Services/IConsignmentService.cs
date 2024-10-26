@@ -6,6 +6,7 @@ namespace koi_farm_demo.Services
 {
     public interface IConsignmentService
     {
+        Task CheckAndUpdateAllConsignmentStatusesAsync();
         Task UpdateConsignmentForSaleAsync(int consignmentId, decimal agreePrice, List<ConsignmentLineUpdateDto> updatedConsignmentLines);
         Task ReceiveConsignmentForSaleAsync(int consignmentId, decimal agreePrice);
         Task ReceiveConsignmentForCareAsync(int consignmentId, decimal careFee);
