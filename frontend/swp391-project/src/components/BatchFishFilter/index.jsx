@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import config from "../../config/config";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
+import CurrencyFormatter from "../currency";
 const { Meta } = Card;
 
 const BatchFishFilter = () => {
@@ -50,22 +51,32 @@ const BatchFishFilter = () => {
       <Row gutter={[16, 16]}>
         {batchFishes.map((fish) => (
           <Col xs={24} sm={12} md={8} lg={6} key={fish.fishId}>
-            <Link to={`/fish/${fish.fishId}`}>
-              <Card
+            <Link to={`/fish/${fish.fishId}`} className="batch-fish-wrapper">
+              {/* <Card
                 hoverable
-                cover={<img alt={fish.name} src={fish.imageUrl} />}
+                cover={<img src={fish.imageUrl} alt={fish.name} />}
                 className="fish-card"
               >
                 <Meta
                   title={fish.name}
-                  description={`${t(
-                    "price"
-                  )}: ${fish.price.toLocaleString()} VND`}
+                  description={`Price: ${fish.price.toLocaleString()} VND`}
                 />
-                <p>
-                  {t("quantity")}: {fish.quantity}
-                </p>
-              </Card>
+                <p>Amount: {fish.quantity}</p>
+              </Card> */}
+              <div className="image">
+                <img src={fish.imageUrl} alt={fish.name} />
+              </div>
+              <div className="info-container">
+                <div className="info">
+                  <h2>{fish.name}</h2>
+                  <p className="price">
+                    {t("price")}: <CurrencyFormatter amount={fish.price} />
+                  </p>
+                  <p>
+                    {t("amount")}: {fish.quantity}
+                  </p>
+                </div>
+              </div>
             </Link>
           </Col>
         ))}
@@ -75,7 +86,6 @@ const BatchFishFilter = () => {
         total={totalItems}
         pageSize={pageSize}
         onChange={handlePageChange}
-        className="pagination"
       />
     </div>
   );

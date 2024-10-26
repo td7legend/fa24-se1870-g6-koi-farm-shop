@@ -17,7 +17,7 @@ import { EyeOutlined, CheckOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import "./index.scss";
 const { Title } = Typography;
 
 const ConsignmentManagement = () => {
@@ -145,15 +145,6 @@ const ConsignmentManagement = () => {
 
       const totalPrice = calculateTotalPrice(values.unitPrice, values.quantity);
 
-      // Update consignment status and agreed price
-      // await axios.post(
-      //   `https://localhost:44366/api/Consignment/${selectedConsignment.consignmentId}/receive-sale?agreePrice=${values.agreePrice}`,
-      //   null,
-      //   { headers: { Authorization: `Bearer ${token}` } }
-      // );
-
-      // Update fish details - Note the changed structure to include array
-      // Update fish details
       await axios.put(
         `https://localhost:44366/api/Consignment/${selectedConsignment.consignmentId}/update-sale?agreePrice=${values.agreePrice}`,
         [
@@ -187,7 +178,7 @@ const ConsignmentManagement = () => {
           fishTypeId: values.fishTypeId,
           quantity: values.quantity,
           imageUrl: selectedConsignment.consignmentLines[0].imageUrl,
-          description: "bo may mat Git",
+          description: values.description,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -362,7 +353,7 @@ const ConsignmentManagement = () => {
   ];
 
   return (
-    <div style={{ padding: 24 }}>
+    <div className="consignment-management">
       <Card>
         <Title level={2}>Consignment Management</Title>
         <Table
@@ -577,6 +568,13 @@ const ConsignmentManagement = () => {
           <Form.Item
             name="sellingPrice"
             label="Selling Price"
+            rules={[{ required: true }]}
+          >
+            <InputNumber style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Description"
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
