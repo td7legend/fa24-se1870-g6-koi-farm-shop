@@ -18,6 +18,7 @@ import {
   faShoppingCart,
   faCog,
   faSignOutAlt,
+  faHandHoldingUsd,
 } from "@fortawesome/free-solid-svg-icons";
 const { Title } = Typography;
 import "./index.scss";
@@ -169,6 +170,9 @@ const OrderHistoryPage = () => {
             </li>
             <li onClick={() => navigate("/user-setting/:id")}>
               <FontAwesomeIcon icon={faCog} /> Setting
+            </li>
+            <li onClick={() => navigate("/consignment-history")}>
+              <FontAwesomeIcon icon={faHandHoldingUsd} /> Consignment
             </li>
             <li onClick={confirmLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout

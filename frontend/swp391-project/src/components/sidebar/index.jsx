@@ -20,6 +20,11 @@ function Sidebar() {
               Fish Type Management
             </Link>
           </li>
+          <li>
+            <Link to="/staff-dashboard/consignment-management">
+              Consignment Management
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>
