@@ -20,10 +20,11 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import config from "../../config/config";
 import { AES, enc } from "crypto-js";
 import CurrencyFormatter from "../../components/currency";
+import { setCart } from "../../store/actions/cartAction";
 
 const { Text } = Typography;
 
@@ -39,6 +40,7 @@ function ProductDetail() {
   const [currentFishTypes, setCurrentFishTypes] = useState({});
   const [activeTab, setActiveTab] = useState("description");
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const decryptedToken = token
     ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
     : null;
@@ -95,6 +97,7 @@ function ProductDetail() {
       });
       if (response.data && response.data.length > 0) {
         setCartItems(response.data[0].orderLines || []);
+        dispatch(setCart(response.data[0].orderLines || []));
       }
     } catch (error) {
       message.error("Failed to fetch cart data.");
