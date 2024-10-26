@@ -1,32 +1,60 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import {
+  faFish,
+  faList,
+  faShoppingCart,
+  faTruck,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./index.scss";
+
 function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar__logo">
         <h2>Staff Dashboard</h2>
       </div>
-      <nav className="sidebar__nav">
-        <ul>
+      <aside className="sidebar__nav">
+        <ul className="sidebar__menu">
           <li>
-            <Link to="/staff-dashboard/order-management">Order Management</Link>
+            <NavLink
+              to="/staff-dashboard/order-management"
+              activeClassName="active"
+            >
+              <FontAwesomeIcon icon={faShoppingCart} className="icon" />
+              <span className="label">Order Management</span>
+            </NavLink>
           </li>
           <li>
-            <Link to="/staff-dashboard/fish-management">Fish Management</Link>
+            <NavLink
+              to="/staff-dashboard/fish-management"
+              activeClassName="active"
+            >
+              <FontAwesomeIcon icon={faFish} className="icon" />
+              <span className="label">Fish Management</span>
+            </NavLink>
           </li>
           <li>
-            <Link to="/staff-dashboard/fishtype-management">
-              Fish Type Management
-            </Link>
+            <NavLink
+              to="/staff-dashboard/fishtype-management"
+              activeClassName="active"
+            >
+              <FontAwesomeIcon icon={faList} className="icon" />
+              <span className="label">Fish Type Management</span>
+            </NavLink>
           </li>
           <li>
-            <Link to="/staff-dashboard/consignment-management">
-              Consignment Management
-            </Link>
+            <NavLink
+              to="/staff-dashboard/consignment-management"
+              activeClassName="active"
+            >
+              <FontAwesomeIcon icon={faTruck} className="icon" />
+              <span className="label">Consignment Management</span>
+            </NavLink>
           </li>
         </ul>
-      </nav>
+      </aside>
     </div>
   );
 }
