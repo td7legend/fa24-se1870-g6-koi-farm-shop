@@ -143,7 +143,7 @@ const Checkout = () => {
         orderType: "01",
         amount: calculateTotalPrice(),
         orderDescription: `Payment for Order`,
-        name: String(user.fullName),
+        name: "",
       };
       console.log(paymentData);
       const response = await axios.post(

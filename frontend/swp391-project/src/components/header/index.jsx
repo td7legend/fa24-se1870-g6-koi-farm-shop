@@ -22,6 +22,7 @@ import EnhancedSearchBar from "../autosuggest";
 import { Drawer, List, Button, Typography, message } from "antd";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { setCart } from "../../store/actions/cartAction";
 const { Text } = Typography;
 
 const Header = () => {
@@ -39,7 +40,7 @@ const Header = () => {
   const decryptedToken = token
     ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
     : null;
-
+  const { cartItemsRedux } = useSelector((state) => state.cart);
   // Move getFishPrice outside of useEffect
   const getFishPrice = (fishId) => {
     const fish = fishes.find((f) => f.fishId === fishId);
@@ -72,6 +73,7 @@ const Header = () => {
         });
         if (response.data && response.data.length > 0) {
           setCartItems(response.data[0].orderLines || []);
+          dispatch(setCart(response.data[0].orderLines || []));
         }
       } catch (error) {
         message.error("Failed to fetch cart data.");
@@ -118,7 +120,7 @@ const Header = () => {
   };
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
+    return cartItemsRedux.reduce((total, item) => {
       const price = getFishPrice(item.fishId);
       return total + price * item.quantity;
     }, 0);
@@ -249,7 +251,7 @@ const Header = () => {
       >
         <List
           itemLayout="horizontal"
-          dataSource={cartItems}
+          dataSource={cartItemsRedux}
           renderItem={(item) => (
             <List.Item>
               <List.Item.Meta

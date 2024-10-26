@@ -334,8 +334,9 @@ const LoginPage = () => {
       const message = error.response.data;
       if (message === "Email already exists.") {
         toast.error(message);
+      } else {
+        toast.error("Đã xảy ra lỗi khi kiểm tra tài khoản: " + error.message);
       }
-      toast.error("Đã xảy ra lỗi khi kiểm tra tài khoản: " + error.message);
     }
   };
 
