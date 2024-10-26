@@ -23,6 +23,8 @@ import { Drawer, List, Button, Typography, message } from "antd";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setCart } from "../../store/actions/cartAction";
+import LanguageSelector from "../language/LanguageSelector";
+import { useTranslation } from "react-i18next";
 const { Text } = Typography;
 
 const Header = () => {
@@ -46,7 +48,7 @@ const Header = () => {
     const fish = fishes.find((f) => f.fishId === fishId);
     return fish ? fish.price : 0;
   };
-
+  const { t } = useTranslation();
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -141,25 +143,25 @@ const Header = () => {
         {/* User Options */}
         <div className="user__options">
           <div className="language" onClick={toggleDropdown}>
-            <FontAwesomeIcon icon={faGlobe} className="fa__icon" /> {language}
+            <LanguageSelector />
           </div>
 
           {!isLoggedIn ? (
             <div className="cart" onClick={handleCartClick}>
               <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" />{" "}
-              Your Cart
+              {t("yourCart")}
             </div>
           ) : (
             <div className="cart" onClick={() => setCartDrawerVisible(true)}>
               <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" />{" "}
-              Your Cart
+              {t("yourCart")}
             </div>
           )}
 
           {!isLoggedIn ? (
             <Link to="/login" className="register__sign__in">
               <FontAwesomeIcon icon={faUser} className="fa__icon" />{" "}
-              Register/Sign in
+              {t("registerSignIn")}
             </Link>
           ) : (
             <Link
@@ -170,26 +172,6 @@ const Header = () => {
               {userData.fullName}
             </Link>
           )}
-
-          {/* Language Dropdown */}
-          {isDropdownOpen && (
-            <div className="language__dropdown">
-              <div onClick={() => handleLanguageChange("English")}>
-                <img
-                  src="/path/to/us-flag.png"
-                  alt="English"
-                  className="flag__icon"
-                />
-              </div>
-              <div onClick={() => handleLanguageChange("Tiếng Việt")}>
-                <img
-                  src="/path/to/vn-flag.png"
-                  alt="Tiếng Việt"
-                  className="flag__icon"
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
@@ -198,44 +180,46 @@ const Header = () => {
         <nav className="nav__links">
           <ul>
             <li>
-              <Link to="/">
-                <FontAwesomeIcon icon={faHome} className="fa__icon" /> Home
+              <Link to="/" className="nav__link">
+                {t("home")}
               </Link>
             </li>
             <li className="dropdown">
               <Link to="/fish-page">
-                <FontAwesomeIcon icon={faFish} className="fa__icon" /> Fish
+                <FontAwesomeIcon icon={faFish} className="fa__icon" />{" "}
+                {t("fish")}
                 <ul className="dropdown-menu">
                   <li className="menu-item">
-                    <Link to="/breed/Ogon">Ogon</Link>
+                    <Link to="/breed/Ogon">{t("ogon")}</Link>
                   </li>
                   <li className="menu-item">
-                    <Link to="/breed/Ochiba">Ochiba</Link>
+                    <Link to="/breed/Ochiba">{t("ochiba")}</Link>
                   </li>
                   <li className="menu-item">
-                    <Link to="/breed/Kujaku">Kujaku</Link>
+                    <Link to="/breed/Kujaku">{t("kujaku")}</Link>
                   </li>
                   <li className="menu-item">
-                    <Link to="/breed/kohaku">Kohaku</Link>
+                    <Link to="/breed/kohaku">{t("kohaku")}</Link>
                   </li>
                 </ul>
               </Link>
             </li>
             <li>
               <Link to="/blog">
-                <FontAwesomeIcon icon={faBlog} className="fa__icon" /> Blog
+                <FontAwesomeIcon icon={faBlog} className="fa__icon" />{" "}
+                {t("blog")}
               </Link>
             </li>
             <li>
               <Link to="/about-us">
                 <FontAwesomeIcon icon={faInfoCircle} className="fa__icon" />{" "}
-                About Us
+                {t("aboutUs")}
               </Link>
             </li>
             <li>
               <Link to="/consignment">
                 <FontAwesomeIcon icon={faHandHoldingUsd} className="fa__icon" />{" "}
-                Consignment
+                {t("consignment")}
               </Link>
             </li>
           </ul>
@@ -243,7 +227,7 @@ const Header = () => {
       </div>
 
       <Drawer
-        title="Your Cart"
+        title={t("yourCart")}
         placement="right"
         onClose={() => setCartDrawerVisible(false)}
         visible={cartDrawerVisible}
@@ -259,7 +243,7 @@ const Header = () => {
                   <img src={item.imageUrl} width={50} alt={item.fishName} />
                 }
                 title={item.fishName}
-                description={`Quantity: ${item.quantity}`}
+                description={`${t("quantity")}: ${item.quantity}`}
               />
               <div>
                 <Text>
@@ -271,18 +255,20 @@ const Header = () => {
           )}
         />
         <div style={{ marginTop: 16, textAlign: "right" }}>
-          <Text strong>Total: {calculateTotal().toLocaleString()} VND</Text>
+          <Text strong>
+            {t("total")}: {calculateTotal().toLocaleString()} VND
+          </Text>
         </div>
         <div style={{ textAlign: "right", marginTop: 16 }}>
           <Button type="primary" onClick={() => setCartDrawerVisible(false)}>
-            Close
+            {t("close")}
           </Button>
           <Button
             type="primary"
             style={{ marginLeft: 8 }}
             onClick={() => (window.location.href = "/cart")}
           >
-            View Full Cart
+            {t("viewFullCart")}
           </Button>
         </div>
       </Drawer>

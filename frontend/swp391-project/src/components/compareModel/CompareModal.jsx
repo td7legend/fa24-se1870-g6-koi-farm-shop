@@ -19,6 +19,7 @@ import {
   ZoomInOutlined,
 } from "@ant-design/icons";
 import ProductCard from "../product-card";
+import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
 
@@ -26,6 +27,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
   const [comparedFishes, setComparedFishes] = useState([initialFish, null]);
   const [isSelectModalVisible, setIsSelectModalVisible] = useState(false);
   const [selectIndex, setSelectIndex] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (initialFish) {
@@ -73,7 +75,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
         key={`${property}-${values.join("-")}`}
       >
         <Col span={6}>
-          <Text strong>{label}</Text>
+          <Text strong>{t(property)}</Text>
         </Col>
         {comparedFishes.map((fish, index) => (
           <Col span={9} key={index}>
@@ -162,7 +164,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
   return (
     <>
       <Modal
-        title="Compare Fishes"
+        title={t("compareFishes")}
         visible={isVisible}
         onCancel={onClose}
         width={800}
@@ -229,40 +231,40 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                       }}
                       style={{ width: "100%", height: "100%", minHeight: 200 }}
                     >
-                      Add Fish to Compare
+                      {t("addFishToCompare")}
                     </Button>
                   )}
                 </Col>
               ))}
             </Row>
             <div style={{ marginTop: 20 }}>
-              {renderComparisonRow("Name", "name")}
-              {renderComparisonRow("Breed", "breed")}
-              {renderComparisonRow("Size", "size", (a, b) =>
+              {renderComparisonRow("name")}
+              {renderComparisonRow("breed")}
+              {renderComparisonRow("size", null, (a, b) =>
                 compareNumeric(a, b)
               )}
-              {renderComparisonRow("Price", "price", comparePrice, formatPrice)}
-              {renderComparisonRow("Origin", "origin", compareOrigin)}
+              {renderComparisonRow("price", "price", comparePrice, formatPrice)}
+              {renderComparisonRow("origin", "origin", compareOrigin)}
               {renderComparisonRow(
-                "Rating",
+                "rating",
                 "rating",
                 (a, b) => compareNumeric(a, b),
                 null,
                 renderRating
               )}
-              {renderComparisonRow("Gender", "gender")}
-              {renderComparisonRow("Age", "age", (a, b) =>
+              {renderComparisonRow("gender", "gender")}
+              {renderComparisonRow("age", "age", (a, b) =>
                 compareNumeric(a, b)
               )}
             </div>
           </>
         ) : (
-          <Empty description="No fish selected for comparison" />
+          <Empty description={t("noFishSelectedForComparison")} />
         )}
       </Modal>
 
       <Modal
-        title="Select Fish to Compare"
+        title={t("selectFishToCompare")}
         visible={isSelectModalVisible}
         onCancel={() => setIsSelectModalVisible(false)}
         width={1000}
@@ -279,7 +281,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
           ))}
         </Row>
         {availableFishes.length === 0 && (
-          <Empty description="No more fish available for comparison" />
+          <Empty description={t("noMoreFishAvailableForComparison")} />
         )}
       </Modal>
     </>

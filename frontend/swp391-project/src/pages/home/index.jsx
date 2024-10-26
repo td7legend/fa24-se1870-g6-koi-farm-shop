@@ -5,6 +5,7 @@ import LatestNews from "../../components/home/LatestNews";
 import PopularProduct from "../../components/home/PopularProduct";
 import OurService from "../../components/home/OurService";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState({
@@ -18,7 +19,7 @@ const Home = () => {
     popularProduct: false,
     ourService: false,
   });
-
+  const { t } = useTranslation();
   const sectionsRef = useRef({});
   const videoSources = {
     ogon: "https://www.youtube.com/embed/OeuhPo4AgkI?autoplay=1&mute=1&vq=hd1080",
