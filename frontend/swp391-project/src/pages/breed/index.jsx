@@ -23,6 +23,7 @@ import ochibaImage from "../../images/ochiba.jpg";
 import kujakuImage from "../../images/kujaku.jpg";
 import kohakuImage from "../../images/kohaku.jpg";
 import ImageFrame from "../../components/home/ImageFrame";
+import { useTranslation } from "react-i18next";
 
 const BreedFishPage = () => {
   const { breedName } = useParams();
@@ -37,7 +38,7 @@ const BreedFishPage = () => {
   const [priceRange, setPriceRange] = useState([100000, 100000000]);
   const [minPrice, setMinPrice] = useState(100000); // <-- Add state for manual price input
   const [maxPrice, setMaxPrice] = useState(100000000);
-
+  const { t } = useTranslation();
   useEffect(() => {
     const fetchBreedFish = async () => {
       try {
@@ -167,18 +168,18 @@ const BreedFishPage = () => {
           <Col className="left-side">
             <div className="product-list-filter">
               <div className="search-container">
-                <h1>Filter</h1>
+                <h1>{t("filter")}</h1>
                 <Search
                   type="search"
                   value={searchQuery}
                   onChange={handleSearch}
-                  placeholder="Search fish by name"
+                  placeholder={t("searchFishByName")}
                 ></Search>
               </div>
               <hr className="divider" />
               <div className="filter-container">
                 <div className="breed-filter">
-                  <h3>Origin</h3>
+                  <h3>{t("origin")}</h3>
                   <div className="button-group">
                     {origins.map((origin) => (
                       <Button
@@ -201,7 +202,7 @@ const BreedFishPage = () => {
                 </div>
                 <hr className="divider" />
                 <div className="size-filter">
-                  <h3>Size</h3>
+                  <h3>{t("size")}</h3>
                   <div className="button-group">
                     {sizes.map((size) => (
                       <Button
@@ -220,7 +221,7 @@ const BreedFishPage = () => {
                 </div>
                 <hr className="divider" />
                 <div className="age-filter">
-                  <h3>Age</h3>
+                  <h3>{t("age")}</h3>
                   <div className="button-group">
                     {ages.map((age) => (
                       <Button
@@ -232,7 +233,7 @@ const BreedFishPage = () => {
                           toggleSelection(age, selectedAges, setSelectedAges)
                         }
                       >
-                        {age} years
+                        {age} {t("years")}
                       </Button>
                     ))}
                   </div>
@@ -249,13 +250,13 @@ const BreedFishPage = () => {
                   />
                   <div className="price-range">
                     <span style={{ fontSize: 16 }}>
-                      Price: ${priceRange[0]} - ${priceRange[1]}
+                      {t("price")}: ${priceRange[0]} - ${priceRange[1]}
                     </span>
                   </div>
                   <div className="price-inputs">
                     <Input
                       type="number"
-                      placeholder="Min Price"
+                      placeholder={t("minPrice")}
                       value={minPrice}
                       onChange={(e) => setMinPrice(Number(e.target.value))}
                       style={{
@@ -268,7 +269,7 @@ const BreedFishPage = () => {
                     />
                     <Input
                       type="number"
-                      placeholder="Max Price"
+                      placeholder={t("maxPrice")}
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(Number(e.target.value))}
                       style={{
@@ -286,7 +287,7 @@ const BreedFishPage = () => {
                         backgroundColor: "#bbab6f",
                       }}
                     >
-                      Apply
+                      {t("apply")}
                     </Button>
                   </div>
                 </div>
@@ -307,17 +308,17 @@ const BreedFishPage = () => {
                 />
               </div>
               <div className="sort-container">
-                <div>Sort By</div>
+                <div>{t("sortBy")}</div>
                 <Select
                   value={sortOrder}
                   onChange={handleSortChange}
                   style={{ width: 200 }}
                 >
                   <Select.Option value="price-asc">
-                    Price (Low to High)
+                    {t("priceLowToHigh")}
                   </Select.Option>
                   <Select.Option value="price-desc">
-                    Price (High to Low)
+                    {t("priceHighToLow")}
                   </Select.Option>
                 </Select>
               </div>
@@ -326,17 +327,17 @@ const BreedFishPage = () => {
             <div className="filter-tags">
               {selectedOrigins.length > 0 && (
                 <Tag closable onClose={() => setSelectedOrigins([])}>
-                  Origin: {selectedOrigins.join(", ")}
+                  {t("origin")}: {selectedOrigins.join(", ")}
                 </Tag>
               )}
               {selectedSizes.length > 0 && (
                 <Tag closable onClose={() => setSelectedSizes([])}>
-                  Size: {selectedSizes.join(", ")}
+                  {t("size")}: {selectedSizes.join(", ")}
                 </Tag>
               )}
               {selectedAges.length > 0 && (
                 <Tag closable onClose={() => setSelectedAges([])}>
-                  Age: {selectedAges.join(", ")} years
+                  {t("age")}: {selectedAges.join(", ")} {t("years")}
                 </Tag>
               )}
               {priceRange[0] !== 0 ||
@@ -351,7 +352,7 @@ const BreedFishPage = () => {
                     closable
                     onClose={() => setPriceRange([0, 100])}
                   >
-                    Price: ${priceRange[0]} - ${priceRange[1]}
+                    {t("price")}: ${priceRange[0]} - ${priceRange[1]}
                   </Tag>
                 ))}
               {searchQuery !== "" && (
@@ -365,7 +366,7 @@ const BreedFishPage = () => {
                   closable
                   onClose={() => setSearchQuery("")}
                 >
-                  Search: {searchQuery}
+                  {t("search")}: {searchQuery}
                 </Tag>
               )}
             </div>

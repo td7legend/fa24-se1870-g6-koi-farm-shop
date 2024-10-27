@@ -6,12 +6,14 @@ import config from "../../config/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons"; // Import icon search
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 const EnhancedSearchBar = () => {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [fishes, setFishes] = useState([]);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchFishes = async () => {
@@ -63,7 +65,7 @@ const EnhancedSearchBar = () => {
   };
 
   const inputProps = {
-    placeholder: "Search Fish",
+    placeholder: t("searchFish"),
     value,
     onChange: onChange,
   };
@@ -87,7 +89,7 @@ const EnhancedSearchBar = () => {
         style={{ margin: "0", display: "flex", alignItems: "center" }}
       >
         <FontAwesomeIcon icon={faSearch} style={{ marginRight: "5px" }} />
-        Search
+        {t("search")}
       </button>
     </div>
   );

@@ -3,8 +3,10 @@ import "./index.scss";
 import { Breadcrumb, Col, Row } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 function ShoppingGuidePage() {
+  const { t } = useTranslation();
   return (
     <div>
       <Row>
@@ -17,18 +19,18 @@ function ShoppingGuidePage() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>Shopping Guide</Breadcrumb.Item>
+              <Breadcrumb.Item>{t("shoppingGuide")}</Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>
       </Row>
 
       <div className="shopping-guide-page">
-        <h1>Shopping Guide</h1>
+        <h1>{t("shoppingGuide")}</h1>
 
         <div className="guide-content">
           <div className="section">
-            <h3>How to Shop</h3>
+            <h3>{t("howToShop")}</h3>
             <p>
               Welcome to our shopping guide! To get started, simply browse our
               categories or use the search bar to find specific koi fish. Once
@@ -42,7 +44,7 @@ function ShoppingGuidePage() {
           </div>
 
           <div className="section">
-            <h3>Payment Methods</h3>
+            <h3>{t("paymentMethods")}</h3>
             <p>
               We accept various payment methods to ensure a smooth shopping
               experience. You can pay using:
@@ -59,7 +61,7 @@ function ShoppingGuidePage() {
           </div>
 
           <div className="section">
-            <h3>Shipping Information</h3>
+            <h3>{t("shippingInformation")}</h3>
             <p>
               We offer fast and reliable shipping options to ensure your koi
               fish arrive safely and promptly. Shipping rates are calculated at
@@ -73,7 +75,7 @@ function ShoppingGuidePage() {
           </div>
 
           <div className="section">
-            <h3>Return Policy</h3>
+            <h3>{t("returnPolicy")}</h3>
             <p>
               If you are not satisfied with your purchase, we accept returns
               within 30 days. Ensure the product is in its original condition
@@ -86,7 +88,7 @@ function ShoppingGuidePage() {
           </div>
 
           <div className="section">
-            <h3>Order Tracking</h3>
+            <h3>{t("orderTracking")}</h3>
             <p>
               After placing an order, you will receive a tracking link in your
               confirmation email. Use this link to monitor your order status.
@@ -98,7 +100,7 @@ function ShoppingGuidePage() {
           </div>
 
           <div className="section">
-            <h3>Customer Support</h3>
+            <h3>{t("customerSupport")}</h3>
             <p>
               If you have any questions or need assistance, please reach out to
               our customer support team. We are here to help!

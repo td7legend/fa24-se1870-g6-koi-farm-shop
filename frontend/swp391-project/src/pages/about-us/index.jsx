@@ -2,8 +2,10 @@ import { Breadcrumb, Col, Row } from "antd";
 import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 function AboutUs() {
+  const { t } = useTranslation();
   return (
     <div className="about-us-page">
       <Row>
@@ -14,7 +16,7 @@ function AboutUs() {
                 <FontAwesomeIcon icon={faHome} className="icon" />
               </Breadcrumb.Item>
               <Breadcrumb.Item className="breadcrumb-page">
-                About Us
+                {t("aboutUs")}
               </Breadcrumb.Item>
             </Breadcrumb>
           </div>
@@ -24,7 +26,7 @@ function AboutUs() {
       <div className="about-us-container">
         <div className="about-us-form">
           <div className="section introduction">
-            <h2>Introduce</h2>
+            <h2>{t("introduce")}</h2>
             <p>
               Welcome to Golden Koi Farm, where we bring you high-quality Koi
               fish and dedicated care services. With many years of experience in
@@ -45,11 +47,11 @@ function AboutUs() {
               src="src/images/background-koi-introduce-4.webp"
               alt="Koi Fish Pond Area"
             />
-            <figcaption>Koi Fish Pond Area</figcaption>
+            <figcaption>{t("koiFishPondArea")}</figcaption>
           </figure>
 
           <div className="section development-history">
-            <h3>Development history of Golden Koi</h3>
+            <h3>{t("developmentHistory")}</h3>
             <p>
               Golden Koi Farm has had a proud development journey since its
               establishment, affirming its position in the field of Koi farming
@@ -87,7 +89,7 @@ function AboutUs() {
               shapes, giving customers more choices.
             </p>
             <br />
-            <h3>Future Vision</h3>
+            <h3>{t("futureVision")}</h3>
             <p>
               - With a history of strong development and a commitment to
               continuous innovation, Golden Koi Farm aims to become a leading
@@ -99,7 +101,7 @@ function AboutUs() {
           </div>
 
           <div className="section core-values">
-            <h3>Core Values</h3>
+            <h3>{t("coreValues")}</h3>
             <p>
               At Golden Koi Farm, our core values are:
               <ul>
@@ -121,7 +123,7 @@ function AboutUs() {
           </div>
 
           <div className="section customer-benefits">
-            <h3>Why Choose Us?</h3>
+            <h3>{t("whyChooseUs")}</h3>
             <p>
               Choosing Golden Koi Farm means you are guaranteed:
               <ul>

@@ -4,10 +4,11 @@ import Picture from "../../../images/picture-3.png";
 import config from "../../../config/config";
 import axios from "axios";
 import ProductCard from "../Product";
+import { useTranslation } from "react-i18next";
 
 const PopularProduct = () => {
   const [products, setProducts] = useState([]);
-
+  const { t } = useTranslation();
   const itemsPerPage = 4;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState("");
@@ -50,7 +51,7 @@ const PopularProduct = () => {
 
   return (
     <section className="popular__product">
-      <h2>POPULAR PRODUCTS</h2>
+      <h2>{t("popularProducts")}</h2>
       <div className="popular__product__grid">
         <button className="nav__button left" onClick={prevProducts}>
           &lt;

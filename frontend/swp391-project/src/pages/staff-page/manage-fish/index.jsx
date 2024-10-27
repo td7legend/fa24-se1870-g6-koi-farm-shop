@@ -24,12 +24,10 @@ import { toast, ToastContainer } from "react-toastify";
 import { PlusOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
 import uploadFile from "../../../utils/upload/upload";
 import "./index.scss";
+import { useSelector } from "react-redux";
+import config from "../../../config/config";
 const { Title } = Typography;
 const { Option } = Select;
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
 
 const StaffFishManagement = () => {
   const [fishes, setFishes] = useState([]);
@@ -43,6 +41,7 @@ const StaffFishManagement = () => {
   const [isQuantityModalVisible, setIsQuantityModalVisible] = useState(false);
   const [selectedFish, setSelectedFish] = useState(null);
   const [quantityForm] = Form.useForm();
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     fetchFishes();
@@ -80,15 +79,15 @@ const StaffFishManagement = () => {
   const fetchFishes = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
         return;
       }
 
-      const response = await axios.get(`${config.API_ROOT}/fishs`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${config.API_ROOT}fishs`, {
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
 
       setFishes(
@@ -107,7 +106,6 @@ const StaffFishManagement = () => {
 
   const handleAdd = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       let imageUrl = "";
 
       // Handle image upload if there's a file
@@ -138,9 +136,9 @@ const StaffFishManagement = () => {
 
       console.log(fishData);
 
-      await axios.post(`${config.API_ROOT}/fishs`, fishData, {
+      await axios.post(`${config.API_ROOT}fishs`, fishData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token ?? null}`,
           "Content-Type": "application/json",
         },
       });
@@ -157,9 +155,8 @@ const StaffFishManagement = () => {
 
   const handleDelete = async (fishId) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`${config.API_ROOT}/fishs/${fishId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.delete(`${config.API_ROOT}fishs/${fishId}`, {
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
       message.success("Fish deleted successfully");
       fetchFishes();
@@ -182,18 +179,17 @@ const StaffFishManagement = () => {
 
   const handleQuantityUpdate = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         return;
       }
 
       await axios.patch(
-        `${config.API_ROOT}/fishs/${selectedFish.fishId}/quantity?quantity=${values.quantity}`,
+        `${config.API_ROOT}fishs/${selectedFish.fishId}/quantity?quantity=${values.quantity}`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token ?? null}`,
           },
         }
       );

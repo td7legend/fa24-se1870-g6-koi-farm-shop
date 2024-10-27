@@ -12,12 +12,15 @@ import {
   Input,
   InputNumber,
   Descriptions,
+  Breadcrumb,
 } from "antd";
 import { EyeOutlined, CheckOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 import "./index.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { Title } = Typography;
 
 const ConsignmentManagement = () => {
@@ -353,239 +356,255 @@ const ConsignmentManagement = () => {
   ];
 
   return (
-    <div className="consignment-management">
-      <Card>
-        <Title level={2}>Consignment Management</Title>
-        <Table
-          dataSource={consignments}
-          columns={columns}
-          rowKey="consignmentId"
-          loading={loading}
-          pagination={{ pageSize: 10 }}
-        />
-      </Card>
+    <div className="staff-consignment-management">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item>
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Staff</Breadcrumb.Item>
+          <Breadcrumb.Item>Consignment Management</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+      <div className="manage-consignment-container">
+        <Card>
+          <Title level={2}>Consignment Management</Title>
+          <Table
+            dataSource={consignments}
+            columns={columns}
+            rowKey="consignmentId"
+            loading={loading}
+            pagination={{ pageSize: 10 }}
+            className="consignment-management-table"
+          />
+        </Card>
 
-      {/* Detail Modal */}
-      <Modal
-        title={`Consignment #${selectedConsignment?.consignmentId} Details`}
-        open={detailModalVisible}
-        onCancel={() => setDetailModalVisible(false)}
-        footer={null}
-        width={800}
-      >
-        {selectedConsignment && (
-          <>
-            <Descriptions bordered column={2}>
-              <Descriptions.Item label="Type">
-                {selectedConsignment.type === 0 ? "Care" : "Sale"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                {getStatusTag(selectedConsignment.status)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Start Date">
-                {new Date(selectedConsignment.startDate).toLocaleDateString()}
-              </Descriptions.Item>
-              <Descriptions.Item label="End Date">
-                {new Date(selectedConsignment.endDate).toLocaleDateString()}
-              </Descriptions.Item>
-              <Descriptions.Item label="Price">
-                {selectedConsignment.type === 0
-                  ? selectedConsignment.careFee
-                  : selectedConsignment.agreedPrice}
-              </Descriptions.Item>
-              <Descriptions.Item label="Customer ID">
-                {selectedConsignment.customerId}
-              </Descriptions.Item>
-              <Descriptions.Item label="Note" span={2}>
-                {selectedConsignment.note}
-              </Descriptions.Item>
-            </Descriptions>
+        {/* Detail Modal */}
+        <Modal
+          title={`Consignment #${selectedConsignment?.consignmentId} Details`}
+          open={detailModalVisible}
+          onCancel={() => setDetailModalVisible(false)}
+          footer={null}
+          width={800}
+        >
+          {selectedConsignment && (
+            <>
+              <Descriptions bordered column={2}>
+                <Descriptions.Item label="Type">
+                  {selectedConsignment.type === 0 ? "Care" : "Sale"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Status">
+                  {getStatusTag(selectedConsignment.status)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Start Date">
+                  {new Date(selectedConsignment.startDate).toLocaleDateString()}
+                </Descriptions.Item>
+                <Descriptions.Item label="End Date">
+                  {new Date(selectedConsignment.endDate).toLocaleDateString()}
+                </Descriptions.Item>
+                <Descriptions.Item label="Price">
+                  {selectedConsignment.type === 0
+                    ? selectedConsignment.careFee
+                    : selectedConsignment.agreedPrice}
+                </Descriptions.Item>
+                <Descriptions.Item label="Customer ID">
+                  {selectedConsignment.customerId}
+                </Descriptions.Item>
+                <Descriptions.Item label="Note" span={2}>
+                  {selectedConsignment.note}
+                </Descriptions.Item>
+              </Descriptions>
 
-            <Title level={4} style={{ marginTop: 24 }}>
-              Consignment Lines
-            </Title>
-            <Table
-              dataSource={selectedConsignment.consignmentLines}
-              rowKey="consignmentLineId"
-              pagination={false}
-              columns={[
-                {
-                  title: "Fish Type",
-                  dataIndex: "fishType",
-                  key: "fishType",
-                },
-                {
-                  title: "Quantity",
-                  dataIndex: "quantity",
-                  key: "quantity",
-                },
-                {
-                  title: "Total Price",
-                  dataIndex: "totalPrice",
-                  key: "totalPrice",
-                },
-                {
-                  title: "Images",
-                  dataIndex: "imageUrl",
-                  key: "imageUrl",
-                  render: (url) =>
-                    url ? (
-                      <img src={url} alt="Fish" style={{ maxWidth: 100 }} />
-                    ) : (
-                      "No image"
-                    ),
-                },
-              ]}
-            />
-          </>
-        )}
-      </Modal>
+              <Title level={4} style={{ marginTop: 24 }}>
+                Consignment Lines
+              </Title>
+              <Table
+                dataSource={selectedConsignment.consignmentLines}
+                rowKey="consignmentLineId"
+                pagination={false}
+                columns={[
+                  {
+                    title: "Fish Type",
+                    dataIndex: "fishType",
+                    key: "fishType",
+                  },
+                  {
+                    title: "Quantity",
+                    dataIndex: "quantity",
+                    key: "quantity",
+                  },
+                  {
+                    title: "Total Price",
+                    dataIndex: "totalPrice",
+                    key: "totalPrice",
+                  },
+                  {
+                    title: "Images",
+                    dataIndex: "imageUrl",
+                    key: "imageUrl",
+                    render: (url) =>
+                      url ? (
+                        <img src={url} alt="Fish" style={{ maxWidth: 100 }} />
+                      ) : (
+                        "No image"
+                      ),
+                  },
+                ]}
+              />
+            </>
+          )}
+        </Modal>
 
-      {/* Care Confirmation Modal */}
-      <Modal
-        title="Confirm Care Consignment"
-        open={careModalVisible}
-        onCancel={() => setCareModalVisible(false)}
-        footer={null}
-      >
-        <Form form={careForm} layout="vertical" onFinish={handleCareConfirm}>
-          <Form.Item
-            name="fishType"
-            label="Fish Type"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="healthStatus"
-            label="Health Status"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="careDetails"
-            label="Care Details"
-            rules={[{ required: true }]}
-          >
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item
-            name="careFee"
-            label="Care Fee"
-            rules={[{ required: true }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Confirm Care
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+        {/* Care Confirmation Modal */}
+        <Modal
+          title="Confirm Care Consignment"
+          open={careModalVisible}
+          onCancel={() => setCareModalVisible(false)}
+          footer={null}
+        >
+          <Form form={careForm} layout="vertical" onFinish={handleCareConfirm}>
+            <Form.Item
+              name="fishType"
+              label="Fish Type"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="healthStatus"
+              label="Health Status"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="careDetails"
+              label="Care Details"
+              rules={[{ required: true }]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item
+              name="careFee"
+              label="Care Fee"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                Confirm Care
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
 
-      {/* Sale Confirmation Modal */}
-      <Modal
-        title="Confirm Sale Consignment"
-        open={saleModalVisible}
-        onCancel={() => setSaleModalVisible(false)}
-        footer={null}
-        width={800}
-      >
-        <Form form={saleForm} layout="vertical" onFinish={handleSaleConfirm}>
-          {/* Read-only fields */}
-          <Form.Item name="fishType" label="Fish Type">
-            <Input disabled />
-          </Form.Item>
-          <Form.Item name="quantity" label="Quantity">
-            <InputNumber style={{ width: "100%" }} disabled />
-          </Form.Item>
-          <Form.Item name="imageUrl" label="Image URL">
-            <Input disabled />
-          </Form.Item>
+        {/* Sale Confirmation Modal */}
+        <Modal
+          title="Confirm Sale Consignment"
+          open={saleModalVisible}
+          onCancel={() => setSaleModalVisible(false)}
+          footer={null}
+          width={800}
+        >
+          <Form form={saleForm} layout="vertical" onFinish={handleSaleConfirm}>
+            {/* Read-only fields */}
+            <Form.Item name="fishType" label="Fish Type">
+              <Input disabled />
+            </Form.Item>
+            <Form.Item name="quantity" label="Quantity">
+              <InputNumber style={{ width: "100%" }} disabled />
+            </Form.Item>
+            <Form.Item name="imageUrl" label="Image URL">
+              <Input disabled />
+            </Form.Item>
 
-          {/* Editable fields */}
-          <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item name="age" label="Age" rules={[{ required: true }]}>
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item name="size" label="Size" rules={[{ required: true }]}>
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item name="class" label="Class" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="fishTypeId"
-            label="Fish Type ID"
-            rules={[{ required: true }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            name="foodRequirement"
-            label="Food Requirement"
-            rules={[{ required: true }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            name="overallRating"
-            label="Overall Rating"
-            rules={[{ required: true }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
+            {/* Editable fields */}
+            <Form.Item
+              name="gender"
+              label="Gender"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item name="age" label="Age" rules={[{ required: true }]}>
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item name="size" label="Size" rules={[{ required: true }]}>
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item name="class" label="Class" rules={[{ required: true }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="fishTypeId"
+              label="Fish Type ID"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item
+              name="foodRequirement"
+              label="Food Requirement"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item
+              name="overallRating"
+              label="Overall Rating"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
 
-          {/* Price related fields */}
-          <Form.Item
-            name="unitPrice"
-            label="Unit Price"
-            rules={[{ required: true }]}
-          >
-            <InputNumber
-              style={{ width: "100%" }}
-              onChange={(value) => {
-                setUnitPrice(value);
-                const total = calculateTotalPrice(value, quantity);
-                saleForm.setFieldValue("totalPrice", total);
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="totalPrice" label="Total Price">
-            <InputNumber style={{ width: "100%" }} disabled />
-          </Form.Item>
-          <Form.Item
-            name="agreePrice"
-            label="Agreed Price"
-            rules={[{ required: true }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            name="sellingPrice"
-            label="Selling Price"
-            rules={[{ required: true }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true }]}
-          >
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Confirm Sale
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+            {/* Price related fields */}
+            <Form.Item
+              name="unitPrice"
+              label="Unit Price"
+              rules={[{ required: true }]}
+            >
+              <InputNumber
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  setUnitPrice(value);
+                  const total = calculateTotalPrice(value, quantity);
+                  saleForm.setFieldValue("totalPrice", total);
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="totalPrice" label="Total Price">
+              <InputNumber style={{ width: "100%" }} disabled />
+            </Form.Item>
+            <Form.Item
+              name="agreePrice"
+              label="Agreed Price"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item
+              name="sellingPrice"
+              label="Selling Price"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[{ required: true }]}
+            >
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                Confirm Sale
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
     </div>
   );
 };

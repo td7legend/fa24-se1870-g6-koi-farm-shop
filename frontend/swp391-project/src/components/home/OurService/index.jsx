@@ -1,43 +1,47 @@
+import { useTranslation } from "react-i18next";
 import "./index.scss";
 import { Link } from "react-router-dom";
 
 const OurService = () => {
+  const { t } = useTranslation();
   return (
     <section className="our__service">
-      <h2>OUR SERVICE</h2>
+      <h2>{t("ourService")}</h2>
       <div className="service__content">
         <Link
           to="/consignment/care"
           className="service__box service__box--care"
         >
-          <h3>Consignment Care</h3>
+          <h3>{t("consignmentCare")}</h3>
           <p>
-            Our Consignment Care service ensures your Koi fish are healthy and
-            well-maintained. We offer:
+            {t(
+              "ourConsignmentCareServiceEnsuresYourKoiFishAreHealthyAndWell-MaintainedWeOffer"
+            )}
           </p>
           <ul>
-            <li>Regular health checks and disease prevention</li>
-            <li>Customized care plans for your fish</li>
-            <li>High-quality feeding and water maintenance</li>
+            <li>{t("regularHealthChecksAndDiseasePrevention")}</li>
+            <li>{t("customizedCarePlansForYourFish")}</li>
+            <li>{t("high-qualityFeedingAndWaterMaintenance")}</li>
           </ul>
-          <p className="learn-more">Learn More →</p>
+          <p className="learn-more">{t("learnMore")} →</p>
         </Link>
 
         <Link
           to="/consignment/sell"
           className="service__box service__box--sell"
         >
-          <h3>Consignment Sell</h3>
+          <h3>{t("consignmentSell")}</h3>
           <p>
-            Our Consignment Sell service connects you with trusted buyers. Key
-            features include:
+            {t(
+              "ourConsignmentSellServiceConnectsYouWithTrustedBuyersKeyFeaturesInclude"
+            )}
           </p>
           <ul>
-            <li>Comprehensive market analysis for fair pricing</li>
-            <li>Wide network of dedicated Koi fish buyers</li>
-            <li>Seamless transaction and logistics support</li>
+            <li>{t("comprehensiveMarketAnalysisForFairPricing")}</li>
+            <li>{t("wideNetworkOfDedicatedKoiFishBuyers")}</li>
+            <li>{t("seamlessTransactionAndLogisticsSupport")}</li>
           </ul>
-          <p className="learn-more">Learn More →</p>
+          <p className="learn-more">{t("learnMore")} →</p>
         </Link>
       </div>
     </section>

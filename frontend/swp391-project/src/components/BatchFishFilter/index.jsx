@@ -4,6 +4,7 @@ import { Card, Col, Row, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import config from "../../config/config";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 import CurrencyFormatter from "../currency";
 const { Meta } = Card;
 
@@ -12,6 +13,7 @@ const BatchFishFilter = () => {
   const [batchFishes, setBatchFishes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchAllFishes();
@@ -45,7 +47,7 @@ const BatchFishFilter = () => {
 
   return (
     <div className="batch-fish-filter">
-      <h2>Fish sell by batch</h2>
+      <h2>{t("fishSellByBatch")}</h2>
       <Row gutter={[16, 16]}>
         {batchFishes.map((fish) => (
           <Col xs={24} sm={12} md={8} lg={6} key={fish.fishId}>
@@ -68,9 +70,11 @@ const BatchFishFilter = () => {
                 <div className="info">
                   <h2>{fish.name}</h2>
                   <p className="price">
-                    Price: <CurrencyFormatter amount={fish.price} />
+                    {t("price")}: <CurrencyFormatter amount={fish.price} />
                   </p>
-                  <p>Amount : {fish.quantity}</p>
+                  <p>
+                    {t("amount")}: {fish.quantity}
+                  </p>
                 </div>
               </div>
             </Link>

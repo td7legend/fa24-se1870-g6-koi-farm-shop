@@ -15,6 +15,9 @@ import { CheckCircleFilled, HomeFilled, HeartFilled } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./success.scss";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import config from "../../config/config";
 
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -26,21 +29,22 @@ const PaymentSuccess = () => {
   const [consignmentModal, setConsignmentModal] = useState(false);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-
+  const { t } = useTranslation();
+  const { token } = useSelector((state) => state.auth);
   const handleConsignmentCare = async (values) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
-        message.error("Please login first");
+        message.error(t("pleaseLoginFirst"));
         return;
       }
 
       // First, get order details
       const orderResponse = await axios.get(
-        `https://localhost:44366/api/orders/${orderId}`,
+        `${config.API_ROOT}orders/${orderId}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
 
@@ -62,15 +66,11 @@ const PaymentSuccess = () => {
       };
 
       // Create consignment
-      await axios.post(
-        "https://localhost:44366/api/Consignment/care",
-        consignmentData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.post(`${config.API_ROOT}Consignment/care`, consignmentData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      message.success("Care consignment created successfully");
+      message.success(t("careConsignmentCreatedSuccessfully"));
       setConsignmentModal(false);
       form.resetFields();
 
@@ -78,7 +78,7 @@ const PaymentSuccess = () => {
       navigate("/consignment-history");
     } catch (error) {
       console.error("Error creating consignment:", error);
-      message.error("Failed to create consignment");
+      message.error(t("failedToCreateConsignment"));
     } finally {
       setLoading(false);
     }
@@ -96,12 +96,8 @@ const PaymentSuccess = () => {
       >
         <Result
           icon={<CheckCircleFilled style={{ color: "#52c41a" }} />}
-          title={<Title level={2}>Payment Successful!</Title>}
-          subTitle={
-            <Paragraph>
-              Thank you for your purchase. Your order has been confirmed.
-            </Paragraph>
-          }
+          title={<Title level={2}>{t("paymentSuccessful")}</Title>}
+          subTitle={<Paragraph>{t("thankYouForYourPurchase")}</Paragraph>}
           extra={[
             <Button
               className="button"
@@ -110,7 +106,7 @@ const PaymentSuccess = () => {
               icon={<HomeFilled />}
               onClick={() => navigate("/")}
             >
-              Return to Home
+              {t("returnToHome")}
             </Button>,
             <Button
               className="button"
@@ -119,7 +115,21 @@ const PaymentSuccess = () => {
               icon={<HomeFilled />}
               onClick={() => navigate("/order-details", { state: { orderId } })}
             >
-              View order details
+              {t("viewOrderDetails")}
+            </Button>,
+            <Button
+              className="button"
+              key="consignmentCare"
+              type="primary"
+              size="large"
+              icon={<HeartFilled />}
+              onClick={() => setConsignmentModal(true)}
+              style={{
+                backgroundColor: "#ff4d4f",
+                borderColor: "#ff4d4f",
+              }}
+            >
+              {t("consignmentForCare")}
             </Button>,
             <Button
               className="button"
@@ -137,14 +147,14 @@ const PaymentSuccess = () => {
             </Button>,
           ]}
         >
-          <Descriptions title="Order Information" bordered column={1}>
-            <Descriptions.Item label="Order ID">
+          <Descriptions title={t("orderInformation")} bordered column={1}>
+            <Descriptions.Item label={t("orderID")}>
               {orderId || "Not available"}
             </Descriptions.Item>
-            <Descriptions.Item label="Total Amount">
+            <Descriptions.Item label={t("totalAmount")}>
               {totalAmount
                 ? `${totalAmount.toLocaleString()} VND`
-                : "Information not available"}
+                : t("informationNotAvailable")}
             </Descriptions.Item>
           </Descriptions>
         </Result>
@@ -152,7 +162,7 @@ const PaymentSuccess = () => {
 
       {/* Consignment Modal */}
       <Modal
-        title="Create Care Consignment"
+        title={t("createCareConsignment")}
         open={consignmentModal}
         onCancel={() => {
           setConsignmentModal(false);
@@ -163,8 +173,8 @@ const PaymentSuccess = () => {
         <Form form={form} layout="vertical" onFinish={handleConsignmentCare}>
           <Form.Item
             name="endDate"
-            label="End Date"
-            rules={[{ required: true, message: "Please select end date" }]}
+            label={t("endDate")}
+            rules={[{ required: true, message: t("pleaseSelectEndDate") }]}
           >
             <DatePicker
               style={{ width: "100%" }}
@@ -176,18 +186,18 @@ const PaymentSuccess = () => {
 
           <Form.Item
             name="note"
-            label="Note"
-            rules={[{ required: true, message: "Please enter note" }]}
+            label={t("note")}
+            rules={[{ required: true, message: t("pleaseEnterNote") }]}
           >
             <TextArea
               rows={4}
-              placeholder="Enter care instructions or special requirements"
+              placeholder={t("enterCareInstructionsOrSpecialRequirements")}
             />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" block loading={loading}>
-              Create Consignment
+              {t("createConsignment")}
             </Button>
           </Form.Item>
         </Form>

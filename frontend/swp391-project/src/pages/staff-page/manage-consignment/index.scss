@@ -1,7 +1,65 @@
-.consignment-management {
+.staff-consignment-management {
   margin-left: 250px;
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
   background-color: #fffaf0;
+
+  .manage-consignment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+  }
+  .ant-card-bordered {
+    background-color: #fffaf0;
+  }
+  .ant-card-body {
+    border-radius: 10px;
+    background-color: #fffaf0;
+    height: fit-content;
+    width: 1200px;
+    border: 1px solid #000;
+  }
+  .consignment-management-table {
+    .card {
+      background-color: #fffaf0;
+      width: 1000px;
+      height: fit-content;
+      border-radius: 5px;
+    }
+
+    .ant-table {
+      background-color: #fffaf0;
+    }
+
+    .ant-card-bordered {
+      border: none;
+    }
+    .ant-table-thead > tr > th {
+      background-color: #fffaf0;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px;
+      text-transform: uppercase;
+    }
+    .ant-pagination {
+      .ant-pagination-item-active {
+        border-color: #bbab6f;
+        color: #bbab6f;
+      }
+      a {
+        border-radius: 5px;
+        color: #bbab6f;
+        border-color: #bbab6f;
+        &:hover {
+          color: #bbab6f;
+          background-color: #ddd;
+        }
+      }
+    }
+    .ant-table-tbody > tr > td {
+      background-color: #fffaf0;
+    }
+  }
 }

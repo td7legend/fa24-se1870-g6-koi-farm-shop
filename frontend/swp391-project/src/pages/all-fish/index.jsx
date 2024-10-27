@@ -12,6 +12,7 @@ import kujakuImage from "../../images/kujaku.jpg";
 import kohakuImage from "../../images/kohaku.jpg";
 import ProductCard from "../../components/product-card";
 import CompareModal from "../../components/compareModel/CompareModal";
+import { useTranslation } from "react-i18next";
 
 const fishImages = {
   Ogon: ogonImage,
@@ -28,7 +29,7 @@ const AllFishPage = () => {
   const location = useLocation();
   const [isCompareModalVisible, setIsCompareModalVisible] = useState(false);
   const [selectedFishForCompare, setSelectedFishForCompare] = useState(null);
-
+  const { t } = useTranslation();
   const itemsPerPage = 4;
 
   const fetchAllFish = async () => {
@@ -112,13 +113,17 @@ const AllFishPage = () => {
               <FontAwesomeIcon icon={faHome} className="icon" />
             </Breadcrumb.Item>
             <Breadcrumb.Item className="breadcrumb-page">
-              Product List
+              {t("productList")}
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
       <div className="all-fish-page-container">
-        {searchQuery && <h2>Search results for: {searchQuery}</h2>}
+        {searchQuery && (
+          <h2>
+            {t("searchResultsFor")}: {searchQuery}
+          </h2>
+        )}
 
         {Object.keys(fishByBreed).map((breed) => {
           const breedFish = fishByBreed[breed].filter(filterFishBySearch);

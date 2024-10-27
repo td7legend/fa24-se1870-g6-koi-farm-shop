@@ -3,12 +3,14 @@ import "./index.scss";
 import { Tag, Button, notification } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import CurrencyFormatter from "../../currency";
+import { useTranslation } from "react-i18next";
 
 const Product = ({ product }) => {
+  const { t } = useTranslation();
   const handleAddToCart = () => {
     notification.open({
-      message: "Fish added to cart",
-      description: `${product.name} has been added to your cart`,
+      message: t("fishAddedToCart"),
+      description: `${product.name} ${t("hasBeenAddedToYourCart")}`,
       placement: "topRight",
       duration: 5,
     });
@@ -26,10 +28,12 @@ const Product = ({ product }) => {
             <p className="description">{product.description}</p>
             <div className="tag">
               <div className="tag-item-origin">{product.origin}</div>
-              <div className="tag-item-size">Size: {product.size} cm</div>
+              <div className="tag-item-size">
+                {t("size")}: {product.size} cm
+              </div>
             </div>
             <p className="price">
-              Price: <CurrencyFormatter amount={product.price} />
+              {t("price")}: <CurrencyFormatter amount={product.price} />
             </p>
           </div>
 
@@ -38,7 +42,7 @@ const Product = ({ product }) => {
             icon={<ShoppingCartOutlined />}
             onClick={handleAddToCart}
           >
-            Add to Cart
+            {t("addToCart")}
           </Button>
         </div>
       </div>

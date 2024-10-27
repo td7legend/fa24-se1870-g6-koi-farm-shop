@@ -25,6 +25,7 @@ import config from "../../config/config";
 import { AES, enc } from "crypto-js";
 import CurrencyFormatter from "../../components/currency";
 import { setCart } from "../../store/actions/cartAction";
+import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
 
@@ -41,13 +42,7 @@ function ProductDetail() {
   const [activeTab, setActiveTab] = useState("description");
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const decryptedToken = token
-    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
-    : null;
-  const decryptedRole = role
-    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
-    : 0;
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (id) {
       fetchProduct();
@@ -70,7 +65,7 @@ function ProductDetail() {
         setProduct(response.data);
       }
     } catch (error) {
-      message.error("Failed to fetch product data.");
+      message.error(t("failedToFetchProductData"));
     }
   };
 
@@ -79,7 +74,7 @@ function ProductDetail() {
       const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
-      message.error("Failed to fetch fish data.");
+      message.error(t("failedToFetchFishData"));
     }
   };
 
@@ -92,7 +87,7 @@ function ProductDetail() {
     try {
       const response = await axios.get(`${config.API_ROOT}cart`, {
         headers: {
-          Authorization: `Bearer ${decryptedToken ?? null}`,
+          Authorization: `Bearer ${token ?? null}`,
         },
       });
       if (response.data && response.data.length > 0) {
@@ -100,7 +95,7 @@ function ProductDetail() {
         dispatch(setCart(response.data[0].orderLines || []));
       }
     } catch (error) {
-      message.error("Failed to fetch cart data.");
+      message.error(t("yourCartIsEmpty"));
     }
   };
 
@@ -108,7 +103,7 @@ function ProductDetail() {
     setLoading(true);
     try {
       if (!token) {
-        message.error("Please log in to add items to your cart.");
+        message.error(t("pleaseLogInToAddItemsToYourCart"));
         return;
       }
 
@@ -120,7 +115,7 @@ function ProductDetail() {
         },
         {
           headers: {
-            Authorization: `Bearer ${decryptedToken ?? null}`,
+            Authorization: `Bearer ${token ?? null}`,
             "Content-Type": "application/json",
           },
         }
@@ -134,7 +129,7 @@ function ProductDetail() {
         throw new Error("Failed to add item to cart");
       }
     } catch (error) {
-      message.error("Failed to add item to cart. Please try again.");
+      message.error(t("failedToAddItemToCartPleaseTryAgain"));
     } finally {
       setLoading(false);
     }
@@ -166,7 +161,7 @@ function ProductDetail() {
   }
 
   if (!product.name) {
-    return <div>Loading...</div>;
+    return <div>{t("loading")}</div>;
   }
 
   return (
@@ -181,7 +176,9 @@ function ProductDetail() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item href="/fish-page">Fish List</Breadcrumb.Item>
+              <Breadcrumb.Item href="/fish-page">
+                {t("fishList")}
+              </Breadcrumb.Item>
               <Breadcrumb.Item>
                 <Link to={`/breed/${currentFishTypes.name}`}>
                   {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
@@ -218,14 +215,14 @@ function ProductDetail() {
 
               <div className="product-info">
                 <p>
-                  <span>Breed:</span>{" "}
+                  <span>{t("breed")}:</span>{" "}
                   {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
                 </p>
                 <p>
-                  <span>Age:</span> {product.age}
+                  <span>{t("age")}:</span> {product.age}
                 </p>
                 <p>
-                  <span>Gender:</span> {product.gender}
+                  <span>{t("gender")}:</span> {product.gender}
                 </p>
               </div>
 
@@ -251,7 +248,7 @@ function ProductDetail() {
                   }}
                   loading={loading}
                 >
-                  Add to Cart
+                  {t("addToCart")}
                 </Button>
               </div>
 
@@ -263,7 +260,7 @@ function ProductDetail() {
                   }`}
                   onClick={() => setActiveTab("description")}
                 >
-                  Description
+                  {t("description")}
                 </div>
                 <div
                   className={`tab-item ${
@@ -271,25 +268,27 @@ function ProductDetail() {
                   }`}
                   onClick={() => setActiveTab("rating")}
                 >
-                  Rating
+                  {t("rating")}
                 </div>
               </div>
 
               {/* Content Box */}
               {activeTab === "description" && (
                 <div className="product-description">
-                  <h3>Description</h3>
+                  <h3>{t("description")}</h3>
                   <p>
                     {capitalizeFirstLetter(currentFishTypes.description) ||
-                      "No description available."}
+                      t("noDescriptionAvailable")}
                   </p>
                 </div>
               )}
               {activeTab === "rating" && (
                 <div className="product-ratings">
-                  <h3>Customer Ratings</h3>
+                  <h3>{t("customerRatings")}</h3>
                   <Rate allowHalf defaultValue={product.rating || 4.5} />
-                  <p>Rating: {product.rating || 4.5} / 5</p>
+                  <p>
+                    {t("rating")}: {product.rating || 4.5} / 5
+                  </p>
                 </div>
               )}
             </div>

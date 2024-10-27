@@ -300,21 +300,23 @@ const StaffOrderManagement = () => {
         </Breadcrumb>
       </div>
 
-      <Card className="card">
-        <Title level={3}>Order Management</Title>
-        <Table
-          className="order-management-table"
-          columns={columns}
-          dataSource={orders}
-          loading={loading}
-          pagination={{
-            total: orders.length,
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-          }}
-        />
-      </Card>
+      <div className="manage-order-container">
+        <Card className="card">
+          <Title level={3}>Order Management</Title>
+          <Table
+            className="order-management-table"
+            columns={columns}
+            dataSource={orders}
+            loading={loading}
+            pagination={{
+              total: orders.length,
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: false,
+            }}
+          />
+        </Card>
+      </div>
 
       <OrderDetailsModal />
       <ToastContainer />

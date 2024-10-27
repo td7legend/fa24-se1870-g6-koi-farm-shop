@@ -8,12 +8,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./index.scss";
-
+import { useTranslation } from "react-i18next";
 function Sidebar() {
+  const { t } = useTranslation();
   return (
     <div className="sidebar">
       <div className="sidebar__logo">
-        <h2>Staff Dashboard</h2>
+        <h2>{t("staffDashboard")}</h2>
       </div>
       <aside className="sidebar__nav">
         <ul className="sidebar__menu">
@@ -23,7 +24,7 @@ function Sidebar() {
               activeClassName="active"
             >
               <FontAwesomeIcon icon={faShoppingCart} className="icon" />
-              <span className="label">Order Management</span>
+              <span className="label">{t("orderManagement")}</span>
             </NavLink>
           </li>
           <li>
@@ -32,7 +33,7 @@ function Sidebar() {
               activeClassName="active"
             >
               <FontAwesomeIcon icon={faFish} className="icon" />
-              <span className="label">Fish Management</span>
+              <span className="label">{t("fishManagement")}</span>
             </NavLink>
           </li>
           <li>
@@ -41,7 +42,7 @@ function Sidebar() {
               activeClassName="active"
             >
               <FontAwesomeIcon icon={faList} className="icon" />
-              <span className="label">Fish Type Management</span>
+              <span className="label">{t("fishtypeManagement")}</span>
             </NavLink>
           </li>
           <li>
@@ -50,7 +51,7 @@ function Sidebar() {
               activeClassName="active"
             >
               <FontAwesomeIcon icon={faTruck} className="icon" />
-              <span className="label">Consignment Management</span>
+              <span className="label">{t("consignmentManagement")}</span>
             </NavLink>
           </li>
         </ul>
