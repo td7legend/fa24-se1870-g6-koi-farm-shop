@@ -1,17 +1,20 @@
 .sidebar {
-  width: 250px;
-  background: linear-gradient(180deg, #2f2f2f, #3a3a3a);
+  width: 80px;
+  background: linear-gradient(180deg, #1e1e1e, #3a3a3a);
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 10px;
   color: white;
   z-index: 10;
   overflow-y: auto;
+  overflow-x: hidden;
   font-family: "Lato", sans-serif;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+  transition: width 0.3s ease;
 
   &::before {
     content: "";
@@ -20,40 +23,105 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url("../../images/wave-pattern2.png");
+    background-image: url("../../images/cherry-blossom.png");
     background-repeat: no-repeat;
     background-size: cover;
-    opacity: 0.1;
+    opacity: 0.06;
     z-index: 0;
     pointer-events: none;
+    filter: blur(3px);
   }
+
+  &:hover {
+    width: 310px;
+  }
+
   &__logo {
     margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.7rem;
       font-family: "Lora", serif;
+      color: #bbab6f;
+      letter-spacing: 1.2px;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .sidebar:hover & {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 
   &__nav {
     flex-grow: 1;
-
+    z-index: 2;
     ul {
       list-style: none;
       padding: 0;
 
       li {
         margin-bottom: 20px;
+        position: relative;
+        display: flex;
+        align-items: center;
 
         a {
           color: white;
           text-decoration: none;
           font-family: "Lato", sans-serif;
-          font-size: 1rem;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          transition: color 0.3s ease, background-color 0.3s ease;
+          width: 100%;
+          padding: 10px 15px;
+          border-radius: 15px 0 0 15px;
+          white-space: nowrap;
+          overflow: hidden;
+
+          &.active {
+            transform: translateX(17px);
+          }
+
+          .icon {
+            font-size: 1.5rem;
+          }
+
+          .label {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            flex-grow: 1;
+          }
 
           &:hover {
-            text-decoration: underline;
+            color: #bbab6f;
+            background: linear-gradient(#1e1e1e, #3a3a3a);
           }
+        }
+
+        .sidebar:hover & .label {
+          opacity: 1;
+        }
+
+        .active {
+          background-color: #fffaf0;
+          color: #1e1e1e;
+          border-left: 5px solid #bbab6f;
+        }
+
+        .sidebar:not(:hover) & .active {
+          justify-content: start;
+          background-color: #fffaf0;
+          border-radius: 15px;
         }
       }
     }

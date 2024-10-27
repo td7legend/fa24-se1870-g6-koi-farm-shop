@@ -374,5 +374,6 @@
   "saveChanges": "Lưu thay đổi",
   "passwordSettings": "Cài đặt mật khẩu",
   "currentPassword": "Mật khẩu hiện tại",
-  "newPassword": "Mật khẩu mới"
+  "newPassword": "Mật khẩu mới",
+  "fishtypeManagement": "Quản lý loại cá"
 }

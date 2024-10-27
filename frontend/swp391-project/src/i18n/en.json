@@ -373,5 +373,6 @@
   "saveChanges": "Save Changes",
   "passwordSettings": "Password Settings",
   "currentPassword": "Current Password",
-  "newPassword": "New Password"
+  "newPassword": "New Password",
+  "fishtypeManagement": "Fish Type Management"
 }
