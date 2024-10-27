@@ -115,107 +115,107 @@ const OrderDetailsPage = () => {
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb">
           <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/user_info/user">
-            User Dashboard
-          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/user_info/user">Dashboard</Breadcrumb.Item>
           <Breadcrumb.Item href="/order-history">Order History</Breadcrumb.Item>
           <Breadcrumb.Item>Order Detail</Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <div className="order-detail-container">
-        <Card className="card" style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <Button
-            type="link"
-            icon={<ArrowLeftOutlined />}
-            onClick={() => navigate("/order-history")}
-            style={{ marginBottom: 16, color: "#D4B57E" }}
-          >
-            Back to List
-          </Button>
-          <Title level={3}>
-            Order Details • {formatDate(order.orderDate)} •{" "}
-            {order.orderLines.length} Fish
-          </Title>
+      <div className="layout-container">
+        <div className="order-detail-container">
+          <Card className="card" style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <Button
+              type="link"
+              icon={<ArrowLeftOutlined />}
+              onClick={() => navigate("/order-history")}
+              style={{ marginBottom: 16, color: "#D4B57E" }}
+            >
+              Back to List
+            </Button>
+            <Title level={3}>
+              Order Details • {formatDate(order.orderDate)} •{" "}
+              {order.orderLines.length} Fish
+            </Title>
 
-          <Row gutter={24}>
-            <Col span={16}>
-              <Card className="card" title="ORDER SUMMARY" bordered={false}>
-                <Row>
-                  <Col span={12}>
-                    <Text strong>ORDER ID:</Text>
-                  </Col>
-                  <Col span={12}>
-                    <Text>#{order.orderId}</Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={12}>
-                    <Text strong>STATUS:</Text>
-                  </Col>
-                  <Col span={12}>
-                    <Text>
-                      {["Processing", "Shipping", "Delivered"][
-                        order.status - 1
-                      ] || "Unknown"}
-                    </Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={12}>
-                    <Text strong>TOTAL AMOUNT:</Text>
-                  </Col>
-                  <Col span={12}>
-                    <Text>
-                      {order.totalAmount.toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })}
-                    </Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={12}>
-                    <Text strong>TOTAL TAX:</Text>
-                  </Col>
-                  <Col span={12}>
-                    <Text>
-                      {order.totalTax.toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })}
-                    </Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={12}>
-                    <Text strong>TOTAL DISCOUNT:</Text>
-                  </Col>
-                  <Col span={12}>
-                    <Text>
-                      {order.totalDiscount.toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })}
-                    </Text>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-          </Row>
+            <Row gutter={24}>
+              <Col span={16}>
+                <Card className="card" title="ORDER SUMMARY" bordered={false}>
+                  <Row>
+                    <Col span={12}>
+                      <Text strong>ORDER ID:</Text>
+                    </Col>
+                    <Col span={12}>
+                      <Text>#{order.orderId}</Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Text strong>STATUS:</Text>
+                    </Col>
+                    <Col span={12}>
+                      <Text>
+                        {["Processing", "Shipping", "Delivered"][
+                          order.status - 1
+                        ] || "Unknown"}
+                      </Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Text strong>TOTAL AMOUNT:</Text>
+                    </Col>
+                    <Col span={12}>
+                      <Text>
+                        {order.totalAmount.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                      </Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Text strong>TOTAL TAX:</Text>
+                    </Col>
+                    <Col span={12}>
+                      <Text>
+                        {order.totalTax.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                      </Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Text strong>TOTAL DISCOUNT:</Text>
+                    </Col>
+                    <Col span={12}>
+                      <Text>
+                        {order.totalDiscount.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                      </Text>
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+            </Row>
 
-          <Steps current={order.status - 1} style={{ margin: "24px 0" }}>
-            <Step className="step" title="Processing" />
-            <Step className="step" title="Shipped" />
-            <Step className="step" title="Delivered" />
-          </Steps>
+            <Steps current={order.status - 1} style={{ margin: "24px 0" }}>
+              <Step className="step" title="Processing" />
+              <Step className="step" title="Shipped" />
+              <Step className="step" title="Delivered" />
+            </Steps>
 
-          <Table
-            className="table"
-            columns={columns}
-            dataSource={order.orderLines}
-            pagination={false}
-          />
-        </Card>
+            <Table
+              className="table"
+              columns={columns}
+              dataSource={order.orderLines}
+              pagination={false}
+            />
+          </Card>
+        </div>
       </div>
     </div>
   );

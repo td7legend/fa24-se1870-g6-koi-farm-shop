@@ -131,6 +131,7 @@ const StaffFishManagement = () => {
         price: parseInt(values.price),
         batch: true,
         fishTypeId: parseInt(values.fishTypeId),
+        description: values.description,
         quantity: parseInt(values.quantity),
         imageUrl: imageUrl,
       };
@@ -403,6 +404,14 @@ const StaffFishManagement = () => {
           name="fishTypeId"
           label="Fish Type ID"
           rules={[{ required: true, message: "Please enter fish type ID" }]}
+        >
+          <InputNumber style={{ width: "100%" }} min={0} />
+        </Form.Item>
+
+        <Form.Item
+          name="desciption"
+          label="Description"
+          rules={[{ required: true, message: "Please enter fish description" }]}
         >
           <InputNumber style={{ width: "100%" }} min={0} />
         </Form.Item>

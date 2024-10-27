@@ -3,8 +3,11 @@ import "./index.scss";
 import { Breadcrumb } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import ConsignmentCare from "../../../components/consignment-care";
+import ConsignmentSell from "../../../components/consignment-sell";
+
+
 function Consignment() {
-  const navigate = useNavigate();
   return (
     <div>
       <div className="breadcrumb-container">
@@ -21,12 +24,8 @@ function Consignment() {
         <div>
           <h1>Choose your consignment</h1>
           <ul>
-            <li onClick={() => navigate("/consignment/care")}>
-              Consignment for care
-            </li>
-            <li onClick={() => navigate("/consignment/sell")}>
-              Consignment for sell
-            </li>
+            <ConsignmentCare />
+            <ConsignmentSell />
           </ul>
         </div>
       </div>

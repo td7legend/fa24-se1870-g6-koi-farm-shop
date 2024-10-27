@@ -6,16 +6,33 @@ import { ShoppingCartOutlined, SwapOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBalanceScale } from "@fortawesome/free-solid-svg-icons";
 import CurrencyFormatter from "../currency";
+import config from "../../config/config";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../store/actions/cartAction";
 
 const ProductCard = ({ fish, onCompare }) => {
-  const handleAddToCart = (e) => {
+  const { cartItemsRedux } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const handleAddToCart = async (e) => {
     e.preventDefault();
-    notification.open({
-      message: "Fish added to cart",
-      description: `${fish.name} has been added to your cart`,
-      placement: "topRight",
-      duration: 2,
-    });
+    try {
+      const response = await axios.post(`${config.API_ROOT}cart`, {
+        fishId: fish.fishId,
+        quantity: 1,
+      });
+      if (response.data) {
+        notification.open({
+          message: "Fish added to cart",
+          description: `${fish.name} has been added to your cart`,
+          placement: "topRight",
+          duration: 2,
+        });
+        dispatch(addToCart(fish.fishId, 1));
+      }
+    } catch (error) {
+      console.error("Error adding fish to cart:", error);
+    }
   };
 
   const handleCompare = (e) => {
@@ -24,7 +41,6 @@ const ProductCard = ({ fish, onCompare }) => {
       onCompare(fish);
     }
   };
-
   return (
     <Link to={`/fish/${fish.id}`} className="product-card-wrapper">
       <div className="product-card">

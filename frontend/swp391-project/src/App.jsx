@@ -26,14 +26,14 @@ import OrderDetailsPage from "./pages/user-page/order-detail";
 import OrderHistoryPage from "./pages/user-page/order-history";
 import UserDashboard from "./pages/user-page/user-dashboard";
 import PaymentSuccess from "./pages/checkout/success";
-import BatchFishFilter from "./components/BatchFishFilter/BatchFishFilter";
-
+import BatchFishFilter from "./components/BatchFishFilter";
+import ConsignmentHistory from "./pages/user-page/consignment-history";
 import StaffOrderManagement from "./pages/staff-page/manage-order";
 import StaffFishManagement from "./pages/staff-page/manage-fish";
 import StaffFishTypeManagement from "./pages/staff-page/manage-fishtype";
-import ConsignmentView from "./pages/user-page/consignment-history";
 
 import "react-toastify/dist/ReactToastify.css";
+import ConsignmentManagement from "./pages/staff-page/manage-consignment";
 
 function App() {
   const router = createBrowserRouter([
@@ -56,7 +56,7 @@ function App() {
         { path: "/user-dashboard/:id", element: <UserDashboard /> },
         { path: "/order-history", element: <OrderHistoryPage /> },
         { path: "/order-details", element: <OrderDetailsPage /> },
-        { path: "/consignment-history", element: <ConsignmentView /> },
+        { path: "/consignment-history", element: <ConsignmentHistory /> },
         { path: "/contact", element: <Contact /> },
         { path: "/about-us", element: <AboutUs /> },
         { path: "/faqs-page", element: <FAQsPage /> },
@@ -86,6 +86,7 @@ function App() {
         { path: "order-management", element: <StaffOrderManagement /> },
         { path: "fish-management", element: <StaffFishManagement /> },
         { path: "fishtype-management", element: <StaffFishTypeManagement /> },
+        { path: "consignment-management", element: <ConsignmentManagement /> },
       ],
     },
   ]);

@@ -1,34 +1,56 @@
-$primary-color: #1890ff;
-$hover-color: #40a9ff;
-$background-light: #f9f9f9;
-$background-gray: #f0f2f5;
+$breadcrumb-bg: #f0f2f5;
+$form-bg: #fffaf0;
+$modal-border-radius: 8px;
 $text-color: #333;
-$border-color-light: #e0e0e0;
-$border-color-dashed: #d9d9d9;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$upload-bg: #f7f7f7;
+$upload-border: #d9d9d9;
+$hover-border-color: #bbab6f;
+$button-bg: #bbab6f;
+$button-disabled-bg: #d9d9d9;
+$button-disabled-text: rgba(0, 0, 0, 0.25);
+$fish-item-border: #e0e0e0;
+$fish-item-bg: #fffaf0;
 
-.consignment-sell-page {
-  .breadcrumb-container {
-    background: $background-gray;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
 
-    .breadcrumb {
-      font-size: 16px;
-      font-weight: bold;
+.breadcrumb-container {
+  background: $breadcrumb-bg;
+  padding: 10px 20px;
+  @include border-radius(5px);
+  margin-bottom: 20px;
+
+  .breadcrumb {
+    font-size: 16px;
+    font-weight: bold;
+
+    .breadcrumb-page {
+      font-weight: normal;
     }
   }
 
-  .consignment {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  .icon {
+    margin-right: 5px;
+  }
+}
 
-    &__wrapper {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+.consignment-sale {
+  background: $form-bg;
+  @include border-radius(8px);
+  padding: 20px;
+  // box-shadow: 0 2px 10px $shadow-color;
+  box-sizing: border-box;
+  .consignment__wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    padding: 50px;
+    border-radius: 30px;
   }
 
   h2 {
@@ -36,61 +58,74 @@ $border-color-dashed: #d9d9d9;
     color: $text-color;
     margin-bottom: 20px;
   }
-
-  .fish-item {
-    border: 1px solid $border-color-light;
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 20px;
-    background: $background-light;
-
-    h3 {
-      color: darken($text-color, 20%);
-      margin-bottom: 10px;
+  .add-fish-center {
+    margin: 0 500px;
+  }
+  .form {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    label {
+      font-weight: bold;
     }
-  }
-
-  .ant-form-item {
-    margin-bottom: 16px;
-  }
-
-  .ant-upload {
-    background: lighten($background-gray, 10%);
-    border: 1px dashed $border-color-dashed;
-    border-radius: 5px;
-    transition: border-color 0.3s;
-
-    &:hover {
-      border-color: $hover-color;
+    .form-right,
+    .form-left {
+      flex: 1;
+    }
+    .form-right {
+      height: fit-content;
+      padding: 15px;
+      box-shadow: 0 2px 10px $shadow-color;
+      border-radius: 15px;
     }
   }
 
   button.ant-btn {
-    background-color: $primary-color;
-    border: none;
-    color: #fff;
+    background-color: $button-bg;
+    border-color: #bbab6f;
+    color: #fffaf0;
     transition: background-color 0.3s;
-
     &:hover {
-      background-color: $hover-color;
+      background-color: #ddd !important;
+      color: #bbab6f !important;
+      border-color: #bbab6f !important;
     }
 
     &:disabled {
-      background-color: #d9d9d9;
-      color: rgba(0, 0, 0, 0.25);
+      background-color: $button-disabled-bg;
+      color: $button-disabled-text;
     }
   }
+}
 
-  // Modal
-  .ant-modal {
-    border-radius: 8px;
+.fish-item {
+  // border: 1px solid $fish-item-border;
+  @include border-radius(15px);
+  padding: 20px;
+  margin-bottom: 20px;
+  background: $fish-item-bg;
+  box-shadow: 0 2px 10px $shadow-color;
+  h3 {
+    color: darken($text-color, 20%);
+    margin-bottom: 10px;
+  }
+}
 
-    .ant-modal-header {
-      border-bottom: none;
-    }
+.ant-upload {
+  background: $upload-bg;
+  border: 1px dashed $upload-border;
+  @include border-radius(5px);
+  transition: border-color 0.3s;
 
-    .ant-modal-footer {
-      border-top: none;
-    }
+  &:hover {
+    border-color: $hover-border-color;
+  }
+}
+
+.ant-modal {
+  @include border-radius($modal-border-radius);
+  .ant-modal-header,
+  .ant-modal-footer {
+    border: none;
   }
 }

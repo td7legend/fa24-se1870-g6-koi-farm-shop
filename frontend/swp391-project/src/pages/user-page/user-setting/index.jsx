@@ -13,6 +13,7 @@ import {
   faShoppingCart,
   faCog,
   faSignOutAlt,
+  faHandHoldingUsd,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
@@ -306,6 +307,9 @@ const UserSetting = () => {
             </li>
             <li className="active">
               <FontAwesomeIcon icon={faCog} /> Setting
+            </li>
+            <li onClick={() => navigate("/consignment-history")}>
+              <FontAwesomeIcon icon={faHandHoldingUsd} /> Consignment
             </li>
             <li onClick={confirmLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout

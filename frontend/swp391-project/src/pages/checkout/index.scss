@@ -17,12 +17,22 @@
         color: #bbab6f;
       }
     }
+    .button-main {
+      color: #fffaf0;
+      border-color: #bbab6f;
+      background-color: #bbab6f;
+      &:hover {
+        background-color: #ddd;
+        border-color: #bbab6f;
+        color: #bbab6f;
+      }
+    }
 
     p {
-      word-wrap: break-word; // Đảm bảo nội dung sẽ ngắt dòng khi không đủ chỗ.
-      overflow-wrap: break-word; // Tương tự như wordWrap, nó xử lý các từ dài không có dấu cách và buộc chúng phải xuống dòng.
-      word-break: break-word; // hoặc break-all nếu vẫn chưa ngắt dòng
-      white-space: normal; //Giúp văn bản tự động xuống dòng.
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
     }
 
     p,
@@ -43,11 +53,13 @@
       background-color: #fffaf0;
       width: 1000px;
       h2 {
-        font-size: 24px;
+        font-size: 25px;
         margin-bottom: 20px;
+        text-transform: uppercase;
       }
       .ant-table-cell {
         background-color: #fffaf0;
+        text-transform: uppercase;
       }
       .ant-table {
         border-radius: 5px;
@@ -72,8 +84,8 @@
     }
 
     .form-right {
-      flex-wrap: wrap;
       width: 400px;
+
       h2 {
         font-size: 24px;
         margin-bottom: 20px;
@@ -83,6 +95,27 @@
         font-size: 16px;
         margin-bottom: 10px;
         color: #555;
+      }
+      .information-item {
+        margin-bottom: 5px;
+        line-height: 1.5;
+
+        .item-tittle {
+          display: inline-block;
+          width: 120px;
+          font-weight: bold;
+          vertical-align: top;
+          margin-right: 5px;
+        }
+
+        p {
+          display: inline-block;
+          margin: 0;
+          line-height: 1.3;
+          padding: 0;
+          word-wrap: break-word;
+          white-space: normal;
+        }
       }
     }
   }
