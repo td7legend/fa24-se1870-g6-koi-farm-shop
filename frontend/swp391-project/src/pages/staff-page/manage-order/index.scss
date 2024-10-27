@@ -1,9 +1,17 @@
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$border-color: #ddd;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$element-spacing: 25px;
+$large-border-radius: 20px;
+
 .staff-order-management {
-  margin-left: 250px;
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
-  background-color: #fffaf0;
+  background-color: $background-color;
 
   .manage-order-container {
     display: flex;
@@ -12,32 +20,32 @@
     padding: 30px;
   }
   .ant-card-bordered {
-    background-color: #fffaf0;
+    background-color: $background-color;
   }
   .ant-card-body {
     border-radius: 10px;
-    background-color: #fffaf0;
+    background-color: $background-color;
     height: fit-content;
     width: 1200px;
     border: 1px solid #000;
   }
   .order-management-table {
     .card {
-      background-color: #fffaf0;
+      background-color: $background-color;
       width: 1000px;
       height: fit-content;
       border-radius: 5px;
     }
 
     .ant-table {
-      background-color: #fffaf0;
+      background-color: $background-color;
     }
 
     .ant-card-bordered {
       border: none;
     }
     .ant-table-thead > tr > th {
-      background-color: #fffaf0;
+      background-color: $background-color;
       font-size: 16px;
       font-weight: 600;
       padding: 16px;
@@ -49,7 +57,7 @@
       }
       a {
         border-radius: 5px;
-        color: #bbab6f;
+        color: $text-color;
         border-color: #bbab6f;
         &:hover {
           color: #bbab6f;
@@ -58,7 +66,7 @@
       }
     }
     .ant-table-tbody > tr > td {
-      background-color: #fffaf0;
+      background-color: $background-color;
     }
   }
 }

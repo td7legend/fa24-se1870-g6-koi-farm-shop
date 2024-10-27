@@ -16,11 +16,9 @@ import { faHome, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import "./index.scss";
+import { useSelector } from "react-redux";
+import config from "../../../config/config";
 const { Title } = Typography;
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
 
 const StaffOrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -28,6 +26,7 @@ const StaffOrderManagement = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     fetchOrders();
@@ -36,15 +35,14 @@ const StaffOrderManagement = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
         return;
       }
 
-      const response = await axios.get(`${config.API_ROOT}/orders`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${config.API_ROOT}orders`, {
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
 
       const processedOrders = response.data.map((order) => ({
@@ -63,9 +61,8 @@ const StaffOrderManagement = () => {
 
   const fetchOrderDetails = async (orderId) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${config.API_ROOT}/orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${config.API_ROOT}orders/${orderId}`, {
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
       setSelectedOrder(response.data);
       setIsModalVisible(true);
@@ -77,14 +74,12 @@ const StaffOrderManagement = () => {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const token = localStorage.getItem("token");
-
       await axios.patch(
-        `${config.API_ROOT}/orders/${orderId}/status`,
+        `${config.API_ROOT}orders/${orderId}/status`,
         newStatus,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token ?? null}`,
             "Content-Type": "application/json",
           },
         }
@@ -300,23 +295,21 @@ const StaffOrderManagement = () => {
         </Breadcrumb>
       </div>
 
-      <div className="manage-order-container">
-        <Card className="card">
-          <Title level={3}>Order Management</Title>
-          <Table
-            className="order-management-table"
-            columns={columns}
-            dataSource={orders}
-            loading={loading}
-            pagination={{
-              total: orders.length,
-              pageSize: 10,
-              showSizeChanger: false,
-              showQuickJumper: false,
-            }}
-          />
-        </Card>
-      </div>
+      <Card className="card">
+        <Title level={3}>Order Management</Title>
+        <Table
+          className="order-management-table"
+          columns={columns}
+          dataSource={orders}
+          loading={loading}
+          pagination={{
+            total: orders.length,
+            pageSize: 10,
+            showSizeChanger: false,
+            showQuickJumper: false,
+          }}
+        />
+      </Card>
 
       <OrderDetailsModal />
       <ToastContainer />
