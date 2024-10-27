@@ -18,34 +18,29 @@ import { useDispatch, useSelector } from "react-redux";
 import config from "../../config/config";
 import { AES, enc } from "crypto-js";
 import { setCart } from "../../store/actions/cartAction";
+import { useTranslation } from "react-i18next";
 
 const Cart = () => {
   const [cart, setCartNoneRedux] = useState(null);
   const [fishes, setFishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
-  const decryptedToken = token
-    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
-    : null;
-  const decryptedRole = role
-    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
-    : 0;
   const dispatch = useDispatch();
   useEffect(() => {
     fetchCart();
     fetchFishes();
   }, []);
-
+  const { t } = useTranslation();
   const fetchCart = async () => {
     try {
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         return;
       }
 
       const response = await axios.get(`${config.API_ROOT}cart`, {
         headers: {
-          Authorization: `Bearer ${decryptedToken ?? null}`,
+          Authorization: `Bearer ${token ?? null}`,
         },
       });
 
@@ -54,7 +49,7 @@ const Cart = () => {
         dispatch(setCart(response.data[0].orderLines || []));
       } else {
         setCartNoneRedux(null);
-        message.info("Your cart is empty.");
+        message.info(t("yourCartIsEmpty"));
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -68,7 +63,6 @@ const Cart = () => {
       setFishes(response.data);
     } catch (error) {
       console.error("Error fetching fishes:", error);
-      toast.error("Failed to fetch fish data. Some prices may be unavailable.");
     } finally {
       setLoading(false);
     }
@@ -90,7 +84,7 @@ const Cart = () => {
   const updateCart = async (fishId, isAdd, isRemove) => {
     try {
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         return;
       }
 
@@ -99,18 +93,18 @@ const Cart = () => {
         { fishId, isAdd, isRemove },
         {
           headers: {
-            Authorization: `Bearer ${decryptedToken ?? null}`,
+            Authorization: `Bearer ${token ?? null}`,
           },
         }
       );
 
       fetchCart();
       toast.success(
-        isRemove ? "Fish removed from cart" : "Cart updated successfully"
+        isRemove ? t("fishRemovedFromCart") : t("cartUpdatedSuccessfully")
       );
     } catch (error) {
       console.error("Error updating cart:", error);
-      toast.error("Failed to update cart. Please try again.");
+      toast.error(t("failedToUpdateCartPleaseTryAgain"));
     }
   };
 
@@ -128,7 +122,7 @@ const Cart = () => {
 
   const columns = [
     {
-      title: "Fish",
+      title: t("fish"),
       dataIndex: "fishName",
       key: "fishName",
       render: (text, record) => (
@@ -139,7 +133,7 @@ const Cart = () => {
       ),
     },
     {
-      title: "Price",
+      title: t("price"),
       key: "price",
       render: (_, record) => (
         <span style={{ whiteSpace: "nowrap" }}>
@@ -148,7 +142,7 @@ const Cart = () => {
       ),
     },
     {
-      title: "Quantity",
+      title: t("quantity"),
       key: "quantity",
       render: (_, record) => (
         <div className="quantity-input">
@@ -171,7 +165,7 @@ const Cart = () => {
       ),
     },
     {
-      title: "Total",
+      title: t("total"),
       key: "total",
       render: (_, record) => (
         <span style={{ whiteSpace: "nowrap" }}>
@@ -182,14 +176,14 @@ const Cart = () => {
       ),
     },
     {
-      title: "Action",
+      title: t("action"),
       key: "action",
       render: (_, record) => (
         <Button
           className="button-main"
           onClick={() => handleRemoveItem(record.fishId)}
         >
-          Remove
+          {t("remove")}
         </Button>
       ),
     },
@@ -207,15 +201,17 @@ const Cart = () => {
             <Breadcrumb.Item href="/">
               <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
             </Breadcrumb.Item>
-            <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
-            <Breadcrumb.Item>Cart</Breadcrumb.Item>
+            <Breadcrumb.Item href="/products">
+              {t("productList")}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{t("cart")}</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
       <div className="cart-container">
         <Card
           className="card"
-          title="Cart"
+          title={t("cart")}
           style={{
             width: "100%",
             maxWidth: 800,
@@ -237,7 +233,8 @@ const Cart = () => {
                 <p
                   style={{ fontSize: 15, fontWeight: "bold", marginBottom: 10 }}
                 >
-                  Total Price: {calculateTotalPrice().toLocaleString()} VND
+                  {t("totalPrice")}: {calculateTotalPrice().toLocaleString()}{" "}
+                  VND
                 </p>
                 <Button
                   className="button"
@@ -245,7 +242,7 @@ const Cart = () => {
                   onClick={() => (window.location.href = "/products")}
                   style={{ marginRight: 10 }}
                 >
-                  Back to Shop
+                  {t("backToShop")}
                 </Button>
                 <Button
                   className="button-main"
@@ -253,12 +250,12 @@ const Cart = () => {
                   size="large"
                   style={{ width: 200 }}
                 >
-                  Checkout
+                  {t("checkout")}
                 </Button>
               </div>
             </>
           ) : (
-            <p>Your cart is empty.</p>
+            <p>{t("yourCartIsEmpty")}</p>
           )}
         </Card>
       </div>

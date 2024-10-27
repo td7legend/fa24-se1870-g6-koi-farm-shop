@@ -22,7 +22,7 @@ import EnhancedSearchBar from "../autosuggest";
 import { Drawer, List, Button, Typography, message } from "antd";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { setCart } from "../../store/actions/cartAction";
+import { clearCart, setCart } from "../../store/actions/cartAction";
 import LanguageSelector from "../language/LanguageSelector";
 import { useTranslation } from "react-i18next";
 const { Text } = Typography;
@@ -30,7 +30,6 @@ const { Text } = Typography;
 const Header = () => {
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [language, setLanguage] = useState("English");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn, token } = useSelector((state) => state.auth);
@@ -39,9 +38,6 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
-  const decryptedToken = token
-    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
-    : null;
   const { cartItemsRedux } = useSelector((state) => state.cart);
   // Move getFishPrice outside of useEffect
   const getFishPrice = (fishId) => {
@@ -55,7 +51,7 @@ const Header = () => {
         const response = await axios.get(
           `${config.API_ROOT}customers/my-info`,
           {
-            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+            headers: { Authorization: `Bearer ${token ?? null}` },
           }
         );
         if (response?.data) {
@@ -70,7 +66,7 @@ const Header = () => {
       try {
         const response = await axios.get(`${config.API_ROOT}cart`, {
           headers: {
-            Authorization: `Bearer ${decryptedToken ?? null}`,
+            Authorization: `Bearer ${token ?? null}`,
           },
         });
         if (response.data && response.data.length > 0) {
@@ -78,7 +74,11 @@ const Header = () => {
           dispatch(setCart(response.data[0].orderLines || []));
         }
       } catch (error) {
-        message.error("Failed to fetch cart data.");
+        if (error.status === 404) {
+          console.log(t("yourCartIsEmpty"));
+          dispatch(clearCart());
+        }
+        console.log("Error: ", error.message);
       }
     };
 
@@ -87,11 +87,11 @@ const Header = () => {
         const response = await axios.get(`${config.API_ROOT}fishs`);
         setFishes(response.data);
       } catch (error) {
-        message.error("Failed to fetch fish data.");
+        console.log("Error: ", error.message);
       }
     };
 
-    if (decryptedToken) {
+    if (token) {
       fetchUser();
       fetchCart();
       fetchFishes();
@@ -110,14 +110,14 @@ const Header = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [decryptedToken, dispatch]);
+  }, [token, dispatch]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
   const handleCartClick = () => {
-    toast.error("Login to see your cart");
+    toast.error(t("loginToSeeYourCart"));
     // navigate("/login");
   };
 

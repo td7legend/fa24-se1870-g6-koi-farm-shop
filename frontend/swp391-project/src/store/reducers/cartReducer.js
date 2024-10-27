@@ -3,6 +3,7 @@ import {
   REMOVE_FROM_CART,
   SET_CART,
   ADD_TO_CART,
+  CLEAR_CART,
 } from "../actions/cartAction";
 
 const initialState = {
@@ -44,6 +45,11 @@ export const cartReducer = (state = initialState, action) => {
         cartItemsRedux: state.cartItemsRedux.filter(
           (item) => item.fishId !== action.payload
         ),
+      };
+    case CLEAR_CART:
+      return {
+        ...state,
+        cartItemsRedux: [],
       };
     default:
       return state;

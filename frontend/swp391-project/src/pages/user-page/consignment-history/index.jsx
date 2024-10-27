@@ -27,8 +27,10 @@ import {
   faSignOutAlt,
   faHandHoldingUsd,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
+import config from "../../../config/config";
+import { useTranslation } from "react-i18next";
 const { Title } = Typography;
 
 const ConsignmentHistory = () => {
@@ -42,6 +44,8 @@ const ConsignmentHistory = () => {
   const dispatch = useDispatch();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const customerId = 1;
+  const { token } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
   useEffect(() => {
     fetchConsignments();
   }, []);
@@ -49,17 +53,16 @@ const ConsignmentHistory = () => {
   const fetchConsignments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthToken"));
         navigate("/login");
         return;
       }
 
       const response = await axios.get(
-        `https://localhost:44366/api/Consignment/customer/${customerId}`,
+        `${config.API_ROOT}Consignment/customer/${customerId}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
 
@@ -71,7 +74,7 @@ const ConsignmentHistory = () => {
       );
     } catch (error) {
       console.error("Error fetching consignments:", error);
-      message.error("Failed to fetch consignment history");
+      message.error(t("failedFetchConsignmentHistory"));
     } finally {
       setLoading(false);
     }
@@ -80,15 +83,14 @@ const ConsignmentHistory = () => {
   const fetchFishCareData = async (consignmentId) => {
     try {
       setLoadingFishCare(true);
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthToken"));
         navigate("/login");
         return;
       }
 
-      const response = await axios.get(`https://localhost:44366/api/FishCare`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${config.API_ROOT}FishCare`, {
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
 
       // Filter fish care data for the selected consignment
@@ -98,7 +100,7 @@ const ConsignmentHistory = () => {
       setFishCareData(filteredData);
     } catch (error) {
       console.error("Error fetching fish care data:", error);
-      message.error("Failed to fetch fish care details");
+      message.error(t("failedFetchFishCareDetails"));
     } finally {
       setLoadingFishCare(false);
     }
@@ -115,14 +117,14 @@ const ConsignmentHistory = () => {
 
   const getStatusTag = (status, type) => {
     const statusConfig = {
-      0: { color: "warning", text: "Pending" },
-      1: { color: "processing", text: "Under Review" },
-      2: { color: "success", text: "Confirmed" },
-      3: { color: "blue", text: "Listed For Sale" },
-      4: { color: "purple", text: "Sold" },
-      5: { color: "cyan", text: "Under Care" },
-      6: { color: "green", text: "Care Completed" },
-      7: { color: "red", text: "Cancelled" },
+      0: { color: "warning", text: t("pending") },
+      1: { color: "processing", text: t("underReview") },
+      2: { color: "success", text: t("confirmed") },
+      3: { color: "blue", text: t("listedForSale") },
+      4: { color: "purple", text: t("sold") },
+      5: { color: "cyan", text: t("underCare") },
+      6: { color: "green", text: t("careCompleted") },
+      7: { color: "red", text: t("cancelled") },
     };
 
     return (
@@ -148,7 +150,7 @@ const ConsignmentHistory = () => {
       width: 80,
     },
     {
-      title: "Type",
+      title: t("type"),
       dataIndex: "type",
       key: "type",
       width: 100,
@@ -160,25 +162,25 @@ const ConsignmentHistory = () => {
       ),
     },
     {
-      title: "Start Date",
+      title: t("startDate"),
       dataIndex: "startDate",
       key: "startDate",
       render: (date) => formatDate(date),
     },
     {
-      title: "End Date",
+      title: t("endDate"),
       dataIndex: "endDate",
       key: "endDate",
       render: (date) => formatDate(date),
     },
     {
-      title: "Status",
+      title: t("status"),
       dataIndex: "status",
       key: "status",
       render: (status, record) => getStatusTag(status, record.type),
     },
     {
-      title: "Price",
+      title: t("price"),
       key: "price",
       render: (_, record) => {
         const price = record.type === 0 ? record.careFee : record.agreedPrice;
@@ -186,7 +188,7 @@ const ConsignmentHistory = () => {
       },
     },
     {
-      title: "Actions",
+      title: t("actions"),
       key: "actions",
       width: 120,
       render: (_, record) => (
@@ -194,7 +196,7 @@ const ConsignmentHistory = () => {
           icon={<EyeOutlined />}
           onClick={() => handleViewDetails(record)}
         >
-          Details
+          {t("details")}
         </Button>
       ),
     },
@@ -216,7 +218,7 @@ const ConsignmentHistory = () => {
           <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
           <Breadcrumb.Item href="/user_info/user">Dashboard</Breadcrumb.Item>
           <Breadcrumb.Item href="/consigment-history">
-            Consignment History
+            {t("consignmentHistory")}
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
@@ -224,26 +226,26 @@ const ConsignmentHistory = () => {
         <aside className="settings-sider">
           <ul className="settings-menu">
             <li onClick={() => navigate("/user-dashboard/:id")}>
-              <FontAwesomeIcon icon={faHome} /> Dashboard
+              <FontAwesomeIcon icon={faHome} /> {t("dashboard")}
             </li>
             <li onClick={() => navigate("/order-history")}>
-              <FontAwesomeIcon icon={faClipboardList} /> Order History
+              <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
             <li onClick={() => navigate("/promotion")}>
-              <FontAwesomeIcon icon={faTag} /> Promotion
+              <FontAwesomeIcon icon={faTag} /> {t("promotion")}
             </li>
             <li onClick={() => navigate("/cart")}>
-              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+              <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}
             </li>
             <li onClick={() => navigate("/user-setting/:id")}>
-              <FontAwesomeIcon icon={faCog} /> Setting
+              <FontAwesomeIcon icon={faCog} /> {t("setting")}
             </li>
             <li className="active">
               <FontAwesomeIcon icon={faHandHoldingUsd} />
-              Consignment History
+              {t("consignmentHistory")}
             </li>
             <li onClick={confirmLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+              <FontAwesomeIcon icon={faSignOutAlt} /> {t("logout")}
             </li>
           </ul>
         </aside>
@@ -251,7 +253,7 @@ const ConsignmentHistory = () => {
         <div className="cosignment-history-container">
           <div style={{ padding: 24 }}>
             <Card>
-              <Title level={2}>My Consignment History</Title>
+              <Title level={2}>{t("consignmentHistory")}</Title>
               <Table
                 dataSource={consignments}
                 columns={columns}
@@ -263,7 +265,9 @@ const ConsignmentHistory = () => {
 
             {/* Detail Modal */}
             <Modal
-              title={`Consignment #${selectedConsignment?.consignmentId} Details`}
+              title={`${t("consignment")} #${
+                selectedConsignment?.consignmentId
+              } ${t("details")}`}
               open={detailModalVisible}
               onCancel={() => {
                 setDetailModalVisible(false);
@@ -275,28 +279,28 @@ const ConsignmentHistory = () => {
               {selectedConsignment && (
                 <>
                   <Descriptions bordered column={2}>
-                    <Descriptions.Item label="Type">
-                      {selectedConsignment.type === 0 ? "Care" : "Sale"}
+                    <Descriptions.Item label={t("type")}>
+                      {selectedConsignment.type === 0 ? t("care") : t("sale")}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Status">
+                    <Descriptions.Item label={t("status")}>
                       {getStatusTag(selectedConsignment.status)}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Start Date">
+                    <Descriptions.Item label={t("startDate")}>
                       {formatDate(selectedConsignment.startDate)}
                     </Descriptions.Item>
-                    <Descriptions.Item label="End Date">
+                    <Descriptions.Item label={t("endDate")}>
                       {formatDate(selectedConsignment.endDate)}
                     </Descriptions.Item>
                     {selectedConsignment.type === 0 ? (
-                      <Descriptions.Item label="Care Fee">
+                      <Descriptions.Item label={t("careFee")}>
                         ${selectedConsignment.careFee?.toFixed(2) || "0.00"}
                       </Descriptions.Item>
                     ) : (
-                      <Descriptions.Item label="Agreed Price">
+                      <Descriptions.Item label={t("agreedPrice")}>
                         ${selectedConsignment.agreedPrice?.toFixed(2) || "0.00"}
                       </Descriptions.Item>
                     )}
-                    <Descriptions.Item label="Note" span={2}>
+                    <Descriptions.Item label={t("note")} span={2}>
                       {selectedConsignment.note}
                     </Descriptions.Item>
                   </Descriptions>
@@ -305,7 +309,7 @@ const ConsignmentHistory = () => {
                     // Show Fish Care Data for Care type
                     <>
                       <Title level={4} style={{ marginTop: 24 }}>
-                        Fish Care Details
+                        {t("fishCareDetails")}
                       </Title>
                       <Table
                         dataSource={fishCareData}
@@ -314,12 +318,12 @@ const ConsignmentHistory = () => {
                         loading={loadingFishCare}
                         columns={[
                           {
-                            title: "Fish Type",
+                            title: t("fishType"),
                             dataIndex: "fishType",
                             key: "fishType",
                           },
                           {
-                            title: "Health Status",
+                            title: t("healthStatus"),
                             dataIndex: "healthStatus",
                             key: "healthStatus",
                             render: (status) => {
@@ -336,7 +340,7 @@ const ConsignmentHistory = () => {
                             },
                           },
                           {
-                            title: "Care Details",
+                            title: t("careDetails"),
                             dataIndex: "careDetails",
                             key: "careDetails",
                             ellipsis: true,
@@ -344,14 +348,14 @@ const ConsignmentHistory = () => {
                         ]}
                       />
                       {fishCareData.length === 0 && !loadingFishCare && (
-                        <Empty description="No fish care records found" />
+                        <Empty description={t("noFishCareRecordsFound")} />
                       )}
                     </>
                   ) : (
                     // Show Fish Details for Sale type
                     <>
                       <Title level={4} style={{ marginTop: 24 }}>
-                        Fish Details
+                        {t("fishDetails")}
                       </Title>
                       <Table
                         dataSource={selectedConsignment.consignmentLines}
@@ -359,31 +363,31 @@ const ConsignmentHistory = () => {
                         pagination={false}
                         columns={[
                           {
-                            title: "Fish Type",
+                            title: t("fishType"),
                             dataIndex: "fishType",
                             key: "fishType",
                           },
                           {
-                            title: "Quantity",
+                            title: t("quantity"),
                             dataIndex: "quantity",
                             key: "quantity",
                           },
                           {
-                            title: "Total Price",
+                            title: t("totalPrice"),
                             dataIndex: "totalPrice",
                             key: "totalPrice",
                             render: (price) =>
                               `$${price?.toFixed(2) || "0.00"}`,
                           },
                           {
-                            title: "Unit Price",
+                            title: t("unitPrice"),
                             dataIndex: "unitPrice",
                             key: "unitPrice",
                             render: (price) =>
                               `$${price?.toFixed(2) || "0.00"}`,
                           },
                           {
-                            title: "Images",
+                            title: t("images"),
                             dataIndex: "imageUrl",
                             key: "imageUrl",
                             render: (url) =>
@@ -395,7 +399,7 @@ const ConsignmentHistory = () => {
                                   onClick={() => window.open(url, "_blank")}
                                 />
                               ) : (
-                                "No image"
+                                t("noImage")
                               ),
                           },
                         ]}
@@ -407,19 +411,19 @@ const ConsignmentHistory = () => {
             </Modal>
 
             <Modal
-              title="Confirm Logout?"
+              title={t("confirmLogout")}
               visible={showConfirmation}
               onOk={handleLogout}
               onCancel={() => setShowConfirmation(false)}
-              okText="Log out"
-              cancelText="Cancel"
+              okText={t("logout")}
+              cancelText={t("cancel")}
               footer={[
                 <Button
                   key="back"
                   onClick={() => setShowConfirmation(false)}
                   style={{ backgroundColor: "#C0C0C0", color: "black" }}
                 >
-                  Cancel
+                  {t("cancel")}
                 </Button>,
                 <Button
                   key="submit"
@@ -427,11 +431,11 @@ const ConsignmentHistory = () => {
                   onClick={handleLogout}
                   style={{ backgroundColor: "#bbab6f", color: "white" }}
                 >
-                  Confirm
+                  {t("confirm")}
                 </Button>,
               ]}
             >
-              <p>Are you sure you want to logout?</p>
+              <p>{t("confirmLogoutMessage")}</p>
             </Modal>
           </div>
         </div>

@@ -2,8 +2,10 @@ import "./index.scss";
 import { Breadcrumb, Col, Row } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 function PolicyPage() {
+  const { t } = useTranslation();
   return (
     <div className="policy-page">
       <Row>
@@ -16,18 +18,18 @@ function PolicyPage() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>Policy</Breadcrumb.Item>
+              <Breadcrumb.Item>{t("policy")}</Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>
       </Row>
 
       <div className="policy-container">
-        <h1>Our Policies</h1>
+        <h1>{t("ourPolicies")}</h1>
 
         <div className="policy-content">
           <div className="section">
-            <h3>General Information</h3>
+            <h3>{t("generalInformation")}</h3>
             <p>
               We are committed to providing accurate and transparent information
               about our products. All products are carefully selected from the
@@ -40,7 +42,7 @@ function PolicyPage() {
           </div>
 
           <div className="section">
-            <h3>Returns and Exchanges</h3>
+            <h3>{t("returnsAndExchanges")}</h3>
             <p>
               We accept returns and exchanges within 30 days of purchase. To be
               eligible for a return, the product must be in its original
@@ -54,7 +56,7 @@ function PolicyPage() {
           </div>
 
           <div className="section">
-            <h3>Privacy Policy</h3>
+            <h3>{t("privacyPolicy")}</h3>
             <p>
               We are committed to protecting your personal information. All
               information you provide will be encrypted and used solely for
@@ -64,7 +66,7 @@ function PolicyPage() {
           </div>
 
           <div className="section">
-            <h3>Consignment Policy</h3>
+            <h3>{t("consignmentPolicy")}</h3>
             <p>
               At Golden Koi, we offer consignment services for customers looking
               to sell their Koi fish through our farm. Our team ensures that all
@@ -84,7 +86,7 @@ function PolicyPage() {
 
           {/* Contact Us section always centered */}
           <div className="section contact-us">
-            <h3>Contact Us</h3>
+            <h3>{t("contactUs")}</h3>
             <p>
               If you have any questions about our policies, please contact us:
             </p>

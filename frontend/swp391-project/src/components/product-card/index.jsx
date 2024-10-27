@@ -10,10 +10,12 @@ import config from "../../config/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../store/actions/cartAction";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({ fish, onCompare }) => {
   const { cartItemsRedux } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const handleAddToCart = async (e) => {
     e.preventDefault();
     try {
@@ -23,8 +25,8 @@ const ProductCard = ({ fish, onCompare }) => {
       });
       if (response.data) {
         notification.open({
-          message: "Fish added to cart",
-          description: `${fish.name} has been added to your cart`,
+          message: t("fishAddedToCart"),
+          description: `${fish.name} ${t("hasBeenAddedToYourCart")}`,
           placement: "topRight",
           duration: 2,
         });
@@ -52,12 +54,18 @@ const ProductCard = ({ fish, onCompare }) => {
             <h2>{fish.name}</h2>
             <p className="description">{fish.description}</p>
             <div className="tag">
-              <div className="tag-item-origin">Origin: {fish.origin}</div>
-              <div className="tag-item-size">Size: {fish.size} cm</div>
-              <div className="tag-item-age">Age: {fish.age} year</div>
+              <div className="tag-item-origin">
+                {t("origin")}: {fish.origin}
+              </div>
+              <div className="tag-item-size">
+                {t("size")}: {fish.size} cm
+              </div>
+              <div className="tag-item-age">
+                {t("age")}: {fish.age} {t("years")}
+              </div>
             </div>
             <p className="price">
-              Price: <CurrencyFormatter amount={fish.price} />
+              {t("price")}: <CurrencyFormatter amount={fish.price} />
             </p>
           </div>
           <div className="button-container">
@@ -66,7 +74,7 @@ const ProductCard = ({ fish, onCompare }) => {
               icon={<ShoppingCartOutlined />}
               onClick={handleAddToCart}
             >
-              Add to Cart
+              {t("addToCart")}
             </Button>
             {onCompare && (
               <Button
@@ -74,7 +82,7 @@ const ProductCard = ({ fish, onCompare }) => {
                 icon={<FontAwesomeIcon icon={faBalanceScale} />}
                 onClick={handleCompare}
               >
-                Compare
+                {t("compare")}
               </Button>
             )}
           </div>

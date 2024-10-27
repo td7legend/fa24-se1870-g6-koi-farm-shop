@@ -83,11 +83,14 @@ const Home = () => {
       >
         <div className="demo">
           <div className="content" style={{ textAlign: "right" }}>
-            <h2>Ogon Koi Fish</h2>
+            <h2>Ogon Koi </h2>
             <p>
-              The Ogon koi fish is known for its stunning golden color and shiny
-              appearance. This variety symbolizes prosperity and is a favorite
-              among koi enthusiasts.
+              {t(
+                "theOgonKoiFishIsKnownForItsStunningGoldenColorAndShinyAppearance"
+              )}
+              {t(
+                "thisVarietySymbolizesProsperityAndIsAFavoriteAmongKoiEnthusiasts"
+              )}
             </p>
           </div>
           <iframe
@@ -135,10 +138,11 @@ const Home = () => {
             className="youtube-iframe"
           ></iframe>
           <div className="content">
-            <h2>Ochiba Koi Fish</h2>
+            <h2>Ochiba Koi</h2>
             <p>
-              The Ochiba koi fish is appreciated for its unique blue-gray body
-              with orange patterns. It's a beautiful addition to any pond.
+              {t(
+                "theOchibaKoiFishIsAppreciatedForItsUniqueBlueGrayBodyWithOrangePatternsItSABeautifulAdditionToAnyPond"
+              )}
             </p>
           </div>
         </div>
@@ -162,11 +166,11 @@ const Home = () => {
       >
         <div className="demo">
           <div className="content" style={{ textAlign: "right" }}>
-            <h2>Kohaku Koi Fish</h2>
+            <h2>Kohaku Koi </h2>
             <p>
-              The Kohaku is one of the most popular koi varieties, known for its
-              striking red and white coloration. It represents luck and
-              prosperity.
+              {t(
+                "theKohakuIsOneOfTheMostPopularKoiVarietiesKnownForItsStrikingRedAndWhiteColorationItRepresentsLuckAndProsperity"
+              )}
             </p>
           </div>
           <iframe
@@ -207,17 +211,18 @@ const Home = () => {
             width="560"
             height="500"
             src={isVisible.kujaku ? videoSources.kujaku : ""}
-            title="Kujaku Koi Fish"
+            title="Kujaku Koi "
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="youtube-iframe"
           ></iframe>
           <div className="content">
-            <h2>Kujaku Koi Fish</h2>
+            <h2>Kujaku Koi </h2>
             <p>
-              The Kujaku is known for its stunning patterns and colors, making
-              it a striking presence in any koi pond.
+              {t(
+                "theKujakuIsKnownForItsStunningPatternsAndColorsMakingItAStrikingPresenceInAnyKoiPond"
+              )}
             </p>
           </div>
         </div>

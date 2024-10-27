@@ -19,6 +19,7 @@ import "./index.scss";
 import { AES, enc } from "crypto-js";
 import config from "../../config/config";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const Checkout = () => {
   const [form] = Form.useForm();
@@ -30,12 +31,7 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("VnPay");
   const [loading, setLoading] = useState(true);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
-  const decryptedToken = token
-    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
-    : null;
-  const decryptedRole = role
-    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
-    : 0;
+  const { t } = useTranslation();
   useEffect(() => {
     fetchData();
     console.log("user", user);
@@ -44,17 +40,17 @@ const Checkout = () => {
     try {
       setLoading(true);
       if (!isLoggedIn) {
-        message.error("No authentication token found. Please log in.");
+        message.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         navigate("/login"); // Redirect to login if token is not available
         return;
       }
 
       const [userResponse, cartResponse, fishesResponse] = await Promise.all([
         axios.get(`${config.API_ROOT}customers/my-info`, {
-          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }),
         axios.get(`${config.API_ROOT}cart`, {
-          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }),
         axios.get(`${config.API_ROOT}fishs`),
       ]);
@@ -64,7 +60,7 @@ const Checkout = () => {
       setFishes(fishesResponse.data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      message.error("Failed to fetch data. Please try again.");
+      console.log("Failed to fetch data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -90,7 +86,7 @@ const Checkout = () => {
 
   const columns = [
     {
-      title: "Fish",
+      title: `${t("fish")}`,
       dataIndex: "fishName",
       key: "fishName",
       render: (text, record) => (
@@ -107,18 +103,18 @@ const Checkout = () => {
       ),
     },
     {
-      title: "Quantity",
+      title: `${t("quantity")}`,
       dataIndex: "quantity",
       key: "quantity",
     },
     {
-      title: "Price",
+      title: `${t("price")}`,
       key: "price",
       render: (_, record) =>
         `${getFishPrice(record.fishId).toLocaleString()} VND`,
     },
     {
-      title: "Total",
+      title: `${t("total")}`,
       key: "total",
       render: (_, record) =>
         `${calculateItemTotal(record).toLocaleString()} VND`,
@@ -156,7 +152,7 @@ const Checkout = () => {
         `${config.API_ROOT}payments`,
         paymentData,
         {
-          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
 
@@ -167,7 +163,7 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error("Error processing VnPay payment:", error);
-      message.error("Failed to process payment. Please try again.");
+      message.error(t("failedToProcessPaymentPleaseTryAgain"));
     }
   };
 
@@ -189,7 +185,7 @@ const Checkout = () => {
             handlePaymentSuccess();
             popup.close();
           } else {
-            message.error("Payment was not. Please try again.");
+            message.error(t("paymentWasNotSuccessfulPleaseTryAgain"));
           }
         }
       } catch (error) {
@@ -205,12 +201,12 @@ const Checkout = () => {
 
   const handlePaymentSuccess = async () => {
     try {
-      message.success("Payment successful!");
+      message.success(t("paymentSuccessful"));
       await completeOrder();
     } catch (error) {
       console.error("Error completing order:", error);
       message.error(
-        "Payment was successful but failed to complete the order. Please contact support."
+        t("paymentWasSuccessfulButFailedToCompleteTheOrderPleaseContactSupport")
       );
     }
   };
@@ -244,7 +240,7 @@ const Checkout = () => {
         `${config.API_ROOT}orders/pay`,
         orderData,
         {
-          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
 
@@ -261,7 +257,7 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error("Error completing order:", error);
-      message.error("Failed to complete the order. Please contact support.");
+      message.error(t("failedToCompleteTheOrderPleaseContactSupport"));
     }
   };
 
@@ -269,7 +265,7 @@ const Checkout = () => {
     if (paymentMethod === "VnPay") {
       processVnPayPayment();
     } else {
-      message.warning("Please select a valid payment method.");
+      message.warning(t("pleaseSelectAValidPaymentMethod"));
     }
   };
 
@@ -278,7 +274,7 @@ const Checkout = () => {
   }
 
   if (!user || !cart || fishes.length === 0) {
-    return <div>No active cart found or user information unavailable.</div>;
+    return <div>{t("noActiveCartFoundOrUserInformationUnavailable")}</div>;
   }
 
   const fullName = user.fullName ? String(user.fullName) : "Unknown User";
@@ -292,16 +288,16 @@ const Checkout = () => {
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
             <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
-            <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
-            <Breadcrumb.Item>Checkout</Breadcrumb.Item>
+            <Breadcrumb.Item href="/products">{t("fishList")}</Breadcrumb.Item>
+            <Breadcrumb.Item href="/cart">{t("cart")}</Breadcrumb.Item>
+            <Breadcrumb.Item>{t("checkOut")}</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
       <div className="check-out-container">
         <Row className="check-out-form">
           <Col className="form-left">
-            <h2>Order Summary</h2>
+            <h2>{t("orderSummary")}</h2>
             <Table
               className="table"
               columns={columns}
@@ -312,7 +308,9 @@ const Checkout = () => {
                 <Table.Summary>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0} colSpan={3}>
-                      <strong style={{ float: "right" }}>Total Price:</strong>
+                      <strong style={{ float: "right" }}>
+                        {t("totalPrice")}:
+                      </strong>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1}>
                       <strong>
@@ -333,35 +331,35 @@ const Checkout = () => {
                   <img src="src/images/vn-pay.png" alt="" width={50} />
                 </Radio>
                 <Radio value="bankTransfer" disabled>
-                  Bank Transfer
+                  {t("bankTransfer")}
                 </Radio>
                 <Button className="button-main" onClick={handlePlaceOrder}>
-                  Place Order
+                  {t("placeOrder")}
                 </Button>
               </Radio.Group>
             </div>
           </Col>
           <Col className="form-right">
             <div style={{ padding: "20px", border: "1px solid #f0f0f0" }}>
-              <h2>Billing Information</h2>
+              <h2>{t("billingInformation")}</h2>
               <div className="information-item">
-                <p className="item-tittle ">Name:</p>
+                <p className="item-tittle ">{t("name")}:</p>
                 <p>{fullName}</p>
               </div>
               <div className="information-item">
-                <p className="item-tittle ">Phone Number:</p>
-                <p>{user.phoneNumber || "Not provided"}</p>
+                <p className="item-tittle ">{t("phoneNumber")}:</p>
+                <p>{user.phoneNumber || `${t("notProvided")}`}</p>
               </div>
               <div className="information-item">
-                <p className="item-tittle ">Email:</p>
-                <p>{user.email || "Not provided"}</p>
+                <p className="item-tittle ">{t("email")}:</p>
+                <p>{user.email || `${t("notProvided")}`}</p>
               </div>
               <div className="information-item">
-                <p className="item-tittle ">Address:</p>
+                <p className="item-tittle ">{t("address")}:</p>
                 <p> {user.address}</p>
               </div>
               <Button className="button" onClick={showModal}>
-                Edit Address
+                {t("editAddress")}
               </Button>
             </div>
           </Col>
@@ -369,7 +367,7 @@ const Checkout = () => {
       </div>
 
       <Modal
-        title="Edit Address"
+        title={t("editAddress")}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -377,8 +375,8 @@ const Checkout = () => {
         <Form form={form} name="address" onFinish={onFinish} layout="vertical">
           <Form.Item
             name="address"
-            label="Address"
-            rules={[{ required: true, message: "Please input your address!" }]}
+            label={t("address")}
+            rules={[{ required: true, message: t("pleaseInputYourAddress") }]}
           >
             <Input.TextArea autoSize={{ minRows: 4, maxRows: 6 }} />
           </Form.Item>

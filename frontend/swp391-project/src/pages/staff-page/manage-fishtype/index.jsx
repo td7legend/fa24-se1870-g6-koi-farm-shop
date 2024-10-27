@@ -18,11 +18,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import { PlusOutlined } from "@ant-design/icons";
 import "./index.scss";
+import { useSelector } from "react-redux";
+import config from "../../../config/config";
 const { Title } = Typography;
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
 
 const FishTypeManagement = () => {
   const [fishTypes, setFishTypes] = useState([]);
@@ -30,7 +28,7 @@ const FishTypeManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
+  const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     fetchFishTypes();
   }, []);
@@ -38,15 +36,15 @@ const FishTypeManagement = () => {
   const fetchFishTypes = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
         return;
       }
 
-      const response = await axios.get(`${config.API_ROOT}/fishtypes`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${config.API_ROOT}fishtypes`, {
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
 
       setFishTypes(
@@ -65,7 +63,6 @@ const FishTypeManagement = () => {
 
   const handleAdd = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         return;
@@ -76,9 +73,9 @@ const FishTypeManagement = () => {
         description: values.description,
       };
 
-      await axios.post(`${config.API_ROOT}/fishtypes`, fishTypeData, {
+      await axios.post(`${config.API_ROOT}fishtypes`, fishTypeData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token ?? null}`,
           "Content-Type": "application/json",
         },
       });

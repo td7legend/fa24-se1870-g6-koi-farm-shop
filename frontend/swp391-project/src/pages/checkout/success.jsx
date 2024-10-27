@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Result, Typography, Card, Descriptions, Button } from "antd";
 import { CheckCircleFilled, HomeFilled } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./success.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCart } from "../../store/actions/cartAction";
+import { useTranslation } from "react-i18next";
 const { Title, Paragraph } = Typography;
 
 const PaymentSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { orderId, totalAmount } = location.state || {};
-
+  const { cartItemsRedux } = useSelector((state) => state.cart);
+  const { t } = useTranslation();
+  useEffect(() => {
+    dispatch(clearCart());
+  }, []);
   return (
     <div className="success-container">
       <Card
@@ -22,10 +30,10 @@ const PaymentSuccess = () => {
       >
         <Result
           icon={<CheckCircleFilled style={{ color: "#52c41a" }} />}
-          title={<Title level={2}>Payment Successful!</Title>}
+          title={<Title level={2}>{t("paymentSuccessful")}</Title>}
           subTitle={
             <Paragraph>
-              Thank you for your purchase. Your order has been confirmed.
+              {t("thankYouForYourPurchaseYourOrderHasBeenConfirmed")}
             </Paragraph>
           }
           extra={[
@@ -36,7 +44,7 @@ const PaymentSuccess = () => {
               icon={<HomeFilled />}
               onClick={() => navigate("/")}
             >
-              Return to Home
+              {t("returnToHome")}
             </Button>,
             <Button
               className="button"
@@ -45,18 +53,18 @@ const PaymentSuccess = () => {
               icon={<HomeFilled />}
               onClick={() => navigate("/order-details", { state: { orderId } })}
             >
-              View order details
+              {t("viewOrderDetails")}
             </Button>,
           ]}
         >
-          <Descriptions title="Order Information" bordered column={1}>
-            <Descriptions.Item label="Order ID">
-              {orderId || "Not available"}
+          <Descriptions title={t("orderInformation")} bordered column={1}>
+            <Descriptions.Item label={t("orderId")}>
+              {orderId || t("notAvailable")}
             </Descriptions.Item>
-            <Descriptions.Item label="Total Amount">
+            <Descriptions.Item label={t("totalAmount")}>
               {totalAmount
                 ? `${totalAmount.toLocaleString()} VND`
-                : "Information not available"}
+                : t("informationNotAvailable")}
             </Descriptions.Item>
           </Descriptions>
         </Result>

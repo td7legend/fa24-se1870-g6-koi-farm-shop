@@ -3,6 +3,7 @@ import "./index.scss";
 import axios from "axios";
 import config from "../../../config/config";
 import ProductCard from "../Product";
+import { useTranslation } from "react-i18next";
 
 const RecentlyAdded = () => {
   const [newFishes, setNewFishes] = useState([]);
@@ -10,7 +11,7 @@ const RecentlyAdded = () => {
   const [fade, setFade] = useState(""); // For CSS animations
   const itemsPerPage = 4; // Number of products to show at once
   const itemsToShow = 8; // Number of products to fetch
-
+  const { t } = useTranslation();
   const fetchRecentlyAdded = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}fishs`);
@@ -45,7 +46,7 @@ const RecentlyAdded = () => {
 
   return (
     <section className="recently__added">
-      <h2>NEW FISH</h2>
+      <h2>{t("newFish")}</h2>
       <div className="product__grid__wrapper">
         <button className="nav__button left" onClick={prevProducts}>
           &lt;

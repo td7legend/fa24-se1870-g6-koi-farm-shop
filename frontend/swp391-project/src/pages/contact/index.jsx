@@ -16,8 +16,10 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 import { useForm } from "antd/es/form/Form";
+import { useTranslation } from "react-i18next";
 
 function Contact() {
+  const { t } = useTranslation();
   return (
     <div className="contact-page">
       <Row>
@@ -31,7 +33,7 @@ function Contact() {
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
               <Breadcrumb.Item className="breadcrumb-page">
-                Contact
+                {t("contact")}
               </Breadcrumb.Item>
             </Breadcrumb>
           </div>

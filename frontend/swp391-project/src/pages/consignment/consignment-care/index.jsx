@@ -10,10 +10,9 @@ import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import uploadFile from "../../../utils/upload/upload";
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import config from "../../../config/config";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 function ConsignmentCare() {
   const getBase64 = (file) =>
@@ -29,27 +28,28 @@ function ConsignmentCare() {
   const [formVariable] = useForm();
   const [showDateFields, setShowDateFields] = useState(false);
   const [customerId, setCustomerId] = useState(null);
-
+  const { token } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
   useEffect(() => {
     fetchCustomerInfo();
   }, []);
 
   const fetchCustomerInfo = async () => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         navigation("/login");
         return;
       }
 
-      const response = await axios.get(`${config.API_ROOT}/customers/my-info`, {
+      const response = await axios.get(`${config.API_ROOT}customers/my-info`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       setCustomerId(response.data.customerId);
     } catch (error) {
       console.error("Error fetching customer info:", error);
+      //mốt xóa dòng này
       toast.error("Failed to fetch customer information");
     }
   };
@@ -82,13 +82,13 @@ function ConsignmentCare() {
     try {
       if (startDate && endDate) {
         if (start > end) {
-          toast.error("Start Date can't be later than End Date");
+          toast.error(t("startDateCanNotBeLaterThanEndDate"));
           return false;
         }
         if (start >= currentDate || end >= currentDate) {
           return true;
         } else {
-          toast.error("Start Date or End Date can't be in the past");
+          toast.error(t("startDateOrEndDateCanNotBeInThePast"));
           return false;
         }
       }
@@ -100,14 +100,13 @@ function ConsignmentCare() {
 
   const handleSubmit = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         return;
       }
 
       if (!customerId) {
-        toast.error("Customer information not available");
+        toast.error(t("customerInformationNotAvailable"));
         return;
       }
 
@@ -129,7 +128,7 @@ function ConsignmentCare() {
               imageUrl = await uploadFile(fishItem.fish_image[0].originFileObj);
             } catch (error) {
               console.error("Error uploading fish image:", error);
-              toast.error("Failed to upload fish image");
+              toast.error(t("failedToUploadFishImage"));
               return null;
             }
           }
@@ -142,7 +141,7 @@ function ConsignmentCare() {
               );
             } catch (error) {
               console.error("Error uploading certificate:", error);
-              toast.error("Failed to upload certificate");
+              toast.error(t("failedToUploadCertificate"));
               return null;
             }
           }
@@ -158,7 +157,7 @@ function ConsignmentCare() {
 
       // Check if any image uploads failed
       if (consignmentLines.includes(null)) {
-        toast.error("Failed to upload some images");
+        toast.error(t("failedToUploadSomeImages"));
         return;
       }
 
@@ -173,19 +172,19 @@ function ConsignmentCare() {
       };
 
       // Send request to API
-      await axios.post(`${config.API_ROOT}/Consignment/care`, requestBody, {
+      await axios.post(`${config.API_ROOT}Consignment/care`, requestBody, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
-      toast.success("Consignment care created successfully");
+      toast.success(t("consignmentCareCreatedSuccessfully"));
       formVariable.resetFields();
       setShowDateFields(false);
     } catch (error) {
       console.error("Error submitting consignment care:", error);
-      toast.error("Failed to submit consignment care");
+      toast.error(t("failedToSubmitConsignmentCare"));
     }
   };
 
@@ -196,13 +195,17 @@ function ConsignmentCare() {
           <Breadcrumb.Item href="/">
             <FontAwesomeIcon icon={faHome} className="icon" />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href="/consignment">Consignment</Breadcrumb.Item>
-          <Breadcrumb.Item className="breadcrumb-page">Care</Breadcrumb.Item>
+          <Breadcrumb.Item href="/consignment">
+            {t("consignment")}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {t("care")}
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="consignment-care">
         <div className="consignment__wrapper">
-          <h2>Consignment Care Information</h2>
+          <h2>{t("consignmentCareInformation")}</h2>
           <div className="consignment__form">
             <Form
               className="form"
@@ -216,29 +219,31 @@ function ConsignmentCare() {
                     <>
                       {fields.map((field, index) => (
                         <div key={field.key} className="fish-item">
-                          <h3>Fish {index + 1}</h3>
+                          <h3>
+                            {t("fish")} {index + 1}
+                          </h3>
                           <Form.Item
                             {...field}
-                            label="Fish Type"
+                            label={t("fishType")}
                             name={[field.name, "fish_type"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Please enter fish type",
+                                message: t("pleaseEnterFishType"),
                               },
                             ]}
                           >
-                            <Input placeholder="Fish Type" />
+                            <Input placeholder={t("fishType")} />
                           </Form.Item>
 
                           <Form.Item
                             {...field}
-                            label="Quantity"
+                            label={t("quantity")}
                             name={[field.name, "quantity"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Please enter quantity",
+                                message: t("pleaseEnterQuantity"),
                               },
                               {
                                 validator: (_, value) =>
@@ -254,19 +259,19 @@ function ConsignmentCare() {
                           >
                             <Input
                               type="number"
-                              placeholder="Quantity"
+                              placeholder={t("quantity")}
                               min={1}
                             />
                           </Form.Item>
 
                           <Form.Item
                             {...field}
-                            label="Fish Image"
+                            label={t("fishImage")}
                             name={[field.name, "fish_image"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Please upload fish image",
+                                message: t("pleaseUploadFishImage"),
                               },
                             ]}
                             valuePropName="fileList"
@@ -291,7 +296,7 @@ function ConsignmentCare() {
 
                           <Form.Item
                             {...field}
-                            label="Fish Certificate"
+                            label={t("fishCertificate")}
                             name={[field.name, "fish_certificate"]}
                             valuePropName="fileList"
                             getValueFromEvent={(e) => {
@@ -324,7 +329,7 @@ function ConsignmentCare() {
                             }}
                             style={{ marginBottom: 20 }}
                           >
-                            Remove Fish
+                            {t("removeFish")}
                           </Button>
                         </div>
                       ))}
@@ -338,7 +343,7 @@ function ConsignmentCare() {
                             }}
                             icon={<PlusOutlined />}
                           >
-                            Add Fish
+                            {t("addFish")}
                           </Button>
                         </div>
                       ) : (
@@ -351,7 +356,7 @@ function ConsignmentCare() {
                           icon={<PlusOutlined />}
                           style={{ marginTop: 20 }}
                         >
-                          Add Fish
+                          {t("addFish")}
                         </Button>
                       )}
                     </>
@@ -362,28 +367,31 @@ function ConsignmentCare() {
                 {showDateFields && (
                   <>
                     <Form.Item
-                      label="Start Date"
+                      label={t("startDate")}
                       name="startDate"
                       rules={[
-                        { required: true, message: "Please select start date" },
+                        { required: true, message: t("pleaseSelectStartDate") },
                       ]}
                     >
                       <Input type="date" />
                     </Form.Item>
                     <Form.Item
-                      label="End Date"
+                      label={t("endDate")}
                       name="endDate"
                       rules={[
-                        { required: true, message: "Please select end date" },
+                        {
+                          required: true,
+                          message: t("pleaseSelectEndDate"),
+                        },
                       ]}
                     >
                       <Input type="date" />
                     </Form.Item>
-                    <Form.Item label="Note" name="note">
-                      <Input.TextArea placeholder="Enter note" />
+                    <Form.Item label={t("note")} name="note">
+                      <Input.TextArea placeholder={t("enterNote")} />
                     </Form.Item>
                     <Button type="primary" htmlType="submit">
-                      Submit
+                      {t("submit")}
                     </Button>
                   </>
                 )}

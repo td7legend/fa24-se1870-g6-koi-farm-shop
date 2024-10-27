@@ -18,46 +18,45 @@ import { toast } from "react-toastify";
 const { Title, Text } = Typography;
 const { Step } = Steps;
 import "./index.scss";
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import { useSelector } from "react-redux";
+import config from "../../../config/config";
+import { useTranslation } from "react-i18next";
 
 const OrderDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { token } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         setLoading(true);
         const orderId = location.state?.orderId;
         if (!orderId) {
-          toast.error("Order ID not provided");
+          toast.error(t("orderIdNotProvided"));
           navigate("/order-history");
           return;
         }
 
-        const token = localStorage.getItem("token");
         if (!token) {
-          toast.error("No authentication token found. Please log in.");
+          toast.error(t("noAuthToken"));
           navigate("/login");
           return;
         }
 
         const response = await axios.get(
-          `${config.API_ROOT}/orders/${orderId}`,
+          `${config.API_ROOT}orders/${orderId}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token ?? null}` },
           }
         );
 
         setOrder(response.data);
       } catch (error) {
         console.error("Error fetching order details:", error);
-        toast.error("Failed to fetch order details");
+        toast.error(t("failedFetchOrderDetails"));
         navigate("/order-history");
       } finally {
         setLoading(false);
@@ -77,7 +76,7 @@ const OrderDetailsPage = () => {
 
   const columns = [
     {
-      title: "FISH",
+      title: t("fish"),
       dataIndex: "fishName",
       key: "fish",
       render: (fishName, record) => (
@@ -94,15 +93,15 @@ const OrderDetailsPage = () => {
       ),
     },
     {
-      title: "PRICE",
+      title: t("price"),
       dataIndex: "unitPrice",
       key: "price",
       render: (price) =>
         price.toLocaleString("vi-VN", { style: "currency", currency: "VND" }),
     },
-    { title: "QUANTITY", dataIndex: "quantity", key: "quantity" },
+    { title: t("quantity"), dataIndex: "quantity", key: "quantity" },
     {
-      title: "SUBTOTAL",
+      title: t("subtotal"),
       dataIndex: "totalPrice",
       key: "subtotal",
       render: (price) =>
@@ -116,8 +115,10 @@ const OrderDetailsPage = () => {
         <Breadcrumb className="breadcrumb">
           <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
           <Breadcrumb.Item href="/user_info/user">Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item href="/order-history">Order History</Breadcrumb.Item>
-          <Breadcrumb.Item>Order Detail</Breadcrumb.Item>
+          <Breadcrumb.Item href="/order-history">
+            {t("orderHistory")}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{t("orderDetail")}</Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="layout-container">
@@ -129,11 +130,11 @@ const OrderDetailsPage = () => {
               onClick={() => navigate("/order-history")}
               style={{ marginBottom: 16, color: "#D4B57E" }}
             >
-              Back to List
+              {t("backToList")}
             </Button>
             <Title level={3}>
-              Order Details • {formatDate(order.orderDate)} •{" "}
-              {order.orderLines.length} Fish
+              {t("orderDetail")} • {formatDate(order.orderDate)} •{" "}
+              {order.orderLines.length} {t("fish")}
             </Title>
 
             <Row gutter={24}>
@@ -141,7 +142,7 @@ const OrderDetailsPage = () => {
                 <Card className="card" title="ORDER SUMMARY" bordered={false}>
                   <Row>
                     <Col span={12}>
-                      <Text strong>ORDER ID:</Text>
+                      <Text strong>{t("orderId")}:</Text>
                     </Col>
                     <Col span={12}>
                       <Text>#{order.orderId}</Text>
@@ -149,7 +150,7 @@ const OrderDetailsPage = () => {
                   </Row>
                   <Row>
                     <Col span={12}>
-                      <Text strong>STATUS:</Text>
+                      <Text strong>{t("status")}:</Text>
                     </Col>
                     <Col span={12}>
                       <Text>
@@ -161,7 +162,7 @@ const OrderDetailsPage = () => {
                   </Row>
                   <Row>
                     <Col span={12}>
-                      <Text strong>TOTAL AMOUNT:</Text>
+                      <Text strong>{t("totalAmount")}:</Text>
                     </Col>
                     <Col span={12}>
                       <Text>
@@ -174,7 +175,7 @@ const OrderDetailsPage = () => {
                   </Row>
                   <Row>
                     <Col span={12}>
-                      <Text strong>TOTAL TAX:</Text>
+                      <Text strong>{t("totalTax")}:</Text>
                     </Col>
                     <Col span={12}>
                       <Text>
@@ -187,7 +188,7 @@ const OrderDetailsPage = () => {
                   </Row>
                   <Row>
                     <Col span={12}>
-                      <Text strong>TOTAL DISCOUNT:</Text>
+                      <Text strong>{t("totalDiscount")}:</Text>
                     </Col>
                     <Col span={12}>
                       <Text>
@@ -203,9 +204,9 @@ const OrderDetailsPage = () => {
             </Row>
 
             <Steps current={order.status - 1} style={{ margin: "24px 0" }}>
-              <Step className="step" title="Processing" />
-              <Step className="step" title="Shipped" />
-              <Step className="step" title="Delivered" />
+              <Step className="step" title={t("processing")} />
+              <Step className="step" title={t("shipped")} />
+              <Step className="step" title={t("delivered")} />
             </Steps>
 
             <Table

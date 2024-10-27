@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
 import { AES, enc } from "crypto-js";
 import config from "../../../config/config";
+import { useTranslation } from "react-i18next";
 const DEFAULT_AVATAR =
   "https://ih1.redbubble.net/image.3771768892.4974/flat,750x,075,f-pad,750x1000,f8f8f8.jpg";
 
@@ -45,12 +46,7 @@ const UserSetting = () => {
   const [isPasswordFormChanged, setIsPasswordFormChanged] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
-  const decryptedToken = token
-    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
-    : null;
-  const decryptedRole = role
-    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
-    : 0;
+  const { t } = useTranslation();
   useEffect(() => {
     console.log("token ", token);
     const fetchData = async () => {
@@ -58,7 +54,7 @@ const UserSetting = () => {
         setLoading(true);
 
         if (!token) {
-          toast.error("No authentication token found. Please log in.");
+          toast.error(t("noAuthenticationTokenFound"));
           navigate("/login");
           return;
         }
@@ -66,7 +62,7 @@ const UserSetting = () => {
         const response = await axios.get(
           `${config.API_ROOT}customers/my-info`,
           {
-            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+            headers: { Authorization: `Bearer ${token ?? null}` },
           }
         );
         const userInfo = response.data;
@@ -85,19 +81,17 @@ const UserSetting = () => {
       } catch (error) {
         console.error("Error fetching user data:", error);
         if (error.response && error.response.status === 401) {
-          toast.error("Authentication failed. Please log in again.");
+          toast.error(t("authFailed"));
           navigate("/login");
         } else {
-          toast.error(
-            "An error occurred while fetching data. Please try again later."
-          );
+          toast.error(t("errorFetchingData"));
         }
       } finally {
         setLoading(false);
       }
     };
-    decryptedToken && fetchData();
-  }, [decryptedToken, dispatch, navigate]);
+    token && fetchData();
+  }, [token, dispatch, navigate]);
 
   useEffect(() => {
     const hasChanged =
@@ -143,15 +137,15 @@ const UserSetting = () => {
 
   const validateForm = () => {
     if (!userForm.fullName.trim()) {
-      toast.error("Name is required");
+      toast.error(t("nameRequired"));
       return false;
     }
     if (userForm.phoneNumber.length !== 10) {
-      toast.error("Phone number must be 10 digits");
+      toast.error(t("phoneNumberMustBe10Digits"));
       return false;
     }
     if (!userForm.address.trim()) {
-      toast.error("Address is required");
+      toast.error(t("addressRequired"));
       return false;
     }
     return true;
@@ -163,7 +157,7 @@ const UserSetting = () => {
 
     try {
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFound"));
         navigate("/login");
         return;
       }
@@ -175,10 +169,10 @@ const UserSetting = () => {
       };
 
       await axios.put(`${config.API_ROOT}customers/my-info`, updatedUser, {
-        headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
 
-      toast.success("User information updated successfully!");
+      toast.success(t("userInfoUpdatedSuccessfully"));
       setInitialUserForm(userForm);
       setIsUserFormChanged(false);
     } catch (error) {
@@ -189,7 +183,7 @@ const UserSetting = () => {
       ) {
         handleValidationErrors(error.response.data.errors);
       } else {
-        toast.error(`Failed to update user information: ${error.message}`);
+        toast.error(`${t("failedToUpdateUserInfo")}: ${error.message}`);
       }
     }
   };
@@ -198,13 +192,13 @@ const UserSetting = () => {
     e.preventDefault();
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      toast.error("New password and confirm password do not match");
+      toast.error(t("passwordDoNotMatch"));
       return;
     }
 
     try {
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFound"));
         navigate("/login");
         return;
       }
@@ -216,12 +210,12 @@ const UserSetting = () => {
           newPassword: passwordForm.newPassword,
         },
         {
-          headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
 
       if (response.status === 200) {
-        toast.success("Password changed successfully!");
+        toast.success(t("passwordChangedSuccessfully"));
         setPasswordForm({
           currentPassword: "",
           newPassword: "",
@@ -233,26 +227,24 @@ const UserSetting = () => {
       if (error.response) {
         switch (error.response.status) {
           case 401:
-            toast.error("Old password is incorrect. Please try again.");
+            toast.error(t("oldPasswordIncorrect"));
             break;
           case 400:
             if (error.response.data.errors) {
               handleValidationErrors(error.response.data.errors);
             } else {
-              toast.error(
-                "Invalid input. Please check your entries and try again."
-              );
+              toast.error(t("invalidInput"));
             }
             break;
           default:
             toast.error(
-              `Failed to change password: ${
+              `${t("failedToChangePassword")}: ${
                 error.response.data.message || "Unknown error occurred"
               }`
             );
         }
       } else {
-        toast.error(`An error occurred: ${error.message}`);
+        toast.error(`${t("errorOccurred")}: ${error.message}`);
       }
     }
   };
@@ -268,7 +260,7 @@ const UserSetting = () => {
   };
 
   if (loading) {
-    return <div className="loading-spinner">Loading...</div>;
+    return <div className="loading-spinner">{t("loading")}...</div>;
   }
 
   return (
@@ -285,8 +277,10 @@ const UserSetting = () => {
               }}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Account</Breadcrumb.Item>
-          <Breadcrumb.Item className="breadcrumb-page">Setting</Breadcrumb.Item>
+          <Breadcrumb.Item>{t("account")}</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {t("setting")}
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
 
@@ -294,36 +288,36 @@ const UserSetting = () => {
         <aside className="settings-sider">
           <ul className="settings-menu">
             <li onClick={() => navigate("/user-dashboard/:id")}>
-              <FontAwesomeIcon icon={faHome} /> Dashboard
+              <FontAwesomeIcon icon={faHome} /> {t("dashboard")}
             </li>
             <li onClick={() => navigate("/order-history")}>
-              <FontAwesomeIcon icon={faClipboardList} /> Order History
+              <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
             <li onClick={() => navigate("/promotion")}>
-              <FontAwesomeIcon icon={faTag} /> Promotion
+              <FontAwesomeIcon icon={faTag} /> {t("promotion")}
             </li>
             <li onClick={() => navigate("/cart")}>
-              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+              <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}
             </li>
             <li className="active">
-              <FontAwesomeIcon icon={faCog} /> Setting
+              <FontAwesomeIcon icon={faCog} /> {t("setting")}
             </li>
             <li onClick={() => navigate("/consignment-history")}>
-              <FontAwesomeIcon icon={faHandHoldingUsd} /> Consignment
+              <FontAwesomeIcon icon={faHandHoldingUsd} /> {t("consignment")}
             </li>
             <li onClick={confirmLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+              <FontAwesomeIcon icon={faSignOutAlt} /> {t("logout")}
             </li>
           </ul>
         </aside>
 
         <main className="settings-content">
           <div className="settings-card">
-            <h4>User Information</h4>
+            <h4>{t("userInformation")}</h4>
             <form onSubmit={saveUserInfo}>
               <div className="form-row">
                 <div className="form-column">
-                  <label>Full Name</label>
+                  <label>{t("fullName")}</label>
                   <input
                     type="text"
                     name="fullName"
@@ -332,17 +326,17 @@ const UserSetting = () => {
                     required
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Phone Number</label>
+                  <label>{t("phoneNumber")}</label>
                   <input
                     type="tel"
                     name="phoneNumber"
                     value={userForm.phoneNumber}
                     onChange={handleInputChange}
                     required
-                    placeholder="Enter 10 digit number"
+                    placeholder={t("enter10DigitNumber")}
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Address</label>
+                  <label>{t("address")}</label>
                   <input
                     type="text"
                     name="address"
@@ -359,7 +353,7 @@ const UserSetting = () => {
                     readOnly
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Points Available</label>
+                  <label>{t("pointsAvailable")}</label>
                   <input
                     type="number"
                     name="pointAvailable"
@@ -367,7 +361,7 @@ const UserSetting = () => {
                     readOnly
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Points Used</label>
+                  <label>{t("pointsUsed")}</label>
                   <input
                     type="number"
                     name="usedPoint"
@@ -375,7 +369,7 @@ const UserSetting = () => {
                     readOnly
                     style={{ backgroundColor: "#fffaf0" }}
                   />
-                  <label>Accommodate Point</label>
+                  <label>{t("accommodatePoint")}</label>
                   <input
                     type="number"
                     name="accommodatePoint"
@@ -389,17 +383,17 @@ const UserSetting = () => {
                 </div>
               </div>
               <button type="submit" disabled={!isUserFormChanged}>
-                Save Changes
+                {t("saveChanges")}
               </button>
             </form>
           </div>
 
           <div className="settings-card">
-            <h4>Password Settings</h4>
+            <h4>{t("passwordSettings")}</h4>
             <form onSubmit={savePasswordInfo}>
               <div className="form-row">
                 <div className="form-column">
-                  <label>Current Password</label>
+                  <label>{t("currentPassword")}</label>
                   <input
                     type="password"
                     name="currentPassword"
@@ -412,7 +406,7 @@ const UserSetting = () => {
               </div>
               <div className="form-row">
                 <div className="form-column">
-                  <label>New Password</label>
+                  <label>{t("newPassword")}</label>
                   <input
                     type="password"
                     name="newPassword"
@@ -423,7 +417,7 @@ const UserSetting = () => {
                   />
                 </div>
                 <div className="form-column">
-                  <label>Confirm Password</label>
+                  <label>{t("confirmPassword")}</label>
                   <input
                     type="password"
                     name="confirmPassword"
@@ -435,7 +429,7 @@ const UserSetting = () => {
                 </div>
               </div>
               <button type="submit" disabled={!isPasswordFormChanged}>
-                Change Password
+                {t("changePassword")}
               </button>
             </form>
           </div>
@@ -456,7 +450,7 @@ const UserSetting = () => {
             onClick={() => setShowConfirmation(false)}
             style={{ backgroundColor: "#C0C0C0", color: "black" }}
           >
-            Cancel
+            {t("cancel")}
           </Button>,
           <Button
             key="submit"
@@ -464,11 +458,11 @@ const UserSetting = () => {
             onClick={handleLogout}
             style={{ backgroundColor: "#bbab6f", color: "white" }}
           >
-            Confirm
+            {t("confirm")}
           </Button>,
         ]}
       >
-        <p>Are you sure you want to logout?</p>
+        <p>{t("confirmLogoutMessage")}</p>
       </Modal>
     </div>
   );

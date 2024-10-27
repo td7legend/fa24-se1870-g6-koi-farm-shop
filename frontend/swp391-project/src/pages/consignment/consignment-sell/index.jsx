@@ -19,10 +19,9 @@ import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import uploadFile from "../../../utils/upload/upload";
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import config from "../../../config/config";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 function ConsignmentSell() {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -30,27 +29,28 @@ function ConsignmentSell() {
   const [formVariable] = useForm();
   const [showDateFields, setShowDateFields] = useState(false);
   const [customerId, setCustomerId] = useState(null);
-
+  const { token } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
   useEffect(() => {
     fetchCustomerInfo();
   }, []);
 
   const fetchCustomerInfo = async () => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         return;
       }
 
-      const response = await axios.get(`${config.API_ROOT}/customers/my-info`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${config.API_ROOT}customers/my-info`, {
+        headers: { Authorization: `Bearer ${token ?? null}` },
       });
 
       setCustomerId(response.data.customerId);
     } catch (error) {
       console.error("Error fetching customer info:", error);
-      toast.error("Failed to fetch customer information");
+      // xài tạm mốt xóa
+      toast.error(t("failedToFetchCustomerInformation"));
     }
   };
 
@@ -79,7 +79,7 @@ function ConsignmentSell() {
       type="button"
     >
       <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
+      <div style={{ marginTop: 8 }}>{t("upload")}</div>
     </button>
   );
 
@@ -90,13 +90,13 @@ function ConsignmentSell() {
     try {
       if (startDate && endDate) {
         if (start > end) {
-          toast.error("Start Date can't be later than End Date");
+          toast.error(t("startDateCanNotBeLaterThanEndDate"));
           return false;
         }
         if (start >= currentDate || end >= currentDate) {
           return true;
         } else {
-          toast.error("Start Date or End Date can't be in the past");
+          toast.error(t("startDateOrEndDateCanNotBeInThePast"));
           return false;
         }
       }
@@ -109,14 +109,13 @@ function ConsignmentSell() {
 
   const handleSubmit = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         return;
       }
 
       if (!customerId) {
-        toast.error("Customer information not available");
+        toast.error(t("customerInformationNotAvailable"));
         return;
       }
 
@@ -138,7 +137,7 @@ function ConsignmentSell() {
               imageUrl = await uploadFile(fishItem.fish_image[0].originFileObj);
             } catch (error) {
               console.error("Error uploading fish image:", error);
-              toast.error("Failed to upload fish image");
+              toast.error(t("failedToUploadFishImage"));
               return null;
             }
           }
@@ -151,7 +150,7 @@ function ConsignmentSell() {
               );
             } catch (error) {
               console.error("Error uploading certificate:", error);
-              toast.error("Failed to upload certificate");
+              toast.error(t("failedToUploadCertificate"));
               return null;
             }
           }
@@ -167,7 +166,7 @@ function ConsignmentSell() {
 
       // Check if any image uploads failed
       if (consignmentLines.includes(null)) {
-        toast.error("Failed to upload some images");
+        toast.error(t("failedToUploadSomeImages"));
         return;
       }
 
@@ -182,19 +181,19 @@ function ConsignmentSell() {
       };
 
       // Send request to API
-      await axios.post(`${config.API_ROOT}/Consignment/sale`, requestBody, {
+      await axios.post(`${config.API_ROOT}Consignment/sale`, requestBody, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token ?? null}`,
           "Content-Type": "application/json",
         },
       });
 
-      toast.success("Consignment sale created successfully");
+      toast.success(t("consignmentSaleCreatedSuccessfully"));
       formVariable.resetFields();
       setShowDateFields(false);
     } catch (error) {
       console.error("Error submitting consignment sale:", error);
-      toast.error("Failed to submit consignment sale");
+      toast.error(t("failedToSubmitConsignmentSale"));
     }
   };
 
@@ -205,13 +204,17 @@ function ConsignmentSell() {
           <Breadcrumb.Item href="/">
             <FontAwesomeIcon icon={faHome} className="icon" />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href="/consignment">Consignment</Breadcrumb.Item>
-          <Breadcrumb.Item className="breadcrumb-page">Sell</Breadcrumb.Item>
+          <Breadcrumb.Item href="/consignment">
+            {t("consignment")}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {t("sell")}
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="consignment-sale">
         <div className="consignment__wrapper">
-          <h2>Consignment Sale Information</h2>
+          <h2>{t("consignmentSaleInformation")}</h2>
           <div className="consignment__form">
             <Form
               className="form"
@@ -225,29 +228,31 @@ function ConsignmentSell() {
                     <>
                       {fields.map((field, index) => (
                         <div key={field.key} className="fish-item">
-                          <h3>Fish {index + 1}</h3>
+                          <h3>
+                            {t("fish")} {index + 1}
+                          </h3>
                           <Form.Item
                             {...field}
-                            label="Fish Type"
+                            label={t("fishType")}
                             name={[field.name, "fish_type"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Please enter fish type",
+                                message: t("pleaseEnterFishType"),
                               },
                             ]}
                           >
-                            <Input placeholder="Fish Type" />
+                            <Input placeholder={t("fishType")} />
                           </Form.Item>
 
                           <Form.Item
                             {...field}
-                            label="Quantity"
+                            label={t("quantity")}
                             name={[field.name, "quantity"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Please enter quantity",
+                                message: t("pleaseEnterQuantity"),
                               },
                               {
                                 validator: (_, value) =>
@@ -255,7 +260,7 @@ function ConsignmentSell() {
                                     ? Promise.resolve()
                                     : Promise.reject(
                                         new Error(
-                                          "Quantity must be greater than 0!"
+                                          t("quantityMustBeGreaterThan0")
                                         )
                                       ),
                               },
@@ -266,12 +271,12 @@ function ConsignmentSell() {
 
                           <Form.Item
                             {...field}
-                            label="Fish Image"
+                            label={t("fishImage")}
                             name={[field.name, "fish_image"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Please upload fish image",
+                                message: t("pleaseUploadFishImage"),
                               },
                             ]}
                             valuePropName="fileList"
@@ -296,7 +301,7 @@ function ConsignmentSell() {
 
                           <Form.Item
                             {...field}
-                            label="Fish Certificate"
+                            label={t("fishCertificate")}
                             name={[field.name, "fish_certificate"]}
                             valuePropName="fileList"
                             getValueFromEvent={(e) => {
@@ -330,7 +335,7 @@ function ConsignmentSell() {
                             type="dashed"
                             style={{ marginBottom: 20 }}
                           >
-                            Remove Fish
+                            {t("removeFish")}
                           </Button>
                         </div>
                       ))}
@@ -344,7 +349,7 @@ function ConsignmentSell() {
                             }}
                             icon={<PlusOutlined />}
                           >
-                            Add Fish
+                            {t("addFish")}
                           </Button>
                         </div>
                       ) : (
@@ -357,7 +362,7 @@ function ConsignmentSell() {
                           icon={<PlusOutlined />}
                           style={{ marginTop: 20 }}
                         >
-                          Add Fish
+                          {t("addFish")}
                         </Button>
                       )}
                     </>
@@ -368,7 +373,7 @@ function ConsignmentSell() {
                 {showDateFields && (
                   <>
                     <Form.Item
-                      label="Start Date"
+                      label={t("startDate")}
                       name="startDate"
                       rules={[
                         { required: true, message: "Please select start date" },
@@ -377,7 +382,7 @@ function ConsignmentSell() {
                       <Input type="date" />
                     </Form.Item>
                     <Form.Item
-                      label="End Date"
+                      label={t("endDate")}
                       name="endDate"
                       rules={[
                         { required: true, message: "Please select end date" },
@@ -386,12 +391,12 @@ function ConsignmentSell() {
                       <Input type="date" />
                     </Form.Item>
                     <Form.Item
-                      label="Agreed Price"
+                      label={t("agreedPrice")}
                       name="agreedPrice"
                       rules={[
                         {
                           required: true,
-                          message: "Please enter agreed price",
+                          message: t("pleaseEnterAgreedPrice"),
                         },
                       ]}
                     >
@@ -404,11 +409,11 @@ function ConsignmentSell() {
                         parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                       />
                     </Form.Item>
-                    <Form.Item label="Note" name="note">
-                      <Input.TextArea placeholder="Enter note" />
+                    <Form.Item label={t("note")} name="note">
+                      <Input.TextArea placeholder={t("enterNote")} />
                     </Form.Item>
                     <Button type="primary" htmlType="submit">
-                      Submit
+                      {t("submit")}
                     </Button>
                   </>
                 )}

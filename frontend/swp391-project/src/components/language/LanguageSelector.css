@@ -125,15 +125,15 @@ button:focus {
 }
 
 .bg-blue-500 {
-  background-color: #0f7fc1;
+  background-color: #bbab6f;
 }
 
 .focus\:ring-2:focus {
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5);
+  box-shadow: 0 0 0 2px rgba(159, 139, 42, 0.5);
 }
 
 .focus\:ring-blue-400:focus {
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5);
+  box-shadow: 0 0 0 2px rgba(215, 182, 14, 0.763);
 }
 
 .translate {
@@ -146,16 +146,16 @@ button:focus {
   background-color: white;
 }
 
-.language-selector-button-1{
+.language-selector-button-1 {
   outline: none;
   border: none;
 }
 
-.language-selector-button:hover{
+.language-selector-button:hover {
   background-color: rgb(219, 214, 214);
 }
-.nut-lag{
-  bolder : none;
+.nut-lag {
+  bolder: none;
 }
 .language-selector-button-1:focus {
   outline: none;

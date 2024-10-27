@@ -1,28 +1,34 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 function Sidebar() {
+  const { t } = useTranslation();
   return (
     <div className="sidebar">
       <div className="sidebar__logo">
-        <h2>Staff Dashboard</h2>
+        <h2>{t("staffDashboard")}</h2>
       </div>
       <nav className="sidebar__nav">
         <ul>
           <li>
-            <Link to="/staff-dashboard/order-management">Order Management</Link>
+            <Link to="/staff-dashboard/order-management">
+              {t("orderManagement")}
+            </Link>
           </li>
           <li>
-            <Link to="/staff-dashboard/fish-management">Fish Management</Link>
+            <Link to="/staff-dashboard/fish-management">
+              {t("fishManagement")}
+            </Link>
           </li>
           <li>
             <Link to="/staff-dashboard/fishtype-management">
-              Fish Type Management
+              {t("fishTypeManagement")}
             </Link>
           </li>
           <li>
             <Link to="/staff-dashboard/consignment-management">
-              Consignment Management
+              {t("consignmentManagement")}
             </Link>
           </li>
         </ul>

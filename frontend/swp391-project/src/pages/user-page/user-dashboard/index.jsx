@@ -30,9 +30,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEmailFromToken, logout } from "../../../store/actions/authActions";
 import { toast, ToastContainer } from "react-toastify";
 import "./index.scss";
-import { AES, enc } from "crypto-js";
 import config from "../../../config/config";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 
 const { Title, Text } = Typography;
 const DEFAULT_AVATAR =
@@ -46,18 +46,13 @@ const UserDashboard = () => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
-  const decryptedToken = token
-    ? AES.decrypt(token, config.SECRET_KEY).toString(enc.Utf8)
-    : null;
-  const decryptedRole = role
-    ? parseInt(AES.decrypt(role, config.SECRET_KEY).toString(enc.Utf8))
-    : 0;
+  const { t } = useTranslation();
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
 
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFound"));
         navigate("/login");
         return;
       }
@@ -66,7 +61,7 @@ const UserDashboard = () => {
         const userResponse = await axios.get(
           `${config.API_ROOT}customers/my-info`,
           {
-            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+            headers: { Authorization: `Bearer ${token ?? null}` },
           }
         );
         setUser(userResponse.data);
@@ -74,7 +69,7 @@ const UserDashboard = () => {
         const ordersResponse = await axios.get(
           `${config.API_ROOT}orders/order-history`,
           {
-            headers: { Authorization: `Bearer ${decryptedToken ?? null}` },
+            headers: { Authorization: `Bearer ${token ?? null}` },
           }
         );
         const sortedOrders = ordersResponse.data
@@ -86,19 +81,17 @@ const UserDashboard = () => {
       } catch (error) {
         toast.error("Error fetching data:", error);
         if (error.response && error.response.status === 401) {
-          toast.error("Authentication failed. Please log in again.");
+          toast.error(t("authenticationFailed"));
           navigate("/login");
         } else {
-          toast.error(
-            "An error occurred while fetching data. Please try again later."
-          );
+          toast.error(t("errorFetchingData"));
         }
       } finally {
         setLoading(false);
       }
       try {
-        const email = jwtDecode(decryptedToken).userId;
-        console.log(decryptedToken);
+        const email = jwtDecode(token).userId;
+        console.log(token);
         user.email = email;
         console.log(email);
       } catch (error) {
@@ -123,11 +116,11 @@ const UserDashboard = () => {
   const getStatusTag = (status) => {
     switch (status) {
       case "Paid":
-        return <Tag color="green">Paid</Tag>;
+        return <Tag color="green">{t("paid")}</Tag>;
       case "Shipping":
-        return <Tag color="blue">Shipping</Tag>;
+        return <Tag color="blue">{t("shipping")}</Tag>;
       case "Completed":
-        return <Tag color="purple">Completed</Tag>;
+        return <Tag color="purple">{t("completed")}</Tag>;
       default:
         return <Tag color="default">{status || "Unknown"}</Tag>;
     }
@@ -141,13 +134,13 @@ const UserDashboard = () => {
       render: (orderId) => `#${orderId}`,
     },
     {
-      title: "DATE",
+      title: t("date"),
       dataIndex: "orderDate",
       key: "date",
       render: (date) => new Date(date).toLocaleDateString(),
     },
     {
-      title: "TOTAL",
+      title: t("total"),
       dataIndex: "totalAmount",
       key: "total",
       render: (total) =>
@@ -157,13 +150,13 @@ const UserDashboard = () => {
         }),
     },
     {
-      title: "STATUS",
+      title: t("status"),
       dataIndex: "status",
       key: "status",
       render: (status) => getStatusTag(status),
     },
     {
-      title: "ACTION",
+      title: t("action"),
       key: "action",
       render: (_, record) => (
         <a
@@ -172,7 +165,7 @@ const UserDashboard = () => {
           }
           style={{ color: "#D4B57E" }}
         >
-          View Details
+          {t("viewDetails")}
         </a>
       ),
     },
@@ -202,9 +195,9 @@ const UserDashboard = () => {
               }}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Account</Breadcrumb.Item>
+          <Breadcrumb.Item>{t("account")}</Breadcrumb.Item>
           <Breadcrumb.Item className="breadcrumb-page">
-            User Dashboard
+            {t("userDashboard")}
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
@@ -213,25 +206,25 @@ const UserDashboard = () => {
         <aside className="settings-sider">
           <ul className="settings-menu">
             <li className="active">
-              <FontAwesomeIcon icon={faHome} /> Dashboard
+              <FontAwesomeIcon icon={faHome} /> {t("dashboard")}
             </li>
             <li onClick={() => navigate("/order-history")}>
-              <FontAwesomeIcon icon={faClipboardList} /> Order History
+              <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
             <li onClick={() => navigate("/promotion")}>
-              <FontAwesomeIcon icon={faTag} /> Promotion
+              <FontAwesomeIcon icon={faTag} /> {t("promotion")}
             </li>
             <li onClick={() => navigate("/cart")}>
-              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+              <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}
             </li>
             <li onClick={() => navigate("/user-setting/:id")}>
-              <FontAwesomeIcon icon={faCog} /> Setting
+              <FontAwesomeIcon icon={faCog} /> {t("setting")}
             </li>
             <li onClick={() => navigate("/consignment-history")}>
-              <FontAwesomeIcon icon={faHandHoldingUsd} /> Consignment
+              <FontAwesomeIcon icon={faHandHoldingUsd} /> {t("consignment")}
             </li>
             <li onClick={confirmLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+              <FontAwesomeIcon icon={faSignOutAlt} /> {t("logout")}
             </li>
           </ul>
         </aside>
@@ -267,7 +260,7 @@ const UserDashboard = () => {
                     onClick={() => navigate("/user-setting/:id")}
                     style={{ marginTop: "20px" }}
                   >
-                    Edit Profile
+                    {t("editProfile")}
                   </p>
                 </Col>
               </Row>
@@ -276,7 +269,7 @@ const UserDashboard = () => {
 
           <div className="recent-order">
             <Card className="card">
-              <Title level={3}>Recent Order History</Title>
+              <Title level={3}>{t("recentOrderHistory")}</Title>
               <Table
                 columns={columns}
                 dataSource={orderHistory}
@@ -285,7 +278,7 @@ const UserDashboard = () => {
               />
               <div style={{ textAlign: "right", marginTop: 16 }}>
                 <Link to="/order-history" style={{ color: "#D4B57E" }}>
-                  View All Orders
+                  {t("viewAllOrders")}
                 </Link>
               </div>
             </Card>
@@ -307,7 +300,7 @@ const UserDashboard = () => {
             onClick={() => setShowConfirmation(false)}
             style={{ backgroundColor: "red#C0C0C0", color: "black" }}
           >
-            Cancel
+            {t("cancel")}
           </Button>,
           <Button
             key="submit"
@@ -315,11 +308,11 @@ const UserDashboard = () => {
             onClick={handleLogout}
             style={{ backgroundColor: "#bbab6f", color: "white" }}
           >
-            Confirm
+            {t("confirm")}
           </Button>,
         ]}
       >
-        <p>Are you sure you want to logout?</p>
+        <p>{t("confirmLogoutMessage")}</p>
       </Modal>
     </div>
   );

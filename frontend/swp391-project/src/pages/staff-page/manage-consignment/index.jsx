@@ -18,6 +18,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./index.scss";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import config from "../../../config/config";
 const { Title } = Typography;
 
 const ConsignmentManagement = () => {
@@ -29,10 +32,11 @@ const ConsignmentManagement = () => {
   const [saleModalVisible, setSaleModalVisible] = useState(false);
   const [unitPrice, setUnitPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
-
+  const { token } = useSelector((state) => state.auth);
   const [careForm] = Form.useForm();
   const [saleForm] = Form.useForm();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const calculateTotalPrice = (price, qty) => {
     return price * qty;
   };
@@ -43,17 +47,16 @@ const ConsignmentManagement = () => {
   const fetchConsignments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         navigate("/login");
         return;
       }
 
       const response = await axios.get(
-        "https://localhost:44366/api/Consignment/customer/1",
+        `${config.API_ROOT}Consignment/customer/1`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
 
@@ -65,7 +68,7 @@ const ConsignmentManagement = () => {
       );
     } catch (error) {
       console.error("Error fetching consignments:", error);
-      message.error("Failed to fetch consignment data.");
+      message.error(t("failedToFetchConsignmentData"));
     } finally {
       setLoading(false);
     }
@@ -73,23 +76,22 @@ const ConsignmentManagement = () => {
 
   const handleCareConfirm = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         navigate("/login");
         return;
       }
 
       // Update consignment status and care fee
       await axios.post(
-        `https://localhost:44366/api/Consignment/${selectedConsignment.consignmentId}/receive-care?careFee=${values.careFee}`,
+        `${config.API_ROOT}Consignment/${selectedConsignment.consignmentId}/receive-care?careFee=${values.careFee}`,
         null, // no body needed
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token ?? null}` } }
       );
 
       // Add fish care record
       await axios.post(
-        "https://localhost:44366/api/FishCare",
+        `${config.API_ROOT}FishCare`,
         {
           fishCareId: 0,
           fishType: values.fishType,
@@ -97,16 +99,16 @@ const ConsignmentManagement = () => {
           healthStatus: values.healthStatus,
           careDetails: values.careDetails,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token ?? null}` } }
       );
 
-      message.success("Care consignment confirmed successfully");
+      message.success(t("careConsignmentConfirmedSuccessfully"));
       setCareModalVisible(false);
       careForm.resetFields();
       await fetchConsignments();
     } catch (error) {
       console.error("Error confirming care:", error);
-      message.error("Failed to confirm care consignment");
+      message.error(t("failedToConfirmCareConsignment"));
     }
   };
 
@@ -136,9 +138,8 @@ const ConsignmentManagement = () => {
   // Modify the handleSaleConfirm function
   const handleSaleConfirm = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         navigate("/login");
         return;
       }
@@ -146,7 +147,7 @@ const ConsignmentManagement = () => {
       const totalPrice = calculateTotalPrice(values.unitPrice, values.quantity);
 
       await axios.put(
-        `https://localhost:44366/api/Consignment/${selectedConsignment.consignmentId}/update-sale?agreePrice=${values.agreePrice}`,
+        `${config.API_ROOT}Consignment/${selectedConsignment.consignmentId}/update-sale?agreePrice=${values.agreePrice}`,
         [
           // Changed to array directly
           {
@@ -157,12 +158,12 @@ const ConsignmentManagement = () => {
             totalPrice: totalPrice,
           },
         ],
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token ?? null}` } }
       );
 
       // Add fish to database
       await axios.post(
-        "https://localhost:44366/api/fishs",
+        `${config.API_ROOT}fishs`,
         {
           name: values.fishType,
           gender: values.gender,
@@ -180,29 +181,29 @@ const ConsignmentManagement = () => {
           imageUrl: selectedConsignment.consignmentLines[0].imageUrl,
           description: values.description,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token ?? null}` } }
       );
 
-      message.success("Sale consignment confirmed successfully");
+      message.success(t("saleConsignmentConfirmedSuccessfully"));
       setSaleModalVisible(false);
       saleForm.resetFields();
       await fetchConsignments();
     } catch (error) {
       console.error("Error confirming sale:", error);
-      message.error("Failed to confirm sale consignment");
+      message.error(t("failedToConfirmSaleConsignment"));
     }
   };
 
   const getStatusTag = (status) => {
     const statusConfig = {
-      0: { color: "warning", text: "Pending" },
-      1: { color: "processing", text: "Under Review" },
-      2: { color: "success", text: "Confirmed" },
-      3: { color: "blue", text: "Listed For Sale" },
-      4: { color: "purple", text: "Sold" },
-      5: { color: "cyan", text: "Under Care" },
-      6: { color: "green", text: "Care Completed" },
-      7: { color: "red", text: "Cancelled" },
+      0: { color: "warning", text: t("pending") },
+      1: { color: "processing", text: t("underReview") },
+      2: { color: "success", text: t("confirmed") },
+      3: { color: "blue", text: t("listedForSale") },
+      4: { color: "purple", text: t("sold") },
+      5: { color: "cyan", text: t("underCare") },
+      6: { color: "green", text: t("careCompleted") },
+      7: { color: "red", text: t("cancelled") },
     };
 
     return (
@@ -214,37 +215,36 @@ const ConsignmentManagement = () => {
 
   const updateStatus = async (record, newStatus) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         navigate("/login");
         return;
       }
 
       await axios.put(
-        `https://localhost:44366/api/Consignment/${record.consignmentId}/status`,
+        `${config.API_ROOT}Consignment/${record.consignmentId}/status`,
         { status: newStatus },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token ?? null}`,
             "Content-Type": "application/json",
           },
         }
       );
 
       const statusMessages = {
-        1: "Consignment is now under review",
-        2: "Consignment confirmed successfully",
-        7: "Consignment has been cancelled", // Add this line
+        1: t("consignmentIsNowUnderReview"),
+        2: t("consignmentConfirmedSuccessfully"),
+        7: t("consignmentHasBeenCancelled"), // Add this line
       };
 
       message.success(
-        statusMessages[newStatus] || "Status updated successfully"
+        statusMessages[newStatus] || t("statusUpdatedSuccessfully")
       );
       await fetchConsignments();
     } catch (error) {
       console.error("Error updating status:", error);
-      message.error("Failed to update status");
+      message.error(t("failedToUpdateStatus"));
     }
   };
 
@@ -256,7 +256,7 @@ const ConsignmentManagement = () => {
       width: 80,
     },
     {
-      title: "Type",
+      title: t("type"),
       dataIndex: "type",
       key: "type",
       width: 100,
@@ -267,32 +267,32 @@ const ConsignmentManagement = () => {
       ),
     },
     {
-      title: "Start Date",
+      title: t("startDate"),
       dataIndex: "startDate",
       key: "startDate",
       render: (date) => new Date(date).toLocaleDateString(),
     },
     {
-      title: "End Date",
+      title: t("endDate"),
       dataIndex: "endDate",
       key: "endDate",
       render: (date) => new Date(date).toLocaleDateString(),
     },
     {
-      title: "Status",
+      title: t("status"),
       dataIndex: "status",
       key: "status",
       width: 120,
       render: (status) => getStatusTag(status),
     },
     {
-      title: "Price/CareFee",
+      title: t("priceCareFee"),
       key: "price",
       render: (_, record) =>
         record.type === 0 ? record.careFee : record.agreedPrice,
     },
     {
-      title: "Actions",
+      title: t("actions"),
       key: "actions",
       width: 250,
       render: (_, record) => {
@@ -310,24 +310,24 @@ const ConsignmentManagement = () => {
                 setDetailModalVisible(true);
               }}
             >
-              Details
+              {t("details")}
             </Button>
 
             {showCancelButton && (
               <Button danger onClick={() => updateStatus(record, 7)}>
-                Cancel
+                {t("cancel")}
               </Button>
             )}
 
             {showReviewButton && (
               <Button type="primary" onClick={() => updateStatus(record, 1)}>
-                Review
+                {t("review")}
               </Button>
             )}
 
             {showConfirmButton && (
               <Button type="primary" onClick={() => updateStatus(record, 2)}>
-                Confirm
+                {t("confirm")}
               </Button>
             )}
 
@@ -343,7 +343,7 @@ const ConsignmentManagement = () => {
                   }
                 }}
               >
-                {record.type === 0 ? "Receive Care" : "Receive Sale"}
+                {record.type === 0 ? t("receiveCare") : t("receiveSale")}
               </Button>
             )}
           </Space>
@@ -355,7 +355,7 @@ const ConsignmentManagement = () => {
   return (
     <div className="consignment-management">
       <Card>
-        <Title level={2}>Consignment Management</Title>
+        <Title level={2}>{t("consignmentManagement")}</Title>
         <Table
           dataSource={consignments}
           columns={columns}
@@ -367,7 +367,9 @@ const ConsignmentManagement = () => {
 
       {/* Detail Modal */}
       <Modal
-        title={`Consignment #${selectedConsignment?.consignmentId} Details`}
+        title={`${t("consignment")} #${selectedConsignment?.consignmentId} ${t(
+          "details"
+        )}`}
         open={detailModalVisible}
         onCancel={() => setDetailModalVisible(false)}
         footer={null}
@@ -376,33 +378,33 @@ const ConsignmentManagement = () => {
         {selectedConsignment && (
           <>
             <Descriptions bordered column={2}>
-              <Descriptions.Item label="Type">
-                {selectedConsignment.type === 0 ? "Care" : "Sale"}
+              <Descriptions.Item label={t("type")}>
+                {selectedConsignment.type === 0 ? t("care") : t("sale")}
               </Descriptions.Item>
-              <Descriptions.Item label="Status">
+              <Descriptions.Item label={t("status")}>
                 {getStatusTag(selectedConsignment.status)}
               </Descriptions.Item>
-              <Descriptions.Item label="Start Date">
+              <Descriptions.Item label={t("startDate")}>
                 {new Date(selectedConsignment.startDate).toLocaleDateString()}
               </Descriptions.Item>
-              <Descriptions.Item label="End Date">
+              <Descriptions.Item label={t("endDate")}>
                 {new Date(selectedConsignment.endDate).toLocaleDateString()}
               </Descriptions.Item>
-              <Descriptions.Item label="Price">
+              <Descriptions.Item label={t("priceCareFee")}>
                 {selectedConsignment.type === 0
                   ? selectedConsignment.careFee
                   : selectedConsignment.agreedPrice}
               </Descriptions.Item>
-              <Descriptions.Item label="Customer ID">
+              <Descriptions.Item label={t("customerId")}>
                 {selectedConsignment.customerId}
               </Descriptions.Item>
-              <Descriptions.Item label="Note" span={2}>
+              <Descriptions.Item label={t("note")} span={2}>
                 {selectedConsignment.note}
               </Descriptions.Item>
             </Descriptions>
 
             <Title level={4} style={{ marginTop: 24 }}>
-              Consignment Lines
+              {t("consignmentLines")}
             </Title>
             <Table
               dataSource={selectedConsignment.consignmentLines}
@@ -410,29 +412,29 @@ const ConsignmentManagement = () => {
               pagination={false}
               columns={[
                 {
-                  title: "Fish Type",
+                  title: t("fishType"),
                   dataIndex: "fishType",
                   key: "fishType",
                 },
                 {
-                  title: "Quantity",
+                  title: t("quantity"),
                   dataIndex: "quantity",
                   key: "quantity",
                 },
                 {
-                  title: "Total Price",
+                  title: t("totalPrice"),
                   dataIndex: "totalPrice",
                   key: "totalPrice",
                 },
                 {
-                  title: "Images",
+                  title: t("images"),
                   dataIndex: "imageUrl",
                   key: "imageUrl",
                   render: (url) =>
                     url ? (
                       <img src={url} alt="Fish" style={{ maxWidth: 100 }} />
                     ) : (
-                      "No image"
+                      t("noImage")
                     ),
                 },
               ]}
@@ -451,35 +453,35 @@ const ConsignmentManagement = () => {
         <Form form={careForm} layout="vertical" onFinish={handleCareConfirm}>
           <Form.Item
             name="fishType"
-            label="Fish Type"
+            label={t("fishType")}
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="healthStatus"
-            label="Health Status"
+            label={t("healthStatus")}
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="careDetails"
-            label="Care Details"
+            label={t("careDetails")}
             rules={[{ required: true }]}
           >
             <Input.TextArea />
           </Form.Item>
           <Form.Item
             name="careFee"
-            label="Care Fee"
+            label={t("careFee")}
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
-              Confirm Care
+              {t("confirmCare")}
             </Button>
           </Form.Item>
         </Form>
@@ -487,7 +489,7 @@ const ConsignmentManagement = () => {
 
       {/* Sale Confirmation Modal */}
       <Modal
-        title="Confirm Sale Consignment"
+        title={t("confirmSaleConsignment")}
         open={saleModalVisible}
         onCancel={() => setSaleModalVisible(false)}
         footer={null}
@@ -495,46 +497,54 @@ const ConsignmentManagement = () => {
       >
         <Form form={saleForm} layout="vertical" onFinish={handleSaleConfirm}>
           {/* Read-only fields */}
-          <Form.Item name="fishType" label="Fish Type">
+          <Form.Item name="fishType" label={t("fishType")}>
             <Input disabled />
           </Form.Item>
-          <Form.Item name="quantity" label="Quantity">
+          <Form.Item name="quantity" label={t("quantity")}>
             <InputNumber style={{ width: "100%" }} disabled />
           </Form.Item>
-          <Form.Item name="imageUrl" label="Image URL">
+          <Form.Item name="imageUrl" label={t("imageUrl")}>
             <Input disabled />
           </Form.Item>
 
           {/* Editable fields */}
-          <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+          <Form.Item
+            name="gender"
+            label={t("gender")}
+            rules={[{ required: true }]}
+          >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item name="age" label="Age" rules={[{ required: true }]}>
+          <Form.Item name="age" label={t("age")} rules={[{ required: true }]}>
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item name="size" label="Size" rules={[{ required: true }]}>
+          <Form.Item name="size" label={t("size")} rules={[{ required: true }]}>
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item name="class" label="Class" rules={[{ required: true }]}>
+          <Form.Item
+            name="class"
+            label={t("class")}
+            rules={[{ required: true }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
             name="fishTypeId"
-            label="Fish Type ID"
+            label={t("fishTypeId")}
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="foodRequirement"
-            label="Food Requirement"
+            label={t("foodRequirement")}
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="overallRating"
-            label="Overall Rating"
+            label={t("overallRating")}
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
@@ -543,7 +553,7 @@ const ConsignmentManagement = () => {
           {/* Price related fields */}
           <Form.Item
             name="unitPrice"
-            label="Unit Price"
+            label={t("unitPrice")}
             rules={[{ required: true }]}
           >
             <InputNumber
@@ -555,33 +565,33 @@ const ConsignmentManagement = () => {
               }}
             />
           </Form.Item>
-          <Form.Item name="totalPrice" label="Total Price">
+          <Form.Item name="totalPrice" label={t("totalPrice")}>
             <InputNumber style={{ width: "100%" }} disabled />
           </Form.Item>
           <Form.Item
             name="agreePrice"
-            label="Agreed Price"
+            label={t("agreePrice")}
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="sellingPrice"
-            label="Selling Price"
+            label={t("sellingPrice")}
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="description"
-            label="Description"
+            label={t("description")}
             rules={[{ required: true }]}
           >
             <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
-              Confirm Sale
+              {t("confirmSale")}
             </Button>
           </Form.Item>
         </Form>
