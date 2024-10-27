@@ -374,5 +374,11 @@
   "passwordSettings": "Password Settings",
   "currentPassword": "Current Password",
   "newPassword": "New Password",
-  "fishtypeManagement": "Fish Type Management"
+  "fishtypeManagement": "Fish Type Management",
+  "careConsignmentCreatedSuccessfully": "Care consignment created successfully",
+  "pleaseLoginFirst": "Please login first",
+  "failedToCreateConsignment": "Failed to create consignment",
+  "createCareConsignment": "Create Care Consignment",
+  "enterCareInstructionsOrSpecialRequirements": "Enter care instructions or special requirements",
+  "createConsignment": "Create Consignment"
 }
