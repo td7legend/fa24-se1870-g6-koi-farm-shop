@@ -11,12 +11,24 @@ import {
   Descriptions,
   Badge,
   Empty,
+  Breadcrumb,
 } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHome,
+  faClipboardList,
+  faTag,
+  faShoppingCart,
+  faCog,
+  faSignOutAlt,
+  faHandHoldingUsd,
+} from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../store/actions/authActions";
 const { Title } = Typography;
 
 const ConsignmentHistory = () => {
@@ -27,7 +39,9 @@ const ConsignmentHistory = () => {
   const [fishCareData, setFishCareData] = useState([]);
   const [loadingFishCare, setLoadingFishCare] = useState(false);
   const navigate = useNavigate();
-  const customerId = 1; // This should be dynamic based on logged-in user
+  const dispatch = useDispatch();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const customerId = 1;
   useEffect(() => {
     fetchConsignments();
   }, []);
@@ -186,161 +200,242 @@ const ConsignmentHistory = () => {
     },
   ];
 
+  const confirmLogout = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setShowConfirmation(false);
+    navigate("/");
+  };
   return (
-    <div style={{ padding: 24 }}>
-      <Card>
-        <Title level={2}>My Consignment History</Title>
-        <Table
-          dataSource={consignments}
-          columns={columns}
-          rowKey="consignmentId"
-          loading={loading}
-          pagination={{ pageSize: 10 }}
-        />
-      </Card>
+    <div>
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb">
+          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+          <Breadcrumb.Item href="/user_info/user">Dashboard</Breadcrumb.Item>
+          <Breadcrumb.Item href="/consigment-history">
+            Consignment History
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+      <div className="layout-container">
+        <aside className="settings-sider">
+          <ul className="settings-menu">
+            <li onClick={() => navigate("/user-dashboard/:id")}>
+              <FontAwesomeIcon icon={faHome} /> Dashboard
+            </li>
+            <li onClick={() => navigate("/order-history")}>
+              <FontAwesomeIcon icon={faClipboardList} /> Order History
+            </li>
+            <li onClick={() => navigate("/promotion")}>
+              <FontAwesomeIcon icon={faTag} /> Promotion
+            </li>
+            <li onClick={() => navigate("/cart")}>
+              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+            </li>
+            <li onClick={() => navigate("/user-setting/:id")}>
+              <FontAwesomeIcon icon={faCog} /> Setting
+            </li>
+            <li className="active">
+              <FontAwesomeIcon icon={faHandHoldingUsd} />
+              Consignment History
+            </li>
+            <li onClick={confirmLogout}>
+              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+            </li>
+          </ul>
+        </aside>
+        <div style={{ maxWidth: 1200 }}></div>
+        <div className="cosignment-history-container">
+          <div style={{ padding: 24 }}>
+            <Card>
+              <Title level={2}>My Consignment History</Title>
+              <Table
+                dataSource={consignments}
+                columns={columns}
+                rowKey="consignmentId"
+                loading={loading}
+                pagination={{ pageSize: 10 }}
+              />
+            </Card>
 
-      {/* Detail Modal */}
-      <Modal
-        title={`Consignment #${selectedConsignment?.consignmentId} Details`}
-        open={detailModalVisible}
-        onCancel={() => {
-          setDetailModalVisible(false);
-          setFishCareData([]); // Clear fish care data when closing modal
-        }}
-        footer={null}
-        width={800}
-      >
-        {selectedConsignment && (
-          <>
-            <Descriptions bordered column={2}>
-              <Descriptions.Item label="Type">
-                {selectedConsignment.type === 0 ? "Care" : "Sale"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                {getStatusTag(selectedConsignment.status)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Start Date">
-                {formatDate(selectedConsignment.startDate)}
-              </Descriptions.Item>
-              <Descriptions.Item label="End Date">
-                {formatDate(selectedConsignment.endDate)}
-              </Descriptions.Item>
-              {selectedConsignment.type === 0 ? (
-                <Descriptions.Item label="Care Fee">
-                  ${selectedConsignment.careFee?.toFixed(2) || "0.00"}
-                </Descriptions.Item>
-              ) : (
-                <Descriptions.Item label="Agreed Price">
-                  ${selectedConsignment.agreedPrice?.toFixed(2) || "0.00"}
-                </Descriptions.Item>
+            {/* Detail Modal */}
+            <Modal
+              title={`Consignment #${selectedConsignment?.consignmentId} Details`}
+              open={detailModalVisible}
+              onCancel={() => {
+                setDetailModalVisible(false);
+                setFishCareData([]); // Clear fish care data when closing modal
+              }}
+              footer={null}
+              width={800}
+            >
+              {selectedConsignment && (
+                <>
+                  <Descriptions bordered column={2}>
+                    <Descriptions.Item label="Type">
+                      {selectedConsignment.type === 0 ? "Care" : "Sale"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Status">
+                      {getStatusTag(selectedConsignment.status)}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Start Date">
+                      {formatDate(selectedConsignment.startDate)}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="End Date">
+                      {formatDate(selectedConsignment.endDate)}
+                    </Descriptions.Item>
+                    {selectedConsignment.type === 0 ? (
+                      <Descriptions.Item label="Care Fee">
+                        ${selectedConsignment.careFee?.toFixed(2) || "0.00"}
+                      </Descriptions.Item>
+                    ) : (
+                      <Descriptions.Item label="Agreed Price">
+                        ${selectedConsignment.agreedPrice?.toFixed(2) || "0.00"}
+                      </Descriptions.Item>
+                    )}
+                    <Descriptions.Item label="Note" span={2}>
+                      {selectedConsignment.note}
+                    </Descriptions.Item>
+                  </Descriptions>
+
+                  {selectedConsignment.type === 0 ? (
+                    // Show Fish Care Data for Care type
+                    <>
+                      <Title level={4} style={{ marginTop: 24 }}>
+                        Fish Care Details
+                      </Title>
+                      <Table
+                        dataSource={fishCareData}
+                        rowKey="fishCareId"
+                        pagination={false}
+                        loading={loadingFishCare}
+                        columns={[
+                          {
+                            title: "Fish Type",
+                            dataIndex: "fishType",
+                            key: "fishType",
+                          },
+                          {
+                            title: "Health Status",
+                            dataIndex: "healthStatus",
+                            key: "healthStatus",
+                            render: (status) => {
+                              const statusColors = {
+                                Good: "green",
+                                Bad: "red",
+                                Normal: "orange",
+                              };
+                              return (
+                                <Tag color={statusColors[status] || "default"}>
+                                  {status}
+                                </Tag>
+                              );
+                            },
+                          },
+                          {
+                            title: "Care Details",
+                            dataIndex: "careDetails",
+                            key: "careDetails",
+                            ellipsis: true,
+                          },
+                        ]}
+                      />
+                      {fishCareData.length === 0 && !loadingFishCare && (
+                        <Empty description="No fish care records found" />
+                      )}
+                    </>
+                  ) : (
+                    // Show Fish Details for Sale type
+                    <>
+                      <Title level={4} style={{ marginTop: 24 }}>
+                        Fish Details
+                      </Title>
+                      <Table
+                        dataSource={selectedConsignment.consignmentLines}
+                        rowKey="consignmentLineId"
+                        pagination={false}
+                        columns={[
+                          {
+                            title: "Fish Type",
+                            dataIndex: "fishType",
+                            key: "fishType",
+                          },
+                          {
+                            title: "Quantity",
+                            dataIndex: "quantity",
+                            key: "quantity",
+                          },
+                          {
+                            title: "Total Price",
+                            dataIndex: "totalPrice",
+                            key: "totalPrice",
+                            render: (price) =>
+                              `$${price?.toFixed(2) || "0.00"}`,
+                          },
+                          {
+                            title: "Unit Price",
+                            dataIndex: "unitPrice",
+                            key: "unitPrice",
+                            render: (price) =>
+                              `$${price?.toFixed(2) || "0.00"}`,
+                          },
+                          {
+                            title: "Images",
+                            dataIndex: "imageUrl",
+                            key: "imageUrl",
+                            render: (url) =>
+                              url ? (
+                                <img
+                                  src={url}
+                                  alt="Fish"
+                                  style={{ maxWidth: 100, cursor: "pointer" }}
+                                  onClick={() => window.open(url, "_blank")}
+                                />
+                              ) : (
+                                "No image"
+                              ),
+                          },
+                        ]}
+                      />
+                    </>
+                  )}
+                </>
               )}
-              <Descriptions.Item label="Note" span={2}>
-                {selectedConsignment.note}
-              </Descriptions.Item>
-            </Descriptions>
+            </Modal>
 
-            {selectedConsignment.type === 0 ? (
-              // Show Fish Care Data for Care type
-              <>
-                <Title level={4} style={{ marginTop: 24 }}>
-                  Fish Care Details
-                </Title>
-                <Table
-                  dataSource={fishCareData}
-                  rowKey="fishCareId"
-                  pagination={false}
-                  loading={loadingFishCare}
-                  columns={[
-                    {
-                      title: "Fish Type",
-                      dataIndex: "fishType",
-                      key: "fishType",
-                    },
-                    {
-                      title: "Health Status",
-                      dataIndex: "healthStatus",
-                      key: "healthStatus",
-                      render: (status) => {
-                        const statusColors = {
-                          Good: "green",
-                          Bad: "red",
-                          Normal: "orange",
-                        };
-                        return (
-                          <Tag color={statusColors[status] || "default"}>
-                            {status}
-                          </Tag>
-                        );
-                      },
-                    },
-                    {
-                      title: "Care Details",
-                      dataIndex: "careDetails",
-                      key: "careDetails",
-                      ellipsis: true,
-                    },
-                  ]}
-                />
-                {fishCareData.length === 0 && !loadingFishCare && (
-                  <Empty description="No fish care records found" />
-                )}
-              </>
-            ) : (
-              // Show Fish Details for Sale type
-              <>
-                <Title level={4} style={{ marginTop: 24 }}>
-                  Fish Details
-                </Title>
-                <Table
-                  dataSource={selectedConsignment.consignmentLines}
-                  rowKey="consignmentLineId"
-                  pagination={false}
-                  columns={[
-                    {
-                      title: "Fish Type",
-                      dataIndex: "fishType",
-                      key: "fishType",
-                    },
-                    {
-                      title: "Quantity",
-                      dataIndex: "quantity",
-                      key: "quantity",
-                    },
-                    {
-                      title: "Total Price",
-                      dataIndex: "totalPrice",
-                      key: "totalPrice",
-                      render: (price) => `$${price?.toFixed(2) || "0.00"}`,
-                    },
-                    {
-                      title: "Unit Price",
-                      dataIndex: "unitPrice",
-                      key: "unitPrice",
-                      render: (price) => `$${price?.toFixed(2) || "0.00"}`,
-                    },
-                    {
-                      title: "Images",
-                      dataIndex: "imageUrl",
-                      key: "imageUrl",
-                      render: (url) =>
-                        url ? (
-                          <img
-                            src={url}
-                            alt="Fish"
-                            style={{ maxWidth: 100, cursor: "pointer" }}
-                            onClick={() => window.open(url, "_blank")}
-                          />
-                        ) : (
-                          "No image"
-                        ),
-                    },
-                  ]}
-                />
-              </>
-            )}
-          </>
-        )}
-      </Modal>
+            <Modal
+              title="Confirm Logout?"
+              visible={showConfirmation}
+              onOk={handleLogout}
+              onCancel={() => setShowConfirmation(false)}
+              okText="Log out"
+              cancelText="Cancel"
+              footer={[
+                <Button
+                  key="back"
+                  onClick={() => setShowConfirmation(false)}
+                  style={{ backgroundColor: "#C0C0C0", color: "black" }}
+                >
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="primary"
+                  onClick={handleLogout}
+                  style={{ backgroundColor: "#bbab6f", color: "white" }}
+                >
+                  Confirm
+                </Button>,
+              ]}
+            >
+              <p>Are you sure you want to logout?</p>
+            </Modal>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
