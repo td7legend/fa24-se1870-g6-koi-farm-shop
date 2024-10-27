@@ -12,15 +12,15 @@ import {
   Input,
   InputNumber,
   Descriptions,
-  Breadcrumb,
+  Select,
+  Empty,
 } from "antd";
-import { EyeOutlined, CheckOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
+import CurrencyFormatter from "../../../components/currency";
 import "./index.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { Title } = Typography;
 
 const ConsignmentManagement = () => {
@@ -32,13 +32,12 @@ const ConsignmentManagement = () => {
   const [saleModalVisible, setSaleModalVisible] = useState(false);
   const [unitPrice, setUnitPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
+  const [fishCareData, setFishCareData] = useState([]);
+  const [loadingFishCare, setLoadingFishCare] = useState(false);
 
   const [careForm] = Form.useForm();
   const [saleForm] = Form.useForm();
   const navigate = useNavigate();
-  const calculateTotalPrice = (price, qty) => {
-    return price * qty;
-  };
   useEffect(() => {
     fetchConsignments();
   }, []);
@@ -54,7 +53,7 @@ const ConsignmentManagement = () => {
       }
 
       const response = await axios.get(
-        "https://localhost:44366/api/Consignment/customer/1",
+        "https://localhost:44366/api/Consignment/get-all",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -74,6 +73,47 @@ const ConsignmentManagement = () => {
     }
   };
 
+  const fetchFishCareData = async (consignmentId) => {
+    try {
+      setLoadingFishCare(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("No authentication token found. Please log in.");
+        navigate("/login");
+        return;
+      }
+
+      const response = await axios.get(`https://localhost:44366/api/FishCare`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Filter fish care data and add consignment details
+      const filteredData = response.data
+        .filter((care) => care.consignmentId === consignmentId)
+        .map((care) => ({
+          ...care,
+          consignment: selectedConsignment, // Add the consignment data to each fish care record
+        }));
+
+      setFishCareData(filteredData);
+    } catch (error) {
+      console.error("Error fetching fish care data:", error);
+      message.error("Failed to fetch fish care details");
+    } finally {
+      setLoadingFishCare(false);
+    }
+  };
+
+  const updateTotalPrices = (fishDetails, form) => {
+    // Calculate sum of all total prices
+    const totalSum = fishDetails.reduce((sum, fish) => {
+      return sum + (fish.totalPrice || 0);
+    }, 0);
+
+    // Update agree price
+    form.setFieldValue("agreePrice", totalSum);
+  };
+
   const handleCareConfirm = async (values) => {
     try {
       const token = localStorage.getItem("token");
@@ -83,25 +123,30 @@ const ConsignmentManagement = () => {
         return;
       }
 
-      // Update consignment status and care fee
+      // First update consignment with care fee
       await axios.post(
         `https://localhost:44366/api/Consignment/${selectedConsignment.consignmentId}/receive-care?careFee=${values.careFee}`,
-        null, // no body needed
+        null,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Add fish care record
-      await axios.post(
-        "https://localhost:44366/api/FishCare",
-        {
-          fishCareId: 0,
-          fishType: values.fishType,
-          consignmentId: selectedConsignment.consignmentId,
-          healthStatus: values.healthStatus,
-          careDetails: values.careDetails,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+      // Then create fish care records for each fish
+      const fishCarePromises = values.fishCares.map((fishCare) =>
+        axios.post(
+          "https://localhost:44366/api/FishCare",
+          {
+            fishCareId: 0,
+            fishType: fishCare.fishType,
+            consignmentId: selectedConsignment.consignmentId,
+            consignmentLineId: fishCare.consignmentLineId,
+            healthStatus: fishCare.healthStatus,
+            careDetails: fishCare.careDetails,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
       );
+
+      await Promise.all(fishCarePromises);
 
       message.success("Care consignment confirmed successfully");
       setCareModalVisible(false);
@@ -146,45 +191,43 @@ const ConsignmentManagement = () => {
         return;
       }
 
-      const totalPrice = calculateTotalPrice(values.unitPrice, values.quantity);
-
+      // Update consignment sale details
       await axios.put(
         `https://localhost:44366/api/Consignment/${selectedConsignment.consignmentId}/update-sale?agreePrice=${values.agreePrice}`,
-        [
-          // Changed to array directly
-          {
-            consignmentLineId:
-              selectedConsignment.consignmentLines[0].consignmentLineId,
-            unitPrice: values.unitPrice,
-            quantity: selectedConsignment.consignmentLines[0].quantity,
-            totalPrice: totalPrice,
-          },
-        ],
+        values.fishDetails.map((fish) => ({
+          consignmentLineId: fish.consignmentLineId,
+          unitPrice: fish.unitPrice,
+          quantity: fish.quantity,
+          totalPrice: fish.totalPrice,
+        })),
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       // Add fish to database
-      await axios.post(
-        "https://localhost:44366/api/fishs",
-        {
-          name: values.fishType,
-          gender: values.gender,
-          age: values.age,
-          size: values.size,
-          class: values.class,
-          consignmentLineId:
-            selectedConsignment.consignmentLines[0].consignmentLineId,
-          foodRequirement: values.foodRequirement,
-          overallRating: values.overallRating,
-          price: values.sellingPrice,
-          batch: true,
-          fishTypeId: values.fishTypeId,
-          quantity: values.quantity,
-          imageUrl: selectedConsignment.consignmentLines[0].imageUrl,
-          description: values.description,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+      const fishPromises = values.fishDetails.map((fish) =>
+        axios.post(
+          "https://localhost:44366/api/fishs",
+          {
+            name: fish.fishType,
+            gender: fish.gender,
+            age: fish.age,
+            size: fish.size,
+            class: fish.class,
+            consignmentLineId: fish.consignmentLineId,
+            foodRequirement: fish.foodRequirement,
+            overallRating: 5,
+            price: fish.unitPrice,
+            batch: true,
+            fishTypeId: fish.fishTypeId,
+            quantity: fish.quantity,
+            imageUrl: fish.imageUrl,
+            description: fish.description,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
       );
+
+      await Promise.all(fishPromises);
 
       message.success("Sale consignment confirmed successfully");
       setSaleModalVisible(false);
@@ -291,8 +334,11 @@ const ConsignmentManagement = () => {
     {
       title: "Price/CareFee",
       key: "price",
-      render: (_, record) =>
-        record.type === 0 ? record.careFee : record.agreedPrice,
+      render: (_, record) => (
+        <CurrencyFormatter
+          amount={record.type === 0 ? record.careFee : record.agreedPrice}
+        />
+      ),
     },
     {
       title: "Actions",
@@ -310,6 +356,9 @@ const ConsignmentManagement = () => {
               icon={<EyeOutlined />}
               onClick={() => {
                 setSelectedConsignment(record);
+                if (record.type === 0) {
+                  fetchFishCareData(record.consignmentId);
+                }
                 setDetailModalVisible(true);
               }}
             >
@@ -356,255 +405,503 @@ const ConsignmentManagement = () => {
   ];
 
   return (
-    <div className="staff-consignment-management">
-      <div className="breadcrumb-container">
-        <Breadcrumb className="breadcrumb" separator=">">
-          <Breadcrumb.Item>
-            <FontAwesomeIcon icon={faHome} className="icon" />
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>Staff</Breadcrumb.Item>
-          <Breadcrumb.Item>Consignment Management</Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
-      <div className="manage-consignment-container">
-        <Card>
-          <Title level={2}>Consignment Management</Title>
-          <Table
-            dataSource={consignments}
-            columns={columns}
-            rowKey="consignmentId"
-            loading={loading}
-            pagination={{ pageSize: 10 }}
-            className="consignment-management-table"
-          />
-        </Card>
+    <div className="consignment-management">
+      <Card>
+        <Title level={2}>Consignment Management</Title>
+        <Table
+          dataSource={consignments}
+          columns={columns}
+          rowKey="consignmentId"
+          loading={loading}
+          pagination={{ pageSize: 10 }}
+        />
+      </Card>
 
-        {/* Detail Modal */}
-        <Modal
-          title={`Consignment #${selectedConsignment?.consignmentId} Details`}
-          open={detailModalVisible}
-          onCancel={() => setDetailModalVisible(false)}
-          footer={null}
-          width={800}
-        >
-          {selectedConsignment && (
-            <>
-              <Descriptions bordered column={2}>
-                <Descriptions.Item label="Type">
-                  {selectedConsignment.type === 0 ? "Care" : "Sale"}
-                </Descriptions.Item>
-                <Descriptions.Item label="Status">
-                  {getStatusTag(selectedConsignment.status)}
-                </Descriptions.Item>
-                <Descriptions.Item label="Start Date">
-                  {new Date(selectedConsignment.startDate).toLocaleDateString()}
-                </Descriptions.Item>
-                <Descriptions.Item label="End Date">
-                  {new Date(selectedConsignment.endDate).toLocaleDateString()}
-                </Descriptions.Item>
-                <Descriptions.Item label="Price">
-                  {selectedConsignment.type === 0
-                    ? selectedConsignment.careFee
-                    : selectedConsignment.agreedPrice}
-                </Descriptions.Item>
-                <Descriptions.Item label="Customer ID">
-                  {selectedConsignment.customerId}
-                </Descriptions.Item>
-                <Descriptions.Item label="Note" span={2}>
-                  {selectedConsignment.note}
-                </Descriptions.Item>
-              </Descriptions>
+      {/* Detail Modal */}
+      <Modal
+        title={`Consignment #${selectedConsignment?.consignmentId} Details`}
+        open={detailModalVisible}
+        onCancel={() => {
+          setDetailModalVisible(false);
+          setFishCareData([]); // Clear fish care data when closing modal
+        }}
+        footer={null}
+        width={800}
+      >
+        {selectedConsignment && (
+          <>
+            <Descriptions bordered column={2}>
+              <Descriptions.Item label="Type">
+                {selectedConsignment.type === 0 ? "Care" : "Sale"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Status">
+                {getStatusTag(selectedConsignment.status)}
+              </Descriptions.Item>
+              <Descriptions.Item label="Start Date">
+                {new Date(selectedConsignment.startDate).toLocaleDateString()}
+              </Descriptions.Item>
+              <Descriptions.Item label="End Date">
+                {new Date(selectedConsignment.endDate).toLocaleDateString()}
+              </Descriptions.Item>
+              <Descriptions.Item
+                label={
+                  selectedConsignment.type === 0 ? "Care Fee" : "Agreed Price"
+                }
+              >
+                <CurrencyFormatter
+                  amount={
+                    selectedConsignment.type === 0
+                      ? selectedConsignment.careFee
+                      : selectedConsignment.agreedPrice
+                  }
+                />
+              </Descriptions.Item>
+              <Descriptions.Item label="Customer ID">
+                {selectedConsignment.customerId}
+              </Descriptions.Item>
+              <Descriptions.Item label="Note" span={2}>
+                {selectedConsignment.note}
+              </Descriptions.Item>
+            </Descriptions>
 
-              <Title level={4} style={{ marginTop: 24 }}>
-                Consignment Lines
+            {selectedConsignment.type === 0 ? (
+              // Show Fish Care Data for Care type
+              <>
+                <Title level={4} style={{ marginTop: 24 }}>
+                  Fish Care Details
+                </Title>
+                <Table
+                  dataSource={fishCareData}
+                  rowKey="fishCareId"
+                  pagination={false}
+                  loading={loadingFishCare}
+                  columns={[
+                    {
+                      title: "Fish Type",
+                      dataIndex: "fishType",
+                      key: "fishType",
+                      width: 120,
+                    },
+                    {
+                      title: "Health Status",
+                      dataIndex: "healthStatus",
+                      key: "healthStatus",
+                      width: 120,
+                      render: (status) => {
+                        const statusColors = {
+                          Good: "green",
+                          Bad: "red",
+                          Normal: "orange",
+                        };
+                        return (
+                          <Tag color={statusColors[status] || "default"}>
+                            {status}
+                          </Tag>
+                        );
+                      },
+                    },
+                    {
+                      title: "Care Details",
+                      dataIndex: "careDetails",
+                      key: "careDetails",
+                      ellipsis: true,
+                    },
+                    {
+                      title: "Image",
+                      dataIndex: "fishType",
+                      key: "image",
+                      width: 150,
+                      render: (fishType) => {
+                        // Find the matching consignment line for this fish care record
+                        const consignmentLine =
+                          selectedConsignment.consignmentLines.find(
+                            (line) => line.fishType === fishType
+                          );
+                        return consignmentLine?.imageUrl ? (
+                          <img
+                            src={consignmentLine.imageUrl}
+                            alt={fishType}
+                            style={{
+                              width: 120,
+                              height: 80,
+                              objectFit: "cover",
+                              borderRadius: 4,
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              window.open(consignmentLine.imageUrl, "_blank")
+                            }
+                          />
+                        ) : (
+                          "No image"
+                        );
+                      },
+                    },
+                  ]}
+                />
+                {fishCareData.length === 0 && !loadingFishCare && (
+                  <Empty description="No fish care records found" />
+                )}
+              </>
+            ) : (
+              // Show Consignment Lines for Sale type
+              <>
+                <Title level={4} style={{ marginTop: 24 }}>
+                  Fish Details
+                </Title>
+                <Table
+                  dataSource={selectedConsignment.consignmentLines}
+                  rowKey="consignmentLineId"
+                  pagination={false}
+                  columns={[
+                    {
+                      title: "Fish Type",
+                      dataIndex: "fishType",
+                      key: "fishType",
+                    },
+                    {
+                      title: "Quantity",
+                      dataIndex: "quantity",
+                      key: "quantity",
+                    },
+                    {
+                      title: "Unit Price",
+                      dataIndex: "unitPrice",
+                      key: "unitPrice",
+                      render: (price) => <CurrencyFormatter amount={price} />,
+                    },
+                    {
+                      title: "Total Price",
+                      dataIndex: "totalPrice",
+                      key: "totalPrice",
+                      render: (price) => <CurrencyFormatter amount={price} />,
+                    },
+                    {
+                      title: "Images",
+                      dataIndex: "imageUrl",
+                      key: "imageUrl",
+                      render: (url) =>
+                        url ? (
+                          <img
+                            src={url}
+                            alt="Fish"
+                            style={{ maxWidth: 100, cursor: "pointer" }}
+                            onClick={() => window.open(url, "_blank")}
+                          />
+                        ) : (
+                          "No image"
+                        ),
+                    },
+                  ]}
+                />
+              </>
+            )}
+          </>
+        )}
+      </Modal>
+
+      {/* Care Confirmation Modal */}
+      <Modal
+        title="Confirm Care Consignment"
+        open={careModalVisible}
+        onCancel={() => setCareModalVisible(false)}
+        footer={null}
+        width={800}
+      >
+        <Form form={careForm} layout="vertical" onFinish={handleCareConfirm}>
+          {selectedConsignment?.consignmentLines.map((line, index) => (
+            <div key={line.consignmentLineId} style={{ marginBottom: 24 }}>
+              <Title level={5}>
+                Fish {index + 1}: {line.fishType}
               </Title>
-              <Table
-                dataSource={selectedConsignment.consignmentLines}
-                rowKey="consignmentLineId"
-                pagination={false}
-                columns={[
-                  {
-                    title: "Fish Type",
-                    dataIndex: "fishType",
-                    key: "fishType",
-                  },
-                  {
-                    title: "Quantity",
-                    dataIndex: "quantity",
-                    key: "quantity",
-                  },
-                  {
-                    title: "Total Price",
-                    dataIndex: "totalPrice",
-                    key: "totalPrice",
-                  },
-                  {
-                    title: "Images",
-                    dataIndex: "imageUrl",
-                    key: "imageUrl",
-                    render: (url) =>
-                      url ? (
-                        <img src={url} alt="Fish" style={{ maxWidth: 100 }} />
-                      ) : (
-                        "No image"
-                      ),
-                  },
-                ]}
-              />
-            </>
-          )}
-        </Modal>
-
-        {/* Care Confirmation Modal */}
-        <Modal
-          title="Confirm Care Consignment"
-          open={careModalVisible}
-          onCancel={() => setCareModalVisible(false)}
-          footer={null}
-        >
-          <Form form={careForm} layout="vertical" onFinish={handleCareConfirm}>
-            <Form.Item
-              name="fishType"
-              label="Fish Type"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="healthStatus"
-              label="Health Status"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="careDetails"
-              label="Care Details"
-              rules={[{ required: true }]}
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              name="careFee"
-              label="Care Fee"
-              rules={[{ required: true }]}
-            >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" block>
-                Confirm Care
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
-
-        {/* Sale Confirmation Modal */}
-        <Modal
-          title="Confirm Sale Consignment"
-          open={saleModalVisible}
-          onCancel={() => setSaleModalVisible(false)}
-          footer={null}
-          width={800}
-        >
-          <Form form={saleForm} layout="vertical" onFinish={handleSaleConfirm}>
-            {/* Read-only fields */}
-            <Form.Item name="fishType" label="Fish Type">
-              <Input disabled />
-            </Form.Item>
-            <Form.Item name="quantity" label="Quantity">
-              <InputNumber style={{ width: "100%" }} disabled />
-            </Form.Item>
-            <Form.Item name="imageUrl" label="Image URL">
-              <Input disabled />
-            </Form.Item>
-
-            {/* Editable fields */}
-            <Form.Item
-              name="gender"
-              label="Gender"
-              rules={[{ required: true }]}
-            >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item name="age" label="Age" rules={[{ required: true }]}>
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item name="size" label="Size" rules={[{ required: true }]}>
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item name="class" label="Class" rules={[{ required: true }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="fishTypeId"
-              label="Fish Type ID"
-              rules={[{ required: true }]}
-            >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item
-              name="foodRequirement"
-              label="Food Requirement"
-              rules={[{ required: true }]}
-            >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item
-              name="overallRating"
-              label="Overall Rating"
-              rules={[{ required: true }]}
-            >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-
-            {/* Price related fields */}
-            <Form.Item
-              name="unitPrice"
-              label="Unit Price"
-              rules={[{ required: true }]}
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                onChange={(value) => {
-                  setUnitPrice(value);
-                  const total = calculateTotalPrice(value, quantity);
-                  saleForm.setFieldValue("totalPrice", total);
+              <div
+                style={{
+                  display: "flex",
+                  gap: "16px",
+                  alignItems: "center",
+                  marginBottom: 16,
                 }}
-              />
-            </Form.Item>
-            <Form.Item name="totalPrice" label="Total Price">
-              <InputNumber style={{ width: "100%" }} disabled />
-            </Form.Item>
-            <Form.Item
-              name="agreePrice"
-              label="Agreed Price"
-              rules={[{ required: true }]}
+              >
+                <img
+                  src={line.imageUrl}
+                  alt={line.fishType}
+                  style={{ width: 100, height: 100, objectFit: "cover" }}
+                />
+                <div style={{ flex: 1 }}>
+                  <p>
+                    <strong>Quantity:</strong> {line.quantity}
+                  </p>
+                  <Form.Item
+                    name={["fishCares", index, "fishType"]}
+                    hidden
+                    initialValue={line.fishType}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={["fishCares", index, "consignmentLineId"]}
+                    hidden
+                    initialValue={line.consignmentLineId}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={["fishCares", index, "healthStatus"]}
+                    label="Health Status"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Please input health status for ${line.fishType}`,
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={["fishCares", index, "careDetails"]}
+                    label="Care Details"
+                    rules={[
+                      {
+                        required: true,
+                        message: `Please input care details for ${line.fishType}`,
+                      },
+                    ]}
+                  >
+                    <Input.TextArea />
+                  </Form.Item>
+                </div>
+              </div>
+            </div>
+          ))}
+          <Form.Item
+            name="careFee"
+            label="Total Care Fee"
+            rules={[{ required: true }]}
+          >
+            <InputNumber
+              style={{ width: "100%" }}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Confirm Care
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Sale Confirmation Modal */}
+      <Modal
+        title="Confirm Sale Consignment"
+        open={saleModalVisible}
+        onCancel={() => setSaleModalVisible(false)}
+        footer={null}
+        width={800}
+      >
+        <Form form={saleForm} layout="vertical" onFinish={handleSaleConfirm}>
+          {selectedConsignment?.consignmentLines.map((line, index) => (
+            <div
+              key={line.consignmentLineId}
+              style={{
+                marginBottom: 24,
+                padding: 16,
+                border: "1px solid #f0f0f0",
+                borderRadius: 8,
+              }}
             >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item
-              name="sellingPrice"
-              label="Selling Price"
-              rules={[{ required: true }]}
-            >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item
-              name="description"
-              label="Description"
-              rules={[{ required: true }]}
-            >
-              <InputNumber style={{ width: "100%" }} />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" block>
-                Confirm Sale
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
+              <Title level={5}>
+                Fish {index + 1}: {line.fishType}
+              </Title>
+              <div style={{ display: "flex", gap: "16px", marginBottom: 16 }}>
+                <div style={{ width: 200 }}>
+                  <img
+                    src={line.imageUrl}
+                    alt={line.fishType}
+                    style={{
+                      width: "100%",
+                      height: 150,
+                      objectFit: "cover",
+                      borderRadius: 4,
+                    }}
+                  />
+                  {/* Hidden fields for line reference */}
+                  <Form.Item
+                    name={["fishDetails", index, "consignmentLineId"]}
+                    hidden
+                    initialValue={line.consignmentLineId}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={["fishDetails", index, "fishType"]}
+                    hidden
+                    initialValue={line.fishType}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={["fishDetails", index, "imageUrl"]}
+                    hidden
+                    initialValue={line.imageUrl}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={["fishDetails", index, "quantity"]}
+                    hidden
+                    initialValue={line.quantity}
+                  >
+                    <InputNumber />
+                  </Form.Item>
+                </div>
+
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "16px",
+                    }}
+                  >
+                    {/* Fish Details */}
+                    <Form.Item
+                      name={["fishDetails", index, "unitPrice"]}
+                      label="Unit Price"
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber
+                        style={{ width: "100%" }}
+                        formatter={(value) =>
+                          `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }
+                        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                        onChange={(value) => {
+                          // Calculate total price for this fish
+                          const totalPrice = value * line.quantity;
+                          saleForm.setFieldValue(
+                            ["fishDetails", index, "totalPrice"],
+                            totalPrice
+                          );
+
+                          // Get all current fish details
+                          const allFishDetails =
+                            saleForm.getFieldValue("fishDetails");
+                          allFishDetails[index].totalPrice = totalPrice;
+
+                          // Update agree price
+                          updateTotalPrices(allFishDetails, saleForm);
+                        }}
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      name={["fishDetails", index, "totalPrice"]}
+                      label="Total Price"
+                    >
+                      <InputNumber
+                        style={{ width: "100%" }}
+                        disabled
+                        formatter={(value) =>
+                          `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      name={["fishDetails", index, "gender"]}
+                      label="Gender"
+                      rules={[
+                        { required: true, message: "Please select gender" },
+                      ]}
+                    >
+                      <Select style={{ width: "100%" }}>
+                        <Select.Option value={0}>Male</Select.Option>
+                        <Select.Option value={1}>Female</Select.Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item
+                      name={["fishDetails", index, "age"]}
+                      label="Age"
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber style={{ width: "100%" }} />
+                    </Form.Item>
+
+                    <Form.Item
+                      name={["fishDetails", index, "size"]}
+                      label="Size"
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber style={{ width: "100%" }} />
+                    </Form.Item>
+
+                    <Form.Item
+                      name={["fishDetails", index, "fishTypeId"]}
+                      label="Fish Type ID"
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber style={{ width: "100%" }} />
+                    </Form.Item>
+                  </div>
+
+                  <Form.Item
+                    name={["fishDetails", index, "class"]}
+                    label="Class"
+                    rules={[{ required: true }]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "16px",
+                    }}
+                  >
+                    <Form.Item
+                      name={["fishDetails", index, "foodRequirement"]}
+                      label="Food Requirement"
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber style={{ width: "100%" }} />
+                    </Form.Item>
+
+                    <Form.Item
+                      name={["fishDetails", index, "description"]}
+                      label="Description"
+                      rules={[{ required: true }]}
+                    >
+                      <Input.TextArea rows={4} />
+                    </Form.Item>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Agreed Price for entire consignment */}
+          <Form.Item name="agreePrice" label="Agreed Price">
+            <InputNumber
+              style={{ width: "100%" }}
+              disabled
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Confirm Sale
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
