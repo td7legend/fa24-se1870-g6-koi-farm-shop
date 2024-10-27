@@ -79,7 +79,6 @@ namespace koi_farm_demo.Controllers
         }
 
         [HttpGet("get-all")]
-
         public async Task<IActionResult> GetAllConsignment()
         {
             await _consignmentService.CheckAndUpdateAllConsignmentStatusesAsync();
