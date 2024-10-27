@@ -1,3 +1,4 @@
+
 # Golden Koi
 
 ![Golden Koi Logo](https://firebasestorage.googleapis.com/v0/b/move-management-4fb2c.appspot.com/o/379128395d441b9667fb5156f1bbc970.png?alt=media&token=bb8dc2b6-2551-46e3-bf68-903798945e0d)
@@ -10,7 +11,7 @@ Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá k
 
 - **Frontend**: <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png"  width="20"  height="20">
 - **Backend**: <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/C_Sharp_wordmark.svg/1024px-C_Sharp_wordmark.svg.png"  width="20"  height="20">
-- **Cơ sở dữ liệu**: <img  src="https://www.vhv.rs/dpng/d/79-799586_microsoft-sql-server-logo-hd-png-download.png"  width="70"  height="20">
+- **Cơ sở dữ liệu**: <img  src="https://www.vhv.rs/dpng/d/79-799586_microsoft-sql-server-logo-hd-png-download.png"  width="20"  height="20">
 
 ## Tính năng
 
@@ -35,7 +36,7 @@ Dự án được thực hiện bởi một nhóm 5 thành viên:
 
 - <img  src="https://nodejs.org/static/images/logo.svg"  width="100"  height="20">
 - <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Microsoft_.NET_logo.svg/640px-Microsoft_.NET_logo.svg.png"  width="70"  height="70">
-- <img  src="https://www.vhv.rs/dpng/d/79-799586_microsoft-sql-server-logo-hd-png-download.png"  width="70"  height="20">
+- <img  src="https://www.vhv.rs/dpng/d/79-799586_microsoft-sql-server-logo-hd-png-download.png"  width="70"  height="70">
 
 ### Hướng dẫn cài đặt
 
