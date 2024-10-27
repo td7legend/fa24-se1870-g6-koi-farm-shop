@@ -9,10 +9,14 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
-function Sidebar() {
+function Sidebar({ onHover }) {
   const { t } = useTranslation();
   return (
-    <div className="sidebar">
+    <div
+      className="sidebar"
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+    >
       <div className="sidebar__logo">
         <h2>{t("staffDashboard")}</h2>
       </div>

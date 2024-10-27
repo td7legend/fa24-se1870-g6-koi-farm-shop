@@ -8,5 +8,7 @@
     flex-grow: 1;
     overflow-y: auto;
     background-color: #fffaf0;
+    transition: margin-left 0.3s ease;
+    width: calc(100% - 80px);
   }
 }
