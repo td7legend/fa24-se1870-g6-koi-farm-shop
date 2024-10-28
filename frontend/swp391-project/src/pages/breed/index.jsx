@@ -163,7 +163,6 @@ const BreedFishPage = () => {
       </div>
       <div className="breed-page-container">
         <Col span={24}></Col>
-        <h1>{breedName}</h1>
         <Row className="row-container">
           <Col className="left-side">
             <div className="product-list-filter">
@@ -295,8 +294,9 @@ const BreedFishPage = () => {
             </div>
           </Col>
           <Col className="right-side">
-            <div className="banner">
+            <div className="banner" breedName={breedName}>
               <ImageFrame imageSrc={imageSrc} />
+              <h1>{breedName}</h1>
             </div>
             <div className="top-controls">
               <div className="pagination">

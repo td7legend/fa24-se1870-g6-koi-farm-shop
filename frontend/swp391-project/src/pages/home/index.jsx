@@ -6,6 +6,9 @@ import PopularProduct from "../../components/home/PopularProduct";
 import OurService from "../../components/home/OurService";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState({
@@ -92,9 +95,12 @@ const Home = () => {
                 "thisVarietySymbolizesProsperityAndIsAFavoriteAmongKoiEnthusiasts"
               )}
             </p>
+            <Link to="/breed/Ogon" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
           <iframe
-            key={isVisible.ogon ? videoSources.ogon : null} // Changing key forces reload
+            key={isVisible.ogon ? videoSources.ogon : null}
             width="560"
             height="500"
             src={isVisible.ogon ? videoSources.ogon : ""}
@@ -127,7 +133,7 @@ const Home = () => {
       >
         <div className="demo">
           <iframe
-            key={isVisible.ochiba ? videoSources.ochiba : null} // Changing key forces reload
+            key={isVisible.ochiba ? videoSources.ochiba : null}
             width="560"
             height="500"
             src={isVisible.ochiba ? videoSources.ochiba : ""}
@@ -144,6 +150,9 @@ const Home = () => {
                 "theOchibaKoiFishIsAppreciatedForItsUniqueBlueGrayBodyWithOrangePatternsItSABeautifulAdditionToAnyPond"
               )}
             </p>
+            <Link to="/breed/Ochiba" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
         </div>
       </div>
@@ -172,9 +181,12 @@ const Home = () => {
                 "theKohakuIsOneOfTheMostPopularKoiVarietiesKnownForItsStrikingRedAndWhiteColorationItRepresentsLuckAndProsperity"
               )}
             </p>
+            <Link to="/breed/Kohaku" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
           <iframe
-            key={isVisible.kohaku ? videoSources.kohaku : null} // Changing key forces reload
+            key={isVisible.kohaku ? videoSources.kohaku : null}
             width="560"
             height="500"
             src={isVisible.kohaku ? videoSources.kohaku : ""}
@@ -207,7 +219,7 @@ const Home = () => {
       >
         <div className="demo">
           <iframe
-            key={isVisible.kujaku ? videoSources.kujaku : null} // Changing key forces reload
+            key={isVisible.kujaku ? videoSources.kujaku : null}
             width="560"
             height="500"
             src={isVisible.kujaku ? videoSources.kujaku : ""}
@@ -224,6 +236,9 @@ const Home = () => {
                 "theKujakuIsKnownForItsStunningPatternsAndColorsMakingItAStrikingPresenceInAnyKoiPond"
               )}
             </p>
+            <Link to="/breed/Kujaku" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
         </div>
       </div>

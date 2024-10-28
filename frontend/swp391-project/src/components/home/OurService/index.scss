@@ -19,16 +19,21 @@ $shadow-hover-color: rgba(0, 0, 0, 0.2);
     content: "";
     position: absolute;
     inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: url("src/images/background-3.png") center/cover no-repeat;
     z-index: 1;
-    opacity: 0.5;
-    filter: blur(5px);
+    opacity: 0.7;
+    filter: blur(2px) brightness(0.5);
+    // filter: brightness(0.5);
   }
 
   h2 {
     font-family: "Lora", serif;
     font-size: 42px;
-    color: darken($primary-color, 15%);
+    color: $primary-color;
     margin-bottom: $element-spacing;
     position: relative;
     z-index: 2;
@@ -37,7 +42,7 @@ $shadow-hover-color: rgba(0, 0, 0, 0.2);
 
   .our__service-intro {
     font-size: 22px;
-    color: darken($text-color, 15%);
+    color: $text-color;
     font-weight: 500;
     margin: 0 auto $element-spacing;
     max-width: 700px;
@@ -108,18 +113,18 @@ $shadow-hover-color: rgba(0, 0, 0, 0.2);
       transition: color 0.2s;
 
       &:hover {
-        color: darken($highlight-color, 15%);
+        color: $highlight-color;
       }
     }
   }
 
   .service__box--care {
-    border-left: 5px solid darken($highlight-color, 10%);
-    border-top: 3px solid darken($highlight-color, 10%);
+    border-left: 5px solid $highlight-color;
+    border-top: 3px solid $highlight-color;
   }
 
   .service__box--sell {
-    border-left: 5px solid lighten($highlight-color, 10%);
-    border-top: 3px solid lighten($highlight-color, 10%);
+    border-left: 5px solid $highlight-color;
+    border-top: 3px solid $highlight-color;
   }
 }

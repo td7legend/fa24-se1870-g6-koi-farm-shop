@@ -102,11 +102,42 @@ $background-kujaku: url("../../images/kujaku.jpg") no-repeat center center /
       padding: 20px;
       border-radius: 8px;
       h2 {
+        font-size: 2rem;
         font-family: $font-family_1;
         color: $color_1;
+        margin-bottom: 20px;
       }
       p {
+        font-size: 1.2rem;
         font-family: $font-family_2;
+        margin-bottom: 20px;
+      }
+      .view-details {
+        text-decoration: none;
+        font-family: $font-family_2;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 12px 24px;
+        border: 2px solid $color_1;
+        border-radius: 25px;
+        background-color: $color_1;
+        display: inline-flex;
+        align-items: center;
+        transition: background-color 0.3s ease, color 0.3s ease,
+          transform 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          background-color: darken($color_1, 10%);
+          transform: translateY(-3px);
+        }
+
+        svg {
+          margin-left: 10px;
+          font-size: 1.5rem;
+          color: #fff;
+        }
       }
     }
 
