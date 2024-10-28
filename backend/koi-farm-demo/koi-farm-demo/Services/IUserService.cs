@@ -11,7 +11,7 @@ namespace koi_farm_demo.Services
         Task<User> GetUserFromGoogleAsync(string idToken);
         Task<string> LoginWithGoogleAsync();
         Task RegisterCustomerAsync(RegisterCustomerModel model);
-        Task AddStaffAsync(string email, string password, Staff staff, int managerId);
+        Task AddStaffAsync(string email, string password, string fullName, string phoneNumber, string role);
         Task<string> LoginAsync(string email, string password);
         Task<bool> IsEmailTakenAsync(string email);
         Task ResetPasswordAsync(string email, string newPassword);
