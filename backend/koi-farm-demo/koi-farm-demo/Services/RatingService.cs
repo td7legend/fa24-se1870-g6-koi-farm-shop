@@ -7,15 +7,20 @@ namespace koi_farm_demo.Services
     {
         private readonly IRatingRepository _ratingRepository;
         private readonly IFishRepository _fishRepository;
-
-        public RatingService(IRatingRepository ratingRepository, IFishRepository fishRepository)
+        private readonly IOrderService _orderService;
+        public RatingService(IRatingRepository ratingRepository, IFishRepository fishRepository, IOrderService orderService)
         {
             _ratingRepository = ratingRepository;
             _fishRepository = fishRepository;
+            _orderService = orderService;
         }
 
         public async Task AddRatingAsync(int customerId, int fishId, int ratingValue, string comment)
         {
+            if (!await _orderService.HasCustomerBoughtFishAsync(customerId, fishId))
+            {
+                throw new InvalidOperationException("Bạn không thể đánh giá cá mà bạn chưa mua.");
+            }
        
             if (await _ratingRepository.HasCustomerRatedFishAsync(customerId, fishId))
             {
