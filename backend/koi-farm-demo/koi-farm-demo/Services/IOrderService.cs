@@ -14,5 +14,6 @@ namespace koi_farm_demo.Services
         Task PayForOrderAsync(int orderId, OrderDTO orderDTO);
         Task AddItemToCart(int customerId, OrderLineCreateDTO orderLineCreateDto);
         Task UpdateCartAsync(int customerId, UpdateCartDTO updateCartDTO);
+        Task<bool> HasCustomerBoughtFishAsync(int customerId, int fishId);
     }
 }
