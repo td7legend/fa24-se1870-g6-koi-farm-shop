@@ -11,7 +11,7 @@ import {
   Slider,
   Tag,
   Button,
-  Input, // <-- Add Input from antd for price inputs
+  Input,
 } from "antd";
 import Search from "antd/es/transfer/search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
