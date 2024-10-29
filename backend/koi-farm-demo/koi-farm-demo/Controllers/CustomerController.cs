@@ -25,12 +25,12 @@ namespace koi_farm_demo.Controllers
         {
             // Lấy UserId từ claim
             var userIdClaim = User.FindFirst(ClaimTypes.Name)?.Value;
-
+            var emailClaim = User.FindFirst(ClaimTypes.Email)?.Value;
             if (!int.TryParse(userIdClaim, out int userId))
             {
                 return BadRequest("Invalid user ID.");
             }
-
+            
             // Lấy Customer dựa trên UserId
             var customer = await _customerService.GetCustomerByUserIdAsync(userId);
 
@@ -50,7 +50,7 @@ namespace koi_farm_demo.Controllers
                 PointAvailable = customer.PointAvailable,
                 UsedPoint = customer.UsedPoint,
                 AccommodatePoint = customer.AccommodatePoint,
-                Email = customer.User.Email // Lấy email từ User
+                Email = emailClaim // Lấy email từ User
             };
 
             return Ok(customerInfoDto);
