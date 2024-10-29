@@ -31,7 +31,7 @@ import ConsignmentHistory from "./pages/user-page/consignment-history";
 import StaffOrderManagement from "./pages/staff-page/manage-order";
 import StaffFishManagement from "./pages/staff-page/manage-fish";
 import StaffFishTypeManagement from "./pages/staff-page/manage-fishtype";
-
+import LoyaltyPointHistory from "./pages/user-page/loyaltypoint-history";
 import "react-toastify/dist/ReactToastify.css";
 import ConsignmentManagement from "./pages/staff-page/manage-consignment";
 
@@ -41,6 +41,7 @@ function App() {
       path: "/",
       element: <UserLayout />,
       children: [
+        { path: "/loyaltypoint-history", element: <LoyaltyPointHistory /> },
         { path: "/", element: <HomePage /> },
         { path: "/fish-page", element: <AllFishPage /> },
         { path: "/breed/:breedName", element: <BreedFishPage /> },
