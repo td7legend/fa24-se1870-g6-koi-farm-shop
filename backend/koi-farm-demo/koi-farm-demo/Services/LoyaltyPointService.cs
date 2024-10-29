@@ -1,9 +1,11 @@
-﻿using koi_farm_demo.Repositories;
+﻿using koi_farm_demo.Data;
+using koi_farm_demo.Repositories;
 
 namespace koi_farm_demo.Services
 {
     public interface ILoyaltyPointService
     {
+        Task<List<LoyaltyPointHistoryDto>> GetLoyaltyPointHistoryAsync(int customerId);
         Task AwardPointsAsync(int customerId, decimal orderAmount);
         Task<bool> RedeemPointsAsync(int customerId, int pointsToRedeem);
     }
@@ -74,12 +76,30 @@ namespace koi_farm_demo.Services
 
             if (customer.PointAvailable < pointsToRedeem)
                 return false;
+            var loyaltyPoint = new LoyaltyPoint
+            {
+                CustomerId = customerId,
+                Amount = - pointsToRedeem,
+                AwardedDate = DateTime.Now
+            };
 
+            await _loyaltyPointRepository.AddLoyaltyPointAsync(loyaltyPoint);
             customer.PointAvailable -= pointsToRedeem;
             customer.UsedPoint += pointsToRedeem;
             await _loyaltyPointRepository.SaveChangesAsync();
 
             return true;
+        }
+        public async Task<List<LoyaltyPointHistoryDto>> GetLoyaltyPointHistoryAsync(int customerId)
+        {
+            var loyaltyPoints = await _loyaltyPointRepository.GetLoyaltyPointHistoryAsync(customerId);
+
+            return loyaltyPoints.Select(lp => new LoyaltyPointHistoryDto
+            {
+                LoyaltyPointId = lp.LPId,
+                Amount = lp.Amount,
+                AwardedDate = lp.AwardedDate
+            }).ToList();
         }
     }
 

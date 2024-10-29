@@ -42,7 +42,7 @@ const Checkout = () => {
     try {
       setLoading(true);
       if (!isLoggedIn) {
-        message.error(t("noAuthenticationTokenFoundPleaseLogIn"));
+        message.error("No authentication token found. Please log in.");
         navigate("/login");
         return;
       }
@@ -94,7 +94,7 @@ const Checkout = () => {
 
   const columns = [
     {
-      title: `${t("fish")}`,
+      title: "Fish",
       dataIndex: "fishName",
       key: "fishName",
       render: (text, record) => (
@@ -111,18 +111,18 @@ const Checkout = () => {
       ),
     },
     {
-      title: `${t("quantity")}`,
+      title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
     },
     {
-      title: `${t("price")}`,
+      title: "Price",
       key: "price",
       render: (_, record) =>
         `${getFishPrice(record.fishId).toLocaleString()} VND`,
     },
     {
-      title: `${t("total")}`,
+      title: "Total",
       key: "total",
       render: (_, record) =>
         `${calculateItemTotal(record).toLocaleString()} VND`,
@@ -171,7 +171,7 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error("Error processing VnPay payment:", error);
-      message.error(t("failedToProcessPaymentPleaseTryAgain"));
+      message.error("Failed to process payment. Please try again.");
     }
   };
 
@@ -193,7 +193,7 @@ const Checkout = () => {
             handlePaymentSuccess();
             popup.close();
           } else {
-            message.error(t("paymentWasNotSuccessfulPleaseTryAgain"));
+            message.error("Payment was not successful. Please try again.");
           }
         }
       } catch (error) {
@@ -209,7 +209,7 @@ const Checkout = () => {
 
   const handlePaymentSuccess = async () => {
     try {
-      message.success(t("paymentSuccessful"));
+      message.success("Payment successful");
       if (pointsToRedeem > 0) {
         await axios.post(
           `${config.API_ROOT}LoyaltyPoint/redeem?customerId=${user.customerId}&pointsToRedeem=${pointsToRedeem}`,
@@ -223,7 +223,7 @@ const Checkout = () => {
     } catch (error) {
       console.error("Error completing order:", error);
       message.error(
-        t("paymentWasSuccessfulButFailedToCompleteTheOrderPleaseContactSupport")
+        "Payment was successful but failed to complete the order. Please contact support."
       );
     }
   };
@@ -274,7 +274,7 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error("Error completing order:", error);
-      message.error(t("failedToCompleteTheOrderPleaseContactSupport"));
+      message.error("Failed to complete the order. Please contact support.");
     }
   };
 
@@ -282,7 +282,7 @@ const Checkout = () => {
     if (paymentMethod === "VnPay") {
       processVnPayPayment();
     } else {
-      message.warning(t("pleaseSelectAValidPaymentMethod"));
+      message.warning("Please select a valid payment method.");
     }
   };
 
@@ -291,7 +291,7 @@ const Checkout = () => {
   }
 
   if (!user || !cart || fishes.length === 0) {
-    return <div>{t("noActiveCartFoundOrUserInformationUnavailable")}</div>;
+    return <div>No active cart found or user information unavailable</div>;
   }
 
   const fullName = user.fullName ? String(user.fullName) : "Unknown User";
@@ -305,16 +305,16 @@ const Checkout = () => {
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
             <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="/products">{t("fishList")}</Breadcrumb.Item>
-            <Breadcrumb.Item href="/cart">{t("cart")}</Breadcrumb.Item>
-            <Breadcrumb.Item>{t("checkOut")}</Breadcrumb.Item>
+            <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
+            <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
+            <Breadcrumb.Item>Check Out</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
       <div className="check-out-container">
         <Row className="check-out-form">
           <Col className="form-left">
-            <h2>{t("orderSummary")}</h2>
+            <h2>Order Summary</h2>
             {user?.pointAvailable > 0 && (
               <div
                 className="points-section"
@@ -326,12 +326,12 @@ const Checkout = () => {
                 }}
               >
                 <p style={{ margin: 0 }}>
-                  {t("availablePoints")}: {user.pointAvailable}
+                  Available Points: {user.pointAvailable}
                 </p>
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "8px" }}
                 >
-                  <span>{t("pointsToRedeem")}:</span>
+                  <span>Points to redeem:</span>
                   <InputNumber
                     min={0}
                     max={user?.pointAvailable}
@@ -355,9 +355,7 @@ const Checkout = () => {
                 <Table.Summary>
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0} colSpan={3}>
-                      <strong style={{ float: "right" }}>
-                        {t("subtotal")}:
-                      </strong>
+                      <strong style={{ float: "right" }}>Sub Total:</strong>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1}>
                       <strong>
@@ -369,7 +367,7 @@ const Checkout = () => {
                     <Table.Summary.Row>
                       <Table.Summary.Cell index={0} colSpan={3}>
                         <strong style={{ float: "right" }}>
-                          {t("pointsRedemption")}:
+                          Points redemption:
                         </strong>
                       </Table.Summary.Cell>
                       <Table.Summary.Cell index={1}>
@@ -381,9 +379,7 @@ const Checkout = () => {
                   )}
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0} colSpan={3}>
-                      <strong style={{ float: "right" }}>
-                        {t("finalTotal")}:
-                      </strong>
+                      <strong style={{ float: "right" }}>Final Total:</strong>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1}>
                       <strong>
@@ -404,35 +400,35 @@ const Checkout = () => {
                   <img src="src/images/vn-pay.png" alt="" width={50} />
                 </Radio>
                 <Radio value="bankTransfer" disabled>
-                  {t("bankTransfer")}
+                  Bank Transfer
                 </Radio>
                 <Button className="button-main" onClick={handlePlaceOrder}>
-                  {t("placeOrder")}
+                  Place Order
                 </Button>
               </Radio.Group>
             </div>
           </Col>
           <Col className="form-right">
             <div style={{ padding: "20px", border: "1px solid #f0f0f0" }}>
-              <h2>{t("billingInformation")}</h2>
+              <h2>Billing Information</h2>
               <div className="information-item">
-                <p className="item-tittle ">{t("name")}:</p>
+                <p className="item-tittle ">Name:</p>
                 <p>{fullName}</p>
               </div>
               <div className="information-item">
-                <p className="item-tittle ">{t("phoneNumber")}:</p>
-                <p>{user.phoneNumber || `${t("notProvided")}`}</p>
+                <p className="item-tittle ">Phone Number:</p>
+                <p>{user.phoneNumber || "Not provided"}</p>
               </div>
               <div className="information-item">
-                <p className="item-tittle ">{t("email")}:</p>
-                <p>{user.email || `${t("notProvided")}`}</p>
+                <p className="item-tittle ">Email:</p>
+                <p>{user.email || "Not provided"}</p>
               </div>
               <div className="information-item">
-                <p className="item-tittle ">{t("address")}:</p>
+                <p className="item-tittle ">Address:</p>
                 <p> {user.address}</p>
               </div>
               <Button className="button" onClick={showModal}>
-                {t("editAddress")}
+                Edit Address
               </Button>
             </div>
           </Col>
@@ -440,7 +436,7 @@ const Checkout = () => {
       </div>
 
       <Modal
-        title={t("editAddress")}
+        title="Edit Address"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -448,8 +444,8 @@ const Checkout = () => {
         <Form form={form} name="address" onFinish={onFinish} layout="vertical">
           <Form.Item
             name="address"
-            label={t("address")}
-            rules={[{ required: true, message: t("pleaseInputYourAddress") }]}
+            label="Address"
+            rules={[{ required: true, message: "Please Input Your Address" }]}
           >
             <Input.TextArea autoSize={{ minRows: 4, maxRows: 6 }} />
           </Form.Item>
