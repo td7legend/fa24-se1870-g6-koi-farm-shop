@@ -383,5 +383,6 @@
   "createCareConsignment": "Tạo ký gửi chăm sóc",
   "enterCareInstructionsOrSpecialRequirements": "Nhập hướng dẫn chăm sóc hoặc yêu cầu đặc biệt",
   "createConsignment": "Tạo ký gửi",
-  "helloFriend": "Xin chào, Bạn!"
+  "helloFriend": "Xin chào, Bạn!",
+  "openForm": "Tạo đơn"
 }

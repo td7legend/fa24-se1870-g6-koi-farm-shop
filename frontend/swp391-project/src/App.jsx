@@ -34,6 +34,7 @@ import StaffFishTypeManagement from "./pages/staff-page/manage-fishtype";
 import LoyaltyPointHistory from "./pages/user-page/loyaltypoint-history";
 import "react-toastify/dist/ReactToastify.css";
 import ConsignmentManagement from "./pages/staff-page/manage-consignment";
+import FishCareManagement from "./pages/staff-page/manage-consignment/manage-fishcare/manage-fishcare";
 
 function App() {
   const router = createBrowserRouter([
@@ -88,6 +89,7 @@ function App() {
         { path: "fish-management", element: <StaffFishManagement /> },
         { path: "fishtype-management", element: <StaffFishTypeManagement /> },
         { path: "consignment-management", element: <ConsignmentManagement /> },
+        { path: "fish-care-management", element: <FishCareManagement /> },
       ],
     },
   ]);

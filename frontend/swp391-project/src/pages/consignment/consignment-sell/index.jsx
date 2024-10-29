@@ -7,6 +7,7 @@ import {
   Button,
   Modal,
   InputNumber,
+  Table,
 } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
@@ -31,6 +32,7 @@ function ConsignmentSell() {
   const [customerId, setCustomerId] = useState(null);
   const { token } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+  const [showTable, setShowTable] = useState(false);
   useEffect(() => {
     fetchCustomerInfo();
   }, []);
@@ -190,7 +192,7 @@ function ConsignmentSell() {
 
       toast.success(t("consignmentSaleCreatedSuccessfully"));
       formVariable.resetFields();
-      setShowDateFields(false);
+      // setShowDateFields(false);
     } catch (error) {
       console.error("Error submitting consignment sale:", error);
       toast.error(t("failedToSubmitConsignmentSale"));
@@ -223,151 +225,189 @@ function ConsignmentSell() {
               onFinish={handleSubmit}
             >
               <div className="form-left">
-                <Form.List name="fish">
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map((field, index) => (
-                        <div key={field.key} className="fish-item">
-                          <h3>
-                            {t("fish")} {index + 1}
-                          </h3>
-                          <Form.Item
-                            {...field}
-                            label={t("fishType")}
-                            name={[field.name, "fish_type"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: t("pleaseEnterFishType"),
-                              },
-                            ]}
-                          >
-                            <Input placeholder={t("fishType")} />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...field}
-                            label={t("quantity")}
-                            name={[field.name, "quantity"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: t("pleaseEnterQuantity"),
-                              },
-                              {
-                                validator: (_, value) =>
-                                  value > 0
-                                    ? Promise.resolve()
-                                    : Promise.reject(
-                                        new Error(
-                                          t("quantityMustBeGreaterThan0")
-                                        )
-                                      ),
-                              },
-                            ]}
-                          >
-                            <InputNumber style={{ width: "100%" }} min={1} />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...field}
-                            label={t("fishImage")}
-                            name={[field.name, "fish_image"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: t("pleaseUploadFishImage"),
-                              },
-                            ]}
-                            valuePropName="fileList"
-                            getValueFromEvent={(e) => {
-                              if (Array.isArray(e)) {
-                                return e;
-                              }
-                              return e?.fileList;
-                            }}
-                          >
-                            <Upload
-                              listType="picture-card"
-                              maxCount={1}
-                              onPreview={handlePreview}
-                              beforeUpload={() => false}
-                            >
-                              {field.fish_image?.length >= 1
-                                ? null
-                                : uploadButton}
-                            </Upload>
-                          </Form.Item>
-
-                          <Form.Item
-                            {...field}
-                            label={t("fishCertificate")}
-                            name={[field.name, "fish_certificate"]}
-                            valuePropName="fileList"
-                            getValueFromEvent={(e) => {
-                              if (Array.isArray(e)) {
-                                return e;
-                              }
-                              return e?.fileList;
-                            }}
-                          >
-                            <Upload
-                              listType="picture-card"
-                              maxCount={1}
-                              onPreview={handlePreview}
-                              beforeUpload={() => false}
-                            >
-                              {field.fish_certificate?.length >= 1
-                                ? null
-                                : uploadButton}
-                            </Upload>
-                          </Form.Item>
-
-                          <Button
-                            icon={<MinusCircleOutlined />}
-                            onClick={() => {
-                              remove(field.name);
-                              if (fields.length === 1) {
-                                setShowDateFields(false);
-                                formVariable.resetFields();
-                              }
-                            }}
-                            type="dashed"
-                            style={{ marginBottom: 20 }}
-                          >
-                            {t("removeFish")}
-                          </Button>
-                        </div>
-                      ))}
-                      {/* Hiển thị nút Add Fish ở giữa nếu không có form nào */}
-                      {fields.length === 0 ? (
-                        <div className="add-fish-center">
+                {!showTable ? (
+                  <div className="add-fish-center">
+                    <Button
+                      onClick={() => {
+                        setShowTable(true);
+                        setShowDateFields(true);
+                        add();
+                      }}
+                      icon={<PlusOutlined />}
+                    >
+                      {t("openForm")}
+                    </Button>
+                  </div>
+                ) : (
+                  <Form.List name="fish">
+                    {(fields, { add, remove }) => (
+                      <>
+                        <Table
+                          dataSource={fields}
+                          pagination={false}
+                          rowKey="key"
+                          columns={[
+                            {
+                              title: t("fishType"),
+                              key: "fish_type",
+                              render: (_, field, index) => (
+                                <Form.Item
+                                  {...field}
+                                  name={[field.name, "fish_type"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("pleaseEnterFishType"),
+                                    },
+                                  ]}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Input placeholder={t("fishType")} />
+                                </Form.Item>
+                              ),
+                            },
+                            {
+                              title: t("quantity"),
+                              key: "quantity",
+                              render: (_, field, index) => (
+                                <Form.Item
+                                  {...field}
+                                  name={[field.name, "quantity"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("pleaseEnterQuantity"),
+                                    },
+                                    {
+                                      validator: (_, value) =>
+                                        value > 0
+                                          ? Promise.resolve()
+                                          : Promise.reject(),
+                                    },
+                                  ]}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Input
+                                    type="number"
+                                    placeholder={t("quantity")}
+                                    min={1}
+                                  />
+                                </Form.Item>
+                              ),
+                            },
+                            {
+                              title: t("fishImage"),
+                              key: "fish_image",
+                              render: (_, field, index) => (
+                                <Form.Item
+                                  {...field}
+                                  name={[field.name, "fish_image"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t("pleaseUploadFishImage"),
+                                    },
+                                  ]}
+                                  valuePropName="fileList"
+                                  getValueFromEvent={(e) => {
+                                    if (Array.isArray(e)) {
+                                      return e;
+                                    }
+                                    return e?.fileList;
+                                  }}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Upload
+                                    listType="picture-card"
+                                    maxCount={1}
+                                    onPreview={handlePreview}
+                                    beforeUpload={() => false}
+                                  >
+                                    {field.fish_image?.length >= 1
+                                      ? null
+                                      : uploadButton}
+                                  </Upload>
+                                </Form.Item>
+                              ),
+                            },
+                            {
+                              title: t("fishCertificate"),
+                              key: "fish_certificate",
+                              render: (_, field, index) => (
+                                <Form.Item
+                                  {...field}
+                                  name={[field.name, "fish_certificate"]}
+                                  valuePropName="fileList"
+                                  getValueFromEvent={(e) => {
+                                    if (Array.isArray(e)) {
+                                      return e;
+                                    }
+                                    return e?.fileList;
+                                  }}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Upload
+                                    listType="picture-card"
+                                    maxCount={1}
+                                    onPreview={handlePreview}
+                                    beforeUpload={() => false}
+                                  >
+                                    {field.fish_certificate?.length >= 1
+                                      ? null
+                                      : uploadButton}
+                                  </Upload>
+                                </Form.Item>
+                              ),
+                            },
+                            {
+                              title: t("actions"),
+                              key: "actions",
+                              render: (_, field, index) => (
+                                <Button
+                                  icon={<MinusCircleOutlined />}
+                                  onClick={() => {
+                                    remove(field.name);
+                                    if (fields.length === 1) {
+                                      setShowTable(false);
+                                      setShowDateFields(false);
+                                      formVariable.resetFields();
+                                    }
+                                  }}
+                                  danger
+                                >
+                                  {t("removeFish")}
+                                </Button>
+                              ),
+                            },
+                          ]}
+                        />
+                        <div className="table-buttons">
                           <Button
                             onClick={() => {
                               add();
                               setShowDateFields(true);
                             }}
                             icon={<PlusOutlined />}
+                            style={{ marginTop: 20 }}
                           >
                             {t("addFish")}
                           </Button>
+                          <Button
+                            onClick={() => {
+                              setShowTable(false);
+                              setShowDateFields(false);
+                              formVariable.resetFields();
+                            }}
+                            style={{ marginTop: 20, marginLeft: 10 }}
+                            danger
+                          >
+                            {t("close")}
+                          </Button>
                         </div>
-                      ) : (
-                        <Button
-                          onClick={() => {
-                            add();
-                            setShowDateFields(true);
-                          }}
-                          block
-                          icon={<PlusOutlined />}
-                          style={{ marginTop: 20 }}
-                        >
-                          {t("addFish")}
-                        </Button>
-                      )}
-                    </>
-                  )}
-                </Form.List>
+                      </>
+                    )}
+                  </Form.List>
+                )}
               </div>
               <div className="form-right">
                 {showDateFields && (
