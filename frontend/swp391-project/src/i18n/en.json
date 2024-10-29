@@ -380,5 +380,6 @@
   "failedToCreateConsignment": "Failed to create consignment",
   "createCareConsignment": "Create Care Consignment",
   "enterCareInstructionsOrSpecialRequirements": "Enter care instructions or special requirements",
-  "createConsignment": "Create Consignment"
+  "createConsignment": "Create Consignment",
+  "helloFriend": "Hello, Friend!"
 }

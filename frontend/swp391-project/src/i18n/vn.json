@@ -382,5 +382,6 @@
   "thankYouForYourPurchase": "Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xác nhận.",
   "createCareConsignment": "Tạo ký gửi chăm sóc",
   "enterCareInstructionsOrSpecialRequirements": "Nhập hướng dẫn chăm sóc hoặc yêu cầu đặc biệt",
-  "createConsignment": "Tạo ký gửi"
+  "createConsignment": "Tạo ký gửi",
+  "helloFriend": "Xin chào, Bạn!"
 }

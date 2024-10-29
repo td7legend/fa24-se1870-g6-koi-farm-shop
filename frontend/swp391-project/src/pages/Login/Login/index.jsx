@@ -171,7 +171,7 @@ const Main = ({
             </button>
           </div>
           <div className="toggle-panel toggle-right">
-            <h1>Hello, Friend!</h1>
+            <h1>{t("helloFriend")}</h1>
             <p>{t("registerWithYourPersonalDetailsToUseAllOfSiteFeatures")}</p>
             <button className="hidden" onClick={() => setActive(true)}>
               {t("signUp")}
