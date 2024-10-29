@@ -4,16 +4,14 @@ import {
   Row,
   Col,
   Button,
-  Space,
   Image,
   InputNumber,
   Carousel,
   Breadcrumb,
   Rate,
   message,
-  Drawer,
-  List,
   Typography,
+  Input,
 } from "antd";
 import "./index.scss";
 import { ShoppingCartOutlined } from "@ant-design/icons";
@@ -34,10 +32,13 @@ function ProductDetail() {
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [fishes, setFishes] = useState([]);
   const [fishTypes, setFishTypes] = useState([]);
+  const [userRating, setUserRating] = useState(0);
+  const [ratingComment, setRatingComment] = useState("");
+  const [submittingRating, setSubmittingRating] = useState(false);
+  const [ratings, setRatings] = useState([]);
   const [currentFishTypes, setCurrentFishTypes] = useState({});
   const [activeTab, setActiveTab] = useState("description");
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
@@ -78,9 +79,74 @@ function ProductDetail() {
     }
   };
 
-  const getFishPrice = (fishId) => {
-    const fish = fishes.find((f) => f.fishId === fishId);
-    return fish ? fish.price : 0;
+  const fetchRatings = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}ratings/fish/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data && response.data.length > 0) {
+        setRatings(response.data);
+        // If user has rated, set their rating
+        const userRating = response.data.find(
+          (rating) => rating.customerName === "TranDuy"
+        );
+        if (userRating) {
+          setUserRating(userRating.ratingValue);
+          setRatingComment(userRating.comment);
+        }
+      }
+    } catch (error) {
+      console.log("Error fetching ratings:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchRatings();
+    }
+  }, [id]);
+
+  const handleSubmitRatingAndComment = async () => {
+    if (!token) {
+      message.error(t("Please log in to rate this product"));
+      return;
+    }
+
+    if (!userRating) {
+      message.error(t("Please rate this product"));
+      return;
+    }
+
+    setSubmittingRating(true);
+    try {
+      const response = await axios.post(
+        `${config.API_ROOT}ratings/rate-fish`,
+        {
+          fishId: parseInt(id),
+          ratingValue: userRating,
+          comment: ratingComment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        message.success(t("Rating Submitted Successfully"));
+        setRatingComment("");
+        fetchRatings();
+        await fetchProduct();
+      }
+    } catch (error) {
+      message.error(error.response.data);
+    } finally {
+      setSubmittingRating(false);
+    }
   };
 
   const fetchCart = async () => {
@@ -211,7 +277,7 @@ function ProductDetail() {
                   <CurrencyFormatter amount={product.price} />
                 </span>
               </h2>
-              <Rate allowHalf defaultValue={5} />
+              <Rate value={product.overallRating || 0} disabled />
 
               <div className="product-info">
                 <p>
@@ -222,7 +288,8 @@ function ProductDetail() {
                   <span>{t("age")}:</span> {product.age}
                 </p>
                 <p>
-                  <span>{t("gender")}:</span> {product.gender}
+                  <span>{t("gender")}:</span>{" "}
+                  {product.gender === 0 ? t("Male") : t("Female")}
                 </p>
               </div>
 
@@ -277,7 +344,7 @@ function ProductDetail() {
                 <div className="product-description">
                   <h3>{t("description")}</h3>
                   <p>
-                    {capitalizeFirstLetter(currentFishTypes.description) ||
+                    {capitalizeFirstLetter(product.description) ||
                       t("noDescriptionAvailable")}
                   </p>
                 </div>
@@ -285,10 +352,54 @@ function ProductDetail() {
               {activeTab === "rating" && (
                 <div className="product-ratings">
                   <h3>{t("customerRatings")}</h3>
-                  <Rate allowHalf defaultValue={product.rating || 4.5} />
-                  <p>
-                    {t("rating")}: {product.rating || 4.5} / 5
-                  </p>
+
+                  {/* Rating submission form */}
+                  <div className="rating-form border p-4 rounded-lg mb-6">
+                    <h4 className="mb-2">{t("Write A Review")}</h4>
+                    <div className="mb-3">
+                      <Rate
+                        value={userRating}
+                        onChange={setUserRating}
+                        disabled={submittingRating}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <Input.TextArea
+                        value={ratingComment}
+                        onChange={(e) => setRatingComment(e.target.value)}
+                        placeholder={t("Write Your Comment Here")}
+                        rows={4}
+                        disabled={submittingRating}
+                      />
+                    </div>
+                    <Button
+                      type="primary"
+                      onClick={handleSubmitRatingAndComment}
+                      loading={submittingRating}
+                      disabled={!userRating}
+                    >
+                      {t("Submit Review")}
+                    </Button>
+                  </div>
+
+                  {/* Display all ratings */}
+                  <div className="all-ratings">
+                    <h4 className="mb-2">{t("All Reviews")}</h4>
+                    {ratings.map((rating, index) => (
+                      <div key={index} className="border-b py-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">
+                            {rating.customerName}
+                          </span>
+                          <Rate disabled value={rating.ratingValue} />
+                        </div>
+                        {rating.comment && (
+                          <p className="mt-1 text-gray-600">{rating.comment}</p>
+                        )}
+                      </div>
+                    ))}
+                    {ratings.length === 0 && <p>{t("noReviewsYet")}</p>}
+                  </div>
                 </div>
               )}
             </div>

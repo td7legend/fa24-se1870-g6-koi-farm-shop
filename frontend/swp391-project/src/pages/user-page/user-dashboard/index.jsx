@@ -47,6 +47,18 @@ const UserDashboard = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "N/A";
+
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -137,7 +149,7 @@ const UserDashboard = () => {
       title: t("date"),
       dataIndex: "orderDate",
       key: "date",
-      render: (date) => new Date(date).toLocaleDateString(),
+      render: (date) => formatDate(date),
     },
     {
       title: t("total"),

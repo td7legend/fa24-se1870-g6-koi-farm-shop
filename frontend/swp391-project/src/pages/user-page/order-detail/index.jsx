@@ -71,7 +71,13 @@ const OrderDetailsPage = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return isNaN(date.getTime()) ? "N/A" : date.toLocaleDateString();
+    if (isNaN(date.getTime())) return "N/A";
+
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }); // Will return format: DD/MM/YYYY
   };
 
   const columns = [
@@ -193,6 +199,23 @@ const OrderDetailsPage = () => {
                     <Col span={12}>
                       <Text>
                         {order.totalDiscount.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                      </Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Text strong>{t("Final Amount")}:</Text>
+                    </Col>
+                    <Col span={12}>
+                      <Text>
+                        {(
+                          order.totalAmount +
+                          order.totalTax -
+                          order.totalDiscount
+                        ).toLocaleString("vi-VN", {
                           style: "currency",
                           currency: "VND",
                         })}
