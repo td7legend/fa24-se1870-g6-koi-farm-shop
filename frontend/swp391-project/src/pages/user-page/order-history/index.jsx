@@ -37,6 +37,17 @@ const OrderHistoryPage = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { token } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "N/A";
+
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -97,7 +108,7 @@ const OrderHistoryPage = () => {
       title: t("date"),
       dataIndex: "orderDate",
       key: "date",
-      render: (date) => (date ? new Date(date).toLocaleDateString() : "N/A"),
+      render: (date) => formatDate(date),
     },
     {
       title: t("totalAmount"),

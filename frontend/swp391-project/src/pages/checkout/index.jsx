@@ -12,6 +12,7 @@ import {
   Modal,
   message,
   Spin,
+  InputNumber,
 } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +29,7 @@ const Checkout = () => {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState(null);
   const [fishes, setFishes] = useState([]);
+  const [pointsToRedeem, setPointsToRedeem] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("VnPay");
   const [loading, setLoading] = useState(true);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
@@ -82,6 +84,12 @@ const Checkout = () => {
       (total, item) => total + calculateItemTotal(item),
       0
     );
+  };
+
+  const calculateFinalPrice = () => {
+    const totalPrice = calculateTotalPrice();
+    const pointsValueInVND = pointsToRedeem * 1000; // Convert points to VND
+    return Math.max(0, totalPrice - pointsValueInVND);
   };
 
   const columns = [
@@ -143,7 +151,7 @@ const Checkout = () => {
     try {
       const paymentData = {
         orderType: "01",
-        amount: calculateTotalPrice(),
+        amount: calculateFinalPrice(),
         orderDescription: `Payment for Order`,
         name: "",
       };
@@ -202,6 +210,15 @@ const Checkout = () => {
   const handlePaymentSuccess = async () => {
     try {
       message.success(t("paymentSuccessful"));
+      if (pointsToRedeem > 0) {
+        await axios.post(
+          `${config.API_ROOT}LoyaltyPoint/redeem?customerId=${user.customerId}&pointsToRedeem=${pointsToRedeem}`,
+          null,
+          {
+            headers: { Authorization: `Bearer ${token ?? null}` },
+          }
+        );
+      }
       await completeOrder();
     } catch (error) {
       console.error("Error completing order:", error);
@@ -219,10 +236,10 @@ const Checkout = () => {
 
       const orderData = {
         orderId: cart.orderId,
-        status: 1, // Assuming 1 means "Paid"
+        status: 1,
         totalAmount: calculateTotalPrice(),
         totalTax: 0,
-        totalDiscount: 0,
+        totalDiscount: pointsToRedeem * 1000,
         orderDate: new Date().toISOString(),
         address: user.address,
         customerId: user.id,
@@ -249,7 +266,7 @@ const Checkout = () => {
         navigate("/checkout/success", {
           state: {
             orderId: cart.orderId,
-            totalAmount: calculateTotalPrice(),
+            totalAmount: calculateFinalPrice(),
           },
         });
       } else {
@@ -298,6 +315,36 @@ const Checkout = () => {
         <Row className="check-out-form">
           <Col className="form-left">
             <h2>{t("orderSummary")}</h2>
+            {user?.pointAvailable > 0 && (
+              <div
+                className="points-section"
+                style={{
+                  marginBottom: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                }}
+              >
+                <p style={{ margin: 0 }}>
+                  {t("availablePoints")}: {user.pointAvailable}
+                </p>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <span>{t("pointsToRedeem")}:</span>
+                  <InputNumber
+                    min={0}
+                    max={user?.pointAvailable}
+                    value={pointsToRedeem}
+                    onChange={(value) => setPointsToRedeem(value || 0)}
+                    style={{ width: "100px" }}
+                  />
+                </div>
+                {pointsToRedeem > 0 && (
+                  <span>(-{(pointsToRedeem * 1000).toLocaleString()} VND)</span>
+                )}
+              </div>
+            )}
             <Table
               className="table"
               columns={columns}
@@ -309,12 +356,38 @@ const Checkout = () => {
                   <Table.Summary.Row>
                     <Table.Summary.Cell index={0} colSpan={3}>
                       <strong style={{ float: "right" }}>
-                        {t("totalPrice")}:
+                        {t("subtotal")}:
                       </strong>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1}>
                       <strong>
                         {calculateTotalPrice().toLocaleString()} VND
+                      </strong>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                  {pointsToRedeem > 0 && (
+                    <Table.Summary.Row>
+                      <Table.Summary.Cell index={0} colSpan={3}>
+                        <strong style={{ float: "right" }}>
+                          {t("pointsRedemption")}:
+                        </strong>
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={1}>
+                        <strong>
+                          -{(pointsToRedeem * 1000).toLocaleString()} VND
+                        </strong>
+                      </Table.Summary.Cell>
+                    </Table.Summary.Row>
+                  )}
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} colSpan={3}>
+                      <strong style={{ float: "right" }}>
+                        {t("finalTotal")}:
+                      </strong>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>
+                      <strong>
+                        {calculateFinalPrice().toLocaleString()} VND
                       </strong>
                     </Table.Summary.Cell>
                   </Table.Summary.Row>
