@@ -166,7 +166,6 @@ public class OrderService : IOrderService
     }
     public async Task AddItemToCart(int customerId, OrderLineCreateDTO orderLineCreateDto)
     {
-        
         var inCartOrder = await _orderRepository.GetInCartOrderByCustomerIdAsync(customerId);
 
         if (inCartOrder == null)
@@ -186,9 +185,13 @@ public class OrderService : IOrderService
         }
 
         var fish = await _fishRepository.GetByIdAsync(orderLineCreateDto.FishId);
-        if (fish == null || fish.Quantity < orderLineCreateDto.Quantity)
+        if (fish == null)
         {
-            throw new Exception("Fish not available or insufficient quantity");
+            throw new Exception("Fish not available");
+        }
+        if (fish.Quantity < orderLineCreateDto.Quantity)
+        {
+            throw new Exception("Insufficient quantity");
         }
 
         var orderLine = new OrderLine
@@ -205,6 +208,7 @@ public class OrderService : IOrderService
         inCartOrder.TotalAmount = inCartOrder.OrderLines.Sum(ol => ol.TotalPrice);
         await _orderRepository.UpdateAsync(inCartOrder);
     }
+
     public async Task<List<OrderHistoryDTO>> GetOrderHistory(int customerId)
     {
         var orders = await _orderRepository.GetOrderHistoryByCustomerIdAsync(customerId);
