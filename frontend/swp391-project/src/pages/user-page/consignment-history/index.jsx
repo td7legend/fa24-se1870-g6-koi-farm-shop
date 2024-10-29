@@ -6,7 +6,6 @@ import {
   Tag,
   Modal,
   message,
-  Space,
   Typography,
   Descriptions,
   Badge,
@@ -46,6 +45,15 @@ const ConsignmentHistory = () => {
   useEffect(() => {
     fetchConsignments();
   }, []);
+
+  const formatPrice = (price) => {
+    return price
+      ? price.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        })
+      : "0 VND";
+  };
 
   const fetchConsignments = async () => {
     try {
@@ -134,10 +142,13 @@ const ConsignmentHistory = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "N/A";
+
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
       year: "numeric",
-      month: "long",
-      day: "numeric",
     });
   };
 
@@ -183,7 +194,7 @@ const ConsignmentHistory = () => {
       key: "price",
       render: (_, record) => {
         const price = record.type === 0 ? record.careFee : record.agreedPrice;
-        return `$${price?.toFixed(2) || "0.00"}`;
+        return formatPrice(price);
       },
     },
     {
@@ -293,11 +304,11 @@ const ConsignmentHistory = () => {
                     </Descriptions.Item>
                     {selectedConsignment.type === 0 ? (
                       <Descriptions.Item label="Care Fee">
-                        ${selectedConsignment.careFee?.toFixed(2) || "0.00"}
+                        {formatPrice(selectedConsignment.careFee)}
                       </Descriptions.Item>
                     ) : (
                       <Descriptions.Item label="Agreed Price">
-                        ${selectedConsignment.agreedPrice?.toFixed(2) || "0.00"}
+                        {formatPrice(selectedConsignment.agreedPrice)}
                       </Descriptions.Item>
                     )}
                     <Descriptions.Item label="Note" span={2}>
@@ -318,14 +329,50 @@ const ConsignmentHistory = () => {
                         loading={loadingFishCare}
                         columns={[
                           {
+                            title: "Image",
+                            dataIndex: "fishType",
+                            key: "image",
+                            width: 150,
+                            render: (fishType) => {
+                              // Find the matching consignment line for this fish care record
+                              const consignmentLine =
+                                selectedConsignment.consignmentLines.find(
+                                  (line) => line.fishType === fishType
+                                );
+                              return consignmentLine?.imageUrl ? (
+                                <img
+                                  src={consignmentLine.imageUrl}
+                                  alt={fishType}
+                                  style={{
+                                    width: 120,
+                                    height: 80,
+                                    objectFit: "cover",
+                                    borderRadius: 4,
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() =>
+                                    window.open(
+                                      consignmentLine.imageUrl,
+                                      "_blank"
+                                    )
+                                  }
+                                />
+                              ) : (
+                                "No image"
+                              );
+                            },
+                          },
+                          {
                             title: "Fish Type",
                             dataIndex: "fishType",
                             key: "fishType",
+                            width: 120,
                           },
                           {
                             title: "Health Status",
                             dataIndex: "healthStatus",
                             key: "healthStatus",
+                            width: 120,
                             render: (status) => {
                               const statusColors = {
                                 Good: "green",
@@ -373,18 +420,16 @@ const ConsignmentHistory = () => {
                             key: "quantity",
                           },
                           {
-                            title: "Total Price",
-                            dataIndex: "totalPrice",
-                            key: "totalPrice",
-                            render: (price) =>
-                              `$${price?.toFixed(2) || "0.00"}`,
-                          },
-                          {
                             title: "Unit Price",
                             dataIndex: "unitPrice",
                             key: "unitPrice",
-                            render: (price) =>
-                              `$${price?.toFixed(2) || "0.00"}`,
+                            render: (price) => formatPrice(price),
+                          },
+                          {
+                            title: "Total Price",
+                            dataIndex: "totalPrice",
+                            key: "totalPrice",
+                            render: (price) => formatPrice(price),
                           },
                           {
                             title: "Images",
@@ -395,7 +440,13 @@ const ConsignmentHistory = () => {
                                 <img
                                   src={url}
                                   alt="Fish"
-                                  style={{ maxWidth: 100, cursor: "pointer" }}
+                                  style={{
+                                    width: 120,
+                                    height: 80,
+                                    objectFit: "cover",
+                                    borderRadius: 4,
+                                    cursor: "pointer",
+                                  }}
                                   onClick={() => window.open(url, "_blank")}
                                 />
                               ) : (
