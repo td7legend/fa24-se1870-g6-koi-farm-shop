@@ -74,7 +74,9 @@ function FAQsPage() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>FAQs</Breadcrumb.Item>
+              <Breadcrumb.Item className="breadcrumb-page">
+                FAQs
+              </Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>

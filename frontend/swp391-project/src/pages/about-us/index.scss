@@ -14,6 +14,23 @@ $large-border-radius: 20px;
   overflow: hidden;
   background-color: $background-color;
   font-family: sans-serif;
+  z-index: 2;
+  padding: 10px;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 1;
+    filter: blur(4px);
+    pointer-events: none;
+  }
 
   .about-us-container {
     display: grid;
@@ -23,26 +40,12 @@ $large-border-radius: 20px;
     min-height: 100vh;
     max-width: 100%;
     align-items: start;
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("../../images/japanese-pattern.png");
-      background-size: cover;
-      background-position: center;
-      opacity: 0.2;
-      z-index: 1;
-      filter: blur(4px);
-      pointer-events: none;
-    }
+    animation: fadeIn 0.8s forwards;
+    z-index: 2;
 
     .about-us-form {
       grid-column: span 1;
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color: rgba(255, 255, 255, 1);
       border-radius: $large-border-radius;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       padding: 40px;

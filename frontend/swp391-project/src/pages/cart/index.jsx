@@ -19,6 +19,7 @@ import config from "../../config/config";
 import { AES, enc } from "crypto-js";
 import { setCart } from "../../store/actions/cartAction";
 import { useTranslation } from "react-i18next";
+import LoadingKoi from "../../components/loading";
 
 const Cart = () => {
   const [cart, setCartNoneRedux] = useState(null);
@@ -190,11 +191,11 @@ const Cart = () => {
   ];
 
   if (loading) {
-    return <Spin size="large" />;
+    return <LoadingKoi />;
   }
 
   return (
-    <>
+    <div className="cart-page">
       <Col span={24}>
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
@@ -204,7 +205,9 @@ const Cart = () => {
             <Breadcrumb.Item href="/products">
               {t("productList")}
             </Breadcrumb.Item>
-            <Breadcrumb.Item>{t("cart")}</Breadcrumb.Item>
+            <Breadcrumb.Item className="breadcrumb-page">
+              {t("cart")}
+            </Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
@@ -217,6 +220,8 @@ const Cart = () => {
             maxWidth: 800,
             margin: "20px auto",
             padding: "20px",
+            borderRadius: "20px",
+            background: "rgba(255, 250, 240, 0.7)",
           }}
         >
           {cart && cart.orderLines && cart.orderLines.length > 0 ? (
@@ -259,7 +264,7 @@ const Cart = () => {
           )}
         </Card>
       </div>
-    </>
+    </div>
   );
 };
 
