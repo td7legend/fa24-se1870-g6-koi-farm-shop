@@ -257,9 +257,10 @@ const UserDashboard = () => {
                   {renderUserInfo("Address", user.address)}
                   {renderUserInfo("Email", user.email)}
                   {renderUserInfo("Phone", user.phoneNumber)}
-                  {renderUserInfo("Total Points", user.tier)}
+                  {renderUserInfo("Tier", user.tier)}
                   {renderUserInfo("Points Available", user.pointAvailable)}
                   {renderUserInfo("Points Used", user.usedPoint)}
+                  {renderUserInfo("Total Points", user.accommodatePoint)}
                 </Col>
 
                 <Col span={8} style={{ textAlign: "center" }}>
