@@ -59,6 +59,7 @@ function Layout() {
         onClose={() => setCartDrawerVisible(false)}
         open={cartDrawerVisible}
         width={400}
+        style={{ fontSize: "20px" }}
       >
         <List
           itemLayout="horizontal"
