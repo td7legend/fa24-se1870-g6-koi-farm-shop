@@ -1,4 +1,6 @@
-﻿using koi_farm_demo.Services;
+﻿using System.Security.Claims;
+using koi_farm_demo.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,6 +45,31 @@ namespace koi_farm_demo.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("history")]
+        [Authorize]
+        public async Task<IActionResult> GetPointHistory()
+        {
+            // Lấy userId từ claim
+            var userIdClaim = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (!int.TryParse(userIdClaim, out int customerId))
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            try
+            {
+                var history = await _loyaltyPointService.GetLoyaltyPointHistoryAsync(customerId);
+                if (!history.Any())
+                {
+                    return NotFound("No loyalty point history found.");
+                }
+                return Ok(history);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }

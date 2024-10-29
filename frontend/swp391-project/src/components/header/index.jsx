@@ -27,7 +27,7 @@ import LanguageSelector from "../language/LanguageSelector";
 import { useTranslation } from "react-i18next";
 const { Text } = Typography;
 
-const Header = () => {
+const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -37,9 +37,9 @@ const Header = () => {
   const [fishes, setFishes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [cartItems, setCartItems] = useState([]);
-  const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
+  // const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
   const { cartItemsRedux } = useSelector((state) => state.cart);
-  // Move getFishPrice outside of useEffect
+
   const getFishPrice = (fishId) => {
     const fish = fishes.find((f) => f.fishId === fishId);
     return fish ? fish.price : 0;
@@ -86,6 +86,7 @@ const Header = () => {
       try {
         const response = await axios.get(`${config.API_ROOT}fishs`);
         setFishes(response.data);
+        console.log(response.data);
       } catch (error) {
         console.log("Error: ", error.message);
       }
@@ -117,8 +118,12 @@ const Header = () => {
   };
 
   const handleCartClick = () => {
-    toast.error(t("loginToSeeYourCart"));
-    // navigate("/login");
+    if (!isLoggedIn) {
+      toast.error(t("loginToSeeYourCart"));
+      navigate("/login");
+    } else {
+      setCartDrawerVisible(true);
+    }
   };
 
   const calculateTotal = () => {
@@ -146,17 +151,10 @@ const Header = () => {
             <LanguageSelector />
           </div>
 
-          {!isLoggedIn ? (
-            <div className="cart" onClick={handleCartClick}>
-              <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" />{" "}
-              {t("yourCart")}
-            </div>
-          ) : (
-            <div className="cart" onClick={() => setCartDrawerVisible(true)}>
-              <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" />{" "}
-              {t("yourCart")}
-            </div>
-          )}
+          <div className="cart" onClick={handleCartClick}>
+            <FontAwesomeIcon icon={faShoppingCart} className="fa__icon" />{" "}
+            {t("yourCart")}
+          </div>
 
           {!isLoggedIn ? (
             <Link to="/login" className="register__sign__in">
@@ -237,23 +235,23 @@ const Header = () => {
         <List
           itemLayout="horizontal"
           dataSource={cartItemsRedux}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={
-                  <img src={item.imageUrl} width={50} alt={item.fishName} />
-                }
-                title={item.fishName}
-                description={`${t("quantity")}: ${item.quantity}`}
-              />
-              <div>
-                <Text>
-                  {(getFishPrice(item.fishId) * item.quantity).toLocaleString()}{" "}
-                  VND
-                </Text>
-              </div>
-            </List.Item>
-          )}
+          renderItem={(item) => {
+            const price = getFishPrice(item.fishId);
+            return (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={
+                    <img src={item.imageUrl} width={50} alt={item.fishName} />
+                  }
+                  title={item.fishName}
+                  description={`${t("quantity")}: ${item.quantity}`}
+                />
+                <div>
+                  <Text>{(price * item.quantity).toLocaleString()} VND</Text>{" "}
+                </div>
+              </List.Item>
+            );
+          }}
         />
         <div style={{ marginTop: 16, textAlign: "right" }}>
           <Text strong>

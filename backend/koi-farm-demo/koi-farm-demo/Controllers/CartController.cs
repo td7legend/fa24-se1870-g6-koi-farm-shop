@@ -52,19 +52,60 @@ namespace koi_farm_demo.Controllers
 
             if (!int.TryParse(userIdClaim, out int userId))
             {
-                return BadRequest("Invalid user ID.");
+                return BadRequest(new
+                {
+                    ErrorCode = "InvalidUserID",
+                    Message = "User ID không hợp lệ.",
+                    Detail = "Không thể phân tích user ID từ token xác thực."
+                });
             }
 
-            // Lấy CustomerId dựa trên UserId
             var customer = await _customerService.GetCustomerByUserIdAsync(userId);
             if (customer == null)
             {
-                return NotFound("Customer not found.");
+                return NotFound(new
+                {
+                    ErrorCode = "CustomerNotFound",
+                    Message = "Không tìm thấy thông tin khách hàng.",
+                    Detail = "User ID không tương ứng với bất kỳ khách hàng nào."
+                });
             }
 
-            await _orderService.AddItemToCart(customer.CustomerId, orderLineCreateDto);
-            return Ok();
+            try
+            {
+                await _orderService.AddItemToCart(customer.CustomerId, orderLineCreateDto);
+                return Ok("Sản phẩm đã được thêm vào giỏ hàng thành công.");
+            }
+            catch (Exception ex) when (ex.Message.Contains("Fish not available"))
+            {
+                return BadRequest(new
+                {
+                    ErrorCode = "FishUnavailable",
+                    Message = "Sản phẩm này hiện không có sẵn.",
+                    Detail = ex.Message
+                });
+            }
+            catch (Exception ex) when (ex.Message.Contains("insufficient quantity"))
+            {
+                return BadRequest(new
+                {
+                    ErrorCode = "InsufficientQuantity",
+                    Message = "Số lượng cá không đủ trong kho.",
+                    Detail = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ErrorCode = "InternalError",
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu.",
+                    Detail = ex.Message
+                });
+            }
         }
+
+
         [HttpPatch("carts")]
         public async Task<IActionResult> UpdateCart(UpdateCartDTO updateCartDTO)
         {
