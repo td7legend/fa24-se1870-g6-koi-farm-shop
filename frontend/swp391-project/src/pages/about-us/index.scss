@@ -37,6 +37,7 @@ $large-border-radius: 20px;
       opacity: 0.2;
       z-index: 1;
       filter: blur(4px);
+      pointer-events: none;
     }
 
     .about-us-form {

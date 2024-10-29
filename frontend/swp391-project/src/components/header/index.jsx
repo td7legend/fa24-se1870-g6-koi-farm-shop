@@ -129,7 +129,7 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
+    <header className={`header ${cartDrawerVisible ? "blur-background" : ""}`}>
       <div className="header__top">
         <div className="header__logo">
           <Link to="/">
@@ -232,6 +232,7 @@ const Header = () => {
         onClose={() => setCartDrawerVisible(false)}
         visible={cartDrawerVisible}
         width={400}
+        className="drawer-container"
       >
         <List
           itemLayout="horizontal"

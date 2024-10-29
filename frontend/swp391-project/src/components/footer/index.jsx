@@ -73,7 +73,7 @@ function Footer() {
                 <Link to="/consignment">{t("consignment")}</Link>
               </li>
               <li>
-                <Link to="/products">{t("products")}</Link>
+                <Link to="/fish-page">{t("fishs")}</Link>
               </li>
               <li>
                 <Link to="/">{t("home")}</Link>

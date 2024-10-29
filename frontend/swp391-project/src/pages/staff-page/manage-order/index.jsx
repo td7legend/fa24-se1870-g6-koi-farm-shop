@@ -72,6 +72,26 @@ const StaffOrderManagement = () => {
     }
   };
 
+  const awardLoyaltyPoints = async (order) => {
+    try {
+      await axios.post(
+        `${config.API_ROOT}LoyaltyPoint/award?customerId=${order.customerId}&orderAmount=${order.totalAmount}`,
+        null, // no body needed
+        {
+          headers: {
+            Authorization: `Bearer ${token ?? null}`,
+          },
+        }
+      );
+      message.success("Loyalty points awarded successfully");
+    } catch (error) {
+      console.error("Error awarding loyalty points:", error);
+      message.warning(
+        "Failed to award loyalty points, but order was completed"
+      );
+    }
+  };
+
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       await axios.patch(
@@ -85,11 +105,20 @@ const StaffOrderManagement = () => {
         }
       );
 
-      message.success("Order status updated successfully");
+      // If the order is being completed, award loyalty points
+      if (newStatus === 4) {
+        const order = orders.find((o) => o.orderId === orderId);
+        if (order) {
+          await awardLoyaltyPoints(order);
+        }
+      }
+
       fetchOrders();
       if (selectedOrder?.orderId === orderId) {
         fetchOrderDetails(orderId);
       }
+
+      message.success(`Order status updated successfully`);
     } catch (error) {
       console.error("Error updating order status:", error);
       if (error.response?.data?.errors) {

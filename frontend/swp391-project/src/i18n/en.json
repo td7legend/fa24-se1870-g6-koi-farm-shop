@@ -1,6 +1,6 @@
 {
   "home": "Home",
-  "products": "Products",
+  "fishs": "Fishs",
   "aboutUs": "About Us",
   "contact": "Contact",
   "registerSignIn": "Register/Sign in",
@@ -380,5 +380,6 @@
   "failedToCreateConsignment": "Failed to create consignment",
   "createCareConsignment": "Create Care Consignment",
   "enterCareInstructionsOrSpecialRequirements": "Enter care instructions or special requirements",
-  "createConsignment": "Create Consignment"
+  "createConsignment": "Create Consignment",
+  "helloFriend": "Hello, Friend!"
 }
