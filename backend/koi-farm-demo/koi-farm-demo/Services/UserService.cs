@@ -61,7 +61,7 @@ namespace koi_farm_demo.Services
 
             await _customerRepository.AddCustomerAsync(customer); 
         }
-
+       
         public async Task AddStaffAsync(string email, string password, string fullName, string phoneNumber, string role)
         {
             // Kiểm tra xem email có tồn tại không
@@ -207,7 +207,18 @@ namespace koi_farm_demo.Services
 
             await _userRepository.UpdateUserAsync(user);
         }
+        public async Task<string> GetEmailByUserIdAsync(int userId)
+        {
+            // Lấy thông tin người dùng theo UserId
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
 
+            // Trả về địa chỉ email của người dùng
+            return user.Email;
+        }
 
     }
 }
