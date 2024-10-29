@@ -43,7 +43,7 @@ const Checkout = () => {
       setLoading(true);
       if (!isLoggedIn) {
         message.error(t("noAuthenticationTokenFoundPleaseLogIn"));
-        navigate("/login"); // Redirect to login if token is not available
+        navigate("/login");
         return;
       }
 
@@ -58,7 +58,7 @@ const Checkout = () => {
       ]);
 
       setUser(userResponse.data);
-      setCart(cartResponse.data[0]); // Assuming the API returns an array and we take the first item
+      setCart(cartResponse.data[0]);
       setFishes(fishesResponse.data);
     } catch (error) {
       console.error("Error fetching data:", error);

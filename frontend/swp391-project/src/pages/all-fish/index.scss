@@ -137,6 +137,12 @@ $large-border-radius: 20px;
         color: #bbab6f;
         text-align: center;
         margin: 20px 0;
+        transition: 0.3 ease;
+
+        &:hover {
+          color: #9c8f5d;
+          scale: 1.15;
+        }
       }
 
       &:hover {

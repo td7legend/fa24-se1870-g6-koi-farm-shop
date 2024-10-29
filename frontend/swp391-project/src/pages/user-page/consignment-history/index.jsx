@@ -29,8 +29,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
-import CurrencyFormatter from "../../../components/currency";
 const { Title } = Typography;
+import "./index.scss";
 
 const ConsignmentHistory = () => {
   const [consignments, setConsignments] = useState([]);
@@ -208,15 +208,17 @@ const ConsignmentHistory = () => {
   const handleLogout = () => {
     dispatch(logout());
     setShowConfirmation(false);
-    navigate("/");
+    setTimeout(() => navigate("/"));
   };
   return (
-    <div>
+    <div className="user-history-container">
       <div className="breadcrumb-container">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/user_info/user">Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item href="/consigment-history">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Account</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
             Consignment History
           </Breadcrumb.Item>
         </Breadcrumb>
@@ -249,11 +251,12 @@ const ConsignmentHistory = () => {
           </ul>
         </aside>
         <div style={{ maxWidth: 1200 }}></div>
-        <div className="cosignment-history-container">
-          <div style={{ padding: 24 }}>
+        <div className="consignment-history-container">
+          <div>
             <Card>
               <Title level={2}>My Consignment History</Title>
               <Table
+                className="consignment-history-table"
                 dataSource={consignments}
                 columns={columns}
                 rowKey="consignmentId"
@@ -268,7 +271,7 @@ const ConsignmentHistory = () => {
               open={detailModalVisible}
               onCancel={() => {
                 setDetailModalVisible(false);
-                setFishCareData([]); // Clear fish care data when closing modal
+                setFishCareData([]);
               }}
               footer={null}
               width={800}
@@ -406,37 +409,37 @@ const ConsignmentHistory = () => {
                 </>
               )}
             </Modal>
-
-            <Modal
-              title="Confirm Logout?"
-              visible={showConfirmation}
-              onOk={handleLogout}
-              onCancel={() => setShowConfirmation(false)}
-              okText="Log out"
-              cancelText="Cancel"
-              footer={[
-                <Button
-                  key="back"
-                  onClick={() => setShowConfirmation(false)}
-                  style={{ backgroundColor: "#C0C0C0", color: "black" }}
-                >
-                  Cancel
-                </Button>,
-                <Button
-                  key="submit"
-                  type="primary"
-                  onClick={handleLogout}
-                  style={{ backgroundColor: "#bbab6f", color: "white" }}
-                >
-                  Confirm
-                </Button>,
-              ]}
-            >
-              <p>Are you sure you want to logout?</p>
-            </Modal>
           </div>
         </div>
       </div>
+
+      <Modal
+        title="Confirm Logout?"
+        visible={showConfirmation}
+        onOk={handleLogout}
+        onCancel={() => setShowConfirmation(false)}
+        okText="Log out"
+        cancelText="Cancel"
+        footer={[
+          <Button
+            key="back"
+            onClick={() => setShowConfirmation(false)}
+            style={{ backgroundColor: "#C0C0C0", color: "black" }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleLogout}
+            style={{ backgroundColor: "#bbab6f", color: "white" }}
+          >
+            Confirm
+          </Button>,
+        ]}
+      >
+        <p>Are you sure you want to logout?</p>
+      </Modal>
     </div>
   );
 };
