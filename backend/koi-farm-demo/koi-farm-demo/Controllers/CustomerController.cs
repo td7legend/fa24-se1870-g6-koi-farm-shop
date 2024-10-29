@@ -39,7 +39,21 @@ namespace koi_farm_demo.Controllers
                 return NotFound("Customer not found.");
             }
 
-            return Ok(customer);
+            // Tạo DTO chứa thông tin customer và email
+            var customerInfoDto = new CustomerInfoDto
+            {
+                CustomerId = customer.CustomerId,
+                FullName = customer.FullName,
+                Address = customer.Address,
+                PhoneNumber = customer.PhoneNumber,
+                Tier = customer.Tier,
+                PointAvailable = customer.PointAvailable,
+                UsedPoint = customer.UsedPoint,
+                AccommodatePoint = customer.AccommodatePoint,
+                Email = customer.User.Email // Lấy email từ User
+            };
+
+            return Ok(customerInfoDto);
         }
 
         [HttpGet]
