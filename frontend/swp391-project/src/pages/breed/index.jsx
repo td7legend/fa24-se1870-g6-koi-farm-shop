@@ -11,7 +11,7 @@ import {
   Slider,
   Tag,
   Button,
-  Input, // <-- Add Input from antd for price inputs
+  Input,
 } from "antd";
 import Search from "antd/es/transfer/search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,9 +34,9 @@ const BreedFishPage = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [selectedAges, setSelectedAges] = useState([]); // <-- Add state for selected ages
+  const [selectedAges, setSelectedAges] = useState([]);
   const [priceRange, setPriceRange] = useState([100000, 100000000]);
-  const [minPrice, setMinPrice] = useState(100000); // <-- Add state for manual price input
+  const [minPrice, setMinPrice] = useState(100000);
   const [maxPrice, setMaxPrice] = useState(100000000);
   const { t } = useTranslation();
   useEffect(() => {
@@ -93,7 +93,7 @@ const BreedFishPage = () => {
 
   const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
   const sizes = [...new Set(breedFish.map((Fish) => Fish.size))];
-  const ages = [...new Set(breedFish.map((Fish) => Fish.age))]; // <-- Collect unique ages
+  const ages = [...new Set(breedFish.map((Fish) => Fish.age))];
 
   const filteredFishs =
     searchQuery === ""
@@ -108,7 +108,7 @@ const BreedFishPage = () => {
           })
           .filter((Fish) => {
             if (selectedAges.length === 0) return true;
-            return selectedAges.includes(Fish.age); // <-- Filter by age
+            return selectedAges.includes(Fish.age);
           })
           .filter((Fish) => {
             return Fish.price >= priceRange[0] && Fish.price <= priceRange[1];
@@ -119,7 +119,7 @@ const BreedFishPage = () => {
             (selectedOrigins.length === 0 ||
               selectedOrigins.includes(Fish.origin)) &&
             (selectedSizes.length === 0 || selectedSizes.includes(Fish.size)) &&
-            (selectedAges.length === 0 || selectedAges.includes(Fish.age)) && // <-- Filter by age
+            (selectedAges.length === 0 || selectedAges.includes(Fish.age)) &&
             Fish.price >= priceRange[0] &&
             Fish.price <= priceRange[1]
           );
@@ -163,7 +163,6 @@ const BreedFishPage = () => {
       </div>
       <div className="breed-page-container">
         <Col span={24}></Col>
-        <h1>{breedName}</h1>
         <Row className="row-container">
           <Col className="left-side">
             <div className="product-list-filter">
@@ -295,8 +294,9 @@ const BreedFishPage = () => {
             </div>
           </Col>
           <Col className="right-side">
-            <div className="banner">
+            <div className="banner" breedName={breedName}>
               <ImageFrame imageSrc={imageSrc} />
+              <h1>{breedName}</h1>
             </div>
             <div className="top-controls">
               <div className="pagination">

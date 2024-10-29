@@ -30,6 +30,7 @@ $large-border-radius: 20px;
     background-blend-mode: overlay;
     filter: blur(5px);
     opacity: 0.2;
+    pointer-events: none;
   }
 
   .divider {

@@ -18,7 +18,9 @@ function PolicyPage() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>{t("policy")}</Breadcrumb.Item>
+              <Breadcrumb.Item className="breadcrumb-page">
+                {t("policy")}
+              </Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>

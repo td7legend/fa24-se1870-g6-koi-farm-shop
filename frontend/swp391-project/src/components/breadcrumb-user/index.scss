@@ -1,80 +1,88 @@
 $primary-color: #bbab6f;
 $secondary-color: #264653;
-$border-color: #ddd;
 $highlight-color: #bbab6f;
-$background-color: #fffaf0;
+$background-color: transparent;
 $text-color: #264653;
-$button-padding: 12px 24px;
-$card-padding: 15px;
+$hover-bg-color: rgba(187, 171, 111, 0.1);
 $element-spacing: 25px;
 $large-border-radius: 20px;
+$icon-size: 18px;
+$breadcrumb-padding: 15px;
+$breadcrumb-border: 2px solid rgba(0, 0, 0, 0.05);
 
 .breadcrumb-container {
-  position: relative;
-  background-color: rgba(247, 247, 247, 0.9);
-  padding: 30px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  z-index: 2;
+  padding: 20px;
+  background-color: $background-color;
   margin-bottom: $element-spacing;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("../../images/breadcrumbs.jpg");
-    background-size: cover;
-    background-position: center;
-    z-index: 1;
-    opacity: 0.6;
-    pointer-events: none;
-  }
+  border-radius: $large-border-radius;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 
   .breadcrumb {
-    z-index: 2;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 10px;
     display: flex;
     align-items: center;
-    max-width: 1200px;
-    margin: auto 0;
     font-size: 16px;
-    font-family: sans-serif;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: $breadcrumb-padding;
+    border-radius: 10px;
+    border: $breadcrumb-border;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 
     .breadcrumb-page {
-      color: $primary-color;
-      font-weight: bold;
-    }
-
-    .icon {
-      margin-right: 8px;
+      color: #bbab6f;
+      font-weight: 700;
     }
 
     a {
+      display: flex;
+      align-items: center;
       color: $secondary-color;
-
+      text-decoration: none;
+      padding: 8px 15px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      border-radius: 8px;
+      margin-top: 2px;
       &:hover {
+        background-color: $hover-bg-color;
         color: $highlight-color;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       }
     }
 
     .breadcrumb-item {
+      font-weight: 500;
       margin-right: 20px;
-      font-size: 16px;
-      color: #555;
+      display: flex;
+      align-items: center;
+      color: $text-color;
 
-      &:hover {
-        color: #bbab6f;
-        text-decoration: underline;
+      &.active {
+        font-weight: bold;
+        color: $primary-color;
+        cursor: default;
+        background-color: rgba(187, 171, 111, 0.2);
+        padding: 5px 10px;
+        border-radius: 8px;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .icon {
+        margin-right: 10px;
+        font-size: $icon-size;
+        color: $primary-color;
+        margin-bottom: 5px;
       }
     }
 
-    .breadcrumb-item:last-child {
-      margin-right: 0;
+    .breadcrumb-separator {
+      margin: 0 12px;
+      color: $text-color;
     }
   }
 }
