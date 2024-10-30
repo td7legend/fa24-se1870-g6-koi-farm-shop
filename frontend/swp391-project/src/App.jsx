@@ -42,7 +42,6 @@ function App() {
       path: "/",
       element: <UserLayout />,
       children: [
-        { path: "/loyaltypoint-history", element: <LoyaltyPointHistory /> },
         { path: "/", element: <HomePage /> },
         { path: "/fish-page", element: <AllFishPage /> },
         { path: "/breed/:breedName", element: <BreedFishPage /> },
@@ -65,6 +64,7 @@ function App() {
         { path: "/policy-page", element: <PolicyPage /> },
         { path: "/shopping-guide", element: <ShoppingGuidePage /> },
         { path: "/batch-fish", element: <BatchFishFilter /> },
+        { path: "/loyaltypoint-history", element: <LoyaltyPointHistory /> },
 
         { path: "*", element: <ErrorPage /> },
       ],
