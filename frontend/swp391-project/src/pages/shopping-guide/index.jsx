@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 function ShoppingGuidePage() {
   const { t } = useTranslation();
   return (
-    <div>
+    <div className="shopping-guide-page">
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
@@ -25,7 +25,7 @@ function ShoppingGuidePage() {
         </Col>
       </Row>
 
-      <div className="shopping-guide-page">
+      <div className="shopping-guide-container">
         <h1>{t("shoppingGuide")}</h1>
 
         <div className="guide-content">

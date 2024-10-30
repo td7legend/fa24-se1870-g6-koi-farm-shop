@@ -19,6 +19,10 @@ function Layout() {
   const [fishes, setFishes] = useState([]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
+
+  useEffect(() => {
     const fetchFishes = async () => {
       try {
         const response = await axios.get(`${config.API_ROOT}fishs`);
@@ -59,6 +63,7 @@ function Layout() {
         onClose={() => setCartDrawerVisible(false)}
         open={cartDrawerVisible}
         width={400}
+        style={{ fontSize: "20px" }}
       >
         <List
           itemLayout="horizontal"

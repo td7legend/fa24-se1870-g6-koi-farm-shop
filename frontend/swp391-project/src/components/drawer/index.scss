@@ -18,12 +18,11 @@ $drawer-transition: 0.4s;
 }
 
 .ant-drawer {
-  position: fixed;
+  position: absolute;
   right: 0;
   background: transparent;
   z-index: 1000;
   transition: all $drawer-transition ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 
   .ant-drawer-mask {
     background: rgba(0, 0, 0, 0.35);
@@ -33,6 +32,7 @@ $drawer-transition: 0.4s;
     right: 0;
     bottom: 0;
     filter: blur(5px);
+    z-index: 2;
   }
 
   .ant-drawer-header {
@@ -43,6 +43,8 @@ $drawer-transition: 0.4s;
     font-weight: 600;
     color: $secondary-color;
     text-align: center;
+    // z-index: 3;
+    position: relative;
   }
 
   .ant-drawer-content {
@@ -50,11 +52,32 @@ $drawer-transition: 0.4s;
     border-radius: 20px 0 0 20px;
     padding: $element-spacing;
     color: $text-color;
+    z-index: 2;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("../../images/drawer.jpg");
+      background-size: cover;
+      background-position: center;
+      background-color: rgba(255, 255, 255, 0.5);
+      opacity: 0.17;
+      z-index: 1;
+      filter: blur(3px) brightness(0.6);
+      pointer-events: none;
+    }
   }
 
   .ant-list-item {
     padding: $card-padding;
     border-bottom: 1px solid $border-color;
+    z-index: 3;
+    position: relative;
 
     &:last-child {
       border-bottom: none;
@@ -75,6 +98,8 @@ $drawer-transition: 0.4s;
   .total-section {
     margin-top: $element-spacing;
     text-align: right;
+    z-index: 3;
+    position: relative;
 
     .ant-typography {
       color: $text-color;
@@ -89,6 +114,8 @@ $drawer-transition: 0.4s;
       border-radius: 15px;
       font-weight: 600;
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      z-index: 3;
+      position: relative;
 
       &:first-of-type {
         background-color: $secondary-color;
@@ -125,6 +152,8 @@ $drawer-transition: 0.4s;
     padding: $button-padding;
     transition: background-color 0.3s ease, transform 0.3s ease;
     font-weight: 600;
+    z-index: 3;
+    position: relative;
 
     &:hover {
       background-color: lighten($highlight-color, 10%);

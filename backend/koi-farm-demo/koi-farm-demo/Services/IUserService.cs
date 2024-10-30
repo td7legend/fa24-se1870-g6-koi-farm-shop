@@ -6,6 +6,7 @@ namespace koi_farm_demo.Services
 {
     public interface IUserService
     {
+        Task<string> GetEmailByUserIdAsync(int userId);
         Task ChangePasswordAsync(int userId, string oldPassword, string newPassword);
         Task<TokenResult> GetTokenFromGoogle(string code);
         Task<User> GetUserFromGoogleAsync(string idToken);

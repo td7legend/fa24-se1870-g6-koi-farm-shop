@@ -19,16 +19,17 @@ $breadcrumb-border: 2px solid rgba(0, 0, 0, 0.05);
   margin-bottom: $element-spacing;
   border-radius: $large-border-radius;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-
+  z-index: 1000;
   .breadcrumb {
     display: flex;
     align-items: center;
     font-size: 16px;
-    background-color: rgba(255, 255, 255, 0.85);
+    // background-color: rgba(255, 255, 255, 0.85);
     padding: $breadcrumb-padding;
     border-radius: 10px;
-    border: $breadcrumb-border;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    // border: $breadcrumb-border;
+    // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
 
     .breadcrumb-page {
       color: #bbab6f;
@@ -58,6 +59,7 @@ $breadcrumb-border: 2px solid rgba(0, 0, 0, 0.05);
       display: flex;
       align-items: center;
       color: $text-color;
+      z-index: 1000;
 
       &.active {
         font-weight: bold;
@@ -81,6 +83,7 @@ $breadcrumb-border: 2px solid rgba(0, 0, 0, 0.05);
     }
 
     .breadcrumb-separator {
+      z-index: 1000;
       margin: 0 12px;
       color: $text-color;
     }

@@ -21,6 +21,9 @@ import { AES, enc } from "crypto-js";
 import config from "../../config/config";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import LoadingKoi from "../../components/loading";
 
 const Checkout = () => {
   const [form] = Form.useForm();
@@ -287,11 +290,15 @@ const Checkout = () => {
   };
 
   if (loading) {
-    return <Spin size="large" />;
+    return <LoadingKoi />;
   }
 
   if (!user || !cart || fishes.length === 0) {
-    return <div>No active cart found or user information unavailable</div>;
+    return (
+      <div className="no-cart-message">
+        No active cart found or user information unavailable
+      </div>
+    );
   }
 
   const fullName = user.fullName ? String(user.fullName) : "Unknown User";
@@ -300,14 +307,18 @@ const Checkout = () => {
   console.log(user.fullName);
 
   return (
-    <div>
+    <div className="checkout-page">
       <Col span={24}>
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href="/">
+              <FontAwesomeIcon icon={faHome} className="icon" />
+            </Breadcrumb.Item>
             <Breadcrumb.Item href="/products">Fish List</Breadcrumb.Item>
             <Breadcrumb.Item href="/cart">Cart</Breadcrumb.Item>
-            <Breadcrumb.Item>Check Out</Breadcrumb.Item>
+            <Breadcrumb.Item className="breadcrumb-page">
+              Check Out
+            </Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
@@ -402,14 +413,18 @@ const Checkout = () => {
                 <Radio value="bankTransfer" disabled>
                   Bank Transfer
                 </Radio>
-                <Button className="button-main" onClick={handlePlaceOrder}>
+                <Button
+                  className="button-main"
+                  onClick={handlePlaceOrder}
+                  style={{ borderRadius: "15px" }}
+                >
                   Place Order
                 </Button>
               </Radio.Group>
             </div>
           </Col>
           <Col className="form-right">
-            <div style={{ padding: "20px", border: "1px solid #f0f0f0" }}>
+            <div style={{ padding: "20px" }}>
               <h2>Billing Information</h2>
               <div className="information-item">
                 <p className="item-tittle ">Name:</p>
@@ -427,7 +442,11 @@ const Checkout = () => {
                 <p className="item-tittle ">Address:</p>
                 <p> {user.address}</p>
               </div>
-              <Button className="button" onClick={showModal}>
+              <Button
+                className="button"
+                onClick={showModal}
+                style={{ borderRadius: "15px", marginTop: "5px" }}
+              >
                 Edit Address
               </Button>
             </div>
