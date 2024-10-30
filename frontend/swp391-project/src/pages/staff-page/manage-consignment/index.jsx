@@ -24,6 +24,7 @@ import CurrencyFormatter from "../../../components/currency";
 import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 
 const ConsignmentManagement = () => {
@@ -41,6 +42,7 @@ const ConsignmentManagement = () => {
   const [careForm] = Form.useForm();
   const [saleForm] = Form.useForm();
   const navigate = useNavigate();
+  const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     fetchConsignments();
   }, []);
@@ -48,7 +50,6 @@ const ConsignmentManagement = () => {
   const fetchConsignments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -79,7 +80,6 @@ const ConsignmentManagement = () => {
   const fetchFishCareData = async (consignmentId) => {
     try {
       setLoadingFishCare(true);
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -119,7 +119,6 @@ const ConsignmentManagement = () => {
 
   const handleCareConfirm = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -187,7 +186,6 @@ const ConsignmentManagement = () => {
   // Modify the handleSaleConfirm function
   const handleSaleConfirm = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -263,7 +261,6 @@ const ConsignmentManagement = () => {
 
   const updateStatus = async (record, newStatus) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");

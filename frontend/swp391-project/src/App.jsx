@@ -35,6 +35,9 @@ import LoyaltyPointHistory from "./pages/user-page/loyaltypoint-history";
 import "react-toastify/dist/ReactToastify.css";
 import ConsignmentManagement from "./pages/staff-page/manage-consignment";
 import FishCareManagement from "./pages/staff-page/manage-consignment/manage-fishcare/manage-fishcare";
+import AdminLayout from "./components/layout/admin-layout";
+import StaffManagement from "./pages/admin-page/manage-staff";
+// import AdminDashboard from "./pages/admin-page/admin-dashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -90,6 +93,18 @@ function App() {
         { path: "fishtype-management", element: <StaffFishTypeManagement /> },
         { path: "consignment-management", element: <ConsignmentManagement /> },
         { path: "fish-care-management", element: <FishCareManagement /> },
+      ],
+    },
+    {
+      path: "/admin-dashboard",
+      element: <AdminLayout />,
+      children: [
+        // { path: "", element: <AdminDashboard /> },
+        { path: "staff-management", element: <StaffManagement /> },
+        { path: "fish-management", element: <StaffFishManagement /> },
+        { path: "fishtype-management", element: <StaffFishTypeManagement /> },
+        { path: "order-management", element: <StaffOrderManagement /> },
+        { path: "consignment-management", element: <ConsignmentManagement /> },
       ],
     },
   ]);
