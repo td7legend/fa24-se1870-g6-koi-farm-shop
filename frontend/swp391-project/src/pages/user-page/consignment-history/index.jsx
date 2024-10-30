@@ -264,7 +264,7 @@ const ConsignmentHistory = () => {
         <div style={{ maxWidth: 1200 }}></div>
         <div className="consignment-history-container">
           <div>
-            <Card>
+            <Card style={{ background: "transparent" }}>
               <Title level={2}>My Consignment History</Title>
               <Table
                 className="consignment-history-table"

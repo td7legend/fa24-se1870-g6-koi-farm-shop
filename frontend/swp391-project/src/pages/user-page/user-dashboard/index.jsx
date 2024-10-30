@@ -194,7 +194,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="user-dashboard-container">
+    <div className="user-history-container">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
           <Breadcrumb.Item href="/">
@@ -241,16 +241,12 @@ const UserDashboard = () => {
           </ul>
         </aside>
         <div style={{ maxWidth: 1200 }}></div>
-        <div className="user-form">
+        <div className="user-form-container">
           <div className="user-information">
             <Card style={{ marginBottom: 24 }}>
-              {/* <Title
-                level={2}
-                style={{ textAlign: "center", marginBottom: 24 }}
-              >
+              <Title level={2} style={{ textAlign: "left", marginBottom: 24 }}>
                 User Profile
-              </Title> */}
-
+              </Title>
               <Row gutter={16}>
                 <Col span={16}>
                   {renderUserInfo("Full Name", user.fullName)}
