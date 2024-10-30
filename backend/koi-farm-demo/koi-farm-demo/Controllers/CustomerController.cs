@@ -32,7 +32,7 @@ namespace koi_farm_demo.Controllers
             {
                 return BadRequest("Invalid user ID.");
             }
-            var email = _userService.GetEmailByUserIdAsync(userId);
+            var email = await _userService.GetEmailByUserIdAsync(userId);
             // Lấy Customer dựa trên UserId
             var customer = await _customerService.GetCustomerByUserIdAsync(userId);
 
@@ -52,7 +52,7 @@ namespace koi_farm_demo.Controllers
                 PointAvailable = customer.PointAvailable,
                 UsedPoint = customer.UsedPoint,
                 AccommodatePoint = customer.AccommodatePoint,
-                Email = await email // Lấy email từ User
+                Email = email // Lấy email từ User
             };
 
             return Ok(customerInfoDto);
