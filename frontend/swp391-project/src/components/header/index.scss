@@ -453,3 +453,100 @@
 .user-dropdown-menu {
   animation: fadeIn 0.2s ease-out;
 }
+
+.dashboard-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #bbab6f;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: darken(#bbab6f, 10%);
+    color: white;
+  }
+
+  .fa__icon {
+    font-size: 1.1em;
+  }
+}
+
+// Chỉnh lại style cho nav__links để không hiển thị nút dashboard ở menu
+.nav__links {
+  ul {
+    li {
+      &:last-child {
+        .dashboard-link {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.dashboard-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .dashboard-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #bbab6f;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: darken(#bbab6f, 10%);
+      color: white;
+    }
+
+    .fa__icon {
+      font-size: 1.1em;
+    }
+  }
+
+  .logout-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: darken(#ff4d4f, 10%);
+    }
+
+    .fa__icon {
+      font-size: 1.1em;
+    }
+  }
+}
+
+// Style cho Modal
+.ant-modal-confirm {
+  .ant-modal-confirm-btns {
+    .ant-btn-primary {
+      background-color: #ff4d4f;
+      border-color: #ff4d4f;
+
+      &:hover {
+        background-color: darken(#ff4d4f, 10%);
+        border-color: darken(#ff4d4f, 10%);
+      }
+    }
+  }
+}

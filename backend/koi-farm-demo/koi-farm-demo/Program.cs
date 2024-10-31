@@ -109,7 +109,7 @@ namespace koi_farm_demo
             builder.Services.AddScoped<IFishCareRepository, FishCareRepository>();
             builder.Services.AddScoped<ILoyaltyPointRepository, LoyaltyPointRepository>();
             builder.Services.AddScoped<ILoyaltyPointService, LoyaltyPointService>();
-
+            builder.Services.AddScoped<IRevenueService, RevenueService>();
             // Đăng ký các dịch vụ Customer
             builder.Services.AddAuthorization(options =>
             {

@@ -390,5 +390,6 @@
   "loyaltyPoints": "Loyalty Points",
   "settings": "Settings",
   "loyaltyPoint": "Loyalty Point",
-  "myAccount": "My Account"
+  "myAccount": "My Account",
+  "logoutConfirmMessage": "Are you sure you want to logout?"
 }

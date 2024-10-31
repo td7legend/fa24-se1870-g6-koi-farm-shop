@@ -22,12 +22,13 @@ import config from "../../config/config";
 import axios from "axios";
 import { logout } from "../../store/actions/authActions";
 import EnhancedSearchBar from "../autosuggest";
-import { Drawer, List, Button, Typography, message, Badge } from "antd";
+import { Drawer, List, Button, Typography, message, Badge, Modal } from "antd";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { clearCart, setCart } from "../../store/actions/cartAction";
 import LanguageSelector from "../language/LanguageSelector";
 import { useTranslation } from "react-i18next";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 
 const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
@@ -53,14 +54,16 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `${config.API_ROOT}customers/my-info`,
-          {
-            headers: { Authorization: `Bearer ${token ?? null}` },
+        if (role === "Customer") {
+          const response = await axios.get(
+            `${config.API_ROOT}customers/my-info`,
+            {
+              headers: { Authorization: `Bearer ${token ?? null}` },
+            }
+          );
+          if (response?.data) {
+            setUserData(response.data);
           }
-        );
-        if (response?.data) {
-          setUserData(response.data);
         }
       } catch (error) {
         dispatch(logout());
@@ -68,21 +71,23 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
     };
 
     const fetchCart = async () => {
-      try {
-        const response = await axios.get(`${config.API_ROOT}cart`, {
-          headers: {
-            Authorization: `Bearer ${token ?? null}`,
-          },
-        });
-        if (response.data && response.data.length > 0) {
-          dispatch(setCart(response.data[0].orderLines || []));
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          console.log(t("yourCartIsEmpty"));
-          dispatch(clearCart());
-        } else {
-          console.log("Error: ", error.message);
+      if (role === "Customer") {
+        try {
+          const response = await axios.get(`${config.API_ROOT}cart`, {
+            headers: {
+              Authorization: `Bearer ${token ?? null}`,
+            },
+          });
+          if (response.data && response.data.length > 0) {
+            dispatch(setCart(response.data[0].orderLines || []));
+          }
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            console.log(t("yourCartIsEmpty"));
+            dispatch(clearCart());
+          } else {
+            console.log("Error: ", error.message);
+          }
         }
       }
     };
@@ -101,7 +106,7 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
       fetchCart();
       fetchFishes();
     }
-  }, [token, dispatch]);
+  }, [token, dispatch, role]);
 
   // Handle clicks outside of user dropdown to close it
   useEffect(() => {
@@ -159,30 +164,52 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
     }, 0);
   };
 
+  const handleConfirmLogout = () => {
+    Modal.confirm({
+      title: t("confirmLogout"),
+      icon: <ExclamationCircleOutlined />,
+      content: t("logoutConfirmMessage"),
+      okText: t("yes"),
+      cancelText: t("no"),
+      onOk() {
+        dispatch(logout());
+        navigate("/login");
+      },
+    });
+  };
+
   const renderDashboardButton = () => {
-    if (role === "Staff") {
+    if (role === "Manager") {
       return (
-        <li>
-          <Link
-            to="/staff-dashboard/order-management"
-            className="dashboard-link"
-          >
-            <FontAwesomeIcon icon={faUser} className="fa__icon" />
-            {t("staffDashboard")}
-          </Link>
-        </li>
-      );
-    } else if (role === "Manager") {
-      return (
-        <li>
+        <div className="dashboard-wrapper">
           <Link
             to="/admin-dashboard/staff-management"
-            className="dashboard-link"
+            className="dashboard-button"
           >
             <FontAwesomeIcon icon={faUser} className="fa__icon" />
             {t("adminDashboard")}
           </Link>
-        </li>
+          <button className="logout-button" onClick={handleConfirmLogout}>
+            <FontAwesomeIcon icon={faSignOutAlt} className="fa__icon" />
+            {t("logout")}
+          </button>
+        </div>
+      );
+    } else if (role === "Staff") {
+      return (
+        <div className="dashboard-wrapper">
+          <Link
+            to="/staff-dashboard/order-management"
+            className="dashboard-button"
+          >
+            <FontAwesomeIcon icon={faUser} className="fa__icon" />
+            {t("staffDashboard")}
+          </Link>
+          <button className="logout-button" onClick={handleConfirmLogout}>
+            <FontAwesomeIcon icon={faSignOutAlt} className="fa__icon" />
+            {t("logout")}
+          </button>
+        </div>
       );
     }
     return null;
@@ -260,26 +287,29 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
             <LanguageSelector />
           </div>
 
-          <div className="cart" onClick={handleCartClick}>
-            {t("yourCart")}
-            <Badge
-              count={cartItemsRedux.length}
-              overflowCount={9}
-              offset={[5, -10]}
-              // style={{ background: "#c3b88c" }}
-            >
-              <FontAwesomeIcon
-                icon={faShoppingCart}
-                className="fa__icon cart-icon"
-              />
-            </Badge>
-          </div>
+          {role === "Customer" && (
+            <div className="cart" onClick={handleCartClick}>
+              {t("yourCart")}
+              <Badge
+                count={cartItemsRedux.length}
+                overflowCount={9}
+                offset={[5, -10]}
+              >
+                <FontAwesomeIcon
+                  icon={faShoppingCart}
+                  className="fa__icon cart-icon"
+                />
+              </Badge>
+            </div>
+          )}
 
           {!isLoggedIn ? (
             <Link to="/login" className="register__sign__in">
               {t("registerSignIn")}
-              <FontAwesomeIcon icon={faUser} className="fa__icon" />{" "}
+              <FontAwesomeIcon icon={faUser} className="fa__icon" />
             </Link>
+          ) : role === "Manager" || role === "Staff" ? (
+            renderDashboardButton()
           ) : (
             <div
               className="user-profile-wrapper"
@@ -346,7 +376,6 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                 </ul>
               </Link>
             </li>
-            {renderDashboardButton()}
           </ul>
         </nav>
       </div>
