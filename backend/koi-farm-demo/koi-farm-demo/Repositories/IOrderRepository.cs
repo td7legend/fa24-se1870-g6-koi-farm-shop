@@ -11,4 +11,5 @@ public interface IOrderRepository
     Task DeleteOrderAsync(Order order);
     Task<Order> GetInCartOrderByCustomerIdAsync(int customerId);
     Task<List<Order>> GetOrderHistoryByCustomerIdAsync(int customerId);
+    Task<IEnumerable<Order>> GetOrdersByStatusAndDateRangeAsync(OrderStatus status, DateTime? startDate, DateTime? endDate);
 }

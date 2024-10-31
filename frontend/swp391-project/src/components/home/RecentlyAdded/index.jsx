@@ -6,6 +6,7 @@ import config from "../../../config/config";
 import { useTranslation } from "react-i18next";
 import Product from "../Product";
 
+
 const RecentlyAdded = () => {
   const [newFishes, setNewFishes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
