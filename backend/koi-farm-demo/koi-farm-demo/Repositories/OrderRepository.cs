@@ -101,5 +101,19 @@ public class OrderRepository : IOrderRepository
             .Where(o => o.Status != OrderStatus.InCart) 
             .ToListAsync();
     }
+    public async Task<IEnumerable<Order>> GetOrdersByStatusAndDateRangeAsync(OrderStatus status, DateTime? startDate, DateTime? endDate)
+    {
+        var query = _context.Orders.AsQueryable();
+
+        if (startDate.HasValue)
+            query = query.Where(order => order.OrderDate >= startDate.Value);
+
+        if (endDate.HasValue)
+            query = query.Where(order => order.OrderDate <= endDate.Value);
+
+        query = query.Where(order => order.Status == status);
+
+        return await query.ToListAsync();
+    }
 
 }
