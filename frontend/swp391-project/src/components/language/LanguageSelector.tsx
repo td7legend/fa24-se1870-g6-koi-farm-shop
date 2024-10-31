@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import us from "../../assets/US.svg";
 import vn from "../../assets/VN.svg";
-import down from "../../assets/chevron-down.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
-import "./LanguageSelector.css"; // Assuming you have this CSS file
+import "./LanguageSelector.scss";
 
 type LangType = "en" | "vi";
 
@@ -40,7 +41,6 @@ const LanguageSelector: React.FC = () => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -54,43 +54,34 @@ const LanguageSelector: React.FC = () => {
   }, [i18n, lang]);
 
   return (
-    <div
-      className="translate relative inline-flex flex-row-reverse"
-      ref={dropdownRef}
-    >
+    <div className="language-selector relative" ref={dropdownRef}>
       <button
-        className="language-selector-button-1 py-2 px-4 inline-flex items-center gap-2 font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 w-28 mr-2"
+        className="language-selector-button flex items-center gap-2"
         onClick={toggleMenu}
       >
         <img
-          className="w-5 h-auto rounded-full"
+          className="flag-icon"
           src={lang === "vi" ? vn : us}
           alt="current language"
         />
-        <span className="font-medium truncate">
-          {lang === "vi" ? "VI" : "EN"}
-        </span>
-        <img
-          src={down}
-          className={`w-4 transform ${isOpen ? "rotate-180" : ""}`}
-          alt="chevron-down"
-        />
+        <span className="language-text">{lang === "vi" ? "VI" : "EN"}</span>
+        <FontAwesomeIcon icon={faGlobe} className="globe-icon" />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 w-40 bg-white shadow-lg rounded-lg py-2 mt-1 z-50">
+        <div className="language-dropdown">
           <button
-            className="language-selector-button flex items-center gap-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none w-full"
+            className="language-option flex items-center"
             onClick={() => handleChoose("en")}
           >
-            <img src={us} className="w-4 rounded-full" alt="English (US)" />
+            <img src={us} className="flag-icon" alt="English (US)" />
             <span>{t("language.english", "English (US)")}</span>
           </button>
           <button
-            className="language-selector-button flex items-center gap-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 w-full"
+            className="language-option flex items-center"
             onClick={() => handleChoose("vi")}
           >
-            <img src={vn} className="w-4 rounded-full" alt="Việt Nam (VI)" />
+            <img src={vn} className="flag-icon" alt="Việt Nam (VI)" />
             <span>{t("language.vietnamese", "Việt Nam (VI)")}</span>
           </button>
         </div>

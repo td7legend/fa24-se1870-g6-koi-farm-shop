@@ -65,6 +65,7 @@
   "latestNews": "Tin tức mới nhất",
   "ourService": "Dịch vụ của chúng tôi",
   "consignmentCare": "Ký gửi chăm sóc",
+  "consignmentSale": "Ký gửi bán",
   "ourConsignmentCareServiceEnsuresYourKoiFishAreHealthyAndWell-MaintainedWeOffer": "Dịch vụ ký gửi chăm sóc của chúng tôi đảm bảo các con cá cái của bạn khỏe mạnh và được chăm sóc tốt. Chúng tôi cung cấp:",
   "regularHealthChecksAndDiseasePrevention": "Kiểm tra sức khỏe thường xuyên và phòng ngừa bệnh",
   "customizedCarePlansForYourFish": "Kế hoạch chăm sóc cá cái tùy chỉnh cho bạn",
@@ -384,5 +385,12 @@
   "enterCareInstructionsOrSpecialRequirements": "Nhập hướng dẫn chăm sóc hoặc yêu cầu đặc biệt",
   "createConsignment": "Tạo ký gửi",
   "helloFriend": "Xin chào, Bạn!",
-  "openForm": "Tạo đơn"
+  "openForm": "Tạo đơn",
+  "role": "Vai trò",
+  "adminDashboard": "Bảng điều khiển quản trị viên",
+  "membershipLevel": "Cấp độ thành viên",
+  "loyaltyPoints": "Điểm thưởng",
+  "settings": "Cài đặt",
+  "loyaltyPoint": "Điểm Khuyến Mãi",
+  "myAccount": "Tài Khoản"
 }

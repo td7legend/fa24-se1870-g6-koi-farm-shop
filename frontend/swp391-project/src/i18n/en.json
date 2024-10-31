@@ -65,6 +65,7 @@
   "latestNews": "Latest News",
   "ourService": "Our Service",
   "consignmentCare": "Consignment Care",
+  "consignmentSale": "Consignment Sale",
   "ourConsignmentCareServiceEnsuresYourKoiFishAreHealthyAndWell-MaintainedWeOffer": "Our Consignment Care service ensures your Koi fish are healthy and well-maintained. We offer:",
   "regularHealthChecksAndDiseasePrevention": "Regular health checks and disease prevention",
   "customizedCarePlansForYourFish": "Customized care plans for your fish",
@@ -382,5 +383,12 @@
   "enterCareInstructionsOrSpecialRequirements": "Enter care instructions or special requirements",
   "createConsignment": "Create Consignment",
   "helloFriend": "Hello, Friend!",
-  "openForm": "Open Form"
+  "openForm": "Open Form",
+  "role": "Role",
+  "adminDashboard": "Admin Dashboard",
+  "membershipLevel": "Member Ship Level",
+  "loyaltyPoints": "Loyalty Points",
+  "settings": "Settings",
+  "loyaltyPoint": "Loyalty Point",
+  "myAccount": "My Account"
 }

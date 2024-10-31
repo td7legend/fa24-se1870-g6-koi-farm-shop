@@ -202,7 +202,6 @@ const Cart = () => {
             <Breadcrumb.Item href="/">
               <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
             </Breadcrumb.Item>
-            <Breadcrumb.Item href="/fish-page">{t("fishList")}</Breadcrumb.Item>
             <Breadcrumb.Item className="breadcrumb-page">
               {t("cart")}
             </Breadcrumb.Item>

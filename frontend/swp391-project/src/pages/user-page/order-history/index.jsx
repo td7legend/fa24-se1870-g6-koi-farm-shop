@@ -19,6 +19,7 @@ import {
   faCog,
   faSignOutAlt,
   faHandHoldingUsd,
+  faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 const { Title } = Typography;
 import "./index.scss";
@@ -175,7 +176,7 @@ const OrderHistoryPage = () => {
               <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
             <li onClick={() => navigate("/loyaltypoint-history")}>
-              <FontAwesomeIcon icon={faTag} /> {t("promotion")}
+              <FontAwesomeIcon icon={faTrophy} /> {t("loyaltyPoint")}
             </li>
             <li onClick={() => navigate("/cart")}>
               <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}

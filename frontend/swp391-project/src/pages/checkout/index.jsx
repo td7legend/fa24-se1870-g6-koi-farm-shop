@@ -336,7 +336,7 @@ const Checkout = () => {
                   gap: "16px",
                 }}
               >
-                <p style={{ margin: 0 }}>
+                <p style={{ margin: 0, color: "#bbab6f" }}>
                   Available Points: {user.pointAvailable}
                 </p>
                 <div
@@ -348,7 +348,12 @@ const Checkout = () => {
                     max={user?.pointAvailable}
                     value={pointsToRedeem}
                     onChange={(value) => setPointsToRedeem(value || 0)}
-                    style={{ width: "100px" }}
+                    style={{
+                      width: "100px",
+                      borderRadius: "20px",
+                      border: "none",
+                      boxShadow: "0 4px 12px rgba(187, 171, 111, 0.1)",
+                    }}
                   />
                 </div>
                 {pointsToRedeem > 0 && (
@@ -401,7 +406,10 @@ const Checkout = () => {
                 </Table.Summary>
               )}
             />
-            <div style={{ marginTop: "20px", textAlign: "right" }}>
+            <div
+              className="payment-container"
+              style={{ marginTop: "20px", textAlign: "right" }}
+            >
               <Radio.Group
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 value={paymentMethod}
