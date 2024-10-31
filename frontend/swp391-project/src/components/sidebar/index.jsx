@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   faFish,
   faList,
@@ -9,16 +9,38 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/actions/authActions";
 function Sidebar({ onHover }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    onHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    onHover(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
   return (
     <div
-      className="sidebar"
-      onMouseEnter={() => onHover(true)}
-      onMouseLeave={() => onHover(false)}
+      className={`sidebar ${isHovered ? "expanded" : ""}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="sidebar__logo">
-        <h2>{t("staffDashboard")}</h2>
+        {isHovered ? "Staff Dashboard" : "SD"}
+        {/* <h2>{t("staffDashboard")}</h2> */}
       </div>
       <aside className="sidebar__nav">
         <ul className="sidebar__menu">
