@@ -42,7 +42,7 @@ import Blog1 from "./components/blogs/Blog1";
 import Blog2 from "./components/blogs/Blog2";
 import Blog3 from "./components/blogs/Blog3";
 import BlogPage from "./pages/Blog-page";
-// import AdminDashboard from "./pages/admin-page/admin-dashboard";
+import AdminDashboard from "./pages/admin-page/dashboard/dashboard";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
@@ -133,6 +133,7 @@ function App() {
         </Route>
 
         <Route path="/admin-dashboard" element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="fish-management" element={<StaffFishManagement />} />
           <Route
@@ -144,6 +145,7 @@ function App() {
             path="consignment-management"
             element={<ConsignmentManagement />}
           />
+          <Route path="fishcare-management" element={<FishCareManagement />} />
         </Route>
 
         <Route path="/login" element={<Login />} />

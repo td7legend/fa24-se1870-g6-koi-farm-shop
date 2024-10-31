@@ -56,7 +56,6 @@ const LoyaltyPointHistory = () => {
           headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
-      // Sort by ID in descending order
       const sortedHistory = response.data.sort(
         (a, b) => b.loyaltyPointId - a.loyaltyPointId
       );
