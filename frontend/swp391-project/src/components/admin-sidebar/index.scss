@@ -1,0 +1,45 @@
+.admin-sidebar {
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  background-color: #001529;
+  transition: width 0.3s;
+  width: 80px;
+  z-index: 1000;
+  overflow: hidden;
+
+  &.expanded {
+    width: 250px;
+  }
+
+  .logo {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #002140;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .sidebar-menu {
+    border: none;
+
+    .ant-menu-item {
+      margin: 0;
+      height: 50px;
+      line-height: 50px;
+
+      &:hover {
+        background-color: #1890ff;
+      }
+
+      &.ant-menu-item-selected {
+        background-color: #bbab6f;
+      }
+    }
+  }
+}

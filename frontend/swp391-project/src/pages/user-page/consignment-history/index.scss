@@ -1,0 +1,320 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap");
+
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$border-color: #ddd;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$element-spacing: 25px;
+$large-border-radius: 25px;
+$light-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+$soft-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+$hover-transition: all 0.3s ease-in-out;
+$gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
+
+.user-history-container {
+  background: $gradient;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+  padding: 10px;
+  box-shadow: $light-shadow;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.12;
+    filter: blur(7px);
+    pointer-events: none;
+  }
+
+  .layout-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    padding: 20px;
+    z-index: 2;
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  .settings-sider {
+    width: 350px;
+    background: rgba(255, 250, 240, 0.9);
+    padding: 35px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: $large-border-radius;
+    box-shadow: $soft-shadow;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, $highlight-color, transparent);
+      top: -100%;
+      left: -100%;
+      transform: rotate(45deg);
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    h4 {
+      font-family: "Lora", serif;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 25px;
+      color: $secondary-color;
+      letter-spacing: 1.2px;
+      position: relative;
+
+      &::after {
+        content: "";
+        width: 60px;
+        height: 2px;
+        background: $highlight-color;
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    .settings-menu {
+      list-style: none;
+      padding: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        padding: 18px;
+        margin-bottom: 15px;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        background-color: transparent;
+        border-radius: 12px;
+        gap: 15px;
+        height: 55px;
+        transition: $hover-transition;
+        position: relative;
+
+        &:hover {
+          background-color: lighten($primary-color, 35%);
+          transform: translateY(-3px);
+          box-shadow: $light-shadow;
+        }
+
+        &.active {
+          background-color: $primary-color;
+          color: white;
+        }
+
+        i {
+          color: darken($highlight-color, 20%);
+          font-size: 24px;
+        }
+      }
+    }
+  }
+
+  .settings-content {
+    width: 100%;
+    max-width: 900px;
+    padding: 0px;
+    border-radius: $large-border-radius;
+    // background: rgba(255, 250, 240, 0.95);
+    // box-shadow: $soft-shadow;
+
+    .settings-card {
+      background-color: $background-color;
+      border-radius: $large-border-radius;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      padding: 35px;
+      margin-bottom: 35px;
+      box-shadow: $light-shadow;
+
+      h4 {
+        font-family: "Lora", serif;
+        font-size: 22px;
+        margin-bottom: 25px;
+        color: darken($text-color, 15%);
+        position: relative;
+
+        &::before {
+          content: "";
+          width: 60px;
+          height: 2px;
+          background: $highlight-color;
+          position: absolute;
+          bottom: -8px;
+          left: 0;
+        }
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+
+        .form-row {
+          display: flex;
+          gap: 25px;
+          margin-bottom: 30px;
+        }
+
+        .form-column {
+          flex: 1;
+
+          label {
+            display: block;
+            font-size: 15px;
+            color: darken($text-color, 20%);
+            margin-bottom: 12px;
+          }
+
+          input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid darken($border-color, 10%);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background-color: lighten($background-color, 5%);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+
+            &:focus {
+              outline: none;
+              border-color: $highlight-color;
+              box-shadow: 0 0 0 2px rgba($highlight-color, 0.4);
+            }
+          }
+        }
+
+        button {
+          align-self: flex-start;
+          padding: 14px 30px;
+          border: none;
+          border-radius: $large-border-radius;
+          background-color: $primary-color;
+          color: white;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: darken($highlight-color, 10%);
+            transform: translateY(-3px);
+            box-shadow: $light-shadow;
+          }
+        }
+      }
+    }
+
+    .avatar-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 100px;
+
+      .avatar {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: 4px solid #000;
+        box-shadow: $light-shadow;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+
+      .change-image-label {
+        padding: 14px;
+        background-color: $background-color;
+        color: $highlight-color;
+        border-radius: $large-border-radius;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        border: 1px solid $highlight-color;
+        width: 160px;
+        text-align: center;
+
+        &:hover {
+          background-color: $highlight-color;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.consignment-history-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+
+  .card {
+    background-color: rgba(255, 250, 240, 0.9);
+    width: 850px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: $light-shadow;
+  }
+
+  .ant-card-body {
+    background-color: rgba(255, 250, 240, 0.95);
+    border-radius: 25px;
+    padding: 50px;
+    box-shadow: $soft-shadow;
+    max-width: 1100px;
+  }
+  .ant-card-bordered {
+    border-radius: 25px;
+  }
+  .ant-table {
+    width: 100%;
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: rgba(255, 250, 240, 0.85);
+    font-size: 18px;
+    font-weight: bold;
+    padding: 20px;
+    text-transform: uppercase;
+  }
+
+  .ant-pagination .ant-pagination-item-active {
+    border-color: $highlight-color;
+  }
+
+  .ant-pagination a {
+    color: $highlight-color;
+    border-radius: 6px;
+    border-color: $highlight-color;
+
+    &:hover {
+      background-color: lighten($highlight-color, 30%);
+    }
+  }
+
+  .ant-table-tbody > tr > td {
+    background-color: rgba(255, 250, 240, 0.85);
+  }
+}

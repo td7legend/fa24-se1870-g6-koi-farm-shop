@@ -1,159 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap");
+
+$primary-color: #bbab6f;
+$secondary-color: #264653;
 $background-color: #fffaf0;
-$primary-color-1: #bbab6f;
-$primary-color-2: #9b8e5e;
-$secondary-color: #fff;
-$shadow-color: rgba(0, 0, 0, 0.1);
-$border-radius: 12px;
-$transition-duration: 0.3s;
-$max-width: 1200px;
+$highlight-color: #bbab6f;
+$text-color: #264653;
+$border-color: #ddd;
+$large-border-radius: 20px;
 
 .policy-page {
+  position: relative;
   background-color: $background-color;
-  color: $primary-color-2;
-  font-family: "Lora", serif;
-  padding: 60px 20px;
-  width: 100%;
-  max-width: $max-width;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  h1 {
-    color: $primary-color-1;
-    text-align: center;
-    margin-bottom: 50px;
-    font-size: 2.5em;
-    text-shadow: 2px 2px 6px $shadow-color;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  h2,
-  h3 {
-    color: $primary-color-1;
-    text-align: left;
-    margin-bottom: 25px;
-    font-weight: bold;
-    font-size: 2em;
-    position: relative;
-
-    &::after {
-      content: "";
-      display: block;
-      width: 80px;
-      height: 5px;
-      background: $primary-color-1;
-      margin-top: 5px;
-      border-radius: 2px;
-      transition: width $transition-duration;
-    }
-
-    &:hover::after {
-      width: 100%;
-    }
-  }
-
-  p {
-    line-height: 1.6;
-    margin-bottom: 30px;
-    font-size: 1em;
-    text-align: justify;
-    padding: 0 15px;
-    border-left: 5px solid $primary-color-1;
-    padding-left: 20px;
-    background: rgba(255, 255, 255, 0.8);
-    font-family: sans-serif;
-    border-radius: $border-radius;
-    box-shadow: 0 4px 10px $shadow-color;
-    color: black;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  a {
-    // color: black;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .button {
-    display: inline-block;
-    background-color: $primary-color-1;
-    color: $secondary-color;
-    padding: 15px 35px;
-    text-decoration: none;
-    border-radius: $border-radius;
-    transition: background-color $transition-duration,
-      transform $transition-duration;
-    margin-top: 40px;
-    font-weight: bold;
-    font-size: 1em;
-    box-shadow: 0 6px 15px $shadow-color;
-
-    &:hover {
-      background-color: $primary-color-2;
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px $shadow-color;
-    }
-  }
-
-  .section {
-    margin: 40px 0;
-    padding: 40px;
-    border: 1px solid $primary-color-1;
-    border-radius: $border-radius;
-    background-color: $secondary-color;
+  padding: 10px;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 800px;
-    box-shadow: 0 6px 15px $shadow-color;
+    height: 100%;
+    background-image: url("../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 1;
+    filter: blur(4px);
+  }
+
+  .policy-container {
     position: relative;
+    background-color: $background-color;
+    padding: 60px 5%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    animation: fadeIn 0.8s forwards;
 
-    h3 {
-      color: $primary-color-2;
-      margin-bottom: 20px;
-      font-size: 1.5em;
-      text-align: left;
+    h1 {
+      font-family: "Lora", serif;
+      color: $primary-color;
+      font-size: 3rem;
+      margin-bottom: 50px;
+      text-align: center;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
       position: relative;
+      z-index: 2;
+    }
 
-      &::after {
-        content: "";
-        display: block;
-        width: 50px;
-        height: 4px;
-        background: $primary-color-1;
-        margin-top: 5px;
-        border-radius: 2px;
+    .policy-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      width: 100%;
+      max-width: 1200px;
+      position: relative;
+      z-index: 2;
+
+      .section {
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: $large-border-radius;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: $primary-color;
+          margin-bottom: 15px;
+        }
+
+        p {
+          font-size: 1rem;
+          color: $secondary-color;
+          line-height: 1.8;
+          margin-bottom: 10px;
+        }
+
+        a {
+          color: $primary-color;
+          text-decoration: underline;
+
+          &:hover {
+            color: darken($primary-color, 10%);
+          }
+        }
+      }
+
+      .contact-us {
+        grid-column: span 2;
+        text-align: center;
+        margin-top: 40px;
+
+        h3 {
+          text-align: center;
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: $primary-color;
+        }
+
+        p {
+          font-size: 1rem;
+          color: $secondary-color;
+          line-height: 1.8;
+        }
       }
     }
 
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 5px;
-      background: $primary-color-1;
-      border-radius: $border-radius $border-radius 0 0;
-    }
-  }
+    @media (max-width: 768px) {
+      .policy-content {
+        grid-template-columns: 1fr;
+      }
 
-  .footer-note {
-    margin-top: 50px;
-    font-size: 0.9em;
-    color: $primary-color-2;
-    text-align: center;
-    font-style: italic;
-    padding: 10px 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: $border-radius;
-    box-shadow: 0 4px 10px $shadow-color;
+      h1 {
+        font-size: 2.4rem;
+        margin-bottom: 30px;
+      }
+
+      .section {
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .contact-us {
+        grid-column: span 1;
+        margin-top: 30px;
+      }
+    }
   }
 }

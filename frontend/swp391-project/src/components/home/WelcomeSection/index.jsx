@@ -13,8 +13,10 @@ import {
   faSeedling,
   faHandshake,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 function WelcomeSection() {
+  const { t } = useTranslation();
   return (
     <section className="welcome__section">
       <div className="welcome__content">
@@ -46,35 +48,27 @@ function WelcomeSection() {
         </div>
 
         <div className="welcome__text">
-          <h1>Welcome to Golden Koi</h1>
-          <p>
-            Golden Koi is a trusted source for premium koi fish, renowned for
-            their health and elegance. They carefully select and nurture each
-            fish to ensure the highest quality. Whether you are a beginner or a
-            seasoned koi enthusiast, Golden Koi can help create a tranquil pond
-            that brings peace and serenity to your space. Visit them today to
-            explore their captivating world and bring harmony to your home or
-            garden.
-          </p>
+          <h1>{t("welcomeToGoldenKoi")}</h1>
+          <p>{t("goldenKoiIsATrustedSourceForPremiumKoiFish")}</p>
         </div>
 
         <div className="welcome__additional-info">
           <ul>
             <li>
-              <FontAwesomeIcon icon={faFish} className="icon" /> Premium Quality
-              Koi Fish
+              <FontAwesomeIcon icon={faFish} className="icon" />{" "}
+              {t("premiumQualityKoiFish")}
             </li>
             <li>
-              <FontAwesomeIcon icon={faWater} className="icon" /> Expertly
-              Selected and Nurtured
+              <FontAwesomeIcon icon={faWater} className="icon" />{" "}
+              {t("expertlySelectedAndNurtured")}
             </li>
             <li>
-              <FontAwesomeIcon icon={faSeedling} className="icon" /> Tranquil
-              Pond Solutions
+              <FontAwesomeIcon icon={faSeedling} className="icon" />{" "}
+              {t("tranquilPondSolutions")}
             </li>
             <li>
-              <FontAwesomeIcon icon={faHandshake} className="icon" /> Visit Us
-              for Exclusive Offers
+              <FontAwesomeIcon icon={faHandshake} className="icon" />{" "}
+              {t("visitUsForExclusiveOffers")}
             </li>
           </ul>
         </div>

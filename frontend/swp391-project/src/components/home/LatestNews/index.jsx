@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Picture from "../../../images/picture-3.png";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 const LatestNews = () => {
   const newsItems = [
@@ -42,7 +43,7 @@ const LatestNews = () => {
       link: "/news/6",
     },
   ];
-
+  const { t } = useTranslation();
   const itemsPerPage = 3;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState("");
@@ -73,7 +74,7 @@ const LatestNews = () => {
 
   return (
     <section className="latest__news">
-      <h2>LATEST NEWS</h2>
+      <h2>{t("latestNews")}</h2>
       <div className="news__grid">
         <button className="nav__button left" onClick={prevNews}>
           &lt;

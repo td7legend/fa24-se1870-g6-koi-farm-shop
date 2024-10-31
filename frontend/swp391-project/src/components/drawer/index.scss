@@ -1,0 +1,163 @@
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$border-color: #ddd;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: $secondary-color;
+$button-padding: 12px 24px;
+$card-padding: 15px;
+$element-spacing: 25px;
+$large-border-radius: 20px;
+$drawer-width: 400px;
+$mask-blur: 8px;
+$drawer-transition: 0.4s;
+
+.blur-background {
+  filter: blur($mask-blur);
+  transition: filter 0.3s ease;
+}
+
+.ant-drawer {
+  position: absolute;
+  right: 0;
+  background: transparent;
+  z-index: 1000;
+  transition: all $drawer-transition ease;
+
+  .ant-drawer-mask {
+    background: rgba(0, 0, 0, 0.35);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    filter: blur(5px);
+    z-index: 2;
+  }
+
+  .ant-drawer-header {
+    background: $background-color;
+    border-bottom: 1px solid $border-color;
+    padding: $element-spacing;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: $secondary-color;
+    text-align: center;
+    // z-index: 3;
+    position: relative;
+  }
+
+  .ant-drawer-content {
+    background-color: $background-color;
+    border-radius: 20px 0 0 20px;
+    padding: $element-spacing;
+    color: $text-color;
+    z-index: 2;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("../../images/drawer.jpg");
+      background-size: cover;
+      background-position: center;
+      background-color: rgba(255, 255, 255, 0.5);
+      opacity: 0.17;
+      z-index: 1;
+      filter: blur(3px) brightness(0.6);
+      pointer-events: none;
+    }
+  }
+
+  .ant-list-item {
+    padding: $card-padding;
+    border-bottom: 1px solid $border-color;
+    z-index: 3;
+    position: relative;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .ant-list-item-meta-title {
+      color: $text-color;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .ant-list-item-meta-description {
+      color: darken($text-color, 10%);
+      font-size: 0.9rem;
+    }
+  }
+
+  .total-section {
+    margin-top: $element-spacing;
+    text-align: right;
+    z-index: 3;
+    position: relative;
+
+    .ant-typography {
+      color: $text-color;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05rem;
+    }
+
+    .ant-btn-primary {
+      padding: $button-padding;
+      border-radius: 15px;
+      font-weight: 600;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      z-index: 3;
+      position: relative;
+
+      &:first-of-type {
+        background-color: $secondary-color;
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          background-color: lighten($secondary-color, 5%);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      &:last-of-type {
+        background-color: $primary-color;
+        color: #fff;
+        border: none;
+        margin-left: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          background-color: lighten($primary-color, 5%);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+
+  :where(.css-dev-only-do-not-override-5wsri9).ant-btn-variant-solid {
+    background-color: $highlight-color;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    padding: $button-padding;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: 600;
+    z-index: 3;
+    position: relative;
+
+    &:hover {
+      background-color: lighten($highlight-color, 10%);
+      transform: scale(1.05);
+    }
+  }
+}

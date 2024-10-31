@@ -1,127 +1,69 @@
-import { useState } from "react";
-import ProductCard from "../../product-card";
+import { useState, useEffect } from "react";
 import "./index.scss";
 import Picture from "../../../images/picture-3.png";
+import config from "../../../config/config";
+import axios from "axios";
+import { useTranslation } from "react-i18next";
+import Product from "../Product";
 
 const PopularProduct = () => {
-  const products = [
-    {
-      id: 1,
-      img_path: Picture,
-      name: "Koi Fish 1",
-      price: 25,
-      origin: "Japan",
-      size: 30,
-      description: "A beautiful koi fish with vibrant colors.",
-    },
-    {
-      id: 2,
-      img_path: Picture,
-      name: "Koi Fish 2",
-      price: 30,
-      origin: "Japan",
-      size: 35,
-      description:
-        "A striking koi fish with unique patterns. A striking koi fish with unique patterns. A striking koi fish with unique patterns. A striking koi fish with unique patterns.",
-    },
-    {
-      id: 3,
-      img_path: Picture,
-      name: "Koi Fish 3",
-      price: 35,
-      origin: "Japan",
-      size: 40,
-      description: "An elegant koi fish with smooth scales.",
-    },
-    {
-      id: 4,
-      img_path: Picture,
-      name: "Koi Fish 4",
-      price: 40,
-      origin: "Japan",
-      size: 25,
-      description: "A graceful koi fish with bold patterns.",
-    },
-    {
-      id: 5,
-      img_path: Picture,
-      name: "Koi Fish 5",
-      price: 50,
-      origin: "Japan",
-      size: 50,
-      description: "A majestic koi fish with a radiant glow.",
-    },
-    {
-      id: 6,
-      img_path: Picture,
-      name: "Koi Fish 6",
-      price: 55,
-      origin: "Japan",
-      size: 45,
-      description: "A koi fish with delicate fins and a serene presence.",
-    },
-    {
-      id: 7,
-      img_path: Picture,
-      name: "Koi Fish 7",
-      price: 60,
-      origin: "Japan",
-      size: 55,
-      description: "A koi fish with remarkable color transitions.",
-    },
-    {
-      id: 8,
-      img_path: Picture,
-      name: "Koi Fish 8",
-      price: 65,
-      origin: "Japan",
-      size: 60,
-      description: "A stunning koi fish with flawless features.",
-    },
-  ];
-
+  const [products, setProducts] = useState([]);
+  const { t } = useTranslation();
   const itemsPerPage = 4;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState("");
+  // sài tạm mốt co api thi update
+  const fetchPopularProducts = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}fishs`);
+      const data = response.data;
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching popular products:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchPopularProducts();
+  }, []);
   const nextProducts = () => {
     setFade("fade__out");
     setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex + itemsPerPage < products.length
-          ? prevIndex + itemsPerPage
-          : 0
-      );
+      setCurrentIndex((prevIndex) => {
+        const newIndex = (prevIndex + itemsPerPage) % products.length;
+        return newIndex;
+      });
       setFade("fade__in");
-    }, 300);
+    }, 300); // Match the CSS transition duration
   };
 
   const prevProducts = () => {
     setFade("fade__out");
     setTimeout(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex - itemsPerPage >= 0
-          ? prevIndex - itemsPerPage
-          : Math.floor(products.length / itemsPerPage) * itemsPerPage
-      );
+      setCurrentIndex((prevIndex) => {
+        const newIndex =
+          (prevIndex - itemsPerPage + products.length) % products.length;
+        return newIndex;
+      });
       setFade("fade__in");
-    }, 300);
+    }, 300); // Match the CSS transition duration
   };
 
   return (
     <section className="popular__product">
-      <h2>POPULAR PRODUCTS</h2>
+      <h2>{t("popularProducts")}</h2>
       <div className="popular__product__grid">
         <button className="nav__button left" onClick={prevProducts}>
           &lt;
         </button>
-        <div className={`popular__products__display ${fade}`}>
+        <div
+          className={`products__display ${fade}`}
+          style={{ display: "flex", gap: "30px" }}
+        >
           {products
             .slice(currentIndex, currentIndex + itemsPerPage)
-            .map((product, index) => (
-              <div className="product__container" key={index}>
-                <ProductCard fish={product} />
-              </div>
+            .map((topFish, index) => (
+              <Product key={index} product={topFish} />
             ))}
         </div>
         <button className="nav__button right" onClick={nextProducts}>

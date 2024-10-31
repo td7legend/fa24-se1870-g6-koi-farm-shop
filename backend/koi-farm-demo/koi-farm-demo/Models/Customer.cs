@@ -10,6 +10,7 @@
     public int AccommodatePoint { get; set; }
     public ICollection<Order> Orders { get; set; }
     public ICollection<Rating> Ratings { get; set; }
+    public ICollection<Consignment> Consignments { get; set; }
     public User User { get; set; }
     public int UserId { get; set; }
 }

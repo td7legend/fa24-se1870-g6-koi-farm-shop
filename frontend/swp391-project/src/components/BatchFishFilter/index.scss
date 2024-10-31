@@ -1,0 +1,103 @@
+.batch-fish-filter {
+  padding: 20px;
+  text-align: center;
+  h2 {
+    margin-bottom: 20px;
+  }
+  .batch-fish-wrapper {
+    overflow: hidden;
+    height: 500px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    max-width: 300px;
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(#f9f9f9, #fffaf0);
+    transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+      border-color: #bbab6f;
+    }
+    .image {
+      height: 300px;
+      width: 100%;
+      overflow: hidden;
+      margin: 10px 0;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+        border-radius: 8px;
+      }
+
+      &:hover img {
+        transform: scale(1.1);
+      }
+    }
+    .info-container {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      flex-grow: 1;
+      margin-top: 20px;
+      .info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 5px;
+        flex-grow: 1;
+
+        h2 {
+          margin: 0;
+          font-size: 18px;
+          color: #333;
+          font-weight: 700;
+          margin-bottom: 8px;
+          transition: color 0.3s;
+          font-family: "Lora", serif;
+
+          &:hover {
+            color: #bbab6f;
+          }
+        }
+
+        .price {
+          margin: 10px 0;
+          font-size: 16px;
+          color: #bbab6f;
+          font-weight: bold;
+          margin-bottom: 15px;
+        }
+        p {
+          color: #bbab6f;
+        }
+      }
+    }
+  }
+
+  .ant-pagination {
+    .ant-pagination-item-active {
+      border-color: #bbab6f;
+    }
+    a {
+      border-radius: 5px;
+      color: #bbab6f;
+      border-color: #bbab6f;
+      &:hover {
+        color: #bbab6f;
+        background-color: #ddd;
+      }
+    }
+  }
+}

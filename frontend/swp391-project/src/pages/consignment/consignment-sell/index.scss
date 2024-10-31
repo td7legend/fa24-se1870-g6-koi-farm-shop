@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* index.scss */
 
 .breadcrumb-container {
@@ -86,4 +87,162 @@ button.ant-btn:disabled {
 
 .ant-modal-footer {
   border-top: none; /* Ẩn viền trên footer modal */
+=======
+$breadcrumb-bg: #f0f2f5;
+$form-bg: #fffaf0;
+$modal-border-radius: 8px;
+$text-color: #333;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$upload-bg: #f7f7f7;
+$upload-border: #d9d9d9;
+$hover-border-color: #bbab6f;
+$button-bg: #bbab6f;
+$button-disabled-bg: #d9d9d9;
+$button-disabled-text: rgba(0, 0, 0, 0.25);
+$fish-item-border: #e0e0e0;
+$fish-item-bg: #fffaf0;
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
+
+.breadcrumb-container {
+  background: $breadcrumb-bg;
+  padding: 10px 20px;
+  @include border-radius(5px);
+  margin-bottom: 20px;
+
+  .breadcrumb {
+    font-size: 16px;
+    font-weight: bold;
+
+    .breadcrumb-page {
+      font-weight: normal;
+    }
+  }
+
+  .icon {
+    margin-right: 5px;
+  }
+}
+
+.consignment-sale {
+  background: $form-bg;
+  @include border-radius(8px);
+  padding: 20px;
+  box-sizing: border-box;
+
+  .consignment__wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    padding: 50px;
+    border-radius: 30px;
+  }
+
+  h2 {
+    text-align: center;
+    color: $text-color;
+    margin-bottom: 20px;
+  }
+  .add-fish-center {
+    margin: 0 500px;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+
+    .form-left,
+    .form-right {
+      width: 100%;
+    }
+
+    .form-left {
+      margin-bottom: 20px;
+
+      .add-fish-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100px;
+      }
+
+      .ant-table {
+        background: #fffaf0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px $shadow-color;
+
+        .ant-table-thead > tr > th {
+          background: #fffaf0;
+          font-weight: 600;
+        }
+        .ant-table-cell {
+          background: #fffaf0;
+        }
+      }
+    }
+
+    .form-right {
+      .ant-form-item {
+        margin-bottom: 16px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  button.ant-btn {
+    background-color: $button-bg;
+    border-color: #bbab6f;
+    color: #fffaf0;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: #ddd !important;
+      color: #bbab6f !important;
+      border-color: #bbab6f !important;
+    }
+
+    &:disabled {
+      background-color: $button-disabled-bg;
+      color: $button-disabled-text;
+    }
+  }
+}
+
+.fish-item {
+  // border: 1px solid $fish-item-border;
+  @include border-radius(15px);
+  padding: 20px;
+  margin-bottom: 20px;
+  background: $fish-item-bg;
+  box-shadow: 0 2px 10px $shadow-color;
+  h3 {
+    color: darken($text-color, 20%);
+    margin-bottom: 10px;
+  }
+}
+
+.ant-upload {
+  background: $upload-bg;
+  border: 1px dashed $upload-border;
+  @include border-radius(5px);
+  transition: border-color 0.3s;
+
+  &:hover {
+    border-color: $hover-border-color;
+  }
+}
+
+.ant-modal {
+  @include border-radius($modal-border-radius);
+  .ant-modal-header,
+  .ant-modal-footer {
+    border: none;
+  }
+>>>>>>> main
 }

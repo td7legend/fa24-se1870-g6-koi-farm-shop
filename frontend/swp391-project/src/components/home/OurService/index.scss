@@ -1,0 +1,130 @@
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$highlight-color: #bbab6f;
+$background-color: #f7f3e9;
+$text-color: #2a2a2a;
+$element-spacing: 30px;
+$large-border-radius: 12px;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$shadow-hover-color: rgba(0, 0, 0, 0.2);
+
+.our__service {
+  position: relative;
+  text-align: center;
+  padding: 80px 20px;
+  background-color: $background-color;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("src/images/background-3.png") center/cover no-repeat;
+    z-index: 1;
+    opacity: 0.7;
+    filter: blur(2px) brightness(0.5);
+    // filter: brightness(0.5);
+  }
+
+  h2 {
+    font-family: "Lora", serif;
+    font-size: 42px;
+    color: $primary-color;
+    margin-bottom: $element-spacing;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .our__service-intro {
+    font-size: 22px;
+    color: $text-color;
+    font-weight: 500;
+    margin: 0 auto $element-spacing;
+    max-width: 700px;
+    z-index: 2;
+    position: relative;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: $large-border-radius;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    line-height: 1.6;
+  }
+
+  .service__content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $element-spacing;
+    justify-content: center;
+    z-index: 2;
+    position: relative;
+  }
+
+  .service__box {
+    background-color: #fff;
+    border-radius: $large-border-radius;
+    padding: 30px;
+    width: 45%;
+    min-width: 320px;
+    color: $text-color;
+    text-decoration: none;
+    box-shadow: 0 4px 15px $shadow-color;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 18px $shadow-hover-color;
+    }
+
+    h3 {
+      font-family: "Lora", serif;
+      color: $secondary-color;
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: disc;
+      padding-left: 20px;
+      margin-bottom: 20px;
+
+      li {
+        margin-bottom: 8px;
+        font-size: 15px;
+      }
+    }
+
+    .learn-more {
+      font-weight: bold;
+      color: $highlight-color;
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: underline;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $highlight-color;
+      }
+    }
+  }
+
+  .service__box--care {
+    border-left: 5px solid $highlight-color;
+    border-top: 3px solid $highlight-color;
+  }
+
+  .service__box--sell {
+    border-left: 5px solid $highlight-color;
+    border-top: 3px solid $highlight-color;
+  }
+}

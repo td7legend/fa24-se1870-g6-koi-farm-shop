@@ -4,7 +4,8 @@
   font-family: "Lato", sans-serif;
   font-weight: 1000;
   position: relative;
-  z-index: 10;
+  z-index: 1000;
+
   &::before {
     content: "";
     position: absolute;
@@ -72,7 +73,7 @@
         background-color: #bbab6f;
         color: white;
         padding: 10px 20px;
-        border: 2px solid white;
+        border: 2px solid #fff;
         border-left: none;
         border-radius: 0 30px 30px 0;
         cursor: pointer;
@@ -109,7 +110,7 @@
     }
   }
 
-  &__menu {
+  .header__menu {
     padding-top: 20px;
     position: relative;
     z-index: 2;
@@ -149,11 +150,17 @@
 
     .nav__links {
       z-index: 3;
+
+      .fa__icon {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+
       ul {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 100px;
+        gap: 180px;
         font-size: 18px;
         li {
           list-style: none;
@@ -174,7 +181,8 @@
       }
 
       .dropdown-menu {
-        width: 150px;
+        width: auto;
+        white-space: nowrap; /* Ngăn các mục bị ngắt dòng */
         height: fit-content;
         text-align: start;
         top: 150%;
@@ -256,6 +264,19 @@
         background-color: #bbab6f;
         color: white;
       }
+    }
+  }
+
+  .cart {
+    color: #bbab6f;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    .fa__icon {
+      margin-right: 8px;
+    }
+    &:hover {
+      color: white;
+      cursor: pointer;
     }
   }
 }

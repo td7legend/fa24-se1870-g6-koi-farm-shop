@@ -12,8 +12,10 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="footer">
       <div className="footer__container">
@@ -32,7 +34,7 @@ function Footer() {
             </p>
             <p>
               <FontAwesomeIcon icon={faPhone} className="icon" />
-              Hotline: 024xxx.xxx.xxx
+              {t("hotline")}: 024xxx.xxx.xxx
             </p>
             <p>
               <FontAwesomeIcon icon={faEnvelope} className="icon" />
@@ -47,55 +49,55 @@ function Footer() {
         {/* Footer Menu */}
         <div className="footer__menu">
           <div className="footer__column">
-            <h4>Personal</h4>
+            <h4>{t("personal")}</h4>
             <ul>
               <li>
-                <Link to="/user-dashboard/:id">Account</Link>
+                <Link to="/user-dashboard/:id">{t("account")}</Link>
               </li>
               <li>
-                <Link to="/cart">Cart</Link>
+                <Link to="/cart">{t("cart")}</Link>
               </li>
               <li>
-                <Link to="/user-setting/:id">Change Password</Link>
+                <Link to="/user-setting/:id">{t("changePassword")}</Link>
               </li>
               <li>
-                <Link to="/order-history">Order History</Link>
+                <Link to="/order-history">{t("orderHistory")}</Link>
               </li>
             </ul>
           </div>
 
           <div className="footer__column">
-            <h4>About Us</h4>
+            <h4>{t("aboutUs")}</h4>
             <ul>
               <li>
-                <Link to="/consignment">Consignment</Link>
+                <Link to="/consignment">{t("consignment")}</Link>
               </li>
               <li>
-                <Link to="/products">Product</Link>
+                <Link to="/fish-page">{t("fishs")}</Link>
               </li>
               <li>
-                <Link to="/">Home Page</Link>
+                <Link to="/">{t("home")}</Link>
               </li>
               <li>
-                <Link to="/about-us">About Our Shop</Link>
+                <Link to="/about-us">{t("aboutOurShop")}</Link>
               </li>
             </ul>
           </div>
 
           <div className="footer__column">
-            <h4>Support</h4>
+            <h4>{t("support")}</h4>
             <ul>
               <li>
-                <Link to="/contact">Contact</Link>
+                <Link to="/contact">{t("contact")}</Link>
               </li>
               <li>
                 <Link to="/faqs-page">FAQs</Link>
               </li>
               <li>
-                <Link to="/policy-page">Policy</Link>
+                <Link to="/policy-page">{t("policy")}</Link>
               </li>
               <li>
-                <Link to="/shopping-guide">Shopping Guide</Link>
+                <Link to="/shopping-guide">{t("shoppingGuide")}</Link>
               </li>
             </ul>
           </div>
@@ -103,7 +105,7 @@ function Footer() {
 
         {/* Footer Bottom */}
         <div className="footer__bottom">
-          <p>© 2024 Golden Koi. All rights reserved.</p>
+          <p>© 2024 Golden Koi. {t("allRightsReserved")}</p>
           <div className="footer__social-media">
             <Link
               to="https://www.facebook.com/yourpage"

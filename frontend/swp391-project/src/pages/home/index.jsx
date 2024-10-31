@@ -3,8 +3,12 @@ import WelcomeSection from "../../components/home/WelcomeSection";
 import RecentlyAdded from "../../components/home/RecentlyAdded";
 import LatestNews from "../../components/home/LatestNews";
 import PopularProduct from "../../components/home/PopularProduct";
-import AboutFarm from "../../components/home/AboutFarm";
+import OurService from "../../components/home/OurService";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState({
@@ -16,10 +20,19 @@ const Home = () => {
     recentlyAdded: false,
     latestNews: false,
     popularProduct: false,
-    aboutFarm: false,
+    ourService: false,
   });
-
+  const { t } = useTranslation();
   const sectionsRef = useRef({});
+  const videoSources = {
+    ogon: "https://www.youtube.com/embed/OeuhPo4AgkI?autoplay=1&mute=1&vq=hd1080",
+    ochiba:
+      "https://www.youtube.com/embed/rVFfO95KxRk?autoplay=1&mute=1&vq=hd1080",
+    kohaku:
+      "https://www.youtube.com/embed/TjEWSEm6MI4?autoplay=1&mute=1&vq=hd1080",
+    kujaku:
+      "https://www.youtube.com/embed/ySxJcBmKvsM?autoplay=1&mute=1&vq=hd1080",
+  };
 
   useEffect(() => {
     const observerOptions = {
@@ -30,15 +43,17 @@ const Home = () => {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        const componentName = entry.target.dataset.component;
+
         if (entry.isIntersecting) {
           setIsVisible((prev) => ({
             ...prev,
-            [entry.target.dataset.component]: true,
+            [componentName]: true,
           }));
         } else {
           setIsVisible((prev) => ({
             ...prev,
-            [entry.target.dataset.component]: false,
+            [componentName]: false,
           }));
         }
       });
@@ -71,21 +86,29 @@ const Home = () => {
       >
         <div className="demo">
           <div className="content" style={{ textAlign: "right" }}>
-            <h2>Ogon Koi Fish</h2>
+            <h2>Ogon Koi </h2>
             <p>
-              The Ogon koi fish is known for its stunning golden color and shiny
-              appearance. This variety symbolizes prosperity and is a favorite
-              among koi enthusiasts.
+              {t(
+                "theOgonKoiFishIsKnownForItsStunningGoldenColorAndShinyAppearance"
+              )}
+              {t(
+                "thisVarietySymbolizesProsperityAndIsAFavoriteAmongKoiEnthusiasts"
+              )}
             </p>
+            <Link to="/breed/Ogon" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
           <iframe
+            key={isVisible.ogon ? videoSources.ogon : null}
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/OeuhPo4AgkI?autoplay=1&mute=1&vq=hd1080"
+            src={isVisible.ogon ? videoSources.ogon : ""}
             title="Ogon Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
         </div>
       </div>
@@ -110,20 +133,26 @@ const Home = () => {
       >
         <div className="demo">
           <iframe
+            key={isVisible.ochiba ? videoSources.ochiba : null}
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/rVFfO95KxRk?autoplay=1&mute=1&vq=hd1080"
+            src={isVisible.ochiba ? videoSources.ochiba : ""}
             title="Ochiba Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
           <div className="content">
-            <h2>Ochiba Koi Fish</h2>
+            <h2>Ochiba Koi</h2>
             <p>
-              The Ochiba koi fish is appreciated for its unique blue-gray body
-              with orange patterns. It's a beautiful addition to any pond.
+              {t(
+                "theOchibaKoiFishIsAppreciatedForItsUniqueBlueGrayBodyWithOrangePatternsItSABeautifulAdditionToAnyPond"
+              )}
             </p>
+            <Link to="/breed/Ochiba" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
         </div>
       </div>
@@ -146,21 +175,26 @@ const Home = () => {
       >
         <div className="demo">
           <div className="content" style={{ textAlign: "right" }}>
-            <h2>Kohaku Koi Fish</h2>
+            <h2>Kohaku Koi </h2>
             <p>
-              The Kohaku is one of the most popular koi varieties, known for its
-              striking red and white coloration. It represents luck and
-              prosperity.
+              {t(
+                "theKohakuIsOneOfTheMostPopularKoiVarietiesKnownForItsStrikingRedAndWhiteColorationItRepresentsLuckAndProsperity"
+              )}
             </p>
+            <Link to="/breed/Kohaku" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
           <iframe
+            key={isVisible.kohaku ? videoSources.kohaku : null}
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/TjEWSEm6MI4?autoplay=1&mute=1&vq=hd1080"
+            src={isVisible.kohaku ? videoSources.kohaku : ""}
             title="Kohaku Koi Fish"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
         </div>
       </div>
@@ -185,30 +219,36 @@ const Home = () => {
       >
         <div className="demo">
           <iframe
+            key={isVisible.kujaku ? videoSources.kujaku : null}
             width="560"
             height="500"
-            src="https://www.youtube.com/embed/ySxJcBmKvsM?autoplay=1&mute=1&vq=hd1080"
-            title="Kujaku Koi Fish"
+            src={isVisible.kujaku ? videoSources.kujaku : ""}
+            title="Kujaku Koi "
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="youtube-iframe"
           ></iframe>
           <div className="content">
-            <h2>Kujaku Koi Fish</h2>
+            <h2>Kujaku Koi </h2>
             <p>
-              The Kujaku is known for its stunning patterns and colors, making
-              it a striking presence in any koi pond.
+              {t(
+                "theKujakuIsKnownForItsStunningPatternsAndColorsMakingItAStrikingPresenceInAnyKoiPond"
+              )}
             </p>
+            <Link to="/breed/Kujaku" className="view-details">
+              View Details <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
         </div>
       </div>
 
       <div
-        ref={(el) => (sectionsRef.current.aboutFarm = el)}
-        data-component="aboutFarm"
-        className={`component ${isVisible.aboutFarm ? "animate" : "hidden"}`}
+        ref={(el) => (sectionsRef.current.ourService = el)}
+        data-component="ourService"
+        className={`component ${isVisible.ourService ? "animate" : "hidden"}`}
       >
-        <AboutFarm />
+        <OurService />
       </div>
     </div>
   );

@@ -1,3 +1,14 @@
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$border-color: #ddd;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$button-padding: 12px 24px;
+$card-padding: 15px;
+$element-spacing: 25px;
+$large-border-radius: 20px;
+
 .product-card-wrapper {
   text-decoration: none;
   font-family: sans-serif;
@@ -24,7 +35,7 @@
     &:hover {
       transform: scale(1.05);
       box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-      border-color: #bbab6f;
+      border-color: $primary-color;
     }
 
     .image {
@@ -35,6 +46,7 @@
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
+
       img {
         width: 100%;
         height: 100%;
@@ -63,7 +75,7 @@
 
         h2 {
           margin: 0;
-          font-size: 22px;
+          font-size: 18px;
           color: #333;
           font-weight: 700;
           margin-bottom: 8px;
@@ -82,12 +94,14 @@
           overflow: visible;
           white-space: normal;
           margin-bottom: 15px;
+          color: $text-color;
         }
 
         .tag {
           display: flex;
           gap: 10px;
           margin-bottom: 10px;
+          flex-wrap: wrap;
 
           .tag-item-origin {
             background-color: #5a9c8b;
@@ -116,6 +130,22 @@
               transform: scale(1.05);
             }
           }
+
+          .tag-item-age {
+            background-color: #455a64;
+            color: #fff;
+            border-radius: 12px;
+            font-size: 10px;
+            padding: 6px 12px;
+            transition: background-color 0.3s, transform 0.2s;
+            display: block;
+            // margin-top: 10px;
+
+            &:hover {
+              background-color: #3b4a50;
+              transform: scale(1.05);
+            }
+          }
         }
 
         .price {
@@ -139,6 +169,33 @@
 
         &:hover {
           background-color: #a68f5b;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+      }
+      .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+
+        .ant-btn {
+          flex: 1;
+          margin: 0 5px;
+        }
+      }
+
+      .compare {
+        margin: 15px auto 0;
+        background-color: #fff;
+        color: #bbab6f;
+        border: 1px solid #bbab6f;
+        border-radius: 20px;
+        padding: 10px 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+
+        &:hover {
+          // background-color: #a68f5b;
           transform: translateY(-1px);
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }

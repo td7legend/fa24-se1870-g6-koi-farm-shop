@@ -14,44 +14,43 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import "./index.scss";
 import { toast } from "react-toastify";
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import { useDispatch, useSelector } from "react-redux";
+import config from "../../config/config";
+import { AES, enc } from "crypto-js";
+import { setCart } from "../../store/actions/cartAction";
+import { useTranslation } from "react-i18next";
+import LoadingKoi from "../../components/loading";
 
 const Cart = () => {
-  const [cart, setCart] = useState(null);
+  const [cart, setCartNoneRedux] = useState(null);
   const [fishes, setFishes] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   useEffect(() => {
     fetchCart();
     fetchFishes();
   }, []);
-
-  const getAuthToken = () => {
-    return localStorage.getItem("token");
-  };
-
+  const { t } = useTranslation();
   const fetchCart = async () => {
     try {
-      const token = getAuthToken();
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         return;
       }
 
-      const response = await axios.get(`${config.API_ROOT}/cart`, {
+      const response = await axios.get(`${config.API_ROOT}cart`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token ?? null}`,
         },
       });
 
       if (response.data && response.data.length > 0) {
-        setCart(response.data[0]);
+        setCartNoneRedux(response.data[0]);
+        dispatch(setCart(response.data[0].orderLines || []));
       } else {
-        setCart(null);
-        message.info("Your cart is empty.");
+        setCartNoneRedux(null);
+        message.info(t("yourCartIsEmpty"));
       }
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -61,11 +60,10 @@ const Cart = () => {
 
   const fetchFishes = async () => {
     try {
-      const response = await axios.get(`${config.API_ROOT}/fishs`);
+      const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
       console.error("Error fetching fishes:", error);
-      toast.error("Failed to fetch fish data. Some prices may be unavailable.");
     } finally {
       setLoading(false);
     }
@@ -86,29 +84,28 @@ const Cart = () => {
 
   const updateCart = async (fishId, isAdd, isRemove) => {
     try {
-      const token = getAuthToken();
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFoundPleaseLogIn"));
         return;
       }
 
       await axios.patch(
-        `${config.API_ROOT}/carts`,
+        `${config.API_ROOT}carts`,
         { fishId, isAdd, isRemove },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token ?? null}`,
           },
         }
       );
 
-      fetchCart(); // Refresh cart after update
+      fetchCart();
       toast.success(
-        isRemove ? "Fish removed from cart" : "Cart updated successfully"
+        isRemove ? t("fishRemovedFromCart") : t("cartUpdatedSuccessfully")
       );
     } catch (error) {
       console.error("Error updating cart:", error);
-      toast.error("Failed to update cart. Please try again.");
+      toast.error(t("failedToUpdateCartPleaseTryAgain"));
     }
   };
 
@@ -126,7 +123,7 @@ const Cart = () => {
 
   const columns = [
     {
-      title: "Fish",
+      title: t("fish"),
       dataIndex: "fishName",
       key: "fishName",
       render: (text, record) => (
@@ -137,26 +134,31 @@ const Cart = () => {
       ),
     },
     {
-      title: "Price",
+      title: t("price"),
       key: "price",
-      render: (_, record) =>
-        `${getFishPrice(record.fishId).toLocaleString()} VND`,
+      render: (_, record) => (
+        <span style={{ whiteSpace: "nowrap" }}>
+          {`${getFishPrice(record.fishId).toLocaleString()} VND`}
+        </span>
+      ),
     },
     {
-      title: "Quantity",
+      title: t("quantity"),
       key: "quantity",
       render: (_, record) => (
         <div className="quantity-input">
           <Button
-            className="button"
+            className="button-quantity"
             onClick={() => handleDecreaseQuantity(record.fishId)}
+            style={{ border: "none" }}
           >
             -
           </Button>
           <span style={{ margin: "0 10px" }}>{record.quantity}</span>
           <Button
-            className="button"
+            className="button-quantity"
             onClick={() => handleIncreaseQuantity(record.fishId)}
+            style={{ border: "none" }}
           >
             +
           </Button>
@@ -164,53 +166,60 @@ const Cart = () => {
       ),
     },
     {
-      title: "Total",
+      title: t("total"),
       key: "total",
-      render: (_, record) =>
-        `${(
-          getFishPrice(record.fishId) * record.quantity
-        ).toLocaleString()} VND`,
+      render: (_, record) => (
+        <span style={{ whiteSpace: "nowrap" }}>
+          {`${(
+            getFishPrice(record.fishId) * record.quantity
+          ).toLocaleString()} VND`}
+        </span>
+      ),
     },
     {
-      title: "Action",
+      title: t("action"),
       key: "action",
       render: (_, record) => (
         <Button
-          className="button"
+          className="button-main"
           onClick={() => handleRemoveItem(record.fishId)}
         >
-          Remove
+          {t("remove")}
         </Button>
       ),
     },
   ];
 
   if (loading) {
-    return <Spin size="large" />;
+    return <LoadingKoi />;
   }
 
   return (
-    <>
+    <div className="cart-page">
       <Col span={24}>
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
             <Breadcrumb.Item href="/">
               <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
             </Breadcrumb.Item>
-            <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
-            <Breadcrumb.Item>Cart</Breadcrumb.Item>
+            <Breadcrumb.Item href="/fish-page">{t("fishList")}</Breadcrumb.Item>
+            <Breadcrumb.Item className="breadcrumb-page">
+              {t("cart")}
+            </Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
       <div className="cart-container">
         <Card
           className="card"
-          title="Cart"
+          title={t("cart")}
           style={{
             width: "100%",
             maxWidth: 800,
             margin: "20px auto",
             padding: "20px",
+            borderRadius: "20px",
+            background: "rgba(255, 250, 240, 0.7)",
           }}
         >
           {cart && cart.orderLines && cart.orderLines.length > 0 ? (
@@ -225,9 +234,10 @@ const Cart = () => {
                 style={{ textAlign: "right", margin: "5px 0", padding: "5px" }}
               >
                 <p
-                  style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}
+                  style={{ fontSize: 15, fontWeight: "bold", marginBottom: 10 }}
                 >
-                  Total Price: {calculateTotalPrice().toLocaleString()} VND
+                  {t("totalPrice")}: {calculateTotalPrice().toLocaleString()}{" "}
+                  VND
                 </p>
                 <Button
                   className="button"
@@ -235,24 +245,24 @@ const Cart = () => {
                   onClick={() => (window.location.href = "/products")}
                   style={{ marginRight: 10 }}
                 >
-                  Back to Shop
+                  {t("backToShop")}
                 </Button>
                 <Button
-                  className="button"
+                  className="button-main"
                   href="/checkout"
                   size="large"
                   style={{ width: 200 }}
                 >
-                  Checkout
+                  {t("checkout")}
                 </Button>
               </div>
             </>
           ) : (
-            <p>Your cart is empty.</p>
+            <p>{t("yourCartIsEmpty")}</p>
           )}
         </Card>
       </div>
-    </>
+    </div>
   );
 };
 

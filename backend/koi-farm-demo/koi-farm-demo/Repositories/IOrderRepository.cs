@@ -2,6 +2,7 @@
 
 public interface IOrderRepository
 {
+    Task<List<Order>> GetAllOrdersWithStatusAsync();
     Task<List<Order>> GetOrdersByCustomerIdAsync(int customerId);
     Task<OrderDTO> GetOrderByIdAsync(int orderId); 
     Task<Order> GetByIdAsync(int orderId); 

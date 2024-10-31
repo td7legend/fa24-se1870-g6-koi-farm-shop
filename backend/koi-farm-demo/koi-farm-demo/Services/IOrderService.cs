@@ -4,6 +4,8 @@ namespace koi_farm_demo.Services
 {
     public interface IOrderService
     {
+        Task<List<OrderDTO>> GetAllOrdersWithStatusAsync();
+        Task UpdateOrderStatusAsync(int orderId, OrderStatus status);
         Task<List<OrderHistoryDTO>> GetOrderHistory(int customerId);
         Task<List<OrderDTO>> GetOrdersInCartByCustomerIdAsync(int customerId);
         Task<OrderDTO> GetOrderByIdAsync(int orderId);
@@ -12,5 +14,6 @@ namespace koi_farm_demo.Services
         Task PayForOrderAsync(int orderId, OrderDTO orderDTO);
         Task AddItemToCart(int customerId, OrderLineCreateDTO orderLineCreateDto);
         Task UpdateCartAsync(int customerId, UpdateCartDTO updateCartDTO);
+        Task<bool> HasCustomerBoughtFishAsync(int customerId, int fishId);
     }
 }

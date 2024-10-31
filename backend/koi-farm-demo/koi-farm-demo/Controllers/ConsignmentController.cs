@@ -1,4 +1,5 @@
-﻿using koi_farm_demo.Models;
+﻿using koi_farm_demo.Data;
+using koi_farm_demo.Models;
 using koi_farm_demo.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,13 @@ namespace koi_farm_demo.Controllers
         {
             _consignmentService = consignmentService;
         }
-
+        [HttpGet("customer/{customerId}")]
+        public async Task<IActionResult> GetConsignmentsByCustomerId(int customerId)
+        {
+            await _consignmentService.CheckAndUpdateAllConsignmentStatusesAsync();
+            var consignments = await _consignmentService.GetConsignmentsByCustomerIdAsync(customerId);
+            return Ok(consignments);
+        }
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSaleConsignment([FromBody] CreateConsignmentRequest request)
         {
@@ -38,18 +45,19 @@ namespace koi_farm_demo.Controllers
         }
 
         [HttpPost("{id}/receive-sale")]
-        public async Task<IActionResult> ReceiveConsignmentForSale(int id)
+        public async Task<IActionResult> ReceiveConsignmentForSale(int id, [FromQuery] decimal agreePrice)
         {
-            await _consignmentService.ReceiveConsignmentForSaleAsync(id);
+            await _consignmentService.ReceiveConsignmentForSaleAsync(id, agreePrice);
             return Ok();
         }
 
         [HttpPost("{id}/receive-care")]
-        public async Task<IActionResult> ReceiveConsignmentForCare(int id)
+        public async Task<IActionResult> ReceiveConsignmentForCare(int id, [FromQuery] decimal careFee)
         {
-            await _consignmentService.ReceiveConsignmentForCareAsync(id);
+            await _consignmentService.ReceiveConsignmentForCareAsync(id, careFee);
             return Ok();
         }
+
         [HttpPut("{consignmentId}/update-carefee-status")]
         public async Task<IActionResult> UpdateCareFeeAndStatus(int consignmentId, [FromBody] UpdateConsignmentRequest request)
         {
@@ -62,6 +70,20 @@ namespace koi_farm_demo.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        [HttpPut("{id}/update-sale")]
+        public async Task<IActionResult> UpdateConsignmentForSale(int id, [FromQuery] decimal agreePrice, [FromBody] List<ConsignmentLineUpdateDto> updatedConsignmentLines)
+        {
+            await _consignmentService.UpdateConsignmentForSaleAsync(id, agreePrice, updatedConsignmentLines);
+            return Ok("Consignment updated for sale successfully.");
+        }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllConsignment()
+        {
+            await _consignmentService.CheckAndUpdateAllConsignmentStatusesAsync();
+            var consignments = await _consignmentService.GetAllConsignmentAsync();
+            return Ok(consignments);
         }
     }
     public class UpdateConsignmentStatusRequest

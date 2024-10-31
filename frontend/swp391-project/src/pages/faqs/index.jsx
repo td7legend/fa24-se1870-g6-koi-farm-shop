@@ -4,13 +4,15 @@ import { Breadcrumb, Button, Col, Row } from "antd";
 import { Link } from "react-router-dom"; // Import Link for navigation
 import "./index.scss";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 function FAQsPage() {
+  const { t } = useTranslation();
   const faqData = [
     {
       question: "What types of koi fish do you sell?",
       answer:
-        "We offer a wide variety of koi fish, including Kohaku, Showa, and Sanke.",
+        "We offer a wide variety of koi fish, including Kohaku, Showa, and Sanke....",
     },
     {
       question: "How do I take care of my koi?",
@@ -61,7 +63,7 @@ function FAQsPage() {
   ];
 
   return (
-    <div>
+    <div className="faqs-page">
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
@@ -72,36 +74,34 @@ function FAQsPage() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>FAQs</Breadcrumb.Item>
+              <Breadcrumb.Item className="breadcrumb-page">
+                FAQs
+              </Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>
       </Row>
 
       <div className="faqs-container">
-        <h1 className="faqs-title">Golden Koi - Frequently Asked Questions</h1>
+        <h1 className="faqs-title">
+          Golden Koi - {t("frequentlyAskedQuestions")}
+        </h1>
 
         <div className="faq-content">
-          <div className="faq-items">
-            {faqData.map((faq, index) => (
-              <div key={index} className="faq-item">
-                <div className="faq-question">
-                  <FontAwesomeIcon
-                    icon={faQuestionCircle}
-                    className="faq-icon"
-                  />
-                  {faq.question}
-                </div>
-                <div className="faq-answer">{faq.answer}</div>
+          {faqData.map((faq, index) => (
+            <div key={index} className="faq-item">
+              <div className="faq-question">
+                <FontAwesomeIcon icon={faQuestionCircle} className="faq-icon" />
+                {faq.question}
               </div>
-            ))}
-          </div>
+              <div className="faq-answer">{faq.answer}</div>
+            </div>
+          ))}
 
-          {/* Link to Shopping Guide */}
           <div className="shopping-guide-link">
-            <h2>Need more information?</h2>
+            <h2>{t("needMoreInformation")}</h2>
             <Link to="/shopping-guide">
-              <Button type="primary">View Shopping Guide</Button>
+              <Button type="primary">{t("viewShoppingGuide")}</Button>
             </Link>
           </div>
         </div>

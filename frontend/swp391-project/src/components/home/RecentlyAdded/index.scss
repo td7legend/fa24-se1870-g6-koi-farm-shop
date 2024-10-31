@@ -15,8 +15,8 @@
     background-position: center;
     z-index: 1;
     background-color: rgba(255, 255, 255, 0.5);
-    filter: blur(5px);
-    opacity: 0.5;
+    opacity: 0.7;
+    filter: blur(2px) brightness(0.5);
     pointer-events: none;
   }
 
@@ -84,5 +84,31 @@
 
   &:hover .nav__button {
     opacity: 1;
+  }
+}
+.recently__added {
+  .product__grid__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .products__display {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+
+      opacity: 1;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .fade__out {
+      opacity: 0;
+      transform: translateX(-20px); // Thêm dịch chuyển để tạo hiệu ứng mượt
+    }
+
+    .fade__in {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 }

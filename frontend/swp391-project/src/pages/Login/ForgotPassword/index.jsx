@@ -8,8 +8,11 @@ import emailjs from "@emailjs/browser";
 import config from "../../../config/config";
 import axios from "axios";
 import { initEmailJS } from "../../../config/emailjsConfig";
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "../../../components/language/LanguageSelector";
 
 const ForgotPassword = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -24,7 +27,7 @@ const ForgotPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otpMessage, setOtpMessage] = useState("");
-
+  const { t } = useTranslation();
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => {
     const passwordRegex =
@@ -44,15 +47,15 @@ const ForgotPassword = () => {
         .then(
           (response) => {
             console.log("SUCCESS!", response.status, response.text);
-            toast.success("OTP sent successfully!");
+            toast.success(t("otpSentSuccessfully"));
             setOtpModalOpen(true);
           },
           (error) => {
-            toast.error("Failed to send OTP: " + error.message);
+            toast.error(t("failedToSendOtp") + error.message);
           }
         );
     } catch (error) {
-      toast.error("Failed to send OTP: " + error.message);
+      toast.error(t("failedToSendOtp") + error.message);
     }
   };
 
@@ -96,13 +99,13 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     if (!email) {
-      setError("Please enter your email.");
+      setError(t("pleaseEnterYourEmail"));
       setSuccessMessage("");
       return;
     }
 
     if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
+      setError(t("pleaseEnterAValidEmailAddress"));
       setSuccessMessage("");
       return;
     }
@@ -112,11 +115,11 @@ const ForgotPassword = () => {
       try {
         await generateAndSendOtp();
       } catch (error) {
-        toast.error("Cannot send OTP: " + error.message);
+        toast.error(t("failedToSendOtp") + error.message);
         return;
       }
     } else {
-      setError("Email account not registered");
+      setError(t("emailAccountNotRegistered"));
       return;
     }
   };
@@ -127,14 +130,12 @@ const ForgotPassword = () => {
     setError(""); // Reset error message
 
     if (!validatePassword(password)) {
-      setError(
-        "Password must be at least 6 characters long, contain an uppercase letter, a number, and a special character."
-      );
+      setError(t("passwordValid"));
       return; // Dừng xử lý tiếp theo nếu có lỗi
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("passwordsDoNotMatch"));
       return; // Dừng xử lý tiếp theo nếu có lỗi
     }
 
@@ -152,10 +153,10 @@ const ForgotPassword = () => {
         }
       );
       if (response.status === 200) {
-        toast.success("Password reset successfully!");
+        toast.success(t("passwordResetSuccessfully"));
         navigate("/login");
       } else {
-        toast.error("Password reset failed!");
+        toast.error(t("passwordResetFailed"));
       }
     } catch (error) {
       toast.error("An error occurred: " + error.message);
@@ -164,17 +165,17 @@ const ForgotPassword = () => {
 
   const verifyOtp = () => {
     if (Date.now() > otpExpiry) {
-      setOtpMessage("OTP has expired. Please request a new one.");
+      setOtpMessage(t("otpExpired"));
       return;
     }
 
     if (otpInput === otp) {
-      toast.success("OTP verified successfully!");
+      toast.success(t("otpVerifiedSuccessfully"));
       setOtpModalOpen(false);
       setIsVerified(true);
       setOtpMessage("");
     } else {
-      setOtpMessage("Invalid OTP. Please try again.");
+      setOtpMessage(t("invalidOtp"));
     }
   };
 
@@ -182,120 +183,136 @@ const ForgotPassword = () => {
     if (Date.now() > otpExpiry) {
       try {
         await generateAndSendOtp();
-        toast.success("New OTP sent successfully!");
+        toast.success(t("newOtpSentSuccessfully"));
         setOtpMessage(""); // Reset the OTP message
       } catch (error) {
-        toast.error("Cannot send new OTP: " + error.message);
+        toast.error(t("failedToSendNewOtp") + error.message);
       }
     } else {
-      toast.error("Please wait before requesting a new OTP.");
+      toast.error(t("pleaseWaitBeforeRequestingANewOtp"));
     }
   };
 
   const goBackToLogin = () => {
     navigate("/login");
   };
-
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
   return (
-    <div className="page__container">
-      <div className="container">
-        <div className="form-container forgot-password">
-          <form onSubmit={isVerified ? handleResetPass : handleForgotPassword}>
-            {isOtpModalOpen ? (
-              <div className="otp-section">
-                <h2>Input OTP</h2>
-                <label htmlFor="otpInput">
-                  Please enter the OTP sent to your email.
-                </label>
-                <input
-                  id="otpInput"
-                  type="text"
-                  placeholder={`Input OTP (${remainingTime} remaining)`}
-                  value={otpInput}
-                  onChange={(e) => setOtpInput(e.target.value)}
-                  required
-                />
-                <div className="otp-actions">
-                  <button
-                    type="button"
-                    onClick={verifyOtp}
-                    className="otp-button"
-                  >
-                    Verify OTP
-                  </button>
-                  <button
-                    type="button"
-                    onClick={resendOtp}
-                    disabled={isResendDisabled}
-                    className="otp-button resend-button"
-                  >
-                    Resend OTP
-                  </button>
+    <>
+      <div
+        className="language-container"
+        style={{ position: "relative", zIndex: 1000 }}
+      >
+        <LanguageSelector />
+      </div>
+      <div className="page__container">
+        <div className="container">
+          <div className="form-container forgot-password">
+            <form
+              onSubmit={isVerified ? handleResetPass : handleForgotPassword}
+            >
+              {isOtpModalOpen ? (
+                <div className="otp-section">
+                  <h2>{t("inputOtp")}</h2>
+                  <label htmlFor="otpInput">
+                    {t("pleaseEnterTheOtpSentToYourEmail")}
+                  </label>
+                  <input
+                    id="otpInput"
+                    type="text"
+                    placeholder={`${t("inputOtp")} (${remainingTime} ${t(
+                      "remaining"
+                    )})`}
+                    value={otpInput}
+                    onChange={(e) => setOtpInput(e.target.value)}
+                    required
+                  />
+                  <div className="otp-actions">
+                    <button
+                      type="button"
+                      onClick={verifyOtp}
+                      className="otp-button"
+                    >
+                      {t("verifyOtp")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={resendOtp}
+                      disabled={isResendDisabled}
+                      className="otp-button resend-button"
+                    >
+                      {t("resendOtp")}
+                    </button>
+                  </div>
+                  {otpMessage && <p className="otp-message">{otpMessage}</p>}
                 </div>
-                {otpMessage && <p className="otp-message">{otpMessage}</p>}
-              </div>
-            ) : isVerified ? (
-              <div className="inputPassword">
-                <label htmlFor="password">
-                  Please enter your new password.
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <label htmlFor="confirmPassword">
-                  Please enter confirm password
-                </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-                <button type="submit">Submit</button>
-                {error && <p className="error-message">{error}</p>}
-              </div>
-            ) : (
-              <>
-                <h1>Forgot Password</h1>
-                <div className="warning-icon">
-                  <FontAwesomeIcon icon={faCircleExclamation} />
+              ) : isVerified ? (
+                <div className="inputPassword">
+                  <label htmlFor="password">
+                    {t("pleaseEnterYourNewPassword")}
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder={t("password")}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <label htmlFor="confirmPassword">
+                    {t("pleaseEnterConfirmPassword")}
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder={t("confirmPassword")}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <button type="submit">{t("submit")}</button>
+                  {error && <p className="error-message">{error}</p>}
                 </div>
-                <span>Enter your email to reset your password.</span>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <button type="submit">Submit</button>
-                {error && <p className="error-message">{error}</p>}
-                {successMessage && (
-                  <p className="success-message">{successMessage}</p>
-                )}
-              </>
-            )}
-          </form>
-        </div>
-        <div className="toggle-container">
-          <div className="toggle">
-            <div className="toggle-panel toggle-right">
-              <h1>Have an account!</h1>
-              <p>Enter your personal details to use all of site features.</p>
-              <button className="hidden" onClick={goBackToLogin}>
-                Back To Login
-              </button>
+              ) : (
+                <>
+                  <h1>{t("forgotPassword")}</h1>
+                  <div className="warning-icon">
+                    <FontAwesomeIcon icon={faCircleExclamation} />
+                  </div>
+                  <span>{t("enterYourEmailToResetYourPassword")}</span>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <button type="submit" className="submit-button">
+                    {t("submit")}
+                  </button>
+                  {error && <p className="error-message">{error}</p>}
+                  {successMessage && (
+                    <p className="success-message">{successMessage}</p>
+                  )}
+                </>
+              )}
+            </form>
+          </div>
+          <div className="toggle-container">
+            <div className="toggle">
+              <div className="toggle-panel toggle-right">
+                <h1>{t("haveAnAccount")}</h1>
+                <p>{t("enterYourPersonalDetailsToUseAllOfSiteFeatures")}</p>
+                <button className="hidden" onClick={goBackToLogin}>
+                  {t("backToLogin")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

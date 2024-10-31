@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   Table,
   Typography,
-  Space,
   message,
   Breadcrumb,
   Tag,
@@ -19,16 +18,16 @@ import {
   faShoppingCart,
   faCog,
   faSignOutAlt,
+  faHandHoldingUsd,
 } from "@fortawesome/free-solid-svg-icons";
 const { Title } = Typography;
 import "./index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { logout } from "../../../store/actions/authActions";
 import { toast, ToastContainer } from "react-toastify";
-import { useDispatch } from "react-redux";
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
+import { useDispatch, useSelector } from "react-redux";
+import config from "../../../config/config";
+import { useTranslation } from "react-i18next";
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState([]);
@@ -36,7 +35,19 @@ const OrderHistoryPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const { token } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "N/A";
+
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -44,17 +55,16 @@ const OrderHistoryPage = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("No authentication token found. Please log in.");
+        toast.error(t("noAuthenticationTokenFound"));
         navigate("/login");
         return;
       }
 
       const response = await axios.get(
-        `${config.API_ROOT}/orders/order-history`,
+        `${config.API_ROOT}orders/order-history`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token ?? null}` },
         }
       );
 
@@ -68,7 +78,7 @@ const OrderHistoryPage = () => {
       setOrders(processedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
-      message.error("Failed to fetch orders. Please try again.");
+      message.error(t("failedFetchOrders"));
     } finally {
       setLoading(false);
     }
@@ -77,11 +87,11 @@ const OrderHistoryPage = () => {
   const getStatusTag = (status) => {
     switch (status) {
       case "Paid":
-        return <Tag color="green">Paid</Tag>;
+        return <Tag color="green">{t("paid")}</Tag>;
       case "Shipping":
-        return <Tag color="blue">Shipping</Tag>;
+        return <Tag color="blue">{t("shipping")}</Tag>;
       case "Completed":
-        return <Tag color="purple">Completed</Tag>;
+        return <Tag color="purple">{t("completed")}</Tag>;
       default:
         return <Tag color="default">{status || "Unknown"}</Tag>;
     }
@@ -95,13 +105,13 @@ const OrderHistoryPage = () => {
       render: (orderId) => `#${orderId}`,
     },
     {
-      title: "DATE",
+      title: t("date"),
       dataIndex: "orderDate",
       key: "date",
-      render: (date) => (date ? new Date(date).toLocaleDateString() : "N/A"),
+      render: (date) => formatDate(date),
     },
     {
-      title: "TOTAL",
+      title: t("totalAmount"),
       dataIndex: "totalAmount",
       key: "total",
       render: (total) =>
@@ -111,13 +121,13 @@ const OrderHistoryPage = () => {
         }),
     },
     {
-      title: "STATUS",
+      title: t("status"),
       dataIndex: "status",
       key: "status",
       render: (status) => getStatusTag(status),
     },
     {
-      title: "ACTION",
+      title: t("action"),
       key: "action",
       render: (_, record) => (
         <a
@@ -126,7 +136,7 @@ const OrderHistoryPage = () => {
           }
           style={{ color: "#D4B57E" }}
         >
-          View Details
+          {t("viewDetails")}
         </a>
       ),
     },
@@ -149,30 +159,35 @@ const OrderHistoryPage = () => {
           <Breadcrumb.Item href="/">
             <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Account</Breadcrumb.Item>
-          <Breadcrumb.Item className="breadcrumb-page">History</Breadcrumb.Item>
+          <Breadcrumb.Item>{t("account")}</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {t("history")}
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="layout-container">
         <aside className="settings-sider">
           <ul className="settings-menu">
             <li onClick={() => navigate("/user-dashboard/:id")}>
-              <FontAwesomeIcon icon={faHome} /> Dashboard
+              <FontAwesomeIcon icon={faHome} /> {t("dashboard")}
             </li>
             <li className="active">
-              <FontAwesomeIcon icon={faClipboardList} /> Order History
+              <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
-            <li onClick={() => navigate("/promotion")}>
-              <FontAwesomeIcon icon={faTag} /> Promotion
+            <li onClick={() => navigate("/loyaltypoint-history")}>
+              <FontAwesomeIcon icon={faTag} /> {t("promotion")}
             </li>
             <li onClick={() => navigate("/cart")}>
-              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+              <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}
             </li>
             <li onClick={() => navigate("/user-setting/:id")}>
-              <FontAwesomeIcon icon={faCog} /> Setting
+              <FontAwesomeIcon icon={faCog} /> {t("setting")}
+            </li>
+            <li onClick={() => navigate("/consignment-history")}>
+              <FontAwesomeIcon icon={faHandHoldingUsd} /> {t("consignment")}
             </li>
             <li onClick={confirmLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+              <FontAwesomeIcon icon={faSignOutAlt} /> {t("logout")}
             </li>
           </ul>
         </aside>
@@ -180,7 +195,7 @@ const OrderHistoryPage = () => {
 
         <div className="order-history-container">
           <Card className="card">
-            <Title level={3}>Order History</Title>
+            <Title level={3}>{t("orderHistory")}</Title>
             <Table
               className="order-history-table"
               columns={columns}
@@ -198,12 +213,12 @@ const OrderHistoryPage = () => {
       </div>
 
       <Modal
-        title="Confirm Logout?"
+        title={t("confirmLogout")}
         visible={showConfirmation}
         onOk={handleLogout}
         onCancel={() => setShowConfirmation(false)}
-        okText="Log out"
-        cancelText="Cancel"
+        okText={t("logout")}
+        cancelText={t("cancel")}
         footer={[
           <Button
             key="back"
@@ -218,11 +233,11 @@ const OrderHistoryPage = () => {
             onClick={handleLogout}
             style={{ backgroundColor: "#bbab6f", color: "white" }}
           >
-            Confirm
+            {t("confirm")}
           </Button>,
         ]}
       >
-        <p>Are you sure you want to logout?</p>
+        <p>{t("confirmLogoutMessage")}</p>
       </Modal>
     </div>
   );

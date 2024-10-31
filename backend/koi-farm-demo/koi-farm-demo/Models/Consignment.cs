@@ -8,8 +8,6 @@
     public ConsignmentType Type { get; set; }
     public ConsignmentStatus Status { get; set; }
     public ICollection<ConsignmentLine> ConsignmentLines { get; set; }
-    public int? StaffId { get; set; }
-    public Staff Staff { get; set; }
     public decimal Price { get; set; }
     public string Note { get; set; }
     public int CustomerId { get; set; }
@@ -28,5 +26,6 @@ public enum ConsignmentStatus
     ListedForSale = 3,   
     Sold = 4,            
     UnderCare = 5,       
-    CareCompleted = 6    
+    CareCompleted = 6,
+    Cancelled = 7
 }

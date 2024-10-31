@@ -1,0 +1,91 @@
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$highlight-color: #bbab6f;
+$background-color: transparent;
+$text-color: #264653;
+$hover-bg-color: rgba(187, 171, 111, 0.1);
+$element-spacing: 25px;
+$large-border-radius: 20px;
+$icon-size: 18px;
+$breadcrumb-padding: 15px;
+$breadcrumb-border: 2px solid rgba(0, 0, 0, 0.05);
+
+.breadcrumb-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  background-color: $background-color;
+  margin-bottom: $element-spacing;
+  border-radius: $large-border-radius;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    // background-color: rgba(255, 255, 255, 0.85);
+    padding: $breadcrumb-padding;
+    border-radius: 10px;
+    // border: $breadcrumb-border;
+    // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+
+    .breadcrumb-page {
+      color: #bbab6f;
+      font-weight: 700;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      color: $secondary-color;
+      text-decoration: none;
+      padding: 8px 15px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      border-radius: 8px;
+      margin-top: 2px;
+      &:hover {
+        background-color: $hover-bg-color;
+        color: $highlight-color;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .breadcrumb-item {
+      font-weight: 500;
+      margin-right: 20px;
+      display: flex;
+      align-items: center;
+      color: $text-color;
+      z-index: 1000;
+
+      &.active {
+        font-weight: bold;
+        color: $primary-color;
+        cursor: default;
+        background-color: rgba(187, 171, 111, 0.2);
+        padding: 5px 10px;
+        border-radius: 8px;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .icon {
+        margin-right: 10px;
+        font-size: $icon-size;
+        color: $primary-color;
+        margin-bottom: 5px;
+      }
+    }
+
+    .breadcrumb-separator {
+      z-index: 1000;
+      margin: 0 12px;
+      color: $text-color;
+    }
+  }
+}

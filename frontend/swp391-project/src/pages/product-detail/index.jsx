@@ -4,108 +4,129 @@ import {
   Row,
   Col,
   Button,
-  Space,
   Image,
   InputNumber,
   Carousel,
   Breadcrumb,
   Rate,
   message,
-  Drawer,
-  List,
   Typography,
+  Input,
 } from "antd";
 import "./index.scss";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import config from "../../config/config";
+import { AES, enc } from "crypto-js";
+import CurrencyFormatter from "../../components/currency";
+import { setCart } from "../../store/actions/cartAction";
+import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
-
-const config = {
-  API_ROOT: "https://localhost:44366/api",
-};
 
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [cartDrawerVisible, setCartDrawerVisible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [fishes, setFishes] = useState([]);
-
+  const [fishTypes, setFishTypes] = useState([]);
+  const [userRating, setUserRating] = useState(0);
+  const [ratingComment, setRatingComment] = useState("");
+  const [submittingRating, setSubmittingRating] = useState(false);
+  const [ratings, setRatings] = useState([]);
+  const [currentFishTypes, setCurrentFishTypes] = useState({});
+  const [activeTab, setActiveTab] = useState("description");
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
   useEffect(() => {
-    fetchProduct();
+    if (id) {
+      fetchProduct();
+    }
     fetchFishes();
   }, [id]);
 
+  useEffect(() => {
+    getFishTypes();
+  }, []);
+
+  useEffect(() => {
+    getCurrentFishTypes();
+  }, [product, fishTypes]);
+
   const fetchProduct = async () => {
     try {
-      const response = await fetch(
-        `https://66fe08fb699369308956d74e.mockapi.io/KoiProduct/${id}`
-      );
-      const data = await response.json();
-      setProduct(data);
+      const response = await axios.get(`${config.API_ROOT}fishs/${id}`);
+      if (response.data) {
+        setProduct(response.data);
+      }
     } catch (error) {
-      console.error("Error fetching product:", error);
-      message.error("Failed to fetch product data.");
+      message.error(t("failedToFetchProductData"));
     }
   };
 
   const fetchFishes = async () => {
     try {
-      const response = await axios.get(`${config.API_ROOT}/fishs`);
+      const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
-      console.error("Error fetching fishes:", error);
-      message.error("Failed to fetch fish data.");
+      message.error(t("failedToFetchFishData"));
     }
   };
 
-  const getFishPrice = (fishId) => {
-    const fish = fishes.find((f) => f.fishId === fishId);
-    return fish ? fish.price : 0;
-  };
-
-  const fetchCart = async () => {
+  const fetchRatings = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        message.error("Please log in to view your cart.");
-        return;
-      }
-
-      const response = await axios.get(`${config.API_ROOT}/cart`, {
+      const response = await axios.get(`${config.API_ROOT}ratings/fish/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (response.data && response.data.length > 0) {
-        setCartItems(response.data[0].orderLines || []);
+        setRatings(response.data);
+        // If user has rated, set their rating
+        const userRating = response.data.find(
+          (rating) => rating.customerName === "TranDuy"
+        );
+        if (userRating) {
+          setUserRating(userRating.ratingValue);
+          setRatingComment(userRating.comment);
+        }
       }
     } catch (error) {
-      console.error("Error fetching cart:", error);
-      message.error("Failed to fetch cart data.");
+      console.log("Error fetching ratings:", error);
     }
   };
 
-  async function handleAddToCart() {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        message.error("Please log in to add items to your cart.");
-        return;
-      }
+  useEffect(() => {
+    if (id) {
+      fetchRatings();
+    }
+  }, [id]);
 
+  const handleSubmitRatingAndComment = async () => {
+    if (!token) {
+      message.error(t("Please log in to rate this product"));
+      return;
+    }
+
+    if (!userRating) {
+      message.error(t("Please rate this product"));
+      return;
+    }
+
+    setSubmittingRating(true);
+    try {
       const response = await axios.post(
-        `${config.API_ROOT}/carts`,
+        `${config.API_ROOT}ratings/rate-fish`,
         {
           fishId: parseInt(id),
-          quantity: quantity,
+          ratingValue: userRating,
+          comment: ratingComment,
         },
         {
           headers: {
@@ -116,33 +137,101 @@ function ProductDetail() {
       );
 
       if (response.status === 200) {
+        message.success(t("Rating Submitted Successfully"));
+        setRatingComment("");
+        fetchRatings();
+        await fetchProduct();
+      }
+    } catch (error) {
+      message.error(error.response.data);
+    } finally {
+      setSubmittingRating(false);
+    }
+  };
+
+  const fetchCart = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}cart`, {
+        headers: {
+          Authorization: `Bearer ${token ?? null}`,
+        },
+      });
+      if (response.data && response.data.length > 0) {
+        setCartItems(response.data[0].orderLines || []);
+        dispatch(setCart(response.data[0].orderLines || []));
+      }
+    } catch (error) {
+      message.error(t("yourCartIsEmpty"));
+    }
+  };
+
+  async function handleAddToCart() {
+    setLoading(true);
+    try {
+      if (!token) {
+        message.error(t("pleaseLogInToAddItemsToYourCart"));
+        return;
+      }
+
+      const response = await axios.post(
+        `${config.API_ROOT}carts`,
+        {
+          fishId: parseInt(id),
+          quantity: quantity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token ?? null}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
         message.success(`Added ${quantity} of ${product.name} to cart`);
         await fetchCart();
-        setCartDrawerVisible(true);
+        // setCartDrawerVisible(true);
       } else {
         throw new Error("Failed to add item to cart");
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      message.error("Failed to add item to cart. Please try again.");
+      message.error(t("failedToAddItemToCartPleaseTryAgain"));
     } finally {
       setLoading(false);
     }
   }
 
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
-      const price = getFishPrice(item.fishId);
-      return total + price * item.quantity;
-    }, 0);
+  const capitalizeFirstLetter = (string) => {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  async function getFishTypes() {
+    try {
+      const response = await axios.get(`${config.API_ROOT}fishtypes`);
+      setFishTypes(response.data);
+    } catch (error) {
+      console.log("Error: ", error.message);
+    }
+  }
+
+  function getCurrentFishTypes() {
+    if (fishTypes.length > 0 && product.fishTypeId) {
+      const temp = fishTypes.filter(
+        (fishType) => fishType.fishTypeId === product.fishTypeId
+      );
+      setCurrentFishTypes(temp[0] || { name: "" });
+    } else {
+      setCurrentFishTypes({ name: "" });
+    }
+  }
+
   if (!product.name) {
-    return <div>Loading...</div>;
+    return <div>{t("loading")}</div>;
   }
 
   return (
-    <div>
+    <div className="product-detail-page">
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
@@ -153,48 +242,65 @@ function ProductDetail() {
                   className="icon"
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
-              <Breadcrumb.Item href="/products">Product List</Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <Link to={`/breed/${product.breed}`}>{product.breed}</Link>
+              <Breadcrumb.Item href="/fish-page">
+                {t("fishList")}
               </Breadcrumb.Item>
-              <Breadcrumb.Item>{product.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <Link to={`/breed/${currentFishTypes.name}`}>
+                  {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
+                </Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item className="breadcrumb-page">
+                {product?.name}
+              </Breadcrumb.Item>
             </Breadcrumb>
           </div>
         </Col>
       </Row>
+
       <div className="product-detail-container">
         <Row gutter={16}>
           <Col span={10}>
             <Carousel>
               <div>
-                <Image src={product.img_path} alt={product.name} />
+                <Image src={product.imageUrl} alt={product?.name} />
               </div>
             </Carousel>
           </Col>
+
           <Col span={14}>
             <div className="info-container">
               <h1>{product.name}</h1>
-              <h2>{product.price} VND</h2>
-              <Rate allowHalf defaultValue={5} />
+              <h2>
+                Price:{" "}
+                <span className="price">
+                  <CurrencyFormatter amount={product.price} />
+                </span>
+              </h2>
+              <Rate value={product.overallRating || 0} disabled />
 
               <div className="product-info">
                 <p>
-                  <span>Breed:</span> {product.breed}
+                  <span>{t("breed")}:</span>{" "}
+                  {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
                 </p>
                 <p>
-                  <span>Age:</span> {product.age}
+                  <span>{t("age")}:</span> {product.age}
                 </p>
                 <p>
-                  <span>Gender:</span> {product.gender}
+                  <span>{t("gender")}:</span>{" "}
+                  {product.gender === 0 ? t("Male") : t("Female")}
                 </p>
               </div>
+
               <div className="product-submit">
                 <InputNumber
                   min={1}
                   max={100}
                   value={quantity}
                   onChange={(value) => setQuantity(value)}
-                  style={{ width: 150 }}
+                  style={{ width: 150, borderRadius: 10 }}
+                  className="quantity-input"
                 />
                 <Button
                   className="add-to-cart"
@@ -205,59 +311,101 @@ function ProductDetail() {
                     fontSize: 10,
                     padding: "8px 16px",
                     borderRadius: 20,
+                    border: "none",
                   }}
                   loading={loading}
                 >
-                  Add to Cart
+                  {t("addToCart")}
                 </Button>
               </div>
+
+              {/* Tab Box */}
+              <div className="tab-container">
+                <div
+                  className={`tab-item ${
+                    activeTab === "description" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("description")}
+                >
+                  {t("description")}
+                </div>
+                <div
+                  className={`tab-item ${
+                    activeTab === "rating" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("rating")}
+                >
+                  {t("rating")}
+                </div>
+              </div>
+
+              {/* Content Box */}
+              {activeTab === "description" && (
+                <div className="product-description">
+                  <h3>{t("description")}</h3>
+                  <p>
+                    {capitalizeFirstLetter(product.description) ||
+                      t("noDescriptionAvailable")}
+                  </p>
+                </div>
+              )}
+              {activeTab === "rating" && (
+                <div className="product-ratings">
+                  <h3>{t("customerRatings")}</h3>
+
+                  {/* Rating submission form */}
+                  <div className="rating-form border p-4 rounded-lg mb-6">
+                    <h4 className="mb-2">{t("Write A Review")}</h4>
+                    <div className="mb-3">
+                      <Rate
+                        value={userRating}
+                        onChange={setUserRating}
+                        disabled={submittingRating}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <Input.TextArea
+                        value={ratingComment}
+                        onChange={(e) => setRatingComment(e.target.value)}
+                        placeholder={t("Write Your Comment Here")}
+                        rows={4}
+                        disabled={submittingRating}
+                      />
+                    </div>
+                    <Button
+                      type="primary"
+                      onClick={handleSubmitRatingAndComment}
+                      loading={submittingRating}
+                      disabled={!userRating}
+                    >
+                      {t("Submit Review")}
+                    </Button>
+                  </div>
+
+                  {/* Display all ratings */}
+                  <div className="all-ratings">
+                    <h4 className="mb-2">{t("All Reviews")}</h4>
+                    {ratings.map((rating, index) => (
+                      <div key={index} className="border-b py-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">
+                            {rating.customerName}
+                          </span>
+                          <Rate disabled value={rating.ratingValue} />
+                        </div>
+                        {rating.comment && (
+                          <p className="mt-1 text-gray-600">{rating.comment}</p>
+                        )}
+                      </div>
+                    ))}
+                    {ratings.length === 0 && <p>{t("noReviewsYet")}</p>}
+                  </div>
+                </div>
+              )}
             </div>
           </Col>
         </Row>
       </div>
-
-      <Drawer
-        title="Your Cart"
-        placement="right"
-        onClose={() => setCartDrawerVisible(false)}
-        visible={cartDrawerVisible}
-        width={400}
-      >
-        <List
-          itemLayout="horizontal"
-          dataSource={cartItems}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={<Image src={item.imageUrl} width={50} />}
-                title={item.fishName}
-                description={`Quantity: ${item.quantity}`}
-              />
-              <div>
-                <Text>
-                  {(getFishPrice(item.fishId) * item.quantity).toLocaleString()}{" "}
-                  VND
-                </Text>
-              </div>
-            </List.Item>
-          )}
-        />
-        <div style={{ marginTop: 16, textAlign: "right" }}>
-          <Text strong>Total: {calculateTotal().toLocaleString()} VND</Text>
-        </div>
-        <div style={{ textAlign: "right", marginTop: 16 }}>
-          <Button type="primary" onClick={() => setCartDrawerVisible(false)}>
-            Close
-          </Button>
-          <Button
-            type="primary"
-            style={{ marginLeft: 8 }}
-            onClick={() => (window.location.href = "/cart")}
-          >
-            View Full Cart
-          </Button>
-        </div>
-      </Drawer>
     </div>
   );
 }

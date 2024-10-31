@@ -10,10 +10,10 @@ const getRoleFromToken = (token) => {
   }
 };
 
-export const getUserIdFromToken = (token) => {
+export const getEmailFromToken = (token) => {
   try {
     const decoded = jwtDecode(token);
-    return decoded.id;
+    return decoded.email;
   } catch (error) {
     return 0;
   }

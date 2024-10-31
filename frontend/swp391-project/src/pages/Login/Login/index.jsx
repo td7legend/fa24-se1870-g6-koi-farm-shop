@@ -6,8 +6,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
 import emailjs from "@emailjs/browser";
 import config from "../../../config/config";
-import { ToastContainer, toast } from "react-toastify"; // Import Toast components
-import "react-toastify/dist/ReactToastify.css"; // Import the CSS for styling
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import LanguageSelector from "../../../components/language/LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 const Main = ({
   active,
@@ -34,61 +37,66 @@ const Main = ({
   resendOtp,
   remainingTime,
   isResendDisabled,
+  t,
 }) => (
   <main>
+    <div
+      className="language-container"
+      style={{ position: "relative", zIndex: 1000 }}
+    >
+      <LanguageSelector />
+    </div>
     <div className={`container ${active ? "active" : ""}`} id="container">
       {/* Sign Up Form */}
       <div className="form-container sign-up">
         <form onSubmit={handleRegister}>
           {!isOtpModalOpen ? (
             <>
-              <h1>Create Account</h1>
-              <div className="social-icons">
-                <button type="button" className="google-btn">
-                  <FontAwesomeIcon icon={faGooglePlusG} />
-                </button>
-              </div>
-              <span>or use your email for registration</span>
+              <h1>{t("createAccount")}</h1>
+
+              <span>{t("useYourEmailForRegistration")}</span>
               <input
                 type="text"
-                placeholder="Name"
+                placeholder={t("name")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
               <input
                 type="email"
-                placeholder="Email"
+                placeholder={t("email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <input
                 type="password"
-                placeholder="Password"
+                placeholder={t("password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <input
                 type="password"
-                placeholder="Confirm Password"
+                placeholder={t("confirmPassword")}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
-              <button type="submit">Sign Up</button>
+              <button type="submit">{t("signUp")}</button>
             </>
           ) : (
             <div className="otp-section">
-              <h2>Input OTP</h2>
+              <h2>{t("inputOTP")}</h2>
               <label htmlFor="otpInput">
-                Please enter the OTP sent to your email.
+                {t("pleaseEnterTheOTPSentTo")} {email}
               </label>
               <input
                 id="otpInput"
                 type="text"
-                placeholder={`Input OTP (${remainingTime} remaining)`}
+                placeholder={`${t("inputOTP")} (${remainingTime} ${t(
+                  "remaining"
+                )})`}
                 value={otpInput}
                 onChange={(e) => setOtpInput(e.target.value)}
                 required
@@ -99,7 +107,7 @@ const Main = ({
                   onClick={verifyOtp}
                   className="otp-button"
                 >
-                  Verify OTP
+                  {t("verifyOTP")}
                 </button>
                 <button
                   type="button"
@@ -107,7 +115,7 @@ const Main = ({
                   disabled={isResendDisabled}
                   className="otp-button resend-button"
                 >
-                  Resend OTP
+                  {t("resendOTP")}
                 </button>
               </div>
               {error && <p className="error-message">{error}</p>}
@@ -120,7 +128,7 @@ const Main = ({
       {/* Sign In Form */}
       <div className="form-container sign-in">
         <form onSubmit={handleLogin}>
-          <h1>Sign In</h1>
+          <h1>{t("signIn")}</h1>
           <div className="social-icons">
             <button
               type="button"
@@ -131,23 +139,23 @@ const Main = ({
             </button>
           </div>
 
-          <span>or use your email for login</span>
+          <span>{t("orUseYourEmailForLogin")}</span>
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t("email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder={t("password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Link to="/forgot-password">Forgot your password?</Link>
-          <button type="submit">Sign In</button>
+          <Link to="/forgot-password">{t("forgotYourPassword")}</Link>
+          <button type="submit">{t("signIn")}</button>
           {error && <p className="error-message">{error}</p>}
         </form>
       </div>
@@ -156,20 +164,17 @@ const Main = ({
       <div className="toggle-container">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
-            <h1>Welcome Back!</h1>
-            <p>Enter your personal details to use all of the site features</p>
+            <h1>{t("welcomeBack")}</h1>
+            <p>{t("enterYourPersonalDetailsToUseAllOfSiteFeatures")}</p>
             <button className="hidden" onClick={() => setActive(false)}>
-              Sign In
+              {t("signIn")}
             </button>
           </div>
           <div className="toggle-panel toggle-right">
-            <h1>Hello, Friend!</h1>
-            <p>
-              Register with your personal details to use all of the site
-              features
-            </p>
+            <h1>{t("helloFriend")}</h1>
+            <p>{t("registerWithYourPersonalDetailsToUseAllOfSiteFeatures")}</p>
             <button className="hidden" onClick={() => setActive(true)}>
-              Sign Up
+              {t("signUp")}
             </button>
           </div>
         </div>
@@ -193,6 +198,15 @@ const LoginPage = () => {
   const [isOtpModalOpen, setOtpModalOpen] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const { isLoggedIn, token, role } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
+  useEffect(() => {
+    // Kiểm tra xem đã có token đăng nhập hay chưa
+    if (isLoggedIn) {
+      // Nếu đã đăng nhập, điều hướng về trang chủ
+      navigate("/home", { replace: true });
+    }
+  }, [navigate]);
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -209,14 +223,17 @@ const LoginPage = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error("Please fill in both email and password.");
+      toast.error(t("pleaseFillInBothEmailAndPassword"));
       return;
     }
     if (!validateEmail(email)) {
-      toast.error("Please enter a valid email address.");
+      toast.error(t("pleaseEnterAValidEmailAddress"));
       return;
     }
-
+    if (!validatePassword(password)) {
+      toast.error(t("pleaseEnterAValidPassword"));
+      return;
+    }
     setError("");
     const loginAPI = `${config.API_ROOT}auth/login`;
 
@@ -233,14 +250,13 @@ const LoginPage = () => {
 
       const data = response.data;
       if (data.token) {
-        navigate(`/LoginSuccess/${data.token}`);
-        localStorage.setItem("token", data.token);
-        toast.success("Login successful");
+        navigate(`/LoginSuccess/${data.token}`, { replace: true });
+        toast.success(t("loginSuccessfully"));
       } else {
-        toast.error(data.message || "Invalid login credentials.");
+        toast.error(data.message || t("invalidLoginCredentials"));
       }
     } catch (error) {
-      toast.error("An error occurred: " + error.message);
+      toast.error(t("incorrectEmailOrPassword") + error.message);
     }
   };
 
@@ -259,11 +275,11 @@ const LoginPage = () => {
             console.log("SUCCESS!", response.status, response.text);
           },
           (error) => {
-            toast.error("Failed to send OTP: " + error.message);
+            toast.error(t("failedToSendOtp") + error.message);
           }
         );
     } catch (error) {
-      toast.error("Failed to send OTP: " + error.message);
+      toast.error(t("failedToSendOtp") + error.message);
     }
   };
 
@@ -294,17 +310,15 @@ const LoginPage = () => {
     e.preventDefault();
 
     if (!name || !email || !password || !confirmPassword) {
-      toast.error("Please fill in all fields.");
+      toast.error(t("pleaseFillInAllFields"));
       return;
     }
     if (!validatePassword(password)) {
-      toast.error(
-        "Password must be at least 6 characters long, contain an uppercase letter, a number, and a special character."
-      );
+      toast.error(t("passwordValid"));
       return;
     }
     if (password !== confirmPassword) {
-      toast.error("Password and Confirm Password do not match.");
+      toast.error(t("passwordsDoNotMatch"));
       return;
     }
 
@@ -318,21 +332,22 @@ const LoginPage = () => {
 
       // Nếu tài khoản chưa tồn tại, tiếp tục gửi OTP
       await generateAndSendOtp();
-      toast.success("OTP sent successfully!");
+      toast.success(t("otpSentSuccessfully"));
       setOtpModalOpen(true);
     } catch (error) {
       console.log(error);
       const message = error.response.data;
       if (message === "Email already exists.") {
         toast.error(message);
+      } else {
+        toast.error(t("anErrorOccurred") + error.message);
       }
-      toast.error("Đã xảy ra lỗi khi kiểm tra tài khoản: " + error.message);
     }
   };
 
   const verifyOtp = async () => {
     if (otpInput === otp && Date.now() < otpExpiry) {
-      toast.success("OTP verified successfully!");
+      toast.success(t("otpVerifiedSuccessfully"));
       setOtpModalOpen(false);
       try {
         const response = await axios.post(
@@ -350,22 +365,20 @@ const LoginPage = () => {
           }
         );
 
-        // Lấy responseBody từ response
         const responseBody = response.data;
         console.log("Response Body:", responseBody);
 
-        // Xử lý responseBody
         if (responseBody === "Customer registered successfully.") {
-          toast.success("Registration successful!");
-          setActive(false); // Chuyển sang form đăng nhập
+          toast.success(t("registrationSuccessful"));
+          setActive(false);
         } else {
-          toast.error("Registration failed. Please try again.");
+          toast.error(t("registrationFailed"));
         }
       } catch (error) {
-        toast.error("An error occurred: " + error.message);
+        toast.error(t("anErrorOccurred") + error.message);
       }
     } else {
-      toast.error("Invalid or expired OTP. Please try again.");
+      toast.error(t("invalidOtp"));
     }
   };
 
@@ -373,12 +386,12 @@ const LoginPage = () => {
     if (Date.now() > otpExpiry) {
       try {
         await generateAndSendOtp();
-        toast.success("New OTP sent successfully!");
+        toast.success(t("newOTPSentSuccessfully"));
       } catch (error) {
-        toast.error("Cannot send new OTP: " + error.message);
+        toast.error(t("cannotSendNewOTP") + error.message);
       }
     } else {
-      toast.error("Please wait before requesting a new OTP.");
+      toast.error(t("pleaseWaitBeforeRequestingANewOTP"));
     }
   };
   const LoginGoogle_api = `${config.API_ROOT}auth/login/google`;
@@ -390,12 +403,11 @@ const LoginPage = () => {
       const url = response.data.url;
       if (url) {
         window.location.href = url;
-        toast.success("Login successful");
       } else {
         toast.error("Failed to get login URL: " + error.message);
       }
     } catch (error) {
-      toast.error("An error occurred: " + error.message);
+      console.error("An error occurred: " + error.message);
     }
   };
   return (
@@ -425,7 +437,9 @@ const LoginPage = () => {
         resendOtp={resendOtp}
         remainingTime={remainingTime}
         isResendDisabled={isResendDisabled}
+        t={t}
       />
+      <ToastContainer />
     </div>
   );
 };

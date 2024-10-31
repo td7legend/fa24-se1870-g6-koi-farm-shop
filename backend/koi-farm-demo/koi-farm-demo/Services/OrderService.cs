@@ -28,6 +28,8 @@ public class OrderService : IOrderService
             TotalAmount = order.TotalAmount,
             TotalTax = order.TotalTax,
             TotalDiscount = order.TotalDiscount,
+            Address = order.Address,
+            OrderDate = order.OrderDate,
             CustomerId = order.CustomerId,
             OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
             {
@@ -164,7 +166,6 @@ public class OrderService : IOrderService
     }
     public async Task AddItemToCart(int customerId, OrderLineCreateDTO orderLineCreateDto)
     {
-        
         var inCartOrder = await _orderRepository.GetInCartOrderByCustomerIdAsync(customerId);
 
         if (inCartOrder == null)
@@ -184,9 +185,13 @@ public class OrderService : IOrderService
         }
 
         var fish = await _fishRepository.GetByIdAsync(orderLineCreateDto.FishId);
-        if (fish == null || fish.Quantity < orderLineCreateDto.Quantity)
+        if (fish == null)
         {
-            throw new Exception("Fish not available or insufficient quantity");
+            throw new Exception("Fish not available");
+        }
+        if (fish.Quantity < orderLineCreateDto.Quantity)
+        {
+            throw new Exception("Insufficient quantity");
         }
 
         var orderLine = new OrderLine
@@ -203,6 +208,7 @@ public class OrderService : IOrderService
         inCartOrder.TotalAmount = inCartOrder.OrderLines.Sum(ol => ol.TotalPrice);
         await _orderRepository.UpdateAsync(inCartOrder);
     }
+
     public async Task<List<OrderHistoryDTO>> GetOrderHistory(int customerId)
     {
         var orders = await _orderRepository.GetOrderHistoryByCustomerIdAsync(customerId);
@@ -238,6 +244,40 @@ public class OrderService : IOrderService
         var orders = await _orderRepository.GetOrderHistoryByCustomerIdAsync(customerId);
         return orders.Any(order => order.OrderLines.Any(ol => ol.FishId == fishId));
     }
+    public async Task UpdateOrderStatusAsync(int orderId, OrderStatus status)
+    {
+        var order = await _orderRepository.GetByIdAsync(orderId);
+        if (order == null)
+        {
+            throw new Exception("Order not found");
+        }
 
+        order.Status = status;
+        await _orderRepository.UpdateAsync(order);
+    }
+    public async Task<List<OrderDTO>> GetAllOrdersWithStatusAsync()
+    {
+        var orders = await _orderRepository.GetAllOrdersWithStatusAsync();
+
+        return orders.Select(order => new OrderDTO
+        {
+            OrderId = order.OrderId,
+            Status = order.Status,
+            TotalAmount = order.TotalAmount,
+            OrderDate = order.OrderDate ?? DateTime.Now,
+            TotalTax = order.TotalTax,
+            TotalDiscount = order.TotalDiscount,
+            CustomerId = order.CustomerId,
+            OrderLines = order.OrderLines.Select(ol => new OrderLineDTO
+            {
+                FishId = ol.FishId,
+                FishName = ol.Fish.Name,
+                ImageUrl = ol.Fish.ImageUrl,
+                Quantity = ol.Quantity,
+                UnitPrice = ol.UnitPrice,
+                TotalPrice = ol.TotalPrice
+            }).ToList()
+        }).ToList();
+    }
 
 }

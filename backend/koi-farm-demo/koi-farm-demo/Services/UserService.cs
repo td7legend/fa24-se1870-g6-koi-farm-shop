@@ -61,19 +61,17 @@ namespace koi_farm_demo.Services
 
             await _customerRepository.AddCustomerAsync(customer); 
         }
-
-        public async Task AddStaffAsync(string email, string password, Staff staff, int managerId)
+       
+        public async Task AddStaffAsync(string email, string password, string fullName, string phoneNumber, string role)
         {
-            var manager = await _userRepository.GetUserByIdAsync(managerId);
-            if (manager == null || manager.Role != UserRole.Manager)
-            {
-                throw new UnauthorizedAccessException("Only manager can add staff.");
-            }
-
+            // Kiểm tra xem email có tồn tại không
             var existingUser = await _userRepository.GetUserByUsernameAsync(email);
-            if (existingUser != null) throw new Exception("Username already exists");
+            if (existingUser != null) throw new Exception("Email already exists");
 
+            // Hash password
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+
+            // Tạo user mới
             var newUser = new User
             {
                 Email = email,
@@ -81,10 +79,22 @@ namespace koi_farm_demo.Services
                 Role = UserRole.Staff
             };
 
+            // Thêm user vào database
             await _userRepository.AddUserAsync(newUser);
-            staff.User = newUser;
-            await _staffRepository.AddStaffAsync(staff);
+
+            // Tạo staff với thông tin từ model
+            var newStaff = new Staff
+            {
+                FullName = fullName,
+                PhoneNumber = phoneNumber,
+                Role = role,
+                User = newUser
+            };
+
+            // Thêm staff vào database
+            await _staffRepository.AddStaffAsync(newStaff);
         }
+
 
         public async Task<string> LoginAsync(string email, string password)
         {
@@ -197,7 +207,18 @@ namespace koi_farm_demo.Services
 
             await _userRepository.UpdateUserAsync(user);
         }
+        public async Task<string> GetEmailByUserIdAsync(int userId)
+        {
+            // Lấy thông tin người dùng theo UserId
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
 
+            // Trả về địa chỉ email của người dùng
+            return user.Email;
+        }
 
     }
 }
