@@ -223,7 +223,7 @@ const UserDashboard = () => {
             <li onClick={() => navigate("/order-history")}>
               <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
-            <li onClick={() => navigate("/promotion")}>
+            <li onClick={() => navigate("/loyaltypoint-history")}>
               <FontAwesomeIcon icon={faTag} /> {t("promotion")}
             </li>
             <li onClick={() => navigate("/cart")}>
