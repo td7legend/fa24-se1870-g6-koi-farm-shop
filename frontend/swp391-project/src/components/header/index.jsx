@@ -188,16 +188,10 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                 {t("fish")}
                 <ul className="dropdown-menu">
                   <li className="menu-item">
-                    <Link to="/breed/Ogon">{t("ogon")}</Link>
+                    <Link to="/fish-page">{t("fishList")}</Link>
                   </li>
                   <li className="menu-item">
-                    <Link to="/breed/Ochiba">{t("ochiba")}</Link>
-                  </li>
-                  <li className="menu-item">
-                    <Link to="/breed/Kujaku">{t("kujaku")}</Link>
-                  </li>
-                  <li className="menu-item">
-                    <Link to="/breed/kohaku">{t("kohaku")}</Link>
+                    <Link to="/batch-fish">{t("fishSellByBatch")}</Link>
                   </li>
                 </ul>
               </Link>

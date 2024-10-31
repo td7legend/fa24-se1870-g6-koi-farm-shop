@@ -243,7 +243,7 @@ const ConsignmentHistory = () => {
             <li onClick={() => navigate("/order-history")}>
               <FontAwesomeIcon icon={faClipboardList} /> Order History
             </li>
-            <li onClick={() => navigate("/promotion")}>
+            <li onClick={() => navigate("/loyaltypoint-history")}>
               <FontAwesomeIcon icon={faTag} /> Promotion
             </li>
             <li onClick={() => navigate("/cart")}>
