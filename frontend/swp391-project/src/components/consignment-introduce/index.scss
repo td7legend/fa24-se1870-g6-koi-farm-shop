@@ -1,0 +1,174 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sans-serif&display=swap");
+
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$border-color: rgba(38, 70, 83, 0.1);
+$element-spacing: 20px;
+$border-radius: 14px;
+$shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+
+.consignment-background {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("../../images/consignment.png");
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px) brightness(0.5);
+    opacity: 0.6;
+    z-index: -1;
+  }
+
+  .background-overlay {
+    background-color: rgba(255, 250, 240, 0.7);
+    padding: 2rem;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    // max-width: 1200px;
+    width: 100%;
+
+    .consignment-container {
+      //   background-color: $background-color;
+      padding: 2rem;
+      border-radius: $border-radius;
+      font-family: "Sans-serif", sans-serif;
+      color: $text-color;
+
+      .consignment-title {
+        font-family: "Lora", serif;
+        font-size: 2.5rem;
+        color: $primary-color;
+        text-align: center;
+        margin-bottom: $element-spacing;
+      }
+
+      .consignment-intro {
+        text-align: center;
+        font-size: 1.15rem;
+        margin-bottom: $element-spacing;
+      }
+
+      .consignment-columns {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: $element-spacing;
+        flex-wrap: wrap;
+
+        .consignment-column {
+          flex: 1;
+          min-width: 280px;
+          background-color: lighten($background-color, 2%);
+          padding: 1.5rem;
+          border-radius: $border-radius;
+          box-shadow: $shadow;
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: translateY(-5px);
+          }
+
+          h2 {
+            color: $secondary-color;
+            font-family: "Lora", serif;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid $highlight-color;
+          }
+
+          .service-card {
+            background-color: $background-color;
+            border: 1px solid $border-color;
+            border-radius: $border-radius;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: $shadow;
+
+            h3 {
+              color: $highlight-color;
+              font-size: 1.15rem;
+              margin-bottom: 0.5rem;
+            }
+
+            p {
+              font-size: 0.95rem;
+              line-height: 1.6;
+              color: darken($text-color, 10%);
+            }
+          }
+        }
+      }
+
+      .consignment-benefits {
+        margin-bottom: $element-spacing;
+        text-align: center;
+
+        h2 {
+          font-family: "Lora", serif;
+          color: $secondary-color;
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+          border-bottom: 2px solid $highlight-color;
+          display: inline-block;
+          padding-bottom: 5px;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+          font-size: 1rem;
+          display: flex;
+          justify-content: center;
+          gap: 1.5rem;
+
+          li {
+            position: relative;
+            padding-left: 1.5rem;
+            &:before {
+              content: "•";
+              color: $primary-color;
+              position: absolute;
+              left: 0;
+              font-size: 1.2rem;
+            }
+          }
+        }
+      }
+
+      .cta-button {
+        display: block;
+        margin: 2rem auto;
+        padding: 0.8rem 2.5rem;
+        font-size: 1.05rem;
+        background-color: $primary-color;
+        color: #fff;
+        border: none;
+        border-radius: $border-radius;
+        cursor: pointer;
+        font-family: "Sans-serif", sans-serif;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}

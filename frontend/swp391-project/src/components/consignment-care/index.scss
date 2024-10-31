@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sans-serif&display=swap");
+
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$border-radius: 12px;
+$padding: 1.5rem;
+$shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+.consignment-care-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("../../images/consignment-care.png");
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px) brightness(0.5);
+    opacity: 0.6;
+    z-index: -1;
+  }
+
+  .background-overlay {
+    background-color: rgba(255, 250, 240, 0.6);
+    padding: 2rem;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    // max-width: 1100px;
+    width: 100%;
+
+    .care-info {
+      display: flex;
+      gap: 2rem;
+      max-width: 100%;
+      align-items: flex-start;
+
+      .image-container {
+        flex: 0 0 40%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .content-image {
+          width: 100%;
+          //   max-width: 300px;
+          height: 1000px;
+          object-fit: cover;
+          //   margin-top: 170px;
+          border-radius: $border-radius;
+          box-shadow: $shadow;
+        }
+      }
+
+      .text-content {
+        flex: 1;
+        padding: $padding;
+        color: $text-color;
+        font-family: "Sans-serif", sans-serif;
+
+        h1 {
+          font-family: "Lora", serif;
+          color: $primary-color;
+          font-size: 2.5rem;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          font-size: 1.1rem;
+          line-height: 1.6;
+          margin-bottom: 1.5rem;
+        }
+
+        h2 {
+          color: $secondary-color;
+          font-size: 1.8rem;
+          margin: 2rem 0 1rem;
+          border-left: 4px solid $highlight-color;
+          padding-left: 10px;
+          font-family: "Lora", serif;
+        }
+
+        .care-process {
+          .process-step {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 3px solid lighten($primary-color, 15%);
+            padding-left: 10px;
+
+            h3 {
+              font-size: 1.3rem;
+              color: $highlight-color;
+              margin-bottom: 0.5rem;
+            }
+
+            p {
+              font-size: 1rem;
+              color: darken($text-color, 10%);
+            }
+          }
+        }
+
+        .care-benefits {
+          list-style: none;
+          padding: 0;
+
+          li {
+            font-size: 1.1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+
+            &:before {
+              content: "•";
+              color: $primary-color;
+              font-size: 1.5rem;
+              position: absolute;
+              left: 0;
+              top: -2px;
+            }
+          }
+        }
+
+        .consignment-care-link {
+          font-size: 1.2rem;
+          padding: 0.5rem 1rem;
+          color: #fff;
+          font-weight: bold;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+          }
+        }
+      }
+    }
+  }
+}
