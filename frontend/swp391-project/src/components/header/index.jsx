@@ -345,7 +345,7 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                     <Link to="/fish-page">{t("fishList")}</Link>
                   </li>
                   <li className="menu-item">
-                    <Link to="/batch-fish">{t("fishSellByBatch")}</Link>
+                    <Link to="/batch-filter">{t("fishSellByBatch")}</Link>
                   </li>
                 </ul>
               </Link>
@@ -362,10 +362,18 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                 {t("aboutUs")}
               </Link>
             </li>
-            <li>
+            <li className="dropdown">
               <Link to="/consignment">
                 <FontAwesomeIcon icon={faHandHoldingUsd} className="fa__icon" />
                 {t("consignment")}
+                <ul className="dropdown-menu">
+                  <li className="menu-item">
+                    <Link to="/consignment/care">{t("consignmentCare")}</Link>
+                  </li>
+                  <li className="menu-item">
+                    <Link to="/consignment/sell">{t("consignmentSale")}</Link>
+                  </li>
+                </ul>
               </Link>
             </li>
           </ul>
