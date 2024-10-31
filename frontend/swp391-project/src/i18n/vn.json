@@ -384,5 +384,10 @@
   "enterCareInstructionsOrSpecialRequirements": "Nhập hướng dẫn chăm sóc hoặc yêu cầu đặc biệt",
   "createConsignment": "Tạo ký gửi",
   "helloFriend": "Xin chào, Bạn!",
-  "openForm": "Tạo đơn"
+  "openForm": "Tạo đơn",
+  "role": "Vai trò",
+  "adminDashboard": "Bảng điều khiển quản trị viên",
+  "membershipLevel": "Cấp độ thành viên",
+  "loyaltyPoints": "Điểm thưởng",
+  "settings": "Cài đặt"
 }
