@@ -13,7 +13,6 @@ import {
   faCog,
   faHistory,
   faSignOutAlt,
-  
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
@@ -41,7 +40,6 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
   const [userData, setUserData] = useState({});
   const [fishes, setFishes] = useState([]);
   const { cartItemsRedux } = useSelector((state) => state.cart);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const userDropdownRef = useRef(null);
 
   const { t } = useTranslation();
@@ -161,7 +159,6 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
     }, 0);
   };
 
-<<<<<<< HEAD
   const renderDashboardButton = () => {
     if (role === "Staff") {
       return (
@@ -231,10 +228,7 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
               <FontAwesomeIcon icon={faHistory} className="fa__icon" />
               {t("orderHistory")}
             </Link>
-            <button
-              className="dropdown-link logout-btn"
-              onClick={() => dispatch(logout())}
-            >
+            <button className="dropdown-link logout-btn" onClick={handleLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} className="fa__icon" />
               {t("logout")}
             </button>
@@ -242,10 +236,10 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
         </div>
       </div>
     );
-=======
+  };
+
   const toggleUserDropdown = () => {
     setIsUserDropdownOpen((prev) => !prev);
->>>>>>> cd3b9e58f7a03747decc089c9b4728183d120f7c
   };
 
   return (
