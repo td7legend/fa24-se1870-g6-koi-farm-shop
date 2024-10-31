@@ -15,7 +15,6 @@ import { EyeOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -24,11 +23,10 @@ const FishCareManagement = () => {
   const [fishCares, setFishCares] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedFishCare, setSelectedFishCare] = useState(null);
-  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  // const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     fetchFishCares();
@@ -37,7 +35,7 @@ const FishCareManagement = () => {
   const fetchFishCares = async () => {
     try {
       setLoading(true);
-
+      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -49,10 +47,12 @@ const FishCareManagement = () => {
       });
 
       setFishCares(
-        response.data.map((care) => ({
-          ...care,
-          key: care.fishCareId,
-        }))
+        response.data
+          .map((care) => ({
+            ...care,
+            key: care.fishCareId,
+          }))
+          .sort((a, b) => b.fishCareId - a.fishCareId)
       );
     } catch (error) {
       console.error("Error fetching fish cares:", error);
@@ -64,6 +64,7 @@ const FishCareManagement = () => {
 
   const handleUpdateStatusDetails = async (values) => {
     try {
+      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -97,6 +98,11 @@ const FishCareManagement = () => {
       width: 80,
     },
     {
+      title: "Consignment ID",
+      dataIndex: "consignmentId",
+      key: "consignmentId",
+    },
+    {
       title: "Fish Type",
       dataIndex: "fishType",
       key: "fishType",
@@ -120,9 +126,9 @@ const FishCareManagement = () => {
       ),
     },
     {
-      title: "Consignment ID",
-      dataIndex: "consignmentId",
-      key: "consignmentId",
+      title: "Care Details",
+      dataIndex: "careDetails",
+      key: "careDetails",
     },
     {
       title: "Actions",
@@ -130,7 +136,7 @@ const FishCareManagement = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          <Button
+          {/* <Button
             icon={<EyeOutlined />}
             onClick={() => {
               setSelectedFishCare(record);
@@ -138,7 +144,7 @@ const FishCareManagement = () => {
             }}
           >
             Details
-          </Button>
+          </Button> */}
           <Button
             type="primary"
             icon={<EditOutlined />}
@@ -172,7 +178,7 @@ const FishCareManagement = () => {
       </Card>
 
       {/* Detail Modal */}
-      <Modal
+      {/* <Modal
         title={`Fish Care #${selectedFishCare?.fishCareId} Details`}
         open={detailModalVisible}
         onCancel={() => setDetailModalVisible(false)}
@@ -195,7 +201,7 @@ const FishCareManagement = () => {
             </p>
           </div>
         )}
-      </Modal>
+      </Modal> */}
 
       {/* Update Status Modal */}
       <Modal

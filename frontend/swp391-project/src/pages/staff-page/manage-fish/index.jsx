@@ -91,10 +91,12 @@ const StaffFishManagement = () => {
       });
 
       setFishes(
-        response.data.map((fish) => ({
-          ...fish,
-          key: fish.fishId,
-        }))
+        response.data
+          .map((fish) => ({
+            ...fish,
+            key: fish.fishId,
+          }))
+          .sort((a, b) => b.fishId - a.fishId)
       );
     } catch (error) {
       console.error("Error fetching fishes:", error);

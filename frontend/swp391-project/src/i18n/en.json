@@ -333,6 +333,9 @@
   "failedFetchOrderDetails": "Failed to fetch order details",
   "subtotal": "Subtotal",
   "orderDetail": "Order Detail",
+  "exportInvoice": "Export Invoice",
+  "invoiceExportSuccess": "Invoice exported successfully",
+  "failedToExportInvoice": "Failed to export invoice",
   "backToList": "Back to List",
   "totalTax": "Total Tax",
   "totalDiscount": "Total Discount",
@@ -392,4 +395,5 @@
   "loyaltyPoint": "Loyalty Point",
   "myAccount": "My Account",
   "logoutConfirmMessage": "Are you sure you want to logout?"
+
 }

@@ -77,10 +77,12 @@ const ConsignmentHistory = () => {
       );
 
       setConsignments(
-        response.data.map((consignment) => ({
-          ...consignment,
-          key: consignment.consignmentId,
-        }))
+        response.data
+          .map((consignment) => ({
+            ...consignment,
+            key: consignment.consignmentId,
+          }))
+          .sort((a, b) => b.consignmentId - a.consignmentId)
       );
     } catch (error) {
       console.error("Error fetching consignments:", error);
