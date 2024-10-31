@@ -1,5 +1,7 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useMemo } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 import Consignment from "./pages/consignment/consignment-page";
 import ConsignmentCare from "./pages/consignment/consignment-care";
 import ConsignmentSell from "./pages/consignment/consignment-sell";
@@ -15,7 +17,6 @@ import Login from "./pages/Login/Login";
 import ForgotPassword from "./pages/Login/ForgotPassword";
 import LoginSuccess from "./pages/Login/LoginSuccess";
 import ErrorPage from "./components/error";
-import { useEffect } from "react";
 import Contact from "./pages/contact";
 import AboutUs from "./pages/about-us";
 import FAQsPage from "./pages/faqs";
@@ -35,74 +36,155 @@ import LoyaltyPointHistory from "./pages/user-page/loyaltypoint-history";
 import "react-toastify/dist/ReactToastify.css";
 import ConsignmentManagement from "./pages/staff-page/manage-consignment";
 import FishCareManagement from "./pages/staff-page/manage-consignment/manage-fishcare/manage-fishcare";
+import AdminLayout from "./components/layout/admin-layout";
+import StaffManagement from "./pages/admin-page/manage-staff";
+// import AdminDashboard from "./pages/admin-page/admin-dashboard";
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <UserLayout />,
-      children: [
-        { path: "/loyaltypoint-history", element: <LoyaltyPointHistory /> },
-        { path: "/", element: <HomePage /> },
-        { path: "/fish-page", element: <AllFishPage /> },
-        { path: "/breed/:breedName", element: <BreedFishPage /> },
-        { path: "/fish/:id", element: <ProductDetail /> },
-        { path: "/breed/:id", element: <ProductDetail /> },
-        { path: "/consignment", element: <Consignment /> },
-        { path: "/consignment/care", element: <ConsignmentCare /> },
-        { path: "/consignment/sell", element: <ConsignmentSell /> },
-        { path: "/cart", element: <Cart /> },
-        { path: "/checkout", element: <Checkout /> },
-        { path: "/checkout/success", element: <PaymentSuccess /> },
-        { path: "/user-setting/:id", element: <UserSetting /> },
-        { path: "/user-dashboard/:id", element: <UserDashboard /> },
-        { path: "/order-history", element: <OrderHistoryPage /> },
-        { path: "/order-details", element: <OrderDetailsPage /> },
-        { path: "/consignment-history", element: <ConsignmentHistory /> },
-        { path: "/contact", element: <Contact /> },
-        { path: "/about-us", element: <AboutUs /> },
-        { path: "/faqs-page", element: <FAQsPage /> },
-        { path: "/policy-page", element: <PolicyPage /> },
-        { path: "/shopping-guide", element: <ShoppingGuidePage /> },
-        { path: "/batch-fish", element: <BatchFishFilter /> },
+  const { role } = useSelector((state) => state.auth);
 
-        { path: "*", element: <ErrorPage /> },
-      ],
-    },
-    {
-      path: "/LoginSuccess/:token",
-      element: <LoginSuccess />,
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/forgot-password",
-      element: <ForgotPassword />,
-    },
-    {
-      path: "/staff-dashboard",
-      element: <StaffLayout />,
-      children: [
-        { path: "order-management", element: <StaffOrderManagement /> },
-        { path: "fish-management", element: <StaffFishManagement /> },
-        { path: "fishtype-management", element: <StaffFishTypeManagement /> },
-        { path: "consignment-management", element: <ConsignmentManagement /> },
-        { path: "fish-care-management", element: <FishCareManagement /> },
-      ],
-    },
-  ]);
+  // Routes cho Staff
+  const staffRoutes = useMemo(
+    () => (
+      <Routes>
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="fish-page" element={<AllFishPage />} />
+          <Route path="breed/:breedName" element={<BreedFishPage />} />
+          <Route path="fish/:id" element={<ProductDetail />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="about-us" element={<AboutUs />} />
+          <Route path="faqs-page" element={<FAQsPage />} />
+          <Route path="policy-page" element={<PolicyPage />} />
+          <Route path="shopping-guide" element={<ShoppingGuidePage />} />
+        </Route>
 
-  useEffect(() => {
-    return () => window.removeEventListener("message", () => {});
-  }, []);
+        <Route path="/staff-dashboard" element={<StaffLayout />}>
+          <Route path="order-management" element={<StaffOrderManagement />} />
+          <Route path="fish-management" element={<StaffFishManagement />} />
+          <Route
+            path="fishtype-management"
+            element={<StaffFishTypeManagement />}
+          />
+          <Route
+            path="consignment-management"
+            element={<ConsignmentManagement />}
+          />
+          <Route path="fish-care-management" element={<FishCareManagement />} />
+        </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/LoginSuccess/:token" element={<LoginSuccess />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    ),
+    []
+  );
+
+  // Routes cho Manager
+  const managerRoutes = useMemo(
+    () => (
+      <Routes>
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="fish-page" element={<AllFishPage />} />
+          {/* ... các route chung khác */}
+        </Route>
+
+        <Route path="/admin-dashboard" element={<AdminLayout />}>
+          <Route path="staff-management" element={<StaffManagement />} />
+          <Route path="fish-management" element={<StaffFishManagement />} />
+          <Route
+            path="fishtype-management"
+            element={<StaffFishTypeManagement />}
+          />
+          <Route path="order-management" element={<StaffOrderManagement />} />
+          <Route
+            path="consignment-management"
+            element={<ConsignmentManagement />}
+          />
+        </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/LoginSuccess/:token" element={<LoginSuccess />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    ),
+    []
+  );
+
+  // Routes cho Customer
+  const customerRoutes = useMemo(
+    () => (
+      <Routes>
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="fish-page" element={<AllFishPage />} />
+          <Route path="consignment" element={<Consignment />} />
+          <Route path="consignment/care" element={<ConsignmentCare />} />
+          <Route path="consignment/sell" element={<ConsignmentSell />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="checkout" element={<Checkout />} />
+          <Route path="checkout/success" element={<PaymentSuccess />} />
+          <Route path="user-setting/:id" element={<UserSetting />} />
+          <Route path="user-dashboard/:id" element={<UserDashboard />} />
+          <Route path="order-history" element={<OrderHistoryPage />} />
+          <Route path="order-details" element={<OrderDetailsPage />} />
+          <Route path="consignment-history" element={<ConsignmentHistory />} />
+          <Route
+            path="loyaltypoint-history"
+            element={<LoyaltyPointHistory />}
+          />
+        </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/LoginSuccess/:token" element={<LoginSuccess />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    ),
+    []
+  );
+
+  // Routes mặc định (chưa đăng nhập)
+  const defaultRoutes = useMemo(
+    () => (
+      <Routes>
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="fish-page" element={<AllFishPage />} />
+          <Route path="breed/:breedName" element={<BreedFishPage />} />
+          <Route path="fish/:id" element={<ProductDetail />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="about-us" element={<AboutUs />} />
+          <Route path="faqs-page" element={<FAQsPage />} />
+          <Route path="policy-page" element={<PolicyPage />} />
+          <Route path="shopping-guide" element={<ShoppingGuidePage />} />
+          <Route path="batch-filter" element={<BatchFishFilter />} />
+        </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/LoginSuccess/:token" element={<LoginSuccess />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    ),
+    []
+  );
 
   return (
-    <>
-      <RouterProvider router={router} />
+    <Router>
+      {role === "Staff"
+        ? staffRoutes
+        : role === "Manager"
+        ? managerRoutes
+        : role === "Customer"
+        ? customerRoutes
+        : defaultRoutes}
       <ToastContainer />
-    </>
+    </Router>
   );
 }
 

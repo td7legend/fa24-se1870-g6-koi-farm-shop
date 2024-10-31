@@ -120,30 +120,11 @@ const PaymentSuccess = () => {
             <Button
               className="button"
               key="consignmentCare"
-              type="primary"
               size="large"
               icon={<HeartFilled />}
               onClick={() => setConsignmentModal(true)}
-              style={{
-                backgroundColor: "#ff4d4f",
-                borderColor: "#ff4d4f",
-              }}
             >
               {t("consignmentForCare")}
-            </Button>,
-            <Button
-              className="button"
-              key="consignmentCare"
-              type="primary"
-              size="large"
-              icon={<HeartFilled />}
-              onClick={() => setConsignmentModal(true)}
-              style={{
-                backgroundColor: "#ff4d4f",
-                borderColor: "#ff4d4f",
-              }}
-            >
-              Consignment for Care
             </Button>,
           ]}
         >

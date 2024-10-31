@@ -181,7 +181,8 @@
       }
 
       .dropdown-menu {
-        width: 150px;
+        width: auto;
+        white-space: nowrap; /* Ngăn các mục bị ngắt dòng */
         height: fit-content;
         text-align: start;
         top: 150%;

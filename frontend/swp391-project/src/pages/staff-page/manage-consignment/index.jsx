@@ -14,6 +14,7 @@ import {
   Descriptions,
   Select,
   Empty,
+  Breadcrumb,
 } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -21,6 +22,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CurrencyFormatter from "../../../components/currency";
 import "./index.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 
 const ConsignmentManagement = () => {
@@ -38,6 +42,7 @@ const ConsignmentManagement = () => {
   const [careForm] = Form.useForm();
   const [saleForm] = Form.useForm();
   const navigate = useNavigate();
+  const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     fetchConsignments();
   }, []);
@@ -45,7 +50,6 @@ const ConsignmentManagement = () => {
   const fetchConsignments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -76,7 +80,6 @@ const ConsignmentManagement = () => {
   const fetchFishCareData = async (consignmentId) => {
     try {
       setLoadingFishCare(true);
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -116,7 +119,6 @@ const ConsignmentManagement = () => {
 
   const handleCareConfirm = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -184,7 +186,6 @@ const ConsignmentManagement = () => {
   // Modify the handleSaleConfirm function
   const handleSaleConfirm = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -215,8 +216,8 @@ const ConsignmentManagement = () => {
             class: fish.class,
             consignmentLineId: fish.consignmentLineId,
             foodRequirement: fish.foodRequirement,
-            overallRating: 0,
-            price: fish.sellingPrice,
+            overallRating: 5,
+            price: fish.unitPrice,
             batch: true,
             fishTypeId: fish.fishTypeId,
             quantity: fish.quantity,
@@ -260,7 +261,6 @@ const ConsignmentManagement = () => {
 
   const updateStatus = async (record, newStatus) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -405,17 +405,30 @@ const ConsignmentManagement = () => {
   ];
 
   return (
-    <div className="consignment-management">
-      <Card>
-        <Title level={2}>Consignment Management</Title>
-        <Table
-          dataSource={consignments}
-          columns={columns}
-          rowKey="consignmentId"
-          loading={loading}
-          pagination={{ pageSize: 10 }}
-        />
-      </Card>
+    <div className="staff-consignment-management">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item>
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Staff</Breadcrumb.Item>
+          <Breadcrumb.Item>Consignment Management</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+
+      <div className="consignment-management-container">
+        <Card className="card">
+          <Title level={2}>Consignment Management</Title>
+          <Table
+            dataSource={consignments}
+            columns={columns}
+            rowKey="consignmentId"
+            loading={loading}
+            pagination={{ pageSize: 10 }}
+            className="consignment-management-table"
+          />
+        </Card>
+      </div>
 
       {/* Detail Modal */}
       <Modal
@@ -767,6 +780,7 @@ const ConsignmentManagement = () => {
                       gap: "16px",
                     }}
                   >
+                    {/* Fish Details */}
                     <Form.Item
                       name={["fishDetails", index, "unitPrice"]}
                       label="Unit Price"
@@ -779,6 +793,7 @@ const ConsignmentManagement = () => {
                         }
                         parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                         onChange={(value) => {
+                          // Calculate total price for this fish
                           const totalPrice = value * line.quantity;
                           saleForm.setFieldValue(
                             ["fishDetails", index, "totalPrice"],
@@ -808,40 +823,19 @@ const ConsignmentManagement = () => {
                         }
                       />
                     </Form.Item>
-                  </div>
 
-                  <Form.Item
-                    name={["fishDetails", index, "sellingPrice"]}
-                    label="Selling Price"
-                    rules={[{ required: true }]}
-                  >
-                    <InputNumber
-                      style={{ width: "100%" }}
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                    />
-                  </Form.Item>
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "16px",
-                    }}
-                  >
                     <Form.Item
                       name={["fishDetails", index, "gender"]}
                       label="Gender"
-                      rules={[{ required: true }]}
+                      rules={[
+                        { required: true, message: "Please select gender" },
+                      ]}
                     >
                       <Select style={{ width: "100%" }}>
                         <Select.Option value={0}>Male</Select.Option>
                         <Select.Option value={1}>Female</Select.Option>
                       </Select>
                     </Form.Item>
-
                     <Form.Item
                       name={["fishDetails", index, "age"]}
                       label="Age"
@@ -849,15 +843,7 @@ const ConsignmentManagement = () => {
                     >
                       <InputNumber style={{ width: "100%" }} />
                     </Form.Item>
-                  </div>
 
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "16px",
-                    }}
-                  >
                     <Form.Item
                       name={["fishDetails", index, "size"]}
                       label="Size"
@@ -883,26 +869,35 @@ const ConsignmentManagement = () => {
                     <Input />
                   </Form.Item>
 
-                  <Form.Item
-                    name={["fishDetails", index, "foodRequirement"]}
-                    label="Food Requirement"
-                    rules={[{ required: true }]}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "16px",
+                    }}
                   >
-                    <InputNumber style={{ width: "100%" }} />
-                  </Form.Item>
+                    <Form.Item
+                      name={["fishDetails", index, "foodRequirement"]}
+                      label="Food Requirement"
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber style={{ width: "100%" }} />
+                    </Form.Item>
 
-                  <Form.Item
-                    name={["fishDetails", index, "description"]}
-                    label="Description"
-                    rules={[{ required: true }]}
-                  >
-                    <Input.TextArea rows={4} />
-                  </Form.Item>
+                    <Form.Item
+                      name={["fishDetails", index, "description"]}
+                      label="Description"
+                      rules={[{ required: true }]}
+                    >
+                      <Input.TextArea rows={4} />
+                    </Form.Item>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
 
+          {/* Agreed Price for entire consignment */}
           <Form.Item name="agreePrice" label="Agreed Price">
             <InputNumber
               style={{ width: "100%" }}

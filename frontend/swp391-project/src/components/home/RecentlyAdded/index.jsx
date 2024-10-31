@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./index.scss";
 import axios from "axios";
 import config from "../../../config/config";
-import ProductCard from "../Product";
+
 import { useTranslation } from "react-i18next";
+import Product from "../Product";
 
 const RecentlyAdded = () => {
   const [newFishes, setNewFishes] = useState([]);
@@ -55,7 +56,7 @@ const RecentlyAdded = () => {
           {newFishes
             .slice(currentIndex, currentIndex + itemsPerPage)
             .map((newFish, index) => (
-              <ProductCard key={index} product={newFish} />
+              <Product key={index} product={newFish} />
             ))}
         </div>
 

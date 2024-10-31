@@ -3,8 +3,8 @@ import "./index.scss";
 import Picture from "../../../images/picture-3.png";
 import config from "../../../config/config";
 import axios from "axios";
-import ProductCard from "../Product";
 import { useTranslation } from "react-i18next";
+import Product from "../Product";
 
 const PopularProduct = () => {
   const [products, setProducts] = useState([]);
@@ -63,7 +63,7 @@ const PopularProduct = () => {
           {products
             .slice(currentIndex, currentIndex + itemsPerPage)
             .map((topFish, index) => (
-              <ProductCard key={index} product={topFish} />
+              <Product key={index} product={topFish} />
             ))}
         </div>
         <button className="nav__button right" onClick={nextProducts}>

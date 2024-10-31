@@ -134,7 +134,7 @@ $gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
   .settings-content {
     width: 100%;
     max-width: 900px;
-    padding: 50px;
+    padding: 0px;
     border-radius: $large-border-radius;
     // background: rgba(255, 250, 240, 0.95);
     // box-shadow: $soft-shadow;
@@ -261,5 +261,60 @@ $gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
         }
       }
     }
+  }
+}
+
+.loyaltypoint-history-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+
+  .card {
+    background-color: rgba(255, 250, 240, 0.9);
+    width: 850px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: $light-shadow;
+  }
+
+  .ant-card-body {
+    background-color: rgba(255, 250, 240, 0.95);
+    border-radius: 25px;
+    padding: 50px;
+    box-shadow: $soft-shadow;
+    width: 800px;
+  }
+  .ant-card-bordered {
+    border-radius: 25px;
+  }
+  .ant-table {
+    width: 100%;
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: rgba(255, 250, 240, 0.85);
+    font-size: 18px;
+    font-weight: bold;
+    padding: 20px;
+    text-transform: uppercase;
+  }
+
+  .ant-pagination .ant-pagination-item-active {
+    border-color: $highlight-color;
+  }
+
+  .ant-pagination a {
+    color: $highlight-color;
+    border-radius: 6px;
+    border-color: $highlight-color;
+
+    &:hover {
+      background-color: lighten($highlight-color, 30%);
+    }
+  }
+
+  .ant-table-tbody > tr > td {
+    background-color: rgba(255, 250, 240, 0.85);
   }
 }

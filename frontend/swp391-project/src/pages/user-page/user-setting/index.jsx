@@ -20,6 +20,7 @@ import { logout } from "../../../store/actions/authActions";
 import { AES, enc } from "crypto-js";
 import config from "../../../config/config";
 import { useTranslation } from "react-i18next";
+import LoadingKoi from "../../../components/loading";
 const DEFAULT_AVATAR =
   "https://ih1.redbubble.net/image.3771768892.4974/flat,750x,075,f-pad,750x1000,f8f8f8.jpg";
 
@@ -260,11 +261,11 @@ const UserSetting = () => {
   };
 
   if (loading) {
-    return <div className="loading-spinner">{t("loading")}...</div>;
+    return <LoadingKoi />;
   }
 
   return (
-    <div className="user-settings-layout">
+    <div className="user-history-container">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=" > ">
           <Breadcrumb.Item href="/">
@@ -293,7 +294,7 @@ const UserSetting = () => {
             <li onClick={() => navigate("/order-history")}>
               <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
-            <li onClick={() => navigate("/promotion")}>
+            <li onClick={() => navigate("/loyaltypoint-history")}>
               <FontAwesomeIcon icon={faTag} /> {t("promotion")}
             </li>
             <li onClick={() => navigate("/cart")}>

@@ -7,7 +7,7 @@ const LoginSuccess = () => {
   const { token } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  console.log(token);
   useEffect(() => {
     if (token) {
       dispatch(login(token));

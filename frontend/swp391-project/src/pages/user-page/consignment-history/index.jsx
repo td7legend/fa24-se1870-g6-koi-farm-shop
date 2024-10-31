@@ -243,7 +243,7 @@ const ConsignmentHistory = () => {
             <li onClick={() => navigate("/order-history")}>
               <FontAwesomeIcon icon={faClipboardList} /> Order History
             </li>
-            <li onClick={() => navigate("/promotion")}>
+            <li onClick={() => navigate("/loyaltypoint-history")}>
               <FontAwesomeIcon icon={faTag} /> Promotion
             </li>
             <li onClick={() => navigate("/cart")}>
@@ -264,7 +264,7 @@ const ConsignmentHistory = () => {
         <div style={{ maxWidth: 1200 }}></div>
         <div className="consignment-history-container">
           <div>
-            <Card>
+            <Card style={{ background: "transparent" }}>
               <Title level={2}>My Consignment History</Title>
               <Table
                 className="consignment-history-table"
