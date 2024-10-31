@@ -8,9 +8,9 @@ namespace koi_farm_demo.Controllers
     [ApiController]
     public class RevenueController : ControllerBase
     {
-        private readonly RevenueService _revenueService;
+        private readonly IRevenueService _revenueService;
 
-        public RevenueController(RevenueService revenueService)
+        public RevenueController(IRevenueService revenueService)
         {
             _revenueService = revenueService;
         }

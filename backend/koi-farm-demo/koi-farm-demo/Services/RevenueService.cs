@@ -1,6 +1,10 @@
 ﻿namespace koi_farm_demo.Services
 {
-    public class RevenueService
+    public interface IRevenueService
+    {
+        Task<decimal> CalculateRevenueAsync(DateTime? startDate, DateTime? endDate);
+    }
+    public class RevenueService : IRevenueService
     {
         private readonly IOrderRepository _orderRepository;
 
