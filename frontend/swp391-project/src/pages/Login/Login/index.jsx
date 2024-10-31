@@ -40,12 +40,12 @@ const Main = ({
   t,
 }) => (
   <main>
-    <div
+    {/* <div
       className="language-container"
       style={{ position: "relative", zIndex: 1000 }}
     >
       <LanguageSelector />
-    </div>
+    </div> */}
     <div className={`container ${active ? "active" : ""}`} id="container">
       {/* Sign Up Form */}
       <div className="form-container sign-up">
