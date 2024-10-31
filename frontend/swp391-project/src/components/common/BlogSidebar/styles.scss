@@ -1,0 +1,158 @@
+.blog-sidebar {
+  width: 300px;
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+
+  .sidebar-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      color: #bbab6f;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 20px;
+      font-family: "Lora", serif;
+    }
+  }
+
+  .related-news {
+    .news-item {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+
+      h4 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+
+        a {
+          color: #bbab6f;
+          text-decoration: none;
+          font-weight: 500;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.4;
+        font-family: "Inter", sans-serif;
+      }
+    }
+
+    .view-all {
+      text-align: right;
+      margin-top: 15px;
+
+      a {
+        color: #bbab6f;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .contact-info {
+    .info-item {
+      margin-bottom: 15px;
+
+      .label {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      a {
+        color: #bbab6f;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .social-media {
+      margin-top: 20px;
+
+      .social-links {
+        display: flex;
+        gap: 10px;
+
+        a {
+          color: #bbab6f;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  .quick-contact {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      input,
+      textarea {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+      }
+
+      textarea {
+        height: 100px;
+      }
+
+      button {
+        background: #bbab6f;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+          background: darken(#bbab6f, 10%);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    position: static;
+    margin-top: 30px;
+  }
+}

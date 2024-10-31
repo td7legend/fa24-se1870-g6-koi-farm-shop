@@ -27,7 +27,7 @@ import {
   faHandHoldingUsd,
   faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
 const { Title } = Typography;
 import "./index.scss";
@@ -45,6 +45,7 @@ const ConsignmentHistory = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const customerId = 1;
   const { t } = useTranslation();
+  const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     fetchConsignments();
   }, []);
@@ -61,7 +62,7 @@ const ConsignmentHistory = () => {
   const fetchConsignments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -92,7 +93,7 @@ const ConsignmentHistory = () => {
   const fetchFishCareData = async (consignmentId) => {
     try {
       setLoadingFishCare(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
