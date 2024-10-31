@@ -25,11 +25,13 @@ import {
   faCog,
   faSignOutAlt,
   faHandHoldingUsd,
+  faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
 const { Title } = Typography;
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 const ConsignmentHistory = () => {
   const [consignments, setConsignments] = useState([]);
@@ -42,6 +44,8 @@ const ConsignmentHistory = () => {
   const dispatch = useDispatch();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const customerId = 1;
+  const { t } = useTranslation();
+  const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     fetchConsignments();
   }, []);
@@ -58,7 +62,7 @@ const ConsignmentHistory = () => {
   const fetchConsignments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -89,7 +93,7 @@ const ConsignmentHistory = () => {
   const fetchFishCareData = async (consignmentId) => {
     try {
       setLoadingFishCare(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -238,26 +242,26 @@ const ConsignmentHistory = () => {
         <aside className="settings-sider">
           <ul className="settings-menu">
             <li onClick={() => navigate("/user-dashboard/:id")}>
-              <FontAwesomeIcon icon={faHome} /> Dashboard
+              <FontAwesomeIcon icon={faHome} /> {t("dashboard")}
             </li>
             <li onClick={() => navigate("/order-history")}>
-              <FontAwesomeIcon icon={faClipboardList} /> Order History
+              <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
             <li onClick={() => navigate("/loyaltypoint-history")}>
-              <FontAwesomeIcon icon={faTag} /> Promotion
+              <FontAwesomeIcon icon={faTrophy} /> {t("loyaltyPoint")}
             </li>
             <li onClick={() => navigate("/cart")}>
-              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+              <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}
             </li>
             <li onClick={() => navigate("/user-setting/:id")}>
-              <FontAwesomeIcon icon={faCog} /> Setting
+              <FontAwesomeIcon icon={faCog} /> {t("setting")}
             </li>
             <li className="active">
               <FontAwesomeIcon icon={faHandHoldingUsd} />
-              Consignment History
+              {t("consignment")}
             </li>
             <li onClick={confirmLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+              <FontAwesomeIcon icon={faSignOutAlt} /> {t("logout")}
             </li>
           </ul>
         </aside>

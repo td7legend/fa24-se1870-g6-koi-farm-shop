@@ -1,0 +1,73 @@
+.language-selector {
+  .language-selector-button {
+    background: transparent;
+    border: none;
+    color: #bbab6f;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      color: white;
+
+      .globe-icon {
+        color: white;
+      }
+    }
+
+    .flag-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    .language-text {
+      font-size: 16px;
+      color: inherit;
+    }
+
+    .globe-icon {
+      color: #bbab6f;
+      font-size: 20px;
+      // transition: color 0.3s ease;
+    }
+  }
+
+  .language-dropdown {
+    margin-top: 10px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 12rem;
+    background: transparent;
+    padding: 0.5rem 0;
+    border-radius: 5px;
+    border: 1px solid rgba(187, 171, 111, 0.5);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+
+    .language-option {
+      background: transparent;
+      border: none;
+      padding: 0.5rem 1rem;
+      color: #bbab6f;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(187, 171, 111, 0.1);
+      }
+
+      .flag-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}

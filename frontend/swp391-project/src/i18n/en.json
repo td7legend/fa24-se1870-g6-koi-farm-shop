@@ -382,5 +382,12 @@
   "enterCareInstructionsOrSpecialRequirements": "Enter care instructions or special requirements",
   "createConsignment": "Create Consignment",
   "helloFriend": "Hello, Friend!",
-  "openForm": "Open Form"
+  "openForm": "Open Form",
+  "role": "Role",
+  "adminDashboard": "Admin Dashboard",
+  "membershipLevel": "Member Ship Level",
+  "loyaltyPoints": "Loyalty Points",
+  "settings": "Settings",
+  "loyaltyPoint": "Loyalty Point",
+  "myAccount": "My Account"
 }

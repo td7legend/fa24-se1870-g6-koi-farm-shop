@@ -38,25 +38,66 @@ import ConsignmentManagement from "./pages/staff-page/manage-consignment";
 import FishCareManagement from "./pages/staff-page/manage-consignment/manage-fishcare/manage-fishcare";
 import AdminLayout from "./components/layout/admin-layout";
 import StaffManagement from "./pages/admin-page/manage-staff";
+import Blog1 from "./components/blogs/Blog1";
+import Blog2 from "./components/blogs/Blog2";
+import Blog3 from "./components/blogs/Blog3";
+import BlogPage from "./pages/Blog-page";
 // import AdminDashboard from "./pages/admin-page/admin-dashboard";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
+
+  // Routes mặc định
+  const defaultRoutePaths = useMemo(
+    () => (
+      <>
+        <Route index element={<HomePage />} />
+        <Route path="fish-page" element={<AllFishPage />} />
+        <Route path="breed/:breedName" element={<BreedFishPage />} />
+        <Route path="fish/:id" element={<ProductDetail />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="about-us" element={<AboutUs />} />
+        <Route path="faqs-page" element={<FAQsPage />} />
+        <Route path="policy-page" element={<PolicyPage />} />
+        <Route path="shopping-guide" element={<ShoppingGuidePage />} />
+        <Route path="batch-filter" element={<BatchFishFilter />} />
+        <Route path="/blog1" element={<Blog1 />} />
+        <Route path="/blog2" element={<Blog2 />} />
+        <Route path="/blog3" element={<Blog3 />} />
+        <Route path="/blog-page" element={<BlogPage />} />
+      </>
+    ),
+    []
+  );
+
+  // Routes của customer để tái sử dụng
+  const customerRoutePaths = useMemo(
+    () => (
+      <>
+        <Route path="consignment" element={<Consignment />} />
+        <Route path="consignment/care" element={<ConsignmentCare />} />
+        <Route path="consignment/sell" element={<ConsignmentSell />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="checkout/success" element={<PaymentSuccess />} />
+        <Route path="user-setting/:id" element={<UserSetting />} />
+        <Route path="user-dashboard/:id" element={<UserDashboard />} />
+        <Route path="order-history" element={<OrderHistoryPage />} />
+        <Route path="order-details" element={<OrderDetailsPage />} />
+        <Route path="consignment-history" element={<ConsignmentHistory />} />
+        <Route path="loyaltypoint-history" element={<LoyaltyPointHistory />} />
+      </>
+    ),
+    []
+  );
 
   // Routes cho Staff
   const staffRoutes = useMemo(
     () => (
       <Routes>
         <Route path="/" element={<UserLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="fish-page" element={<AllFishPage />} />
-          <Route path="breed/:breedName" element={<BreedFishPage />} />
-          <Route path="fish/:id" element={<ProductDetail />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="about-us" element={<AboutUs />} />
-          <Route path="faqs-page" element={<FAQsPage />} />
-          <Route path="policy-page" element={<PolicyPage />} />
-          <Route path="shopping-guide" element={<ShoppingGuidePage />} />
+          {defaultRoutePaths}
+          {customerRoutePaths}
         </Route>
 
         <Route path="/staff-dashboard" element={<StaffLayout />}>
@@ -79,7 +120,7 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     ),
-    []
+    [defaultRoutePaths, customerRoutePaths]
   );
 
   // Routes cho Manager
@@ -87,9 +128,8 @@ function App() {
     () => (
       <Routes>
         <Route path="/" element={<UserLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="fish-page" element={<AllFishPage />} />
-          {/* ... các route chung khác */}
+          {defaultRoutePaths}
+          {customerRoutePaths}
         </Route>
 
         <Route path="/admin-dashboard" element={<AdminLayout />}>
@@ -112,7 +152,7 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     ),
-    []
+    [defaultRoutePaths, customerRoutePaths]
   );
 
   // Routes cho Customer
@@ -120,23 +160,8 @@ function App() {
     () => (
       <Routes>
         <Route path="/" element={<UserLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="fish-page" element={<AllFishPage />} />
-          <Route path="consignment" element={<Consignment />} />
-          <Route path="consignment/care" element={<ConsignmentCare />} />
-          <Route path="consignment/sell" element={<ConsignmentSell />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="checkout" element={<Checkout />} />
-          <Route path="checkout/success" element={<PaymentSuccess />} />
-          <Route path="user-setting/:id" element={<UserSetting />} />
-          <Route path="user-dashboard/:id" element={<UserDashboard />} />
-          <Route path="order-history" element={<OrderHistoryPage />} />
-          <Route path="order-details" element={<OrderDetailsPage />} />
-          <Route path="consignment-history" element={<ConsignmentHistory />} />
-          <Route
-            path="loyaltypoint-history"
-            element={<LoyaltyPointHistory />}
-          />
+          {defaultRoutePaths}
+          {customerRoutePaths}
         </Route>
 
         <Route path="/login" element={<Login />} />
@@ -145,7 +170,7 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     ),
-    []
+    [defaultRoutePaths, customerRoutePaths]
   );
 
   // Routes mặc định (chưa đăng nhập)
@@ -153,16 +178,7 @@ function App() {
     () => (
       <Routes>
         <Route path="/" element={<UserLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="fish-page" element={<AllFishPage />} />
-          <Route path="breed/:breedName" element={<BreedFishPage />} />
-          <Route path="fish/:id" element={<ProductDetail />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="about-us" element={<AboutUs />} />
-          <Route path="faqs-page" element={<FAQsPage />} />
-          <Route path="policy-page" element={<PolicyPage />} />
-          <Route path="shopping-guide" element={<ShoppingGuidePage />} />
-          <Route path="batch-filter" element={<BatchFishFilter />} />
+          {defaultRoutePaths}
         </Route>
 
         <Route path="/login" element={<Login />} />
@@ -171,7 +187,7 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     ),
-    []
+    [defaultRoutePaths]
   );
 
   return (

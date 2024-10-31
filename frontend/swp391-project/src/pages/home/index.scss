@@ -101,11 +101,16 @@ $background-kujaku: url("../../images/kujaku.jpg") no-repeat center center /
       background: transparent;
       padding: 20px;
       border-radius: 8px;
+      background: rgba(221, 213, 183, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+
       h2 {
         font-size: 2rem;
         font-family: $font-family_1;
-        color: $color_1;
+        color: #fff;
         margin-bottom: 20px;
+        font-weight: bold;
       }
       p {
         font-size: 1.2rem;

@@ -23,6 +23,7 @@ import {
   faCog,
   faSignOutAlt,
   faHandHoldingUsd,
+  faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -224,7 +225,7 @@ const UserDashboard = () => {
               <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
             <li onClick={() => navigate("/loyaltypoint-history")}>
-              <FontAwesomeIcon icon={faTag} /> {t("promotion")}
+              <FontAwesomeIcon icon={faTrophy} /> {t("loyaltyPoint")}
             </li>
             <li onClick={() => navigate("/cart")}>
               <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}
@@ -267,7 +268,11 @@ const UserDashboard = () => {
                   />
                   <p
                     onClick={() => navigate("/user-setting/:id")}
-                    style={{ marginTop: "20px" }}
+                    style={{
+                      marginTop: "20px",
+                      color: "#bbab6f",
+                      cursor: "pointer",
+                    }}
                   >
                     {t("editProfile")}
                   </p>

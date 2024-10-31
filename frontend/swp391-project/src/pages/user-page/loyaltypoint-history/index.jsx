@@ -25,6 +25,7 @@ import {
   faShoppingCart,
   faSignOutAlt,
   faTag,
+  faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../store/actions/authActions";
@@ -134,40 +135,44 @@ const LoyaltyPointHistory = () => {
     <div className="user-history-container">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} />
+          </Breadcrumb.Item>
           <Breadcrumb.Item href="/user-dashboard/:id">
             Dashboard
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Loyalty Points History</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            Loyalty Points History
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="layout-container">
         <aside className="settings-sider">
           <ul className="settings-menu">
             <li onClick={() => navigate("/user-dashboard/:id")}>
-              <FontAwesomeIcon icon={faHome} /> Dashboard
+              <FontAwesomeIcon icon={faHome} /> {t("dashboard")}
             </li>
             <li onClick={() => navigate("/order-history")}>
-              <FontAwesomeIcon icon={faClipboardList} /> Order History
+              <FontAwesomeIcon icon={faClipboardList} /> {t("orderHistory")}
             </li>
             <li
               className="active"
               onClick={() => navigate("/loyaltypoint-history")}
             >
-              <FontAwesomeIcon icon={faTag} /> Promotion
+              <FontAwesomeIcon icon={faTrophy} /> {t("loyaltyPoint")}
             </li>
             <li onClick={() => navigate("/cart")}>
-              <FontAwesomeIcon icon={faShoppingCart} /> Shopping Cart
+              <FontAwesomeIcon icon={faShoppingCart} /> {t("shoppingCart")}
             </li>
             <li onClick={() => navigate("/user-setting/:id")}>
-              <FontAwesomeIcon icon={faCog} /> Setting
+              <FontAwesomeIcon icon={faCog} /> {t("setting")}
             </li>
             <li>
               <FontAwesomeIcon icon={faHandHoldingUsd} />
-              Consignment History
+              {t("consignment")}
             </li>
             <li onClick={confirmLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} /> Logout
+              <FontAwesomeIcon icon={faSignOutAlt} /> {t("logout")}
             </li>
           </ul>
         </aside>
@@ -175,9 +180,7 @@ const LoyaltyPointHistory = () => {
         <div className="loyaltypoint-history-container">
           <div>
             <Card style={{ background: "transparent" }}>
-              <Title level={3}>
-                <HistoryOutlined /> Loyalty Points History
-              </Title>
+              <Title level={3}>Loyalty Points History</Title>
 
               <Table
                 className="loyaltypoint-history-table"
