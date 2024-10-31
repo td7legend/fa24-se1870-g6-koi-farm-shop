@@ -81,9 +81,9 @@ const ProductCard = ({ fish, onCompare }) => {
                 className="compare"
                 icon={<FontAwesomeIcon icon={faBalanceScale} />}
                 onClick={handleCompare}
-              >
-                {t("compare")}
-              </Button>
+                shape="circle"
+                // size="large"
+              />
             )}
           </div>
         </div>

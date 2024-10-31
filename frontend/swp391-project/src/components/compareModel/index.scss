@@ -1,0 +1,153 @@
+// Variables and Colors
+$primary-color: #bbab6f; // Gold-like color
+$secondary-color: #264653; // Deep Green
+$border-color: #ddd; // Light border
+$highlight-color: #bbab6f; // Highlight color
+$background-color: #fffaf0; // Soft cream background
+$text-color: #264653; // Dark green for text
+$element-spacing: 25px;
+$large-border-radius: 25px;
+$light-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+$soft-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+$hover-transition: all 0.3s ease-in-out;
+$gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
+
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap");
+
+body {
+  font-family: sans-serif;
+  background-color: $background-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lora", serif;
+  color: $secondary-color;
+}
+
+.compare-page {
+  .ant-modal-content {
+    background-color: rgba(255, 250, 240, 0.95);
+    border-radius: $large-border-radius;
+    box-shadow: $light-shadow;
+    padding: 20px;
+  }
+
+  .ant-modal-header {
+    background-color: transparent;
+    color: $secondary-color;
+    text-align: center;
+    border: none;
+    padding: 0;
+  }
+
+  .ant-modal-footer {
+    display: none;
+  }
+
+  .ant-btn {
+    background-color: $primary-color;
+    color: $background-color;
+    border-radius: $large-border-radius;
+    border: none;
+    padding: 10px 20px;
+
+    &:hover {
+      background-color: darken($primary-color, 5%);
+    }
+  }
+
+  .ant-card {
+    border-radius: $large-border-radius;
+    box-shadow: $soft-shadow;
+    background-color: lighten($background-color, 5%);
+    transition: $hover-transition;
+
+    &:hover {
+      box-shadow: $light-shadow;
+    }
+  }
+
+  .ant-card-meta-title {
+    font-family: "Lora", serif;
+    font-size: 18px;
+    color: $secondary-color;
+  }
+
+  .ant-card-meta-description {
+    font-size: 14px;
+    color: $text-color;
+  }
+
+  .ant-image {
+    border-radius: $large-border-radius;
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .fish-card {
+    .ant-card-cover {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+      width: 100%;
+      height: 250px;
+      overflow: hidden;
+      border-radius: 15px;
+    }
+
+    .ant-card-meta-title {
+      font-family: "Lora", serif;
+      font-size: 18px;
+      color: $secondary-color;
+    }
+
+    .ant-card-meta-description {
+      font-size: 14px;
+      color: $text-color;
+    }
+
+    .ant-image-mask-icon {
+      font-size: 24px;
+      color: $background-color;
+    }
+  }
+
+  .ant-row {
+    margin-bottom: $element-spacing;
+  }
+
+  .ant-tooltip-inner {
+    background-color: $primary-color;
+    color: $background-color;
+    font-family: "Lora", serif;
+  }
+
+  .customize-mask {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .ant-image-mask-icon {
+    font-size: 24px;
+    color: $background-color;
+  }
+
+  .comparison-row {
+    .ant-col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .comparison-icon {
+      margin-left: 8px;
+    }
+  }
+}

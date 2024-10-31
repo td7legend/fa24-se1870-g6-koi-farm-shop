@@ -201,12 +201,12 @@ const ForgotPassword = () => {
   };
   return (
     <>
-      <div
+      {/* <div
         className="language-container"
         style={{ position: "relative", zIndex: 1000 }}
       >
         <LanguageSelector />
-      </div>
+      </div> */}
       <div className="page__container">
         <div className="container">
           <div className="form-container forgot-password">
