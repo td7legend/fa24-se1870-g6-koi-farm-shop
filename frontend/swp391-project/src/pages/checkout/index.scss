@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
 
 .checkout-page {
-  padding: 10px;
+  padding: 20px;
   position: relative;
   background-color: #fffaf0;
   z-index: 2;
@@ -16,36 +16,51 @@
     background-image: url("../../images/japanese-pattern.png");
     background-size: cover;
     background-position: center;
-    opacity: 0.1;
+    opacity: 0.08;
     z-index: 1;
     filter: blur(5px);
     pointer-events: none;
   }
 
   .check-out-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 40px;
-    border-radius: 10px;
-    animation: fadeIn 0.8s forwards;
+    border-radius: 20px;
+    background-color: #fffaf0;
+
     z-index: 2;
+    animation: fadeIn 0.8s forwards;
+
     .check-out-form {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
+      gap: 20px;
       flex-wrap: wrap;
-      font-family: "Lora";
+      width: 100%;
+      max-width: 1200px;
+      font-family: "Lora", serif;
       z-index: 2;
+
       .button {
         color: #bbab6f;
         border-color: #bbab6f;
+        transition: all 0.3s ease;
         &:hover {
           background-color: #ddd;
           border-color: #bbab6f;
           color: #bbab6f;
         }
       }
+
       .button-main {
         color: #fffaf0;
-        border-color: #bbab6f;
         background-color: #bbab6f;
+        border-color: #bbab6f;
+        border-radius: 15px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
         &:hover {
           background-color: #ddd;
           border-color: #bbab6f;
@@ -53,94 +68,105 @@
         }
       }
 
-      p {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        word-break: break-word;
-        white-space: normal;
-      }
-
-      p,
-      h2 {
-        font-family: serif;
-        color: #bbab6f;
-      }
       .form-left,
       .form-right {
-        background-color: #fffaf0;
+        background-color: rgba(255, 250, 240, 0.95);
         padding: 30px;
         border-radius: 20px;
-        border: 1px solid #ccc;
-        margin-bottom: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        flex: 1;
       }
 
       .form-left {
-        background-color: #fffaf0;
-        width: 1000px;
+        max-width: 750px;
+
         h2 {
           font-size: 25px;
           margin-bottom: 20px;
           text-transform: uppercase;
+          color: #bbab6f;
         }
-        .ant-table-cell {
-          background-color: #fffaf0;
-          text-transform: uppercase;
-        }
+
         .ant-table {
-          border-radius: 5px;
+          border-radius: 15px;
           overflow: hidden;
           font-family: serif;
-        }
+          background-color: #fffaf0;
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 
-        .ant-table-summary {
-          font-weight: bold;
-        }
+          .ant-table-thead > tr > th {
+            background-color: rgba(255, 250, 240, 0.9);
+            font-size: 18px;
+            font-weight: bold;
+            padding: 16px;
+            text-transform: uppercase;
+            color: #264653;
+          }
 
-        .ant-radio-group {
-          margin-right: 20px;
-          display: flex;
-          align-items: center;
-          justify-content: end;
-          .ant-radio-button-wrapper {
-            border-radius: 4px;
-            padding: 10px;
+          .ant-table-tbody > tr > td {
+            background-color: rgba(255, 250, 240, 0.95);
+            color: #264653;
+          }
+
+          .ant-table-summary {
+            font-weight: bold;
+            color: #bbab6f;
+            background-color: rgba(255, 250, 240, 0.95);
           }
         }
       }
 
       .form-right {
-        width: 400px;
+        max-width: 400px;
         z-index: 2;
+
         h2 {
           font-size: 24px;
           margin-bottom: 20px;
+          color: #bbab6f;
         }
 
-        p {
-          font-size: 16px;
-          margin-bottom: 10px;
-          color: #555;
-        }
         .information-item {
-          margin-bottom: 5px;
+          display: flex;
+          align-items: center;
+          margin-bottom: 12px;
           line-height: 1.5;
 
           .item-tittle {
-            display: inline-block;
             width: 120px;
             font-weight: bold;
-            vertical-align: top;
-            margin-right: 5px;
+            margin-right: 10px;
+            color: #264653;
           }
 
           p {
-            display: inline-block;
             margin: 0;
-            line-height: 1.3;
-            padding: 0;
-            word-wrap: break-word;
-            white-space: normal;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
+        }
+      }
+    }
+
+    .ant-pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+
+      .ant-pagination-item-active {
+        border-color: #bbab6f;
+      }
+
+      a {
+        color: #bbab6f;
+        border-radius: 6px;
+        border-color: #bbab6f;
+
+        &:hover {
+          background-color: lighten(#bbab6f, 30%);
         }
       }
     }
@@ -155,7 +181,25 @@
   color: #bbab6f;
   background-color: #fff;
   border: 1px solid #bbab6f;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   max-width: 600px;
+}
+
+.payment-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 20px;
+
+  .ant-radio-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .button-main {
+    border-radius: 15px;
+  }
 }

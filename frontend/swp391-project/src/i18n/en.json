@@ -382,5 +382,7 @@
   "enterCareInstructionsOrSpecialRequirements": "Enter care instructions or special requirements",
   "createConsignment": "Create Consignment",
   "helloFriend": "Hello, Friend!",
-  "openForm": "Open Form"
+  "openForm": "Open Form",
+  "loyaltyPoint": "Loyalty Point",
+  "myAccount": "My Account"
 }

@@ -40,6 +40,7 @@
         display: flex;
         align-items: center;
         width: 400px;
+
         .search__icon {
           position: absolute;
           left: 10px;
@@ -91,20 +92,100 @@
       gap: 30px;
       width: 390px;
       z-index: 3;
-      a {
+      position: relative;
+
+      .register__sign__in {
+        position: relative;
         display: flex;
         align-items: center;
         color: #bbab6f;
+        cursor: pointer;
         text-decoration: none;
-        font-size: 16px;
-        font-weight: 1500;
-
         .fa__icon {
-          margin-right: 8px;
+          margin-left: 8px;
+          font-size: 20px;
         }
 
         &:hover {
           color: white;
+        }
+
+        .user-dropdown {
+          margin-top: 10px;
+          position: absolute;
+          top: 100%;
+          right: 0;
+          width: 160px;
+          background: transparent;
+          padding: 0.5rem 0;
+          border-radius: 5px;
+          border: 1px solid rgba(187, 171, 111, 0.5);
+          backdrop-filter: blur(8px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          z-index: 50;
+        }
+
+        .dropdown-item {
+          color: #bbab6f;
+          padding: 10px 15px;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          transition: background-color 0.3s ease;
+
+          .dropdown-icon {
+            font-size: 16px;
+          }
+
+          &:hover {
+            background-color: #a3945f;
+            color: white;
+            cursor: pointer;
+
+            .dropdown-icon {
+              color: white;
+            }
+          }
+        }
+      }
+
+      .cart {
+        color: #bbab6f;
+        display: flex;
+        align-items: center;
+        // transition: color 0.3s ease;
+
+        .fa__icon {
+          margin-left: 8px;
+          font-size: 20px;
+          color: #bbab6f;
+        }
+
+        &:hover {
+          color: white;
+          cursor: pointer;
+
+          .fa__icon {
+            color: white;
+          }
+        }
+      }
+
+      .language {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        color: #bbab6f;
+
+        &:hover {
+          color: white;
+        }
+
+        .fa__icon {
+          margin-left: 8px;
         }
       }
     }
@@ -182,7 +263,7 @@
 
       .dropdown-menu {
         width: auto;
-        white-space: nowrap; /* Ngăn các mục bị ngắt dòng */
+        white-space: nowrap;
         height: fit-content;
         text-align: start;
         top: 150%;
@@ -191,7 +272,7 @@
         position: absolute;
         background-color: #fffaf0;
         list-style: none;
-        margin: auto 0;
+        // margin: auto 0;
         border-radius: 5px;
         border: 1px solid #ccc;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -229,22 +310,6 @@
     }
   }
 
-  .language {
-    cursor: pointer;
-    position: relative;
-    color: #bbab6f;
-    display: flex;
-    align-items: center;
-
-    &:hover {
-      color: white;
-    }
-
-    .fa__icon {
-      margin-right: 8px;
-    }
-  }
-
   .language__dropdown {
     position: absolute;
     top: 100px;
@@ -264,19 +329,6 @@
         background-color: #bbab6f;
         color: white;
       }
-    }
-  }
-
-  .cart {
-    color: #bbab6f;
-    transition: background-color 0.3s ease, color 0.3s ease;
-
-    .fa__icon {
-      margin-right: 8px;
-    }
-    &:hover {
-      color: white;
-      cursor: pointer;
     }
   }
 }
