@@ -123,7 +123,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
     const priceB = parseFloat(b);
     if (isNaN(priceA) || isNaN(priceB)) return null;
     if (priceA === priceB) return null;
-    return priceA < priceB ? (
+    return priceA > priceB ? (
       <ArrowUpOutlined style={{ color: "green" }} />
     ) : (
       <ArrowDownOutlined style={{ color: "red" }} />
@@ -183,6 +183,11 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                                   style={{ fontSize: "24px", color: "#fff" }}
                                 />
                               ),
+                            }}
+                            style={{
+                              width: "368px",
+                              height: "500px",
+                              objectFit: "cover", // Giữ tỷ lệ ảnh mà không bị cắt
                             }}
                           />
                         </div>

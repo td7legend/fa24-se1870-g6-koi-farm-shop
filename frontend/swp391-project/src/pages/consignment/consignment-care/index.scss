@@ -11,6 +11,8 @@ $button-disabled-bg: #d9d9d9;
 $button-disabled-text: rgba(0, 0, 0, 0.25);
 $fish-item-border: #e0e0e0;
 $fish-item-bg: rgba(255, 250, 240, 0.9);
+$light-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+$soft-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 
 @mixin border-radius($radius) {
   border-radius: $radius;
@@ -51,7 +53,6 @@ $fish-item-bg: rgba(255, 250, 240, 0.9);
       flex-direction: column;
       max-width: 1100px;
       margin: 0 auto;
-      border: 1px solid lighten($fish-item-border, 10%);
       padding: 40px;
       border-radius: 20px;
     }
@@ -85,7 +86,6 @@ $fish-item-bg: rgba(255, 250, 240, 0.9);
 
         .ant-table {
           background: rgba(255, 250, 240, 0.95);
-          border-radius: 8px;
           box-shadow: 0 2px 10px $shadow-color;
 
           .ant-table-thead > tr > th {
