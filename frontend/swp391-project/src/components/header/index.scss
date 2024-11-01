@@ -23,18 +23,24 @@
 
   .header__top {
     display: flex;
+    flex-wrap: nowrap;
+    gap: 100px;
     justify-content: space-around;
     align-items: center;
     z-index: 2;
+    // margin-left: 200px;
 
     .header__logo img {
       height: 120px;
+      margin-right: 90px;
+      margin-left: 50px;
     }
 
     .search__bar {
       display: flex;
       flex-shrink: 0;
       z-index: 3;
+      margin-right: 50px;
       .search__input__container {
         position: relative;
         display: flex;
@@ -90,10 +96,10 @@
       display: flex;
       align-items: center;
       gap: 30px;
-      width: 390px;
+      width: 500px;
       z-index: 3;
       position: relative;
-
+      margin-left: 50px;
       .register__sign__in {
         position: relative;
         display: flex;
@@ -243,22 +249,38 @@
         justify-content: center;
         gap: 180px;
         font-size: 18px;
+        list-style: none;
+
         li {
           list-style: none;
           color: #bbab6f;
           padding-bottom: 10px;
         }
       }
+
       a {
         color: white;
         text-decoration: none;
         font-size: 18px;
-        transition: color 0.4s;
+        transition: 0.4s ease;
         margin: 10px;
+        opacity: 1;
+        filter: none;
 
         &:hover {
           color: #bbab6f;
         }
+      }
+
+      ul:not(:hover) > li > a {
+        opacity: 1;
+        filter: none;
+      }
+
+      ul:hover > li > a:not(:hover),
+      ul:hover > li > .dropdown-menu {
+        opacity: 0.5;
+        filter: blur(1px);
       }
 
       .dropdown-menu {
@@ -272,7 +294,6 @@
         position: absolute;
         background-color: #fffaf0;
         list-style: none;
-        // margin: auto 0;
         border-radius: 5px;
         border: 1px solid #ccc;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -292,20 +313,34 @@
             }
           }
         }
+
         .menu-item:last-child {
           border-bottom: none;
         }
+
         a {
           text-decoration: none;
           color: #333;
         }
       }
+
       .dropdown:hover .dropdown-menu {
         opacity: 1;
         visibility: visible;
       }
+
       .dropdown {
         position: relative;
+      }
+
+      .dropdown:hover > a {
+        opacity: 1;
+        filter: none;
+      }
+
+      .dropdown:hover .dropdown-menu .menu-item a {
+        opacity: 1;
+        filter: none;
       }
     }
   }
@@ -438,7 +473,6 @@
   }
 }
 
-// Thêm animation cho dropdown
 @keyframes fadeIn {
   from {
     opacity: 0;

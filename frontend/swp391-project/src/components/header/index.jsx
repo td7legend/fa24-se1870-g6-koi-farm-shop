@@ -287,6 +287,16 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
             <LanguageSelector />
           </div>
 
+          {role === 0 && (
+            <div className="cart" onClick={handleCartClick}>
+              {t("yourCart")}
+              <FontAwesomeIcon
+                icon={faShoppingCart}
+                className="fa__icon cart-icon"
+              />
+            </div>
+          )}
+
           {role === "Customer" && (
             <div className="cart" onClick={handleCartClick}>
               {t("yourCart")}
@@ -312,15 +322,39 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
             renderDashboardButton()
           ) : (
             <div
-              className="user-profile-wrapper"
-              onMouseEnter={() => setIsUserDropdownOpen(true)}
-              onMouseLeave={() => setIsUserDropdownOpen(false)}
+              className="register__sign__in"
+              onClick={toggleUserDropdown}
+              ref={userDropdownRef}
             >
-              <div className="register__sign__in">
-                <FontAwesomeIcon icon={faUser} className="fa__icon" />
-                {userData.fullName}
-              </div>
-              {isUserDropdownOpen && renderUserDropdown()}
+              {userData.fullName}
+              <img
+                src="https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg"
+                alt="User"
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  marginLeft: "8px",
+                  borderRadius: "50px",
+                }}
+              />
+              {isUserDropdownOpen && (
+                <div className="user-dropdown">
+                  <Link
+                    to={`/user-dashboard/${userData.userId}`}
+                    className="dropdown-item"
+                  >
+                    <FontAwesomeIcon icon={faUser} className="dropdown-icon" />
+                    {t("myAccount")}
+                  </Link>
+                  <div onClick={handleLogout} className="dropdown-item">
+                    <FontAwesomeIcon
+                      icon={faSignOutAlt}
+                      className="dropdown-icon"
+                    />
+                    {t("logout")}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

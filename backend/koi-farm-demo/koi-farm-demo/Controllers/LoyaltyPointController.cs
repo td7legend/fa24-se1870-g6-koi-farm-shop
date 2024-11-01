@@ -11,10 +11,11 @@ namespace koi_farm_demo.Controllers
     public class LoyaltyPointController : ControllerBase
     {
         private readonly ILoyaltyPointService _loyaltyPointService;
-
-        public LoyaltyPointController(ILoyaltyPointService loyaltyPointService)
+        private readonly ICustomerService _customerService;
+        public LoyaltyPointController(ILoyaltyPointService loyaltyPointService, ICustomerService customerService)
         {
             _loyaltyPointService = loyaltyPointService;
+            _customerService = customerService;
         }
 
         [HttpPost("award")]
@@ -53,14 +54,17 @@ namespace koi_farm_demo.Controllers
         {
             // Lấy userId từ claim
             var userIdClaim = User.FindFirst(ClaimTypes.Name)?.Value;
-            if (!int.TryParse(userIdClaim, out int customerId))
+            
+
+            if (!int.TryParse(userIdClaim, out int userId))
             {
                 return BadRequest("Invalid user ID.");
             }
+            var customer = await _customerService.GetCustomerByUserIdAsync(userId);
 
             try
             {
-                var history = await _loyaltyPointService.GetLoyaltyPointHistoryAsync(customerId);
+                var history = await _loyaltyPointService.GetLoyaltyPointHistoryAsync(customer.CustomerId);
                 if (!history.Any())
                 {
                     return NotFound("No loyalty point history found.");

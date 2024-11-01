@@ -394,6 +394,18 @@
   "settings": "Settings",
   "loyaltyPoint": "Loyalty Point",
   "myAccount": "My Account",
-  "logoutConfirmMessage": "Are you sure you want to logout?"
-
+  "logoutConfirmMessage": "Are you sure you want to logout?",
+  "consignmentCareTitle": "Consignment Care Services",
+  "consignmentCareDescription": "Our consignment care service ensures your items are carefully managed and maintained. Let us handle the care so you can enjoy peace of mind.",
+  "processTitle": "Our Process",
+  "step1Title": "Step 1: Initial Contact",
+  "step1Description": "Reach out to us and share details about the item you’d like us to care for.",
+  "step2Title": "Step 2: Assessment and Agreement",
+  "step2Description": "We’ll assess the item and discuss maintenance terms with you.",
+  "step3Title": "Step 3: Ongoing Care",
+  "step3Description": "Our team provides the agreed-upon care and regular updates.",
+  "benefitsTitle": "Benefits",
+  "benefit1": "Expert and dedicated care",
+  "benefit2": "Transparency and regular updates",
+  "benefit3": "Preservation of your item's value"
 }
