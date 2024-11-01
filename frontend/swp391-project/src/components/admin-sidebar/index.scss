@@ -41,5 +41,24 @@
         background-color: #bbab6f;
       }
     }
+
+    .ant-menu-item-selected.logout-item {
+      color: #ff4d4f;
+
+      &:hover {
+        color: darken(#ff4d4f, 10%);
+      }
+    }
+  }
+}
+
+// Style cho Modal
+.logout-confirm-button {
+  background-color: #ff4d4f !important;
+  border-color: #ff4d4f !important;
+
+  &:hover {
+    background-color: darken(#ff4d4f, 10%) !important;
+    border-color: darken(#ff4d4f, 10%) !important;
   }
 }

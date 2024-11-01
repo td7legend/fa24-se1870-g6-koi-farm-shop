@@ -20,7 +20,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
   faClipboardList,
-  faTag,
   faShoppingCart,
   faCog,
   faSignOutAlt,
@@ -43,12 +42,18 @@ const ConsignmentHistory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const customerId = 1;
+  const [customerId, setCustomerId] = useState(null);
   const { t } = useTranslation();
   const { token } = useSelector((state) => state.auth);
   useEffect(() => {
-    fetchConsignments();
-  }, []);
+    fetchCustomerInfo();
+  }, [token]);
+
+  useEffect(() => {
+    if (customerId) {
+      fetchConsignments();
+    }
+  }, [customerId]);
 
   const formatPrice = (price) => {
     return price
@@ -57,6 +62,31 @@ const ConsignmentHistory = () => {
           currency: "VND",
         })
       : "0 VND";
+  };
+
+  const fetchCustomerInfo = async () => {
+    try {
+      if (!token) {
+        toast.error("No authentication token found. Please log in.");
+        navigate("/login");
+        return;
+      }
+
+      const response = await axios.get(
+        "https://localhost:44366/api/customers/my-info",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setCustomerId(response.data.customerId);
+    } catch (error) {
+      console.error("Error fetching customer info:", error);
+      toast.error("Failed to fetch customer information");
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
+    }
   };
 
   const fetchConsignments = async () => {
@@ -77,10 +107,12 @@ const ConsignmentHistory = () => {
       );
 
       setConsignments(
-        response.data.map((consignment) => ({
-          ...consignment,
-          key: consignment.consignmentId,
-        }))
+        response.data
+          .map((consignment) => ({
+            ...consignment,
+            key: consignment.consignmentId,
+          }))
+          .sort((a, b) => b.consignmentId - a.consignmentId)
       );
     } catch (error) {
       console.error("Error fetching consignments:", error);

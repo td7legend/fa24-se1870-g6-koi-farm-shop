@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu } from "antd";
+import { Menu, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   UserOutlined,
@@ -14,12 +14,14 @@ import { faFish, faList } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 import "./index.scss";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 const AdminSidebar = ({ onHover }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
-
+  const { t } = useTranslation();
   const handleMouseEnter = () => {
     setIsHovered(true);
     onHover(true);
@@ -31,8 +33,20 @@ const AdminSidebar = ({ onHover }) => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    Modal.confirm({
+      title: t("confirmLogout"),
+      icon: <ExclamationCircleOutlined />,
+      content: t("logoutConfirmMessage"),
+      okText: t("logout"),
+      cancelText: t("cancel"),
+      onOk() {
+        dispatch(logout());
+        navigate("/login");
+      },
+      okButtonProps: {
+        className: "logout-confirm-button",
+      },
+    });
   };
 
   return (

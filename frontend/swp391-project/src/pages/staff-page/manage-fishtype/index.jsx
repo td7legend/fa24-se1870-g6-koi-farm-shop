@@ -48,10 +48,12 @@ const FishTypeManagement = () => {
       });
 
       setFishTypes(
-        response.data.map((type) => ({
-          ...type,
-          key: type.fishTypeId,
-        }))
+        response.data
+          .map((type) => ({
+            ...type,
+            key: type.fishTypeId,
+          }))
+          .sort((a, b) => b.fishTypeId - a.fishTypeId)
       );
     } catch (error) {
       console.error("Error fetching fish types:", error);

@@ -69,10 +69,12 @@ const OrderHistoryPage = () => {
         }
       );
 
-      const processedOrders = response.data.map((order) => ({
-        ...order,
-        key: order.orderId,
-      }));
+      const processedOrders = response.data
+        .map((order) => ({
+          ...order,
+          key: order.orderId,
+        }))
+        .sort((a, b) => b.orderId - a.orderId);
 
       console.log("Processed orders:", processedOrders); // For debugging
 
@@ -91,6 +93,8 @@ const OrderHistoryPage = () => {
         return <Tag color="green">{t("paid")}</Tag>;
       case "Shipping":
         return <Tag color="blue">{t("shipping")}</Tag>;
+      case "Cancelled":
+        return <Tag color="red">{t("cancelled")}</Tag>;
       case "Completed":
         return <Tag color="purple">{t("completed")}</Tag>;
       default:

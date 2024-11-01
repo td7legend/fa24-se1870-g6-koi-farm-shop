@@ -45,10 +45,12 @@ const StaffOrderManagement = () => {
         headers: { Authorization: `Bearer ${token ?? null}` },
       });
 
-      const processedOrders = response.data.map((order) => ({
-        ...order,
-        key: order.orderId,
-      }));
+      const processedOrders = response.data
+        .map((order) => ({
+          ...order,
+          key: order.orderId,
+        }))
+        .sort((a, b) => b.orderId - a.orderId);
 
       setOrders(processedOrders);
     } catch (error) {

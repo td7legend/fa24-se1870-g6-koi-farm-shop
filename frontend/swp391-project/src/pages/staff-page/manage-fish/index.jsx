@@ -28,6 +28,7 @@ import { useSelector } from "react-redux";
 import config from "../../../config/config";
 const { Title } = Typography;
 const { Option } = Select;
+import ExcelFishImport from "./excel-fish-import";
 
 const StaffFishManagement = () => {
   const [fishes, setFishes] = useState([]);
@@ -91,10 +92,12 @@ const StaffFishManagement = () => {
       });
 
       setFishes(
-        response.data.map((fish) => ({
-          ...fish,
-          key: fish.fishId,
-        }))
+        response.data
+          .map((fish) => ({
+            ...fish,
+            key: fish.fishId,
+          }))
+          .sort((a, b) => b.fishId - a.fishId)
       );
     } catch (error) {
       console.error("Error fetching fishes:", error);
@@ -588,6 +591,11 @@ const StaffFishManagement = () => {
         <Card className="card">
           <div className="flex justify-between items-center mb-4">
             <Title level={3}>Fish Management</Title>
+            <ExcelFishImport
+              onUploadSuccess={fetchFishes}
+              token={token}
+              config={config}
+            />
             <Button
               type="primary"
               onClick={() => setIsModalVisible(true)}

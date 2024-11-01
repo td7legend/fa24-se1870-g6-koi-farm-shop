@@ -200,7 +200,7 @@ function ConsignmentSell() {
   };
 
   return (
-    <div>
+    <div className="consignment-sale-page-form">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
           <Breadcrumb.Item href="/">
@@ -367,7 +367,7 @@ function ConsignmentSell() {
                                   icon={<MinusCircleOutlined />}
                                   onClick={() => {
                                     remove(field.name);
-                                    if (fields.length === 1) {
+                                    if (fields.length === 0) {
                                       setShowTable(false);
                                       setShowDateFields(false);
                                       formVariable.resetFields();

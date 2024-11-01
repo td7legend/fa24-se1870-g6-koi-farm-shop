@@ -70,6 +70,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
 
     return (
       <Row
+        className="comparison-row"
         gutter={16}
         style={{ marginBottom: 16, alignItems: "center" }}
         key={`${property}-${values.join("-")}`}
@@ -78,7 +79,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
           <Text strong>{t(property)}</Text>
         </Col>
         {comparedFishes.map((fish, index) => (
-          <Col span={9} key={index}>
+          <Col span={9} key={index} className="comparison-item">
             <div
               style={{
                 display: "flex",
@@ -97,7 +98,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                 </Text>
               )}
               {compare && values[0] !== null && values[1] !== null && (
-                <span style={{ marginLeft: "8px" }}>
+                <span className="comparison-icon">
                   {compare(values[index], values[1 - index])}
                 </span>
               )}
@@ -118,37 +119,28 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
   };
 
   const comparePrice = (a, b) => {
-    console.log("Comparing prices:", a, b); // Để kiểm tra giá trị
     const priceA = parseFloat(a);
     const priceB = parseFloat(b);
-    console.log("Parsed prices:", priceA, priceB); // Để kiểm tra giá trị sau khi parse
-
-    if (isNaN(priceA) || isNaN(priceB)) {
-      console.error("Invalid price value:", a, b);
-      return null;
-    }
-
+    if (isNaN(priceA) || isNaN(priceB)) return null;
     if (priceA === priceB) return null;
-    if (priceA < priceB) {
-      return <ArrowUpOutlined style={{ color: "green" }} />;
-    } else {
-      return <ArrowDownOutlined style={{ color: "red" }} />;
-    }
+    return priceA > priceB ? (
+      <ArrowUpOutlined style={{ color: "green" }} />
+    ) : (
+      <ArrowDownOutlined style={{ color: "red" }} />
+    );
   };
 
   const compareOrigin = (a, b) => {
-    console.log("Comparing origins:", a, b); // Để kiểm tra giá trị
     const originRank = { Japan: 3, F1: 2, VietNam: 1 };
     const rankA = originRank[a] || 0;
     const rankB = originRank[b] || 0;
-    console.log("Origin ranks:", rankA, rankB); // Để kiểm tra giá trị rank
 
     if (rankA === rankB) return null;
-    if (rankA > rankB) {
-      return <ArrowUpOutlined style={{ color: "green" }} />;
-    } else {
-      return <ArrowDownOutlined style={{ color: "red" }} />;
-    }
+    return rankA > rankB ? (
+      <ArrowUpOutlined style={{ color: "green" }} />
+    ) : (
+      <ArrowDownOutlined style={{ color: "red" }} />
+    );
   };
 
   const formatPrice = (price) => `${parseFloat(price).toLocaleString()} VND`;
@@ -162,13 +154,14 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
   };
 
   return (
-    <>
+    <div className="compare-page">
       <Modal
         title={t("compareFishes")}
         visible={isVisible}
         onCancel={onClose}
         width={800}
         footer={null}
+        style={{ borderRadius: "20px" }}
       >
         {comparedFishes.some((fish) => fish !== null) ? (
           <>
@@ -177,32 +170,24 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                 <Col span={12} key={index}>
                   {fish ? (
                     <Card
+                      className="fish-card"
                       cover={
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "200px",
-                            overflow: "hidden",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: "#f0f0f0",
-                            position: "relative",
-                          }}
-                        >
+                        <div className="fish-card-cover">
                           <Image
                             alt={fish.name}
                             src={fish.img_path}
-                            style={{
-                              maxWidth: "100%",
-                              maxHeight: "100%",
-                              objectFit: "contain",
-                            }}
                             preview={{
                               maskClassName: "customize-mask",
                               mask: (
-                                <ZoomInOutlined style={{ fontSize: "24px" }} />
+                                <ZoomInOutlined
+                                  style={{ fontSize: "24px", color: "#fff" }}
+                                />
                               ),
+                            }}
+                            style={{
+                              width: "368px",
+                              height: "500px",
+                              objectFit: "cover", // Giữ tỷ lệ ảnh mà không bị cắt
                             }}
                           />
                         </div>
@@ -212,6 +197,11 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                           <Button
                             icon={<CloseOutlined />}
                             onClick={() => handleRemoveFish(index)}
+                            style={{
+                              borderRadius: "50%",
+                              backgroundColor: "#bbab6f",
+                              color: "#fff",
+                            }}
                           />
                         </Tooltip>
                       }
@@ -229,7 +219,11 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                         setSelectIndex(index);
                         setIsSelectModalVisible(true);
                       }}
-                      style={{ width: "100%", height: "100%", minHeight: 200 }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        minHeight: 200,
+                      }}
                     >
                       {t("addFishToCompare")}
                     </Button>
@@ -284,7 +278,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
           <Empty description={t("noMoreFishAvailableForComparison")} />
         )}
       </Modal>
-    </>
+    </div>
   );
 };
 

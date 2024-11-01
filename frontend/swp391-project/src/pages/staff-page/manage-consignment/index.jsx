@@ -64,10 +64,12 @@ const ConsignmentManagement = () => {
       );
 
       setConsignments(
-        response.data.map((consignment) => ({
-          ...consignment,
-          key: consignment.consignmentId,
-        }))
+        response.data
+          .map((consignment) => ({
+            ...consignment,
+            key: consignment.consignmentId,
+          }))
+          .sort((a, b) => b.consignmentId - a.consignmentId)
       );
     } catch (error) {
       console.error("Error fetching consignments:", error);
@@ -160,6 +162,20 @@ const ConsignmentManagement = () => {
     }
   };
 
+  const handleCloseCareModal = () => {
+    careForm.resetFields(); // Reset the care form
+    setCareModalVisible(false);
+    setSelectedConsignment(null);
+  };
+
+  const handleCloseSaleModal = () => {
+    saleForm.resetFields(); // Reset the sale form
+    setSaleModalVisible(false);
+    setSelectedConsignment(null);
+    setUnitPrice(0);
+    setQuantity(0);
+  };
+
   const handleOpenSaleModal = (record) => {
     setSelectedConsignment(record);
     const consignmentLine = record.consignmentLines[0]; // Assuming first line
@@ -217,7 +233,7 @@ const ConsignmentManagement = () => {
             consignmentLineId: fish.consignmentLineId,
             foodRequirement: fish.foodRequirement,
             overallRating: 5,
-            price: fish.unitPrice,
+            price: fish.sellingPrice,
             batch: true,
             fishTypeId: fish.fishTypeId,
             quantity: fish.quantity,
@@ -617,7 +633,7 @@ const ConsignmentManagement = () => {
       <Modal
         title="Confirm Care Consignment"
         open={careModalVisible}
-        onCancel={() => setCareModalVisible(false)}
+        onCancel={handleCloseCareModal}
         footer={null}
         width={800}
       >
@@ -711,7 +727,7 @@ const ConsignmentManagement = () => {
       <Modal
         title="Confirm Sale Consignment"
         open={saleModalVisible}
-        onCancel={() => setSaleModalVisible(false)}
+        onCancel={handleCloseSaleModal}
         footer={null}
         width={800}
       >
@@ -780,7 +796,6 @@ const ConsignmentManagement = () => {
                       gap: "16px",
                     }}
                   >
-                    {/* Fish Details */}
                     <Form.Item
                       name={["fishDetails", index, "unitPrice"]}
                       label="Unit Price"
@@ -793,7 +808,6 @@ const ConsignmentManagement = () => {
                         }
                         parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                         onChange={(value) => {
-                          // Calculate total price for this fish
                           const totalPrice = value * line.quantity;
                           saleForm.setFieldValue(
                             ["fishDetails", index, "totalPrice"],
@@ -823,19 +837,40 @@ const ConsignmentManagement = () => {
                         }
                       />
                     </Form.Item>
+                  </div>
 
+                  <Form.Item
+                    name={["fishDetails", index, "sellingPrice"]}
+                    label="Selling Price"
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      formatter={(value) =>
+                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                    />
+                  </Form.Item>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "16px",
+                    }}
+                  >
                     <Form.Item
                       name={["fishDetails", index, "gender"]}
                       label="Gender"
-                      rules={[
-                        { required: true, message: "Please select gender" },
-                      ]}
+                      rules={[{ required: true }]}
                     >
                       <Select style={{ width: "100%" }}>
                         <Select.Option value={0}>Male</Select.Option>
                         <Select.Option value={1}>Female</Select.Option>
                       </Select>
                     </Form.Item>
+
                     <Form.Item
                       name={["fishDetails", index, "age"]}
                       label="Age"
@@ -843,7 +878,15 @@ const ConsignmentManagement = () => {
                     >
                       <InputNumber style={{ width: "100%" }} />
                     </Form.Item>
+                  </div>
 
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "16px",
+                    }}
+                  >
                     <Form.Item
                       name={["fishDetails", index, "size"]}
                       label="Size"
@@ -869,35 +912,26 @@ const ConsignmentManagement = () => {
                     <Input />
                   </Form.Item>
 
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "16px",
-                    }}
+                  <Form.Item
+                    name={["fishDetails", index, "foodRequirement"]}
+                    label="Food Requirement"
+                    rules={[{ required: true }]}
                   >
-                    <Form.Item
-                      name={["fishDetails", index, "foodRequirement"]}
-                      label="Food Requirement"
-                      rules={[{ required: true }]}
-                    >
-                      <InputNumber style={{ width: "100%" }} />
-                    </Form.Item>
+                    <InputNumber style={{ width: "100%" }} />
+                  </Form.Item>
 
-                    <Form.Item
-                      name={["fishDetails", index, "description"]}
-                      label="Description"
-                      rules={[{ required: true }]}
-                    >
-                      <Input.TextArea rows={4} />
-                    </Form.Item>
-                  </div>
+                  <Form.Item
+                    name={["fishDetails", index, "description"]}
+                    label="Description"
+                    rules={[{ required: true }]}
+                  >
+                    <Input.TextArea rows={4} />
+                  </Form.Item>
                 </div>
               </div>
             </div>
           ))}
 
-          {/* Agreed Price for entire consignment */}
           <Form.Item name="agreePrice" label="Agreed Price">
             <InputNumber
               style={{ width: "100%" }}

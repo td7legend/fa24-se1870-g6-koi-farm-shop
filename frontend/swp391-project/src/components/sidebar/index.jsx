@@ -5,12 +5,16 @@ import {
   faList,
   faShoppingCart,
   faTruck,
+  faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/actions/authActions";
+import { Modal } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+
 function Sidebar({ onHover }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -28,8 +32,20 @@ function Sidebar({ onHover }) {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    Modal.confirm({
+      title: t("confirmLogout"),
+      icon: <ExclamationCircleOutlined />,
+      content: t("logoutConfirmMessage"),
+      okText: t("logout"),
+      cancelText: t("cancel"),
+      onOk() {
+        dispatch(logout());
+        navigate("/login");
+      },
+      okButtonProps: {
+        className: "logout-confirm-button",
+      },
+    });
   };
 
   return (
@@ -40,7 +56,6 @@ function Sidebar({ onHover }) {
     >
       <div className="sidebar__logo">
         {isHovered ? "Staff Dashboard" : "SD"}
-        {/* <h2>{t("staffDashboard")}</h2> */}
       </div>
       <aside className="sidebar__nav">
         <ul className="sidebar__menu">
@@ -78,6 +93,19 @@ function Sidebar({ onHover }) {
             >
               <FontAwesomeIcon icon={faTruck} className="icon" />
               <span className="label">{t("consignmentManagement")}</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleLogout();
+              }}
+              className={({ isActive }) => (isActive ? "" : undefined)}
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} className="icon" />
+              <span className="label">{t("logout")}</span>
             </NavLink>
           </li>
         </ul>
