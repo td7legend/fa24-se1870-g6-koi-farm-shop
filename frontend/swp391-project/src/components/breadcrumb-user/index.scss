@@ -26,9 +26,9 @@ $breadcrumb-border: 2px solid rgba(0, 0, 0, 0.05);
     font-size: 16px;
     // background-color: rgba(255, 255, 255, 0.85);
     padding: $breadcrumb-padding;
-    border-radius: 10px;
-    // border: $breadcrumb-border;
-    // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 10px 15px;
+    background-color: rgba(255, 255, 255, 0.7);
     z-index: 1000;
 
     .breadcrumb-page {

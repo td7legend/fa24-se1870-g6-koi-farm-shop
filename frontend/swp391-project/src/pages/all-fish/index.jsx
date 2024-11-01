@@ -141,7 +141,7 @@ const AllFishPage = () => {
               <FontAwesomeIcon icon={faHome} className="icon" />
             </Breadcrumb.Item>
             <Breadcrumb.Item className="breadcrumb-page">
-              {t("productList")}
+              Fish List
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>
