@@ -92,15 +92,20 @@ h6 {
   }
 
   .fish-card {
-    .ant-card-cover {
+    .fish-card-cover {
+      height: 300px;
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #f0f0f0;
-      width: 100%;
-      height: 250px;
       overflow: hidden;
-      border-radius: 15px;
+      background-color: #f0f0f0;
+    }
+
+    .fish-card-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover !important;
     }
 
     .ant-card-meta-title {
