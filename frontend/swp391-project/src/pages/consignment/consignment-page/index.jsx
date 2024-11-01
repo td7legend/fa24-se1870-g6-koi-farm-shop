@@ -1,21 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
-<<<<<<< HEAD
-function Consignment() {
-  const navigate = useNavigate();
-  return (
-    <div className="consignment-page-container">
-      <div>
-        <h1>Choose your consignment</h1>
-        <ul>
-          <li onClick={() => navigate("/consignment/care")}>
-            Consignment for care
-          </li>
-          <li onClick={() => navigate("/consignment/sell")}>
-            Consignment for sell
-          </li>
-        </ul>
-=======
 import { Breadcrumb } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
@@ -45,7 +29,6 @@ function Consignment() {
             <ConsignmentSell />
           </ul>
         </div>
->>>>>>> main
       </div>
     </div>
   );
