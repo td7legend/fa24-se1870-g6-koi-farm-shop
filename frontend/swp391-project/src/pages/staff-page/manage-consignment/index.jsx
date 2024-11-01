@@ -162,6 +162,20 @@ const ConsignmentManagement = () => {
     }
   };
 
+  const handleCloseCareModal = () => {
+    careForm.resetFields(); // Reset the care form
+    setCareModalVisible(false);
+    setSelectedConsignment(null);
+  };
+
+  const handleCloseSaleModal = () => {
+    saleForm.resetFields(); // Reset the sale form
+    setSaleModalVisible(false);
+    setSelectedConsignment(null);
+    setUnitPrice(0);
+    setQuantity(0);
+  };
+
   const handleOpenSaleModal = (record) => {
     setSelectedConsignment(record);
     const consignmentLine = record.consignmentLines[0]; // Assuming first line
@@ -619,7 +633,7 @@ const ConsignmentManagement = () => {
       <Modal
         title="Confirm Care Consignment"
         open={careModalVisible}
-        onCancel={() => setCareModalVisible(false)}
+        onCancel={handleCloseCareModal}
         footer={null}
         width={800}
       >
@@ -713,7 +727,7 @@ const ConsignmentManagement = () => {
       <Modal
         title="Confirm Sale Consignment"
         open={saleModalVisible}
-        onCancel={() => setSaleModalVisible(false)}
+        onCancel={handleCloseSaleModal}
         footer={null}
         width={800}
       >
