@@ -53,7 +53,7 @@ function App() {
       <>
         <Route index element={<HomePage />} />
         <Route path="fish-page" element={<AllFishPage />} />
-        <Route path="breed/:breedName" element={<BreedFishPage />} />
+        <Route path="breed/:breedId" element={<BreedFishPage />} />
         <Route path="fish/:id" element={<ProductDetail />} />
         <Route path="contact" element={<Contact />} />
         <Route path="about-us" element={<AboutUs />} />

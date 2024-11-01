@@ -19,11 +19,12 @@ import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import { AES, enc } from "crypto-js";
 import config from "../../config/config";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import LoadingKoi from "../../components/loading";
+import { clearCart } from "../../store/actions/cartAction";
 
 const Checkout = () => {
   const [form] = Form.useForm();
@@ -37,6 +38,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState(true);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
     console.log("user", user);
@@ -272,6 +274,7 @@ const Checkout = () => {
             totalAmount: calculateFinalPrice(),
           },
         });
+        dispatch(clearCart());
       } else {
         throw new Error("Failed to complete order");
       }

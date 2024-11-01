@@ -13,6 +13,7 @@ import kohakuImage from "../../images/kohaku.jpg";
 import ProductCard from "../../components/product-card";
 import CompareModal from "../../components/compareModel/CompareModal";
 import { useTranslation } from "react-i18next";
+import config from "../../config/config";
 
 const fishImages = {
   Ogon: ogonImage,
@@ -23,44 +24,64 @@ const fishImages = {
 
 const AllFishPage = () => {
   const [allFish, setAllFish] = useState([]);
-  const [fishByBreed, setFishByBreed] = useState({});
+  const [fishByType, setFishByType] = useState({});
   const [currentPage, setCurrentPage] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
   const [isCompareModalVisible, setIsCompareModalVisible] = useState(false);
   const [selectedFishForCompare, setSelectedFishForCompare] = useState(null);
   const { t } = useTranslation();
+  const [fishTypes, setFishTypes] = useState([]);
   const itemsPerPage = 4;
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchAllFish = async () => {
-    const response = await axios.get(
-      "https://66fe08fb699369308956d74e.mockapi.io/KoiProduct"
-    );
-    const fishData = response.data;
-    setAllFish(fishData);
-    categorizeFishByBreed(fishData);
+    try {
+      const [fishResponse, typesResponse] = await Promise.all([
+        axios.get(`${config.API_ROOT}fishs`),
+        axios.get(`${config.API_ROOT}fishtypes`),
+      ]);
+
+      const fishData = fishResponse.data;
+      const typesData = typesResponse.data;
+
+      setAllFish(fishData);
+      setFishTypes(typesData);
+
+      categorizeFishByType(fishData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  const categorizeFishByBreed = (fishData) => {
-    const breedMap = fishData.reduce((acc, fish) => {
-      const breed = fish.breed;
-      if (!acc[breed]) {
-        acc[breed] = [];
+  const categorizeFishByType = (fishData) => {
+    if (!fishData.length) return;
+
+    const typeMap = fishData.reduce((acc, fish) => {
+      const typeId = fish.fishTypeId.toString();
+      if (!acc[typeId]) {
+        acc[typeId] = [];
       }
-      acc[breed].push(fish);
+      acc[typeId].push(fish);
       return acc;
     }, {});
-    setFishByBreed(breedMap);
+
+    setFishByType(typeMap);
 
     const initialPageState = {};
-    Object.keys(breedMap).forEach((breed) => {
-      initialPageState[breed] = 1;
+    Object.keys(typeMap).forEach((typeId) => {
+      initialPageState[typeId] = 1;
     });
     setCurrentPage(initialPageState);
   };
 
   useEffect(() => {
-    fetchAllFish();
+    const loadData = async () => {
+      setIsLoading(true);
+      await fetchAllFish();
+      setIsLoading(false);
+    };
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -70,26 +91,33 @@ const AllFishPage = () => {
   }, [location.search]);
 
   useEffect(() => {
-    const sections = document.querySelectorAll(".fade-in-section");
-    sections.forEach((section, index) => {
-      setTimeout(() => {
-        section.classList.add("visible");
-      }, index * 200);
-    });
-  }, [allFish]);
+    if (!isLoading) {
+      const sections = document.querySelectorAll(".fade-in-section");
+      sections.forEach((section, index) => {
+        setTimeout(() => {
+          section.classList.add("visible");
+        }, index * 200);
+      });
+    }
+  }, [allFish, isLoading]);
 
-  const handlePageChange = (breed, direction) => {
+  useEffect(() => {
+    console.log("Fish Types:", fishTypes);
+    console.log("Fish By Type:", fishByType);
+  }, [fishTypes, fishByType]);
+
+  const handlePageChange = (typeId, direction) => {
     setCurrentPage((prevState) => {
-      const newPage = prevState[breed] + direction;
+      const newPage = prevState[typeId] + direction;
       if (
         newPage < 1 ||
-        newPage > Math.ceil(fishByBreed[breed].length / itemsPerPage)
+        newPage > Math.ceil(fishByType[typeId].length / itemsPerPage)
       ) {
         return prevState;
       }
       return {
         ...prevState,
-        [breed]: newPage,
+        [typeId]: newPage,
       };
     });
   };
@@ -125,34 +153,48 @@ const AllFishPage = () => {
           </h2>
         )}
 
-        {Object.keys(fishByBreed).map((breed) => {
-          const breedFish = fishByBreed[breed].filter(filterFishBySearch);
-          if (breedFish.length === 0) return null;
+        {Object.keys(fishByType).map((typeId) => {
+          const typeFish = fishByType[typeId].filter(filterFishBySearch);
+          if (typeFish.length === 0) return null;
 
-          const currentPageForBreed = currentPage[breed] || 1;
-          const startIndex = (currentPageForBreed - 1) * itemsPerPage;
+          const currentPageForType = currentPage[typeId] || 1;
+          const startIndex = (currentPageForType - 1) * itemsPerPage;
           const endIndex = startIndex + itemsPerPage;
-          const fishToDisplay = breedFish.slice(startIndex, endIndex);
+          const fishToDisplay = typeFish.slice(startIndex, endIndex);
 
-          const imageSrc = fishImages[breed] || "default_image_link";
+          const fishType = fishTypes.find(
+            (type) => type.fishTypeId === parseInt(typeId)
+          );
+
+          console.log("Type ID:", typeId);
+          console.log("Found Fish Type:", fishType);
+
+          const typeName = fishType ? fishType.name : "Unknown Type";
+          console.log("Type Name:", typeName);
+
+          const imageSrc =
+            fishImages[typeName] ||
+            fishImages[typeName.toLowerCase()] ||
+            "default_image_link";
+          console.log("Image Source:", imageSrc);
 
           return (
             <div
-              key={breed}
+              key={typeId}
               className="all-fish-page fade-in-section"
               style={{ marginBottom: "50px" }}
             >
               <div className="fish-banner">
                 <ImageFrame imageSrc={imageSrc} />
               </div>
-              <Link to={`/breed/${breed}`} className="breed-link">
-                <h2 className="breed-title">{breed}</h2>
+              <Link to={`/breed/${typeId}`} className="breed-link">
+                <h2 className="breed-title">{typeName}</h2>
               </Link>
               <div className="fish-list">
                 <button
                   className="nav__button left"
-                  onClick={() => handlePageChange(breed, -1)}
-                  disabled={currentPageForBreed === 1}
+                  onClick={() => handlePageChange(typeId, -1)}
+                  disabled={currentPageForType === 1}
                 >
                   &lt;
                 </button>
@@ -161,15 +203,15 @@ const AllFishPage = () => {
                   <ProductCard
                     className="product-card"
                     fish={fish}
-                    key={fish.id}
+                    key={fish.fishId}
                     onCompare={handleCompare}
                   />
                 ))}
 
                 <button
                   className="nav__button right"
-                  onClick={() => handlePageChange(breed, 1)}
-                  disabled={endIndex >= breedFish.length}
+                  onClick={() => handlePageChange(typeId, 1)}
+                  disabled={endIndex >= typeFish.length}
                 >
                   &gt;
                 </button>

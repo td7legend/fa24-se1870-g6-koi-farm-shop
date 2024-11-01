@@ -407,5 +407,9 @@
   "benefitsTitle": "Benefits",
   "benefit1": "Expert and dedicated care",
   "benefit2": "Transparency and regular updates",
-  "benefit3": "Preservation of your item's value"
+  "benefit3": "Preservation of your item's value",
+  "thankYouForYourPurchase": "Thank you for your purchase. Your order has been confirmed.",
+  "orderID": "Order ID",
+  "female": "Female",
+  "male": "Male"
 }
