@@ -35,10 +35,13 @@ const BreedFishPage = () => {
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedAges, setSelectedAges] = useState([]);
+  const [selectedGender, setSelectedGender] = useState([]);
   const [priceRange, setPriceRange] = useState([100000, 100000000]);
   const [minPrice, setMinPrice] = useState(100000);
   const [maxPrice, setMaxPrice] = useState(100000000);
+
   const { t } = useTranslation();
+
   useEffect(() => {
     const fetchBreedFish = async () => {
       try {
@@ -94,7 +97,7 @@ const BreedFishPage = () => {
   const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
   const sizes = [...new Set(breedFish.map((Fish) => Fish.size))];
   const ages = [...new Set(breedFish.map((Fish) => Fish.age))];
-
+  const gender = [...new Set(breedFish.map((Fish) => Fish.gender))];
   const filteredFishs =
     searchQuery === ""
       ? breedFish
@@ -111,6 +114,10 @@ const BreedFishPage = () => {
             return selectedAges.includes(Fish.age);
           })
           .filter((Fish) => {
+            if (selectedGender.length === 0) return true;
+            return selectedGender.includes(Fish.gender);
+          })
+          .filter((Fish) => {
             return Fish.price >= priceRange[0] && Fish.price <= priceRange[1];
           })
       : breedFish.filter((Fish) => {
@@ -120,6 +127,8 @@ const BreedFishPage = () => {
               selectedOrigins.includes(Fish.origin)) &&
             (selectedSizes.length === 0 || selectedSizes.includes(Fish.size)) &&
             (selectedAges.length === 0 || selectedAges.includes(Fish.age)) &&
+            (selectedGender.length === 0 ||
+              selectedGender.includes(Fish.gender)) &&
             Fish.price >= priceRange[0] &&
             Fish.price <= priceRange[1]
           );
@@ -238,6 +247,29 @@ const BreedFishPage = () => {
                   </div>
                 </div>
                 <hr className="divider" />
+                <div className="gender-filter">
+                  <h3>{t("gender")}</h3>
+                  <div className="button-group">
+                    {gender.map((gender) => (
+                      <Button
+                        key={gender}
+                        className={`filter-button ${
+                          selectedGender.includes(gender) ? "selected" : ""
+                        }`}
+                        onClick={() =>
+                          toggleSelection(
+                            gender,
+                            selectedGender,
+                            setSelectedGender
+                          )
+                        }
+                      >
+                        {gender}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <hr className="divider" />
                 <div className="price-filter">
                   <Slider
                     range
@@ -338,6 +370,11 @@ const BreedFishPage = () => {
               {selectedAges.length > 0 && (
                 <Tag closable onClose={() => setSelectedAges([])}>
                   {t("age")}: {selectedAges.join(", ")} {t("years")}
+                </Tag>
+              )}
+              {selectedGender.length > 0 && (
+                <Tag closable onClose={() => setSelectedAges([])}>
+                  Gender: {selectedGender.join(", ")}
                 </Tag>
               )}
               {priceRange[0] !== 0 ||

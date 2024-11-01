@@ -437,7 +437,7 @@ const UserSetting = () => {
           </div>
         </main>
       </div>
-      <ToastContainer />
+      <ToastContainer style={{ zIndex: "10000" }} />
 
       <Modal
         title="Confirm Logout?"
