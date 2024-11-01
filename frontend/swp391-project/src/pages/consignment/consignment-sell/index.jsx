@@ -200,7 +200,7 @@ function ConsignmentSell() {
   };
 
   return (
-    <div>
+    <div className="consignment-sale-page-form">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
           <Breadcrumb.Item href="/">

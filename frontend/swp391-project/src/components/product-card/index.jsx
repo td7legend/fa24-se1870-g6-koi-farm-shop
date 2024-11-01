@@ -63,6 +63,9 @@ const ProductCard = ({ fish, onCompare }) => {
               <div className="tag-item-age">
                 {t("age")}: {fish.age} {t("years")}
               </div>
+              <div className="tag-item-gender">
+                {t("age")}: {fish.gender}
+              </div>
             </div>
             <p className="price">
               {t("price")}: <CurrencyFormatter amount={fish.price} />

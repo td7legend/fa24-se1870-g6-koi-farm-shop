@@ -1,5 +1,5 @@
 $breadcrumb-bg: #f0f2f5;
-$form-bg: #fffaf0;
+$form-bg: rgba(255, 250, 240, 0.5);
 $modal-border-radius: 8px;
 $text-color: #333;
 $shadow-color: rgba(0, 0, 0, 0.1);
@@ -10,146 +10,159 @@ $button-bg: #bbab6f;
 $button-disabled-bg: #d9d9d9;
 $button-disabled-text: rgba(0, 0, 0, 0.25);
 $fish-item-border: #e0e0e0;
-$fish-item-bg: #fffaf0;
+$fish-item-bg: rgba(255, 250, 240, 0.9);
 
 @mixin border-radius($radius) {
   border-radius: $radius;
 }
 
-.breadcrumb-container {
-  background: $breadcrumb-bg;
-  padding: 10px 20px;
-  @include border-radius(5px);
-  margin-bottom: 20px;
+.consignment-care-page-form {
+  position: relative;
+  padding: 30px;
+  z-index: 2;
 
-  .breadcrumb {
-    font-size: 16px;
-    font-weight: bold;
-
-    .breadcrumb-page {
-      font-weight: normal;
-    }
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: url("../../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    z-index: 3;
+    filter: blur(5px) opacity(0.15);
+    pointer-events: none;
   }
 
-  .icon {
-    margin-right: 5px;
-  }
-}
-
-.consignment-care {
-  background: $form-bg;
-  @include border-radius(8px);
-  padding: 20px;
-  box-sizing: border-box;
-
-  .consignment__wrapper {
-    display: flex;
-    flex-direction: column;
-    max-width: 1200px;
-    margin: 0 auto;
+  .consignment-care {
+    background: $form-bg;
+    @include border-radius(15px);
+    padding: 40px;
     box-sizing: border-box;
-    border: 1px solid #333;
-    padding: 50px;
-    border-radius: 30px;
-  }
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 4;
 
-  h2 {
-    text-align: center;
-    color: $text-color;
-    margin-bottom: 20px;
-  }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-
-    .form-left,
-    .form-right {
-      width: 100%;
+    .consignment__wrapper {
+      display: flex;
+      flex-direction: column;
+      max-width: 1100px;
+      margin: 0 auto;
+      border: 1px solid lighten($fish-item-border, 10%);
+      padding: 40px;
+      border-radius: 20px;
     }
 
-    .form-left {
+    h2 {
+      text-align: center;
+      color: darken($text-color, 5%);
       margin-bottom: 20px;
-
-      .add-fish-center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100px;
-      }
-
-      .ant-table {
-        background: #fffaf0;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px $shadow-color;
-
-        .ant-table-thead > tr > th {
-          background: #fffaf0;
-          font-weight: 600;
-        }
-        .ant-table-cell {
-          background: #fffaf0;
-        }
-      }
+      font-weight: 700;
+      font-size: 24px;
     }
 
-    .form-right {
-      .ant-form-item {
-        margin-bottom: 16px;
-      }
+    .form {
+      display: flex;
+      flex-direction: column;
 
-      button {
+      .form-left,
+      .form-right {
         width: 100%;
       }
+
+      .form-left {
+        margin-bottom: 20px;
+
+        .add-fish-center {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100px;
+        }
+
+        .ant-table {
+          background: rgba(255, 250, 240, 0.95);
+          border-radius: 8px;
+          box-shadow: 0 2px 10px $shadow-color;
+
+          .ant-table-thead > tr > th {
+            background: $form-bg;
+            font-weight: 600;
+            text-align: center;
+          }
+          .ant-table-cell {
+            background: $form-bg;
+            text-align: center;
+            padding: 10px;
+          }
+        }
+      }
+
+      .form-right {
+        .ant-form-item {
+          margin-bottom: 16px;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+
+    button.ant-btn {
+      background-color: $button-bg;
+      border-color: $button-bg;
+      color: #fff;
+      transition: background-color 0.3s, transform 0.3s;
+      &:hover {
+        background-color: lighten($button-bg, 10%) !important;
+        color: $button-bg !important;
+        border-color: $button-bg !important;
+        transform: translateY(-2px);
+      }
+
+      &:disabled {
+        background-color: $button-disabled-bg;
+        color: $button-disabled-text;
+      }
     }
   }
 
-  button.ant-btn {
-    background-color: $button-bg;
-    border-color: #bbab6f;
-    color: #fffaf0;
-    transition: background-color 0.3s;
+  .fish-item {
+    @include border-radius(15px);
+    padding: 20px;
+    margin-bottom: 20px;
+    background: $fish-item-bg;
+    box-shadow: 0 2px 10px $shadow-color;
+    border: 1px solid $fish-item-border;
+    position: relative;
+    z-index: 4;
+    h3 {
+      color: darken($text-color, 20%);
+      margin-bottom: 10px;
+    }
+  }
+
+  .ant-upload {
+    background: $upload-bg;
+    border: 1px dashed $upload-border;
+    @include border-radius(5px);
+    transition: border-color 0.3s, transform 0.3s;
+
     &:hover {
-      background-color: #ddd !important;
-      color: #bbab6f !important;
-      border-color: #bbab6f !important;
-    }
-
-    &:disabled {
-      background-color: $button-disabled-bg;
-      color: $button-disabled-text;
+      border-color: $hover-border-color;
+      transform: scale(1.02);
     }
   }
-}
 
-.fish-item {
-  // border: 1px solid $fish-item-border;
-  @include border-radius(15px);
-  padding: 20px;
-  margin-bottom: 20px;
-  background: $fish-item-bg;
-  box-shadow: 0 2px 10px $shadow-color;
-  h3 {
-    color: darken($text-color, 20%);
-    margin-bottom: 10px;
-  }
-}
-
-.ant-upload {
-  background: $upload-bg;
-  border: 1px dashed $upload-border;
-  @include border-radius(5px);
-  transition: border-color 0.3s;
-
-  &:hover {
-    border-color: $hover-border-color;
-  }
-}
-
-.ant-modal {
-  @include border-radius($modal-border-radius);
-  .ant-modal-header,
-  .ant-modal-footer {
-    border: none;
+  .ant-modal {
+    @include border-radius($modal-border-radius);
+    .ant-modal-header,
+    .ant-modal-footer {
+      border: none;
+    }
   }
 }

@@ -199,7 +199,7 @@ function ConsignmentCare() {
   };
 
   return (
-    <div>
+    <div className="consignment-care-page-form">
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
           <Breadcrumb.Item href="/">

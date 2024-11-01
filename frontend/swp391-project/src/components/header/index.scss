@@ -27,7 +27,7 @@
     gap: 100px;
     justify-content: space-around;
     align-items: center;
-    z-index: 2;
+    z-index: 10;
     // margin-left: 200px;
 
     .header__logo img {
@@ -39,7 +39,7 @@
     .search__bar {
       display: flex;
       flex-shrink: 0;
-      z-index: 3;
+      z-index: 20;
       margin-right: 50px;
       .search__input__container {
         position: relative;
@@ -97,7 +97,7 @@
       align-items: center;
       gap: 30px;
       width: 500px;
-      z-index: 3;
+      z-index: 20;
       position: relative;
       margin-left: 50px;
       .register__sign__in {
@@ -200,7 +200,7 @@
   .header__menu {
     padding-top: 20px;
     position: relative;
-    z-index: 2;
+    z-index: 20;
 
     &.fixed {
       position: fixed;
@@ -398,6 +398,7 @@
     z-index: 1000;
     padding: 12px;
     margin-top: 5px;
+    z-index: 50;
 
     &::before {
       content: "";

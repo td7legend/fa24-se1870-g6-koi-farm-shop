@@ -65,6 +65,7 @@ function App() {
         <Route path="/blog2" element={<Blog2 />} />
         <Route path="/blog3" element={<Blog3 />} />
         <Route path="/blog-page" element={<BlogPage />} />
+        <Route path="consignment" element={<Consignment />} />
       </>
     ),
     []
@@ -201,7 +202,7 @@ function App() {
         : role === "Customer"
         ? customerRoutes
         : defaultRoutes}
-      <ToastContainer />
+      <ToastContainer style={{ zIndex: "99999" }} />
     </Router>
   );
 }
