@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./index.scss";
-import { Tag, Button, notification } from "antd";
+import { Tag, Button, notification, message } from "antd";
 import { ShoppingCartOutlined, SwapOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBalanceScale } from "@fortawesome/free-solid-svg-icons";
@@ -16,13 +16,27 @@ const ProductCard = ({ fish, onCompare }) => {
   const { cartItemsRedux } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { token } = useSelector((state) => state.auth);
   const handleAddToCart = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${config.API_ROOT}cart`, {
-        fishId: fish.fishId,
-        quantity: 1,
-      });
+      if (!token) {
+        message.error(t("pleaseLogInToAddItemsToYourCart"));
+        return;
+      }
+      const response = await axios.post(
+        `${config.API_ROOT}carts`,
+        {
+          fishId: parseInt(fish.fishId),
+          quantity: 1,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token ?? null}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.data) {
         notification.open({
           message: t("fishAddedToCart"),
@@ -44,10 +58,10 @@ const ProductCard = ({ fish, onCompare }) => {
     }
   };
   return (
-    <Link to={`/fish/${fish.id}`} className="product-card-wrapper">
+    <Link to={`/fish/${fish.fishId}`} className="product-card-wrapper">
       <div className="product-card">
         <div className="image">
-          <img src={fish.img_path} alt={fish.name} />
+          <img src={fish.imageUrl} alt={fish.name} />
         </div>
         <div className="info-container">
           <div className="info">
@@ -55,7 +69,7 @@ const ProductCard = ({ fish, onCompare }) => {
             <p className="description">{fish.description}</p>
             <div className="tag">
               <div className="tag-item-origin">
-                {t("origin")}: {fish.origin}
+                {t("origin")}: {fish.class}
               </div>
               <div className="tag-item-size">
                 {t("size")}: {fish.size} cm
@@ -64,7 +78,7 @@ const ProductCard = ({ fish, onCompare }) => {
                 {t("age")}: {fish.age} {t("years")}
               </div>
               <div className="tag-item-gender">
-                {t("age")}: {fish.gender}
+                {t("gender")}: {fish.gender === 1 ? t("male") : t("female")}
               </div>
             </div>
             <p className="price">

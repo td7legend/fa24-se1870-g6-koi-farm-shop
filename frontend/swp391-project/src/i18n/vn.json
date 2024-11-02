@@ -393,5 +393,8 @@
   "settings": "Cài đặt",
   "loyaltyPoint": "Điểm Khuyến Mãi",
   "myAccount": "Tài Khoản",
-  "logoutConfirmMessage": "Bạn có chắc chắn muốn đăng xuất?"
+  "logoutConfirmMessage": "Bạn có chắc chắn muốn đăng xuất?",
+  "orderID": "Mã đơn hàng",
+  "female": "Cái",
+  "male": "Đực"
 }

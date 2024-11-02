@@ -366,7 +366,7 @@ function ConsignmentCare() {
                                   icon={<MinusCircleOutlined />}
                                   onClick={() => {
                                     remove(field.name);
-                                    if (fields.length === 1) {
+                                    if (fields.length === 0) {
                                       setShowTable(false);
                                       setShowDateFields(false);
                                       formVariable.resetFields();
