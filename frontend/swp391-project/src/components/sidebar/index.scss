@@ -32,19 +32,22 @@
     filter: blur(3px);
   }
 
-  &:hover {
+  &.expanded {
     width: 310px;
   }
 
   &__logo {
-    margin-bottom: 40px;
+    height: 64px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    // opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: 2;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: transparent;
+    overflow: hidden;
+    white-space: nowrap;
+
     h2 {
       font-size: 1.7rem;
       font-family: "Lora", serif;
@@ -52,11 +55,6 @@
       letter-spacing: 1.2px;
       white-space: nowrap;
       position: relative;
-    }
-
-    .sidebar:hover & {
-      opacity: 1;
-      pointer-events: auto;
     }
   }
 

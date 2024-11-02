@@ -20,11 +20,14 @@ import {
 } from "@ant-design/icons";
 import ProductCard from "../product-card";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
+import config from "../../config/config";
 
 const { Text } = Typography;
 
 const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
   const [comparedFishes, setComparedFishes] = useState([initialFish, null]);
+  const [fishTypes, setFishTypes] = useState([]);
   const [isSelectModalVisible, setIsSelectModalVisible] = useState(false);
   const [selectIndex, setSelectIndex] = useState(null);
   const { t } = useTranslation();
@@ -34,6 +37,18 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
       setComparedFishes([initialFish, null]);
     }
   }, [initialFish]);
+
+  useEffect(() => {
+    const fetchFishTypes = async () => {
+      try {
+        const response = await axios.get(`${config.API_ROOT}fishtypes`);
+        setFishTypes(response.data);
+      } catch (error) {
+        console.error("Error fetching fish types:", error);
+      }
+    };
+    fetchFishTypes();
+  }, []);
 
   const handleSelectFish = (fish) => {
     setComparedFishes((prev) => {
@@ -55,8 +70,8 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
   const availableFishes = useMemo(() => {
     const comparedFishIds = comparedFishes
       .filter((fish) => fish !== null)
-      .map((fish) => fish.id);
-    return allFish.filter((fish) => !comparedFishIds.includes(fish.id));
+      .map((fish) => fish.fishId);
+    return allFish.filter((fish) => !comparedFishIds.includes(fish.fishId));
   }, [allFish, comparedFishes]);
 
   const renderComparisonRow = (
@@ -66,6 +81,35 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
     formatValue = null,
     customRender = null
   ) => {
+    if (property === "breed") {
+      return (
+        <Row
+          className="comparison-row"
+          gutter={16}
+          style={{ marginBottom: 16, alignItems: "center" }}
+          key={property}
+        >
+          <Col span={6}>
+            <Text strong>{label}</Text>
+          </Col>
+          {comparedFishes.map((fish, index) => {
+            const fishType = fish
+              ? fishTypes.find((type) => type.fishTypeId === fish.fishTypeId)
+              : null;
+            const typeName = fishType ? fishType.name : "-";
+
+            return (
+              <Col span={9} key={index} className="comparison-item">
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Text>{typeName}</Text>
+                </div>
+              </Col>
+            );
+          })}
+        </Row>
+      );
+    }
+
     const values = comparedFishes.map((fish) => (fish ? fish[property] : null));
 
     return (
@@ -76,16 +120,11 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
         key={`${property}-${values.join("-")}`}
       >
         <Col span={6}>
-          <Text strong>{t(property)}</Text>
+          <Text strong>{label}</Text>
         </Col>
         {comparedFishes.map((fish, index) => (
           <Col span={9} key={index} className="comparison-item">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center" }}>
               {customRender ? (
                 customRender(fish ? fish[property] : null)
               ) : (
@@ -153,6 +192,10 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
     );
   };
 
+  const formatGender = (gender) => {
+    return gender === 0 ? "Male" : "Female";
+  };
+
   return (
     <div className="compare-page">
       <Modal
@@ -175,7 +218,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                         <div className="fish-card-cover">
                           <Image
                             alt={fish.name}
-                            src={fish.img_path}
+                            src={fish.imageUrl}
                             preview={{
                               maskClassName: "customize-mask",
                               mask: (
@@ -208,7 +251,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                     >
                       <Card.Meta
                         title={fish.name}
-                        description={fish.breed}
+                        description={fish.description}
                         style={{ textAlign: "center" }}
                       />
                     </Card>
@@ -232,22 +275,27 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
               ))}
             </Row>
             <div style={{ marginTop: 20 }}>
-              {renderComparisonRow("name")}
-              {renderComparisonRow("breed")}
-              {renderComparisonRow("size", null, (a, b) =>
+              {renderComparisonRow(t("Name"), "name")}
+              {renderComparisonRow(t("Breed"), "breed")}
+              {renderComparisonRow(t("Size"), "size", (a, b) =>
                 compareNumeric(a, b)
               )}
-              {renderComparisonRow("price", "price", comparePrice, formatPrice)}
-              {renderComparisonRow("origin", "origin", compareOrigin)}
               {renderComparisonRow(
-                "rating",
+                t("Price"),
+                "price",
+                comparePrice,
+                formatPrice
+              )}
+              {renderComparisonRow(t("Class"), "class", compareOrigin)}
+              {renderComparisonRow(
+                t("Rating"),
                 "rating",
                 (a, b) => compareNumeric(a, b),
                 null,
                 renderRating
               )}
-              {renderComparisonRow("gender", "gender")}
-              {renderComparisonRow("age", "age", (a, b) =>
+              {renderComparisonRow(t("Gender"), "gender", null, formatGender)}
+              {renderComparisonRow(t("Age"), "age", (a, b) =>
                 compareNumeric(a, b)
               )}
             </div>

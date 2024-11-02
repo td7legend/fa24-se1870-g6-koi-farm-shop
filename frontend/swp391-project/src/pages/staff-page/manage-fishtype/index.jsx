@@ -141,6 +141,7 @@ const FishTypeManagement = () => {
         <Form.Item>
           <Space className="w-full justify-end">
             <Button
+              className="button"
               onClick={() => {
                 setIsModalVisible(false);
                 form.resetFields();
@@ -148,11 +149,7 @@ const FishTypeManagement = () => {
             >
               Cancel
             </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ backgroundColor: "#bbab6f" }}
-            >
+            <Button className="button-main" htmlType="submit">
               Add
             </Button>
           </Space>
@@ -178,10 +175,8 @@ const FishTypeManagement = () => {
           <div className="flex justify-between items-center mb-4">
             <Title level={3}>Fish Type Management</Title>
             <Button
-              type="primary"
               icon={<PlusOutlined />}
               onClick={() => setIsModalVisible(true)}
-              style={{ backgroundColor: "#bbab6f" }}
             >
               Add New Fish Type
             </Button>

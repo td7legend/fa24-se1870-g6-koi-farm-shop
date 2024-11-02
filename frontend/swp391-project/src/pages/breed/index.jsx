@@ -24,10 +24,14 @@ import kujakuImage from "../../images/kujaku.jpg";
 import kohakuImage from "../../images/kohaku.jpg";
 import ImageFrame from "../../components/home/ImageFrame";
 import { useTranslation } from "react-i18next";
+import config from "../../config/config";
 
 const BreedFishPage = () => {
-  const { breedName } = useParams();
+  const { breedId } = useParams();
+  const [allFish, setAllFish] = useState([]);
   const [breedFish, setBreedFish] = useState([]);
+  const [fishTypes, setFishTypes] = useState([]);
+  const [currentBreed, setCurrentBreed] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -43,19 +47,35 @@ const BreedFishPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchBreedFish = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://66fe08fb699369308956d74e.mockapi.io/KoiProduct?breed=${breedName}`
+        const [fishResponse, typesResponse] = await Promise.all([
+          axios.get(`${config.API_ROOT}fishs`),
+          axios.get(`${config.API_ROOT}fishtypes`),
+        ]);
+
+        const fishData = fishResponse.data;
+        const typesData = typesResponse.data;
+
+        setAllFish(fishData);
+        setFishTypes(typesData);
+
+        const currentBreedType = typesData.find(
+          (type) => type.fishTypeId === parseInt(breedId)
         );
-        setBreedFish(response.data);
+        setCurrentBreed(currentBreedType);
+
+        const filteredFish = fishData.filter(
+          (fish) => fish.fishTypeId === parseInt(breedId)
+        );
+        setBreedFish(filteredFish);
       } catch (error) {
-        console.error("Error fetching breed fish:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchBreedFish();
-  }, [breedName]);
+    fetchData();
+  }, [breedId]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -92,7 +112,7 @@ const BreedFishPage = () => {
     kohaku: kohakuImage,
   };
 
-  const imageSrc = fishImages[breedName] || "default_image_link";
+  const imageSrc = fishImages[currentBreed?.name] || "default_image_link";
 
   const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
   const sizes = [...new Set(breedFish.map((Fish) => Fish.size))];
@@ -162,11 +182,11 @@ const BreedFishPage = () => {
       <div className="breadcrumb-container">
         <Breadcrumb className="breadcrumb" separator=">">
           <Breadcrumb.Item href="/">
-            <FontAwesomeIcon icon={faHome} className="icon"></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faHome} className="icon" />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href="/fish-page">Fish List</Breadcrumb.Item>
+          <Breadcrumb.Item href="/fish-page">{t("fishList")}</Breadcrumb.Item>
           <Breadcrumb.Item className="breadcrumb-page">
-            {breedName}
+            {currentBreed?.name || t("loading")}
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
@@ -326,9 +346,9 @@ const BreedFishPage = () => {
             </div>
           </Col>
           <Col className="right-side">
-            <div className="banner" breedName={breedName}>
+            <div className="banner">
               <ImageFrame imageSrc={imageSrc} />
-              <h1>{breedName}</h1>
+              <h1>{currentBreed?.name}</h1>
             </div>
             <div className="top-controls">
               <div className="pagination">

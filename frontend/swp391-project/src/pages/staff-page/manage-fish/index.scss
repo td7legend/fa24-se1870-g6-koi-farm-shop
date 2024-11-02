@@ -9,6 +9,14 @@
     justify-content: center;
     align-items: center;
     padding: 30px;
+    .form-button {
+      display: flex;
+      gap: 10px;
+    }
+  }
+
+  .ant-upload {
+    border: none;
   }
   .ant-card-bordered {
     background-color: #fffaf0;
@@ -58,6 +66,17 @@
     }
     .ant-table-tbody > tr > td {
       background-color: #fffaf0;
+    }
+  }
+  .ant-btn {
+    color: #fffaf0;
+    border-color: #bbab6f;
+    background-color: #bbab6f !important;
+    border-radius: 20px;
+    &:hover {
+      background-color: #ddd !important;
+      border-color: #bbab6f !important;
+      color: #bbab6f !important;
     }
   }
 }

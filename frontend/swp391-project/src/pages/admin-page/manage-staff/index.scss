@@ -1,43 +1,83 @@
 .admin-staff-management {
-  .breadcrumb-container {
-    margin-bottom: 24px;
-    padding: 8px 24px;
-    background-color: #fff;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  // .card {
+  //   background-color: #fff;
+  //   border-radius: 8px;
+  //   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-    .breadcrumb {
-      font-size: 14px;
+  //   .ant-card-body {
+  //     padding: 24px;
+  //   }
 
-      .icon {
-        margin-right: 8px;
+  //   .staff-management-table {
+  //     .ant-table-thead > tr > th {
+  //       background-color: #f5f5f5;
+  //       color: #333;
+  //       font-weight: 600;
+  //     }
+
+  //     .ant-table-tbody > tr:hover > td {
+  //       background-color: #fafafa;
+  //     }
+  //   }
+  // }
+  .manage-staff-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+  }
+  .ant-card-bordered {
+    background-color: #fffaf0;
+    border: none;
+  }
+  .ant-card-body {
+    border-radius: 10px;
+    background-color: #fffaf0;
+    height: fit-content;
+    width: 1200px;
+    border: 1px solid #000;
+  }
+  .staff-management-table {
+    .card {
+      background-color: #fffaf0;
+      width: 1000px;
+      height: fit-content;
+      border-radius: 5px;
+    }
+
+    .ant-table {
+      background-color: #fffaf0;
+    }
+
+    .ant-card-bordered {
+      border: none;
+    }
+    .ant-table-thead > tr > th {
+      background-color: #fffaf0;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px;
+      text-transform: uppercase;
+    }
+    .ant-pagination {
+      .ant-pagination-item-active {
+        border-color: #bbab6f;
         color: #bbab6f;
       }
-    }
-  }
-
-  .card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-    .ant-card-body {
-      padding: 24px;
-    }
-
-    .staff-management-table {
-      .ant-table-thead > tr > th {
-        background-color: #f5f5f5;
-        color: #333;
-        font-weight: 600;
-      }
-
-      .ant-table-tbody > tr:hover > td {
-        background-color: #fafafa;
+      a {
+        border-radius: 5px;
+        color: #bbab6f;
+        border-color: #bbab6f;
+        &:hover {
+          color: #bbab6f;
+          background-color: #ddd;
+        }
       }
     }
+    .ant-table-tbody > tr > td {
+      background-color: #fffaf0;
+    }
   }
-
   // Modal styling
   .ant-modal {
     .ant-modal-content {
@@ -72,21 +112,29 @@
             box-shadow: 0 0 0 2px rgba(187, 171, 111, 0.2);
           }
         }
-
-        .ant-btn {
-          border-radius: 4px;
-
-          &[type="primary"] {
-            background-color: #bbab6f;
-            border-color: #bbab6f;
-
-            &:hover {
-              background-color: darken(#bbab6f, 10%);
-              border-color: darken(#bbab6f, 10%);
-            }
-          }
-        }
       }
     }
+  }
+}
+.button {
+  color: #bbab6f !important;
+  border-color: #bbab6f !important;
+  background-color: #fffaf0 !important;
+  border-radius: 20px;
+  &:hover {
+    background-color: #ddd !important;
+    border-color: #bbab6f !important;
+    color: #bbab6f !important;
+  }
+}
+.button-main {
+  color: #fffaf0;
+  border-color: #bbab6f;
+  background-color: #bbab6f !important;
+  border-radius: 20px;
+  &:hover {
+    background-color: #ddd !important;
+    border-color: #bbab6f !important;
+    color: #bbab6f !important;
   }
 }

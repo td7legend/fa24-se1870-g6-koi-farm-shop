@@ -9,7 +9,6 @@ import {
   Carousel,
   Breadcrumb,
   Rate,
-  message,
   Typography,
   Input,
 } from "antd";
@@ -20,10 +19,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import config from "../../config/config";
-import { AES, enc } from "crypto-js";
 import CurrencyFormatter from "../../components/currency";
 import { setCart } from "../../store/actions/cartAction";
 import { useTranslation } from "react-i18next";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { Text } = Typography;
 
@@ -44,6 +44,7 @@ function ProductDetail() {
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
   useEffect(() => {
     if (id) {
       fetchProduct();
@@ -66,7 +67,7 @@ function ProductDetail() {
         setProduct(response.data);
       }
     } catch (error) {
-      message.error(t("failedToFetchProductData"));
+      toast.error(t("failedToFetchProductData"));
     }
   };
 
@@ -75,7 +76,7 @@ function ProductDetail() {
       const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
-      message.error(t("failedToFetchFishData"));
+      toast.error(t("failedToFetchFishData"));
     }
   };
 
@@ -88,7 +89,6 @@ function ProductDetail() {
       });
       if (response.data && response.data.length > 0) {
         setRatings(response.data);
-        // If user has rated, set their rating
         const userRating = response.data.find(
           (rating) => rating.customerName === "TranDuy"
         );
@@ -98,7 +98,7 @@ function ProductDetail() {
         }
       }
     } catch (error) {
-      console.log("Error fetching ratings:", error);
+      toast.error("Error fetching ratings.");
     }
   };
 
@@ -110,12 +110,12 @@ function ProductDetail() {
 
   const handleSubmitRatingAndComment = async () => {
     if (!token) {
-      message.error(t("Please log in to rate this product"));
+      toast.error(t("Please log in to rate this product"));
       return;
     }
 
     if (!userRating) {
-      message.error(t("Please rate this product"));
+      toast.error(t("Please rate this product"));
       return;
     }
 
@@ -137,13 +137,13 @@ function ProductDetail() {
       );
 
       if (response.status === 200) {
-        message.success(t("Rating Submitted Successfully"));
+        toast.success(t("Rating Submitted Successfully"));
         setRatingComment("");
         fetchRatings();
         await fetchProduct();
       }
     } catch (error) {
-      message.error(error.response.data);
+      toast.error(error.response?.data || t("failedToSubmitRating"));
     } finally {
       setSubmittingRating(false);
     }
@@ -161,7 +161,7 @@ function ProductDetail() {
         dispatch(setCart(response.data[0].orderLines || []));
       }
     } catch (error) {
-      message.error(t("yourCartIsEmpty"));
+      toast.error(t("yourCartIsEmpty"));
     }
   };
 
@@ -169,7 +169,7 @@ function ProductDetail() {
     setLoading(true);
     try {
       if (!token) {
-        message.error(t("pleaseLogInToAddItemsToYourCart"));
+        toast.error(t("pleaseLogInToAddItemsToYourCart"));
         return;
       }
 
@@ -188,14 +188,13 @@ function ProductDetail() {
       );
 
       if (response.status === 200) {
-        message.success(`Added ${quantity} of ${product.name} to cart`);
+        toast.success(`Added ${quantity} of ${product.name} to cart`);
         await fetchCart();
-        // setCartDrawerVisible(true);
       } else {
         throw new Error("Failed to add item to cart");
       }
     } catch (error) {
-      message.error(t("failedToAddItemToCartPleaseTryAgain"));
+      toast.error(t("failedToAddItemToCartPleaseTryAgain"));
     } finally {
       setLoading(false);
     }
@@ -211,7 +210,7 @@ function ProductDetail() {
       const response = await axios.get(`${config.API_ROOT}fishtypes`);
       setFishTypes(response.data);
     } catch (error) {
-      console.log("Error: ", error.message);
+      toast.error("Error: " + error.message);
     }
   }
 
@@ -232,6 +231,7 @@ function ProductDetail() {
 
   return (
     <div className="product-detail-page">
+      <ToastContainer />
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">
@@ -351,19 +351,17 @@ function ProductDetail() {
               )}
               {activeTab === "rating" && (
                 <div className="product-ratings">
-                  <h3>{t("customerRatings")}</h3>
-
-                  {/* Rating submission form */}
-                  <div className="rating-form border p-4 rounded-lg mb-6">
-                    <h4 className="mb-2">{t("Write A Review")}</h4>
-                    <div className="mb-3">
+                  {/* Left side: Rating submission form */}
+                  <div className="rating-form">
+                    <h4>{t("Write A Review")}</h4>
+                    <div>
                       <Rate
                         value={userRating}
                         onChange={setUserRating}
                         disabled={submittingRating}
                       />
                     </div>
-                    <div className="mb-3">
+                    <div>
                       <Input.TextArea
                         value={ratingComment}
                         onChange={(e) => setRatingComment(e.target.value)}
@@ -382,23 +380,26 @@ function ProductDetail() {
                     </Button>
                   </div>
 
-                  {/* Display all ratings */}
+                  {/* Right side: Display all reviews */}
                   <div className="all-ratings">
-                    <h4 className="mb-2">{t("All Reviews")}</h4>
-                    {ratings.map((rating, index) => (
-                      <div key={index} className="border-b py-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">
-                            {rating.customerName}
-                          </span>
-                          <Rate disabled value={rating.ratingValue} />
+                    <h4>{t("All Reviews")}</h4>
+                    {ratings.length > 0 ? (
+                      ratings.map((rating, index) => (
+                        <div key={index} className="rating-card">
+                          <div className="customer-info">
+                            <span className="customer-name">
+                              {rating.customerName}
+                            </span>
+                            <Rate disabled value={rating.ratingValue} />
+                          </div>
+                          {rating.comment && (
+                            <p className="customer-comment">{rating.comment}</p>
+                          )}
                         </div>
-                        {rating.comment && (
-                          <p className="mt-1 text-gray-600">{rating.comment}</p>
-                        )}
-                      </div>
-                    ))}
-                    {ratings.length === 0 && <p>{t("noReviewsYet")}</p>}
+                      ))
+                    ) : (
+                      <p className="no-reviews">{t("noReviewsYet")}</p>
+                    )}
                   </div>
                 </div>
               )}

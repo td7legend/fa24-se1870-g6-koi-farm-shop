@@ -439,6 +439,7 @@ const StaffFishManagement = () => {
         <Form.Item>
           <Space className="w-full justify-end">
             <Button
+              className="button"
               onClick={() => {
                 setIsModalVisible(false);
                 form.resetFields();
@@ -446,11 +447,7 @@ const StaffFishManagement = () => {
             >
               Cancel
             </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ backgroundColor: "#bbab6f" }}
-            >
+            <Button className="button-main" type="primary" htmlType="submit">
               Add
             </Button>
           </Space>
@@ -589,20 +586,18 @@ const StaffFishManagement = () => {
 
       <div className="manage-fish-container">
         <Card className="card">
-          <div className="flex justify-between items-center mb-4">
+          <div>
             <Title level={3}>Fish Management</Title>
-            <ExcelFishImport
-              onUploadSuccess={fetchFishes}
-              token={token}
-              config={config}
-            />
-            <Button
-              type="primary"
-              onClick={() => setIsModalVisible(true)}
-              style={{ backgroundColor: "#bbab6f" }}
-            >
-              Add New Fish
-            </Button>
+            <div className="form-button">
+              <ExcelFishImport
+                onUploadSuccess={fetchFishes}
+                token={token}
+                config={config}
+              />
+              <Button onClick={() => setIsModalVisible(true)}>
+                Add New Fish
+              </Button>
+            </div>
           </div>
 
           <Table

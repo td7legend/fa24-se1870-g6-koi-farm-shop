@@ -6,6 +6,7 @@ import {
   faShoppingCart,
   faTruck,
   faSignOutAlt,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./index.scss";
@@ -13,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 import { Modal } from "antd";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+
 
 function Sidebar({ onHover }) {
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ function Sidebar({ onHover }) {
   const handleLogout = () => {
     Modal.confirm({
       title: t("confirmLogout"),
-      icon: <ExclamationCircleOutlined />,
+      icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       content: t("logoutConfirmMessage"),
       okText: t("logout"),
       cancelText: t("cancel"),
@@ -55,7 +56,7 @@ function Sidebar({ onHover }) {
       onMouseLeave={handleMouseLeave}
     >
       <div className="sidebar__logo">
-        {isHovered ? "Staff Dashboard" : "SD"}
+        <h2>{isHovered ? "Staff Dashboard" : "SD"}</h2>
       </div>
       <aside className="sidebar__nav">
         <ul className="sidebar__menu">
