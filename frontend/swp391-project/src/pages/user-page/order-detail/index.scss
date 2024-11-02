@@ -1,21 +1,119 @@
-.order-detail-container {
-  box-sizing: border-box;
-  padding: 20px;
-  .ant-steps-item-icon {
-    background-color: #bbab6f;
-  }
-  .card {
-    background-color: #fffaf0;
-    border: 1px solid #ccc;
-  }
-  .ant-table-thead > tr > th {
-    background-color: #fffaf0;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 16px;
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$border-color: #ddd;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$element-spacing: 25px;
+$large-border-radius: 25px;
+$light-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+$soft-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+$hover-transition: all 0.3s ease-in-out;
+$gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
+.order-detail-page {
+  padding: 10px;
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px) opacity(0.15);
+    z-index: 2;
   }
 
-  .ant-table-tbody > tr > td {
-    background-color: #fffaf0;
+  .ant-card-body {
+    background-color: rgba(255, 250, 240, 0.95);
+    border-radius: 25px;
+    padding: 50px;
+    box-shadow: $soft-shadow;
+    max-width: 100%;
   }
+
+  .ant-card-bordered {
+    border-radius: 25px;
+  }
+  .order-detail-container {
+    box-sizing: border-box;
+    padding: 20px;
+    position: relative;
+    z-index: 3;
+    
+    .ant-steps-item-icon {
+      background-color: #bbab6f;
+    }
+
+    .card {
+      background-color: #fffaf0;
+      border: 1px solid #ccc;
+    }
+
+    .ant-table {
+      width: 100%;
+    }
+
+    .ant-table-thead > tr > th {
+      background-color: rgba(255, 250, 240, 0.85);
+      font-size: 18px;
+      font-weight: bold;
+      padding: 20px;
+      text-transform: uppercase;
+    }
+  
+    .ant-table-tbody > tr > td {
+      background-color: rgba(255, 250, 240, 0.85);
+    }
+    
+    .ant-pagination .ant-pagination-item-active {
+      border-color: $highlight-color;
+    }
+  
+    .ant-pagination a {
+      color: $highlight-color;
+      border-radius: 6px;
+      border-color: $highlight-color;
+  
+      &:hover {
+        background-color: lighten($highlight-color, 30%);
+      }
+    }
+    :where(.css-dev-only-do-not-override-5wsri9).ant-steps
+      .ant-steps-item-finish
+      > .ant-steps-item-container
+      > .ant-steps-item-content
+      > .ant-steps-item-title::after {
+      background-color: #bbab6f;
+    }
+  
+    :where(.css-dev-only-do-not-override-5wsri9).ant-steps
+      .ant-steps-item-finish
+      .ant-steps-item-icon {
+      background-color: #bbab6f;
+      border-color: #fff;
+    }
+  
+    .anticon svg {
+      display: inline-block;
+      color: #fff;
+    }
+  :where(.css-dev-only-do-not-override-5wsri9).ant-steps .ant-steps-item-process .ant-steps-item-icon {
+    background-color: #bbab6f;
+    border-color: #fff;
+    }
+  
+  
+  :where(.css-dev-only-do-not-override-5wsri9).ant-btn-variant-link {
+    color: #bbab6f;
+    box-shadow: none;
+  }
+  }
+  
 }
+
