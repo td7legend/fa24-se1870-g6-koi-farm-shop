@@ -49,7 +49,7 @@ const AdminDashboard = () => {
       setAllOrders(response.data);
       filterOrdersByDateRange(response.data, dateRange[0], dateRange[1]);
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      // console.error("Error fetching orders:", error);
       message.error("Failed to fetch orders data");
     }
   };
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
       });
       setCustomers(response.data);
     } catch (error) {
-      console.error("Error fetching customers:", error);
+      // console.error("Error fetching customers:", error);
       message.error("Failed to fetch customers data");
     }
   };
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
       });
       setFishes(response.data);
     } catch (error) {
-      console.error("Error fetching fish data:", error);
+      // console.error("Error fetching fish data:", error);
       message.error("Failed to fetch fish data");
     }
   };
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
       });
       setFishTypes(response.data);
     } catch (error) {
-      console.error("Error fetching fish types:", error);
+      // console.error("Error fetching fish types:", error);
       message.error("Failed to fetch fish types data");
     }
   };

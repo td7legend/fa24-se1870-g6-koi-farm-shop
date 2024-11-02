@@ -60,5 +60,38 @@
     .ant-table-tbody > tr > td {
       background-color: #fffaf0;
     }
+    .ant-btn {
+      color: #fffaf0;
+      border-color: #bbab6f;
+      background-color: #bbab6f !important;
+      border-radius: 20px;
+      &:hover {
+        background-color: #ddd !important;
+        border-color: #bbab6f !important;
+        color: #bbab6f !important;
+      }
+    }
+  }
+}
+.button {
+  color: #fffaf0;
+  border-color: #bbab6f;
+  background-color: #bbab6f !important;
+  border-radius: 20px;
+  &:hover {
+    background-color: #ddd !important;
+    border-color: #bbab6f !important;
+    color: #bbab6f !important;
+  }
+}
+.button-main {
+  color: #fffaf0;
+  border-color: #bbab6f;
+  background-color: #bbab6f;
+  border-radius: 20px;
+  &:hover {
+    background-color: #ddd;
+    border-color: #bbab6f;
+    color: #bbab6f;
   }
 }

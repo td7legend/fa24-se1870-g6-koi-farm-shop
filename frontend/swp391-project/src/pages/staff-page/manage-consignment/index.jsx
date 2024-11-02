@@ -432,7 +432,7 @@ const ConsignmentManagement = () => {
         </Breadcrumb>
       </div>
 
-      <div className="consignment-management-container">
+      <div className="manage-consignment-container">
         <Card className="card">
           <Title level={2}>Consignment Management</Title>
           <Table

@@ -54,7 +54,7 @@ const StaffOrderManagement = () => {
 
       setOrders(processedOrders);
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      // console.error("Error fetching orders:", error);
       message.error("Failed to fetch orders. Please try again.");
     } finally {
       setLoading(false);
@@ -69,7 +69,7 @@ const StaffOrderManagement = () => {
       setSelectedOrder(response.data);
       setIsModalVisible(true);
     } catch (error) {
-      console.error("Error fetching order details:", error);
+      // console.error("Error fetching order details:", error);
       message.error("Failed to fetch order details.");
     }
   };
@@ -87,7 +87,7 @@ const StaffOrderManagement = () => {
       );
       message.success("Loyalty points awarded successfully");
     } catch (error) {
-      console.error("Error awarding loyalty points:", error);
+      // console.error("Error awarding loyalty points:", error);
       message.warning(
         "Failed to award loyalty points, but order was completed"
       );
@@ -122,7 +122,7 @@ const StaffOrderManagement = () => {
 
       message.success(`Order status updated successfully`);
     } catch (error) {
-      console.error("Error updating order status:", error);
+      // console.error("Error updating order status:", error);
       if (error.response?.data?.errors) {
         const errorMessages = Object.values(error.response.data.errors)
           .flat()
@@ -326,21 +326,23 @@ const StaffOrderManagement = () => {
         </Breadcrumb>
       </div>
 
-      <Card className="card">
-        <Title level={3}>Order Management</Title>
-        <Table
-          className="order-management-table"
-          columns={columns}
-          dataSource={orders}
-          loading={loading}
-          pagination={{
-            total: orders.length,
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-          }}
-        />
-      </Card>
+      <div className="manage-order-container">
+        <Card className="card">
+          <Title level={3}>Order Management</Title>
+          <Table
+            className="order-management-table"
+            columns={columns}
+            dataSource={orders}
+            loading={loading}
+            pagination={{
+              total: orders.length,
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: false,
+            }}
+          />
+        </Card>
+      </div>
 
       <OrderDetailsModal />
       <ToastContainer />
