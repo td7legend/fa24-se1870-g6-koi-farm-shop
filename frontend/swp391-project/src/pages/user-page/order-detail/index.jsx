@@ -22,6 +22,9 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import config from "../../../config/config";
 import { useTranslation } from "react-i18next";
+import { faArrowLeft, faHome } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoadingKoi from "../../../components/loading";
 
 const OrderDetailsPage = () => {
   const location = useLocation();
@@ -68,7 +71,7 @@ const OrderDetailsPage = () => {
     fetchOrderDetails();
   }, [location.state, navigate]);
 
-  if (loading) return <Spin size="large" />;
+  if (loading) return <LoadingKoi />;
   if (!order) return null;
 
   const formatDate = (dateString) => {
@@ -183,15 +186,21 @@ const OrderDetailsPage = () => {
   ];
 
   return (
-    <div>
+    <div className="order-detail-page">
       <div className="breadcrumb-container">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/user_info/user">Dashboard</Breadcrumb.Item>
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/user-dashboard/:id">
+            Dashboard
+          </Breadcrumb.Item>
           <Breadcrumb.Item href="/order-history">
             {t("orderHistory")}
           </Breadcrumb.Item>
-          <Breadcrumb.Item>{t("orderDetail")}</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {t("orderDetail")}
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <div className="layout-container">
@@ -201,8 +210,9 @@ const OrderDetailsPage = () => {
               type="link"
               icon={<ArrowLeftOutlined />}
               onClick={() => navigate("/order-history")}
-              style={{ marginBottom: 16, color: "#D4B57E" }}
+              style={{ marginBottom: 16, color: "bbab6f" }}
             >
+              <FontAwesomeIcon icon={faArrowLeft} />
               {t("backToList")}
             </Button>
             <Button
@@ -211,8 +221,8 @@ const OrderDetailsPage = () => {
               onClick={handleExportInvoice}
               loading={exporting}
               style={{
-                backgroundColor: "#D4B57E",
-                borderColor: "#D4B57E",
+                backgroundColor: "#bbab6f",
+                borderColor: "#bbab6f",
               }}
             >
               {t("exportInvoice")}
