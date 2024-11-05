@@ -36,9 +36,9 @@ import ConsignmentManagement from "./pages/staff-page/manage-consignment/index.j
 import FishCareManagement from "./pages/staff-page/manage-consignment/manage-fishcare/manage-fishcare.jsx";
 import AdminLayout from "./components/layout/admin-layout/index.jsx";
 import StaffManagement from "./pages/admin-page/manage-staff/index.jsx";
-import Blog1 from "./components/blogs/Blog1/index.jsx";
-import Blog2 from "./components/blogs/Blog2/index.jsx";
-import Blog3 from "./components/blogs/Blog3/index.jsx";
+import Blog1 from "./components/Blogs/Blog1/index.jsx";
+import Blog2 from "./components/Blogs/Blog2/index.jsx";
+import Blog3 from "./components/Blogs/Blog3/index.jsx";
 import BlogPage from "./pages/Blog-page/index.jsx";
 import AdminDashboard from "./pages/admin-page/dashboard/dashboard.jsx";
 import ConsignmentCare from "./pages/consignment/consignment-care/index.jsx";
@@ -198,10 +198,10 @@ function App() {
       {role === "Staff"
         ? staffRoutes
         : role === "Manager"
-        ? managerRoutes
-        : role === "Customer"
-        ? customerRoutes
-        : defaultRoutes}
+          ? managerRoutes
+          : role === "Customer"
+            ? customerRoutes
+            : defaultRoutes}
       <ToastContainer style={{ zIndex: "99999" }} />
     </Router>
   );
