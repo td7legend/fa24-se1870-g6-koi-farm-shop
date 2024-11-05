@@ -16,7 +16,8 @@
         public int Quantity { get; set; }
         public string? ImageUrl { get; set; }
         public string? Description { get; set; }
-        public int? ConsignmentLineId { get; set; } // Có thể là null
+        public int? ConsignmentLineId { get; set; }
+        public CertificateCreateDto? Certificate { get; set; }// Có thể là null
     }
 
 }
