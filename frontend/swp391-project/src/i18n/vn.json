@@ -396,5 +396,7 @@
   "logoutConfirmMessage": "Bạn có chắc chắn muốn đăng xuất?",
   "orderID": "Mã đơn hàng",
   "female": "Cái",
-  "male": "Đực"
+  "male": "Đực",
+  "yes": "Có",
+  "no": "Không"
 }

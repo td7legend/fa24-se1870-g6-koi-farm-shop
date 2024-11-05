@@ -9,7 +9,7 @@ import CurrencyFormatter from "../currency";
 import config from "../../config/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../store/actions/cartAction";
+import { addToCart, setCart } from "../../store/actions/cartAction";
 import { useTranslation } from "react-i18next";
 
 const ProductCard = ({ fish, onCompare }) => {
@@ -44,7 +44,11 @@ const ProductCard = ({ fish, onCompare }) => {
           placement: "topRight",
           duration: 2,
         });
-        dispatch(addToCart(fish.fishId, 1));
+        if (cartItemsRedux.length === 0) {
+          dispatch(setCart([{ fish, quantity: 1 }]));
+        } else {
+          dispatch(addToCart(fish, 1));
+        }
       }
     } catch (error) {
       console.error("Error adding fish to cart:", error);
