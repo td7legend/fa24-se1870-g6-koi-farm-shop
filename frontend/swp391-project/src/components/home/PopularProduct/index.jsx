@@ -4,7 +4,8 @@ import Picture from "../../../images/picture-3.png";
 import config from "../../../config/config";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import Product from "../Product";
+import Product from "../product/index.jsx";
+
 
 const PopularProduct = () => {
   const [products, setProducts] = useState([]);
