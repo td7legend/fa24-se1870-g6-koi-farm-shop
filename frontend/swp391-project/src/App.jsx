@@ -40,6 +40,9 @@ import AdminLayout from "./components/layout/admin-layout";
 import StaffManagement from "./pages/admin-page/manage-staff";
 import BlogPage from "./pages/Blog-page";
 import AdminDashboard from "./pages/admin-page/dashboard/dashboard";
+import Blog2 from "./components/blogs/Blog2";
+import Blog1 from "./components/blogs/Blog1";
+import Blog3 from "./components/blogs/Blog3";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
@@ -58,6 +61,9 @@ function App() {
         <Route path="policy-page" element={<PolicyPage />} />
         <Route path="shopping-guide" element={<ShoppingGuidePage />} />
         <Route path="batch-filter" element={<BatchFishFilter />} />
+        <Route path="/blog1" element={<Blog1 />} />
+        <Route path="/blog2" element={<Blog2 />} />
+        <Route path="/blog3" element={<Blog3 />} />
         <Route path="/blog-page" element={<BlogPage />} />
         <Route path="consignment" element={<Consignment />} />
       </>
