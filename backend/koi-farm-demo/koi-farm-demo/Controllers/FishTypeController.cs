@@ -45,5 +45,11 @@ namespace koi_farm_demo.Controllers
 
             return BadRequest("Failed to add fish type.");
         }
+        [HttpGet("top-selling-fishtypes")]
+        public async Task<IActionResult> GetTopSellingFishTypes()
+        {
+            var topSellingFishTypes = await _fishTypeService.GetTopSellingFishTypesAsync(8);
+            return Ok(topSellingFishTypes);
+        }
     }
 }
