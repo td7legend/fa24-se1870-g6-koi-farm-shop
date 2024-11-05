@@ -39,10 +39,10 @@ import FishCareManagement from "./pages/staff-page/manage-consignment/manage-fis
 import AdminLayout from "./components/layout/admin-layout";
 import StaffManagement from "./pages/admin-page/manage-staff";
 import Blog1 from "./components/blogs/Blog1";
-import Blog2 from "./components/blogs/Blog2";
 import Blog3 from "./components/blogs/Blog3";
 import BlogPage from "./pages/Blog-page";
 import AdminDashboard from "./pages/admin-page/dashboard/dashboard";
+import Blog2 from "./components/blogs/Blog2";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
@@ -198,10 +198,10 @@ function App() {
       {role === "Staff"
         ? staffRoutes
         : role === "Manager"
-        ? managerRoutes
-        : role === "Customer"
-        ? customerRoutes
-        : defaultRoutes}
+          ? managerRoutes
+          : role === "Customer"
+            ? customerRoutes
+            : defaultRoutes}
       <ToastContainer style={{ zIndex: "99999" }} />
     </Router>
   );
