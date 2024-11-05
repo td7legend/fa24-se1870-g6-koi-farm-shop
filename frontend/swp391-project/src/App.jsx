@@ -38,11 +38,11 @@ import ConsignmentManagement from "./pages/staff-page/manage-consignment";
 import FishCareManagement from "./pages/staff-page/manage-consignment/manage-fishcare/manage-fishcare";
 import AdminLayout from "./components/layout/admin-layout";
 import StaffManagement from "./pages/admin-page/manage-staff";
-import Blog3 from "./components/blogs/Blog3";
 import BlogPage from "./pages/Blog-page";
 import AdminDashboard from "./pages/admin-page/dashboard/dashboard";
 import Blog2 from "./components/blogs/Blog2";
 import Blog1 from "./components/blogs/Blog1";
+import Blog3 from "./components/blogs/Blog3";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
