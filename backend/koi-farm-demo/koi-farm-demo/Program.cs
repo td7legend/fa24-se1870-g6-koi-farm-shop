@@ -17,10 +17,9 @@ namespace koi_farm_demo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("KoiFarmDemo");
 
-            // Đăng ký DbContext với Entity Framework Core và SQL Server
+
             builder.Services.AddDbContext<KoiFarmDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
