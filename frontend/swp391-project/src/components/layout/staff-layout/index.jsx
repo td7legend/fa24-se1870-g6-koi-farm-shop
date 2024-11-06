@@ -16,9 +16,14 @@ function StaffLayout() {
       <Sidebar onHover={setIsSidebarOpen} />
       <div
         className="main__content"
-        style={{ marginLeft: isSidebarOpen ? "310px" : "80px" }}
+        style={{
+          marginLeft: isSidebarOpen ? "310px" : "80px",
+          backgroundColor: isSidebarOpen ? "#fff7e6" : "#faf3e6", // Soft color change on hover
+        }}
       >
-        <Outlet />
+        <div className="content-inner">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
