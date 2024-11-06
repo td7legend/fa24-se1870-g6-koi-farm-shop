@@ -404,5 +404,6 @@
   "failedToAwardPoints": "Không thể tặng điểm thưởng",
   "loyaltyPointsEarned": "Điểm Thưởng Nhận Được",
   "points": "điểm",
-  "alreadyAwarded": "Đã được cộng"
+  "alreadyAwarded": "Đã được cộng",
+  "adding": "Đang thêm..."
 }

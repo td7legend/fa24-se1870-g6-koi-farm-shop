@@ -17,6 +17,16 @@ const ProductCard = ({ fish, onCompare }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { token } = useSelector((state) => state.auth);
+  const fetchCart = async () => {
+    const response = await axios.get(`${config.API_ROOT}cart`, {
+      headers: {
+        Authorization: `Bearer ${token ?? null}`,
+      },
+    });
+    if (response.data) {
+      dispatch(setCart(response.data[0].orderLines || []));
+    }
+  };
   const handleAddToCart = async (e) => {
     e.preventDefault();
     try {
@@ -44,11 +54,7 @@ const ProductCard = ({ fish, onCompare }) => {
           placement: "topRight",
           duration: 2,
         });
-        if (cartItemsRedux.length === 0) {
-          dispatch(setCart([{ fish, quantity: 1 }]));
-        } else {
-          dispatch(addToCart(fish, 1));
-        }
+        fetchCart();
       }
     } catch (error) {
       console.error("Error adding fish to cart:", error);

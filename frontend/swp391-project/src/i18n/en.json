@@ -419,5 +419,6 @@
   "failedToAwardPoints": "Failed to award loyalty points",
   "loyaltyPointsEarned": "Loyalty Points Earned",
   "points": "points",
-  "alreadyAwarded": "Already awarded"
+  "alreadyAwarded": "Already awarded",
+  "adding": "Adding..."
 }

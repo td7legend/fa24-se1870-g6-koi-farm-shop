@@ -432,9 +432,9 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
               <List.Item>
                 <List.Item.Meta
                   avatar={
-                    <img src={item.imageUrl} width={50} alt={item.fishName} />
+                    <img src={item.imageUrl} width={50} alt={item.name} />
                   }
-                  title={item.fishName}
+                  title={item.name}
                   description={`${t("quantity")}: ${item.quantity}`}
                 />
                 <div>
