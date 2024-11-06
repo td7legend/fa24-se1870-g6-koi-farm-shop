@@ -591,18 +591,20 @@ const StaffFishManagement = () => {
         <Card className="card">
           <div className="flex justify-between items-center mb-4">
             <Title level={3}>Fish Management</Title>
-            <ExcelFishImport
-              onUploadSuccess={fetchFishes}
-              token={token}
-              config={config}
-            />
-            <Button
-              type="primary"
-              onClick={() => setIsModalVisible(true)}
-              style={{ backgroundColor: "#bbab6f" }}
-            >
-              Add New Fish
-            </Button>
+            <div className="button-form">
+              <ExcelFishImport
+                onUploadSuccess={fetchFishes}
+                token={token}
+                config={config}
+              />
+              <Button
+                type="primary"
+                onClick={() => setIsModalVisible(true)}
+                style={{ backgroundColor: "#bbab6f" }}
+              >
+                Add New Fish
+              </Button>
+            </div>
           </div>
 
           <Table

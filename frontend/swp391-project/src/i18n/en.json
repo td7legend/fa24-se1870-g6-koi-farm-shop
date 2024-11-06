@@ -138,7 +138,7 @@
   "failedToCompleteTheOrderPleaseContactSupport": "Failed to complete the order. Please contact support.",
   "pleaseSelectAValidPaymentMethod": "Please select a valid payment method.",
   "noActiveCartFoundOrUserInformationUnavailable": "No active cart found or user information unavailable.",
-  "fishList": "Fish List",
+  "fishList": "Fish list",
   "billingInformation": "Billing Information",
   "phoneNumber": "Phone Number",
   "email": "Email",
@@ -411,5 +411,10 @@
   "thankYouForYourPurchase": "Thank you for your purchase. Your order has been confirmed.",
   "orderID": "Order ID",
   "female": "Female",
-  "male": "Male"
+  "male": "Male",
+  "staffManagement": "Staff Management",
+  "consignmentForSale": "Consignment for sale",
+  "consignmentFish": "Consignment fish",
+  "endDateMustBeAtLeast30DaysAfterStartDate" : "End Date Must At Least 30 Days After Start Date"
+
 }

@@ -43,6 +43,7 @@ import BlogPage from "./pages/Blog-page/index.jsx";
 import AdminDashboard from "./pages/admin-page/dashboard/dashboard.jsx";
 import ConsignmentCare from "./pages/consignment/consignment-care/index.jsx";
 import ConsignmentSell from "./pages/consignment/consignment-sell/index.jsx";
+import ConsignmentFishFilter from "./components/consignmentFishFilter/index.jsx";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
@@ -61,6 +62,7 @@ function App() {
         <Route path="policy-page" element={<PolicyPage />} />
         <Route path="shopping-guide" element={<ShoppingGuidePage />} />
         <Route path="batch-filter" element={<BatchFishFilter />} />
+        <Route path="consignment-filter" element={<ConsignmentFishFilter />} />
         <Route path="/blog1" element={<Blog1 />} />
         <Route path="/blog2" element={<Blog2 />} />
         <Route path="/blog3" element={<Blog3 />} />
@@ -198,10 +200,10 @@ function App() {
       {role === "Staff"
         ? staffRoutes
         : role === "Manager"
-          ? managerRoutes
-          : role === "Customer"
-            ? customerRoutes
-            : defaultRoutes}
+        ? managerRoutes
+        : role === "Customer"
+        ? customerRoutes
+        : defaultRoutes}
       <ToastContainer style={{ zIndex: "99999" }} />
     </Router>
   );

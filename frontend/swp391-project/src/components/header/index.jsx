@@ -381,6 +381,9 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                   <li className="menu-item">
                     <Link to="/batch-filter">{t("fishSellByBatch")}</Link>
                   </li>
+                  <li className="menu-item">
+                    <Link to="/consignment-filter">{t("consignmentFish")}</Link>
+                  </li>
                 </ul>
               </Link>
             </li>
