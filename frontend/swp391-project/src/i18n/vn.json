@@ -400,7 +400,7 @@
   "staffManagement": "Quản lý nhân viên",
   "consignmentForSale": "Ký gửi bán",
   "consignmentFish": "Cá ký gửi",
-  "endDateMustBeAtLeast30DaysAfterStartDate" : "Ngày kết thúc phải ít nhất 30 ngày sau ngày bắt đầu",
+  "endDateMustBeAtLeast30DaysAfterStartDate": "Ngày kết thúc phải ít nhất 30 ngày sau ngày bắt đầu",
   "expectedPrice": "Giá mong đợi",
   "yes": "Có",
   "no": "Không",
@@ -410,5 +410,6 @@
   "loyaltyPointsEarned": "Điểm Thưởng Nhận Được",
   "points": "điểm",
   "alreadyAwarded": "Đã được cộng",
-  "adding": "Đang thêm..."
+  "adding": "Đang thêm...",
+  "pleaseEnterAValidPassword": "Sai email hoặc mật khẩu"
 }

@@ -415,7 +415,7 @@
   "staffManagement": "Staff Management",
   "consignmentForSale": "Consignment for sale",
   "consignmentFish": "Consignment fish",
-  "endDateMustBeAtLeast30DaysAfterStartDate" : "End Date Must At Least 30 Days After Start Date",
+  "endDateMustBeAtLeast30DaysAfterStartDate": "End Date Must At Least 30 Days After Start Date",
   "expectedPrice": "Expected Price",
   "yes": "Yes",
   "no": "No",
@@ -425,5 +425,6 @@
   "loyaltyPointsEarned": "Loyalty Points Earned",
   "points": "points",
   "alreadyAwarded": "Already awarded",
-  "adding": "Adding..."
+  "adding": "Adding...",
+  "pleaseEnterAValidPassword": "Wrong password or Email"
 }
