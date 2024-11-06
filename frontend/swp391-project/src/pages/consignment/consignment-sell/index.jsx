@@ -443,7 +443,7 @@ function ConsignmentSell() {
                       <Input type="date" />
                     </Form.Item>
                     <Form.Item
-                      label={t("agreedPrice")}
+                      label={t("expectedPrice")}
                       name="agreedPrice"
                       rules={[
                         {

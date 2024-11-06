@@ -415,6 +415,7 @@
   "staffManagement": "Staff Management",
   "consignmentForSale": "Consignment for sale",
   "consignmentFish": "Consignment fish",
-  "endDateMustBeAtLeast30DaysAfterStartDate" : "End Date Must At Least 30 Days After Start Date"
+  "endDateMustBeAtLeast30DaysAfterStartDate" : "End Date Must At Least 30 Days After Start Date",
+  "expectedPrice": "Expected Price"
 
 }

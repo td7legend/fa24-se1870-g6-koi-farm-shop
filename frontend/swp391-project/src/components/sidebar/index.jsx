@@ -15,7 +15,6 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 import { Modal } from "antd";
 
-
 function Sidebar({ onHover }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -41,7 +40,7 @@ function Sidebar({ onHover }) {
       cancelText: t("cancel"),
       onOk() {
         dispatch(logout());
-        navigate("/login");
+        navigate("/");
       },
       okButtonProps: {
         className: "logout-confirm-button",

@@ -126,6 +126,7 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate("/");
   };
 
   const handleScroll = () => {
@@ -173,7 +174,7 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
       cancelText: t("no"),
       onOk() {
         dispatch(logout());
-        navigate("/login");
+        navigate("/");
       },
     });
   };

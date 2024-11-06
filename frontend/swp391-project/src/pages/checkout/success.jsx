@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Result,
   Typography,
@@ -10,6 +10,7 @@ import {
   DatePicker,
   Input,
   message,
+  Tag,
 } from "antd";
 import { CheckCircleFilled, HomeFilled, HeartFilled } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -25,12 +26,16 @@ const { TextArea } = Input;
 const PaymentSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { orderId, totalAmount } = location.state || {};
+  const { orderId, totalAmount, customerId } = location.state || {};
   const [consignmentModal, setConsignmentModal] = useState(false);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
   const { token } = useSelector((state) => state.auth);
+  const [awardedPoints, setAwardedPoints] = useState(0);
+  const [pointsAwarded, setPointsAwarded] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleConsignmentCare = async (values) => {
     try {
       setLoading(true);
@@ -83,6 +88,100 @@ const PaymentSuccess = () => {
       setLoading(false);
     }
   };
+
+  const handlePlusPoint = async () => {
+    try {
+      const storedPointsData = localStorage.getItem(
+        `points_awarded_${orderId}`
+      );
+      if (storedPointsData || pointsAwarded || isProcessing) {
+        console.log("Points already awarded or processing, skipping...");
+        return;
+      }
+
+      localStorage.setItem(`points_processing_${orderId}`, "true");
+      setIsProcessing(true);
+
+      if (!token || !customerId || !totalAmount) {
+        console.log("Missing required info:", {
+          token: !!token,
+          customerId,
+          totalAmount,
+        });
+        message.error(t("missingRequiredInformation"));
+        return;
+      }
+
+      console.log("Calling award points API...");
+      const response = await axios.post(
+        `${config.API_ROOT}LoyaltyPoint/award?customerId=${customerId}&orderAmount=${totalAmount}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data) {
+        const earnedPoints =
+          response.data.points || Math.floor(totalAmount / 100000);
+        setAwardedPoints(earnedPoints);
+        setPointsAwarded(true);
+
+        localStorage.setItem(
+          `points_awarded_${orderId}`,
+          JSON.stringify({
+            awarded: true,
+            points: earnedPoints,
+          })
+        );
+
+        message.success(
+          t("youHaveEarned", {
+            points: earnedPoints,
+            amount: (earnedPoints * 1000).toLocaleString(),
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error awarding points:", error);
+      message.error(t("failedToAwardPoints"));
+    } finally {
+      setIsProcessing(false);
+      localStorage.removeItem(`points_processing_${orderId}`);
+    }
+  };
+
+  useEffect(() => {
+    const storedPointsData = localStorage.getItem(`points_awarded_${orderId}`);
+    const isCurrentlyProcessing = localStorage.getItem(
+      `points_processing_${orderId}`
+    );
+
+    if (storedPointsData) {
+      const { points } = JSON.parse(storedPointsData);
+      setPointsAwarded(true);
+      setAwardedPoints(points);
+    } else if (
+      token &&
+      customerId &&
+      totalAmount &&
+      !pointsAwarded &&
+      !isProcessing &&
+      !isCurrentlyProcessing
+    ) {
+      handlePlusPoint();
+    }
+  }, [token, customerId, totalAmount, pointsAwarded, isProcessing]);
+
+  useEffect(() => {
+    return () => {
+      setTimeout(() => {
+        localStorage.removeItem(`points_awarded_${orderId}`);
+      }, 24 * 60 * 60 * 1000);
+    };
+  }, [orderId]);
 
   return (
     <div className="success-container">
@@ -137,6 +236,15 @@ const PaymentSuccess = () => {
                 ? `${totalAmount.toLocaleString()} VND`
                 : t("informationNotAvailable")}
             </Descriptions.Item>
+            {awardedPoints > 0 && (
+              <Descriptions.Item label={t("loyaltyPointsEarned")}>
+                <Tag color="green">
+                  +{awardedPoints} {t("points")} (
+                  {(awardedPoints * 1000).toLocaleString()} VND)
+                  {pointsAwarded && <span> • {t("alreadyAwarded")}</span>}
+                </Tag>
+              </Descriptions.Item>
+            )}
           </Descriptions>
         </Result>
       </Card>

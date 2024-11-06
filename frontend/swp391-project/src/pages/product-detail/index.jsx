@@ -22,8 +22,7 @@ import config from "../../config/config";
 import CurrencyFormatter from "../../components/currency";
 import { setCart } from "../../store/actions/cartAction";
 import { useTranslation } from "react-i18next";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const { Text } = Typography;
 
@@ -98,7 +97,7 @@ function ProductDetail() {
         }
       }
     } catch (error) {
-      toast.error("Error fetching ratings.");
+      console.log("Error fetching ratings.", error);
     }
   };
 
@@ -231,7 +230,6 @@ function ProductDetail() {
 
   return (
     <div className="product-detail-page">
-      <ToastContainer />
       <Row>
         <Col span={24}>
           <div className="breadcrumb-container">

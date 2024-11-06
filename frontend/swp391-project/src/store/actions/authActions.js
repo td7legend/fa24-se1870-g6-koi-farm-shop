@@ -43,6 +43,12 @@ export const login = (token) => async (dispatch) => {
     });
   }
 };
-export const logout = () => ({
-  type: actionTypes.LOGOUT,
-});
+
+export const logout = () => (dispatch) => {
+  return new Promise((resolve) => {
+    dispatch({
+      type: actionTypes.LOGOUT,
+    });
+    resolve();
+  });
+};
