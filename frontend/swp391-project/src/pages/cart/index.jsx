@@ -145,25 +145,35 @@ const Cart = () => {
     {
       title: t("quantity"),
       key: "quantity",
-      render: (_, record) => (
-        <div className="quantity-input">
-          <Button
-            className="button-quantity"
-            onClick={() => handleDecreaseQuantity(record.fishId)}
-            style={{ border: "none" }}
-          >
-            -
-          </Button>
-          <span style={{ margin: "0 10px" }}>{record.quantity}</span>
-          <Button
-            className="button-quantity"
-            onClick={() => handleIncreaseQuantity(record.fishId)}
-            style={{ border: "none" }}
-          >
-            +
-          </Button>
-        </div>
-      ),
+      render: (_, record) => {
+        const fish = fishes.find((f) => f.fishId === record.fishId);
+
+        // If fish is not batch (batch = false), only show quantity
+        if (fish && !fish.batch) {
+          return <span>{record.quantity}</span>;
+        }
+
+        // If fish is batch (batch = true), show quantity controls
+        return (
+          <div className="quantity-input">
+            <Button
+              className="button-quantity"
+              onClick={() => handleDecreaseQuantity(record.fishId)}
+              style={{ border: "none" }}
+            >
+              -
+            </Button>
+            <span style={{ margin: "0 10px" }}>{record.quantity}</span>
+            <Button
+              className="button-quantity"
+              onClick={() => handleIncreaseQuantity(record.fishId)}
+              style={{ border: "none" }}
+            >
+              +
+            </Button>
+          </div>
+        );
+      },
     },
     {
       title: t("total"),
