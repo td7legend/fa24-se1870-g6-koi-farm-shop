@@ -40,7 +40,7 @@ const AdminSidebar = ({ onHover }) => {
       cancelText: t("cancel"),
       onOk() {
         dispatch(logout());
-        navigate("/login");
+        navigate("/");
       },
       okButtonProps: {
         className: "admin-logout-confirm-button",

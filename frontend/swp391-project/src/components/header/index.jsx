@@ -126,6 +126,7 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate("/");
   };
 
   const handleScroll = () => {
@@ -173,7 +174,7 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
       cancelText: t("no"),
       onOk() {
         dispatch(logout());
-        navigate("/login");
+        navigate("/");
       },
     });
   };
@@ -431,9 +432,9 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
               <List.Item>
                 <List.Item.Meta
                   avatar={
-                    <img src={item.imageUrl} width={50} alt={item.fishName} />
+                    <img src={item.imageUrl} width={50} alt={item.name} />
                   }
-                  title={item.fishName}
+                  title={item.name}
                   description={`${t("quantity")}: ${item.quantity}`}
                 />
                 <div>

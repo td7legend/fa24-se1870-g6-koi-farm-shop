@@ -9,7 +9,7 @@ import CurrencyFormatter from "../currency";
 import config from "../../config/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../store/actions/cartAction";
+import { addToCart, setCart } from "../../store/actions/cartAction";
 import { useTranslation } from "react-i18next";
 
 const ProductCard = ({ fish, onCompare }) => {
@@ -17,6 +17,16 @@ const ProductCard = ({ fish, onCompare }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { token } = useSelector((state) => state.auth);
+  const fetchCart = async () => {
+    const response = await axios.get(`${config.API_ROOT}cart`, {
+      headers: {
+        Authorization: `Bearer ${token ?? null}`,
+      },
+    });
+    if (response.data) {
+      dispatch(setCart(response.data[0].orderLines || []));
+    }
+  };
   const handleAddToCart = async (e) => {
     e.preventDefault();
     try {
@@ -44,7 +54,7 @@ const ProductCard = ({ fish, onCompare }) => {
           placement: "topRight",
           duration: 2,
         });
-        dispatch(addToCart(fish.fishId, 1));
+        fetchCart();
       }
     } catch (error) {
       console.error("Error adding fish to cart:", error);

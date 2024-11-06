@@ -17,10 +17,9 @@ namespace koi_farm_demo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("KoiFarmDemo");
 
-            // Đăng ký DbContext với Entity Framework Core và SQL Server
+
             builder.Services.AddDbContext<KoiFarmDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
@@ -110,6 +109,10 @@ namespace koi_farm_demo
             builder.Services.AddScoped<ILoyaltyPointRepository, LoyaltyPointRepository>();
             builder.Services.AddScoped<ILoyaltyPointService, LoyaltyPointService>();
             builder.Services.AddScoped<IRevenueService, RevenueService>();
+            builder.Services.AddScoped<IStaffService, StaffService>();
+            builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+            builder.Services.AddScoped<ICertificateRepository, CertificateRepository>();
+            builder.Services.AddScoped<ICertificateService, CertificateService>();
             // Đăng ký các dịch vụ Customer
             builder.Services.AddAuthorization(options =>
             {

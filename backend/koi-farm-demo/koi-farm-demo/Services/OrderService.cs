@@ -279,5 +279,22 @@ public class OrderService : IOrderService
             }).ToList()
         }).ToList();
     }
+    public async Task<List<TransactionHistoryDto>> GetTransactionHistoryAsync()
+    {
+        var orders = await _orderRepository.GetAllOrdersWithStatusAsync();
+
+        // Tạo danh sách lịch sử giao dịch
+        var transactionHistory = orders.Select(order => new TransactionHistoryDto
+        {
+            OrderId = order.OrderId,
+            Date = order.OrderDate,
+            Status = order.Status.ToString(),
+            Amount = order.Status == OrderStatus.Cancelled
+                ? -(order.TotalAmount - order.TotalDiscount + order.TotalTax)  // Trừ tiền cho đơn hàng hủy
+                : (order.TotalAmount - order.TotalDiscount + order.TotalTax)    // Cộng tiền cho các đơn hàng khác
+        }).ToList();
+
+        return transactionHistory;
+    }
 
 }

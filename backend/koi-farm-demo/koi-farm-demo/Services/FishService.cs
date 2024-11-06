@@ -7,10 +7,11 @@ namespace koi_farm_demo.Services
     public class FishService : IFishService
     {
         private readonly IFishRepository _fishRepository;
-
-        public FishService(IFishRepository fishRepository)
+        private readonly ICertificateRepository _certificateRepository;
+        public FishService(IFishRepository fishRepository, ICertificateRepository certificateRepository)
         {
             _fishRepository = fishRepository;
+            _certificateRepository = certificateRepository;
         }
 
         public async Task<IEnumerable<Fish>> GetAllFishAsync()
@@ -44,6 +45,18 @@ namespace koi_farm_demo.Services
             };
 
             await _fishRepository.AddAsync(fish);
+            if (fishCreateDto.Certificate != null)
+            {
+                var certificate = new Certification
+                {
+                    FishId = fish.FishId,  // Sau khi thêm cá, FishId đã có giá trị
+                    Description = fishCreateDto.Certificate.Description,
+                    IssueDate = fishCreateDto.Certificate.IssueDate,
+                    Url = fishCreateDto.Certificate.Url
+                };
+
+                await _certificateRepository.AddCertificateAsync(certificate);
+            }
         }
 
 

@@ -272,6 +272,7 @@ const Checkout = () => {
           state: {
             orderId: cart.orderId,
             totalAmount: calculateFinalPrice(),
+            customerId: user.customerId,
           },
         });
         dispatch(clearCart());
