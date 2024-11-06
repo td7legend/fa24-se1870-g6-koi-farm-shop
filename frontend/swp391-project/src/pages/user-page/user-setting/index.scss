@@ -46,7 +46,7 @@ $gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
     width: 100%;
     padding: 20px;
     z-index: 2;
-    animation: fadeIn 1s ease-out forwards;
+    // animation: fadeIn 1s ease-out forwards;
   }
 
   .settings-sider {
@@ -136,6 +136,7 @@ $gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
     max-width: 900px;
     padding: 50px;
     border-radius: $large-border-radius;
+    animation: fadeIn 1s ease-out forwards;
     // background: rgba(255, 250, 240, 0.95);
     // box-shadow: $soft-shadow;
 
