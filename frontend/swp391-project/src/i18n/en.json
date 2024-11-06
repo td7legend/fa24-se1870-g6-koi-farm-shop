@@ -413,5 +413,11 @@
   "female": "Female",
   "male": "Male",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "missingRequiredInformation": "Missing required information",
+  "youHaveEarned": "You have earned {{points}} points ({{amount}} VND)",
+  "failedToAwardPoints": "Failed to award loyalty points",
+  "loyaltyPointsEarned": "Loyalty Points Earned",
+  "points": "points",
+  "alreadyAwarded": "Already awarded"
 }
