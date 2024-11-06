@@ -416,6 +416,14 @@
   "consignmentForSale": "Consignment for sale",
   "consignmentFish": "Consignment fish",
   "endDateMustBeAtLeast30DaysAfterStartDate" : "End Date Must At Least 30 Days After Start Date",
-  "expectedPrice": "Expected Price"
-
+  "expectedPrice": "Expected Price",
+  "yes": "Yes",
+  "no": "No",
+  "missingRequiredInformation": "Missing required information",
+  "youHaveEarned": "You have earned {{points}} points ({{amount}} VND)",
+  "failedToAwardPoints": "Failed to award loyalty points",
+  "loyaltyPointsEarned": "Loyalty Points Earned",
+  "points": "points",
+  "alreadyAwarded": "Already awarded",
+  "adding": "Adding..."
 }

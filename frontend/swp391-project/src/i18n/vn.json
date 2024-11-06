@@ -398,8 +398,17 @@
   "female": "Cái",
   "male": "Đực",
   "staffManagement": "Quản lý nhân viên",
-  "consignmentForSale": "Ký gửi để bán",
+  "consignmentForSale": "Ký gửi bán",
   "consignmentFish": "Cá ký gửi",
-  "endDateMustBeAtLeast30DaysAfterStartDate": "Ngày kết thúc phải sau ngày bắt đầu ít nhất 30 ngày",
-  "expectedPrice": "Giá mong muốn"
+  "endDateMustBeAtLeast30DaysAfterStartDate" : "Ngày kết thúc phải ít nhất 30 ngày sau ngày bắt đầu",
+  "expectedPrice": "Giá mong đợi",
+  "yes": "Có",
+  "no": "Không",
+  "missingRequiredInformation": "Thiếu thông tin cần thiết",
+  "youHaveEarned": "Bạn đã nhận được {{points}} điểm ({{amount}} VND)",
+  "failedToAwardPoints": "Không thể tặng điểm thưởng",
+  "loyaltyPointsEarned": "Điểm Thưởng Nhận Được",
+  "points": "điểm",
+  "alreadyAwarded": "Đã được cộng",
+  "adding": "Đang thêm..."
 }

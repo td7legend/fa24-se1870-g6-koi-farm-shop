@@ -2,7 +2,8 @@
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
-  background-color: #fffaf0;
+  background-color: transparent;
+  position: relative;
 
   .manage-consignment-container {
     display: flex;
@@ -11,7 +12,7 @@
     padding: 30px;
   }
   .ant-card-bordered {
-    background-color: #fffaf0;
+    background-color: transparent;
     border: none;
   }
   .ant-card-body {

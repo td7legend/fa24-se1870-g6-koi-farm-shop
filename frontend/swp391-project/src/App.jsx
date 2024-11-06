@@ -44,6 +44,7 @@ import AdminDashboard from "./pages/admin-page/dashboard/dashboard.jsx";
 import ConsignmentCare from "./pages/consignment/consignment-care/index.jsx";
 import ConsignmentSell from "./pages/consignment/consignment-sell/index.jsx";
 import ConsignmentFishFilter from "./components/consignmentFishFilter/index.jsx";
+import TierSystem from "./pages/user-page/tier-system/index.jsx";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
@@ -89,6 +90,7 @@ function App() {
         <Route path="order-details" element={<OrderDetailsPage />} />
         <Route path="consignment-history" element={<ConsignmentHistory />} />
         <Route path="loyaltypoint-history" element={<LoyaltyPointHistory />} />
+        <Route path="tier" element={<TierSystem />} />
       </>
     ),
     []

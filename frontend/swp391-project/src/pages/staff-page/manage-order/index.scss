@@ -11,7 +11,7 @@ $large-border-radius: 20px;
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
-  background-color: $background-color;
+  background-color: transparent;
 
   .manage-order-container {
     display: flex;
@@ -20,7 +20,8 @@ $large-border-radius: 20px;
     padding: 30px;
   }
   .ant-card-bordered {
-    background-color: $background-color;
+    background-color: transparent;
+    border: none;
   }
   .ant-card-body {
     border-radius: 10px;

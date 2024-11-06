@@ -2,7 +2,7 @@
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
-  background-color: #fffaf0;
+  background-color: transparent;
 
   .fish-type-container {
     display: flex;
@@ -11,11 +11,11 @@
     padding: 30px;
 
     .ant-card-bordered {
-      background-color: #fffaf0;
+      background-color: transparent;
     }
     .ant-card-body {
       border-radius: 10px;
-      background-color: #fffaf0;
+      background-color: transparent;
       height: fit-content;
       width: 1000px;
       border: 1px solid #000;
