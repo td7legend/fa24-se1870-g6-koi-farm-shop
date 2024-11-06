@@ -11,6 +11,7 @@ import {
   Input,
   message,
   Tag,
+  Checkbox,
 } from "antd";
 import { CheckCircleFilled, HomeFilled, HeartFilled } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -35,6 +36,8 @@ const PaymentSuccess = () => {
   const [awardedPoints, setAwardedPoints] = useState(0);
   const [pointsAwarded, setPointsAwarded] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orderData, setOrderData] = useState(null);
+  const [selectedFish, setSelectedFish] = useState([]);
 
   const handleConsignmentCare = async (values) => {
     try {
@@ -60,12 +63,15 @@ const PaymentSuccess = () => {
         careFee: 0,
         customerId: orderData.customerId,
         note: values.note,
-        consignmentLines: orderData.orderLines.map((line) => ({
-          fishType: line.fishName,
-          quantity: line.quantity,
-          imageUrl: line.imageUrl,
-          certificationUrl: line.imageUrl, // Using same URL for certification
-        })),
+        consignmentLines: selectedFish.map((fishId) => {
+          const line = orderData.orderLines.find((l) => l.id === fishId);
+          return {
+            fishType: line.fishName,
+            quantity: line.quantity,
+            imageUrl: line.imageUrl,
+            certificationUrl: line.imageUrl,
+          };
+        }),
         startDate: orderData.orderDate,
         endDate: values.endDate,
       };
@@ -79,6 +85,10 @@ const PaymentSuccess = () => {
       setConsignmentModal(false);
       form.resetFields();
 
+      // await axios.patch(`${config.API_ROOT}orders/${orderId}/status`, 4, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+
       // Navigate to consignment history
       navigate("/consignment-history");
     } catch (error) {
@@ -86,6 +96,21 @@ const PaymentSuccess = () => {
       message.error(t("failedToCreateConsignment"));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchOrderData = async () => {
+    try {
+      const orderResponse = await axios.get(
+        `${config.API_ROOT}orders/${orderId}`,
+        {
+          headers: { Authorization: `Bearer ${token ?? null}` },
+        }
+      );
+      setOrderData(orderResponse.data);
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      message.error(t("failedToFetchOrder"));
     }
   };
 
@@ -221,7 +246,10 @@ const PaymentSuccess = () => {
               key="consignmentCare"
               size="large"
               icon={<HeartFilled />}
-              onClick={() => setConsignmentModal(true)}
+              onClick={() => {
+                setConsignmentModal(true);
+                fetchOrderData();
+              }}
             >
               {t("consignmentForCare")}
             </Button>,
@@ -256,10 +284,27 @@ const PaymentSuccess = () => {
         onCancel={() => {
           setConsignmentModal(false);
           form.resetFields();
+          setSelectedFish([]);
         }}
         footer={null}
       >
         <Form form={form} layout="vertical" onFinish={handleConsignmentCare}>
+          {orderData?.orderLines?.map((fish) => (
+            <Form.Item key={fish.id}>
+              <Checkbox
+                onChange={(e) => {
+                  setSelectedFish((prev) =>
+                    e.target.checked
+                      ? [...prev, fish.id]
+                      : prev.filter((id) => id !== fish.id)
+                  );
+                }}
+              >
+                {fish.fishName} - {fish.quantity} {t("units")}
+              </Checkbox>
+            </Form.Item>
+          ))}
+
           <Form.Item
             name="endDate"
             label={t("endDate")}
@@ -285,7 +330,13 @@ const PaymentSuccess = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={loading}
+              disabled={selectedFish.length === 0}
+            >
               {t("createConsignment")}
             </Button>
           </Form.Item>

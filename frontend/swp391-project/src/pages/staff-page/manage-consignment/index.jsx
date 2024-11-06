@@ -499,77 +499,144 @@ const ConsignmentManagement = () => {
                 <Title level={4} style={{ marginTop: 24 }}>
                   Fish Care Details
                 </Title>
-                <Table
-                  dataSource={fishCareData}
-                  rowKey="fishCareId"
-                  pagination={false}
-                  loading={loadingFishCare}
-                  columns={[
-                    {
-                      title: "Fish Type",
-                      dataIndex: "fishType",
-                      key: "fishType",
-                      width: 120,
-                    },
-                    {
-                      title: "Health Status",
-                      dataIndex: "healthStatus",
-                      key: "healthStatus",
-                      width: 120,
-                      render: (status) => {
-                        const statusColors = {
-                          Good: "green",
-                          Bad: "red",
-                          Normal: "orange",
-                        };
-                        return (
-                          <Tag color={statusColors[status] || "default"}>
-                            {status}
-                          </Tag>
-                        );
+                {[0, 1, 2].includes(selectedConsignment.status) ? (
+                  // Show initial consignment details for pending, under review, and confirmed status
+                  <Table
+                    dataSource={selectedConsignment.consignmentLines}
+                    rowKey="consignmentLineId"
+                    pagination={false}
+                    columns={[
+                      {
+                        title: "Image",
+                        dataIndex: "imageUrl",
+                        key: "image",
+                        width: 150,
+                        render: (imageUrl) =>
+                          imageUrl ? (
+                            <img
+                              src={imageUrl}
+                              alt="Fish"
+                              style={{
+                                width: 120,
+                                height: 80,
+                                objectFit: "cover",
+                                borderRadius: 4,
+                                cursor: "pointer",
+                              }}
+                              onClick={() => window.open(imageUrl, "_blank")}
+                            />
+                          ) : (
+                            "No image"
+                          ),
                       },
-                    },
-                    {
-                      title: "Care Details",
-                      dataIndex: "careDetails",
-                      key: "careDetails",
-                      ellipsis: true,
-                    },
-                    {
-                      title: "Image",
-                      dataIndex: "fishType",
-                      key: "image",
-                      width: 150,
-                      render: (fishType) => {
-                        // Find the matching consignment line for this fish care record
-                        const consignmentLine =
-                          selectedConsignment.consignmentLines.find(
-                            (line) => line.fishType === fishType
-                          );
-                        return consignmentLine?.imageUrl ? (
-                          <img
-                            src={consignmentLine.imageUrl}
-                            alt={fishType}
-                            style={{
-                              width: 120,
-                              height: 80,
-                              objectFit: "cover",
-                              borderRadius: 4,
-                              cursor: "pointer",
-                            }}
-                            onClick={() =>
-                              window.open(consignmentLine.imageUrl, "_blank")
-                            }
-                          />
-                        ) : (
-                          "No image"
-                        );
+                      {
+                        title: "Fish Type",
+                        dataIndex: "fishType",
+                        key: "fishType",
+                        width: 120,
                       },
-                    },
-                  ]}
-                />
-                {fishCareData.length === 0 && !loadingFishCare && (
-                  <Empty description="No fish care records found" />
+                      {
+                        title: "Quantity",
+                        dataIndex: "quantity",
+                        key: "quantity",
+                        width: 100,
+                      },
+                      {
+                        title: "Certificate",
+                        dataIndex: "certificationUrl",
+                        key: "certificate",
+                        render: (url) =>
+                          url ? (
+                            <Button
+                              type="link"
+                              onClick={() => window.open(url, "_blank")}
+                            >
+                              View Certificate
+                            </Button>
+                          ) : (
+                            "No certificate"
+                          ),
+                      },
+                    ]}
+                  />
+                ) : (
+                  // Show fish care records for other statuses
+                  <>
+                    <Table
+                      dataSource={fishCareData}
+                      rowKey="fishCareId"
+                      pagination={false}
+                      loading={loadingFishCare}
+                      columns={[
+                        {
+                          title: "Image",
+                          dataIndex: "fishType",
+                          key: "image",
+                          width: 150,
+                          render: (fishType) => {
+                            const consignmentLine =
+                              selectedConsignment.consignmentLines.find(
+                                (line) => line.fishType === fishType
+                              );
+                            return consignmentLine?.imageUrl ? (
+                              <img
+                                src={consignmentLine.imageUrl}
+                                alt={fishType}
+                                style={{
+                                  width: 120,
+                                  height: 80,
+                                  objectFit: "cover",
+                                  borderRadius: 4,
+                                  cursor: "pointer",
+                                }}
+                                onClick={() =>
+                                  window.open(
+                                    consignmentLine.imageUrl,
+                                    "_blank"
+                                  )
+                                }
+                              />
+                            ) : (
+                              "No image"
+                            );
+                          },
+                        },
+                        {
+                          title: "Fish Type",
+                          dataIndex: "fishType",
+                          key: "fishType",
+                          width: 120,
+                        },
+                        {
+                          title: "Health Status",
+                          dataIndex: "healthStatus",
+                          key: "healthStatus",
+                          width: 120,
+                          render: (status) => {
+                            const statusColors = {
+                              Good: "green",
+                              Bad: "red",
+                              Normal: "orange",
+                            };
+                            return (
+                              <Tag color={statusColors[status] || "default"}>
+                                {status}
+                              </Tag>
+                            );
+                          },
+                        },
+                        {
+                          title: "Care Details",
+                          dataIndex: "careDetails",
+                          key: "careDetails",
+                          ellipsis: true,
+                        },
+                      ]}
+                    />
+                    {fishCareData.length === 0 && !loadingFishCare && (
+                      <Empty description="No fish care records found" />
+                    )}
+                  </>
                 )}
               </>
             ) : (

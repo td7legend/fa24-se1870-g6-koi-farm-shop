@@ -41,6 +41,8 @@ const StaffFishManagement = () => {
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
   const [isQuantityModalVisible, setIsQuantityModalVisible] = useState(false);
   const [selectedFish, setSelectedFish] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [batchFilter, setBatchFilter] = useState(null);
   const [quantityForm] = Form.useForm();
   const { token } = useSelector((state) => state.auth);
 
@@ -129,7 +131,7 @@ const StaffFishManagement = () => {
         foodRequirement: parseInt(values.foodRequirement),
         overallRating: "0",
         price: parseInt(values.price),
-        batch: true,
+        batch: values.batch === true || values.batch === "true",
         fishTypeId: parseInt(values.fishTypeId),
         description: values.description,
         quantity: parseInt(values.quantity),
@@ -257,6 +259,12 @@ const StaffFishManagement = () => {
       title: "Rating",
       dataIndex: "overallRating",
       key: "overallRating",
+    },
+    {
+      title: "Batch",
+      dataIndex: "batch",
+      key: "batch",
+      render: (batch) => (batch ? "True" : "False"),
     },
     {
       title: "Actions",
@@ -407,11 +415,22 @@ const StaffFishManagement = () => {
         </Form.Item>
 
         <Form.Item
-          name="desciption"
+          name="batch"
+          label="Batch"
+          rules={[{ required: true, message: "Please select batch status" }]}
+        >
+          <Select>
+            <Option value={true}>True</Option>
+            <Option value={false}>False</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="description" // Fixed typo in the field name from "desciption"
           label="Description"
           rules={[{ required: true, message: "Please enter fish description" }]}
         >
-          <InputNumber style={{ width: "100%" }} min={0} />
+          <Input.TextArea rows={4} />
         </Form.Item>
 
         <Form.Item
@@ -575,6 +594,14 @@ const StaffFishManagement = () => {
     </Modal>
   );
 
+  const filteredFishes = fishes.filter((fish) => {
+    const matchesSearch = fish.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesBatch = batchFilter === null || fish.batch === batchFilter;
+    return matchesSearch && matchesBatch;
+  });
+
   return (
     <div className="staff-fish-management">
       <div className="breadcrumb-container">
@@ -591,7 +618,24 @@ const StaffFishManagement = () => {
         <Card className="card">
           <div className="flex justify-between items-center mb-4">
             <Title level={3}>Fish Management</Title>
-            <div className="button-form">
+            <Space>
+              <Input.Search
+                placeholder="Search by name"
+                allowClear
+                style={{ width: 200 }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Select
+                style={{ width: 120 }}
+                placeholder="Batch Filter"
+                allowClear
+                value={batchFilter}
+                onChange={(value) => setBatchFilter(value)}
+              >
+                <Option value={true}>Batch True</Option>
+                <Option value={false}>Batch False</Option>
+              </Select>
               <ExcelFishImport
                 onUploadSuccess={fetchFishes}
                 token={token}
@@ -604,16 +648,16 @@ const StaffFishManagement = () => {
               >
                 Add New Fish
               </Button>
-            </div>
+            </Space>
           </div>
 
           <Table
             className="fish-management-table"
             columns={columns}
-            dataSource={fishes}
+            dataSource={filteredFishes}
             loading={loading}
             pagination={{
-              total: fishes.length,
+              total: filteredFishes.length,
               pageSize: 10,
               showSizeChanger: false,
               showQuickJumper: false,
