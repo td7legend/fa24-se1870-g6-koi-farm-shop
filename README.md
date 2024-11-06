@@ -5,7 +5,7 @@
 
 ## Giới thiệu
 
-Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá koi, mang đến trải nghiệm người dùng tuyệt vời với thiết kế hiện đại và giao diện thân thiện. Ứng dụng được xây dựng bằng **ReactJS**, **C#**, và **MySQL** để đảm bảo hiệu suất cao và khả năng mở rộng.
+Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá koi, mang đến trải nghiệm người dùng tuyệt vời với thiết kế hiện đại và giao diện thân thiện. Ứng dụng được xây dựng bằng **ReactJS**, **C#**, và **SQL SERVER** để đảm bảo hiệu suất cao và khả năng mở rộng.
 
 ## Công nghệ sử dụng
 
@@ -24,11 +24,11 @@ Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá k
 
 Dự án được thực hiện bởi một nhóm 5 thành viên:
 
-1. **Thành viên 1** - Trưởng nhóm & Lập trình viên Frontend
-2. **Thành viên 2** - Lập trình viên Backend
-3. **Thành viên 3** - Thiết kế giao diện người dùng
-4. **Thành viên 4** - Quản lý cơ sở dữ liệu
-5. **Thành viên 5** - Kiểm thử và đảm bảo chất lượng
+1. **Nguyễn Thành Danh** - **Trưởng nhóm** & Backend Designer.
+2. **Bùi Quang Vinh** - Frontend Developer, UI/UX Designer.
+3. **Phạm Minh Quân** - Frontend Developer, UI/UX Designer.
+4. **Trần Quang Duy** - DA, Tester, Frontend Developer.
+5. **Trần Quang Khoa** - Frontend Developer.
 
 ## Hướng dẫn cài đặt
 
@@ -67,6 +67,7 @@ Dự án được thực hiện bởi một nhóm 5 thành viên:
      ```
    - Backend:
      ```
+     Run .sln file by IDE
      ...
      ```
 

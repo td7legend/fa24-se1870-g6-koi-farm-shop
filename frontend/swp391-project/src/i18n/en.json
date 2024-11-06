@@ -411,5 +411,13 @@
   "thankYouForYourPurchase": "Thank you for your purchase. Your order has been confirmed.",
   "orderID": "Order ID",
   "female": "Female",
-  "male": "Male"
+  "male": "Male",
+  "yes": "Yes",
+  "no": "No",
+  "missingRequiredInformation": "Missing required information",
+  "youHaveEarned": "You have earned {{points}} points ({{amount}} VND)",
+  "failedToAwardPoints": "Failed to award loyalty points",
+  "loyaltyPointsEarned": "Loyalty Points Earned",
+  "points": "points",
+  "alreadyAwarded": "Already awarded"
 }

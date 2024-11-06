@@ -27,5 +27,9 @@ namespace koi_farm_demo.Services
 
             return await _fishTypeRepository.AddAsync(fishType);
         }
+        public async Task<List<FishTypeDto>> GetTopSellingFishTypesAsync(int top = 8)
+        {
+            return await _fishTypeRepository.GetTopSellingFishTypesAsync(top);
+        }
     }
 }

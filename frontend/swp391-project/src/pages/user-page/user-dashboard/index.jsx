@@ -39,6 +39,13 @@ const { Title, Text } = Typography;
 const DEFAULT_AVATAR =
   "https://i.pinimg.com/736x/bc/43/98/bc439871417621836a0eeea768d60944.jpg";
 
+const tiers = [
+  { name: "Bronze", minPoints: 0 },
+  { name: "Silver", minPoints: 100 },
+  { name: "Gold", minPoints: 200 },
+  { name: "Platinum", minPoints: 500 },
+];
+
 const UserDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -254,7 +261,13 @@ const UserDashboard = () => {
                   {renderUserInfo("Address", user.address)}
                   {renderUserInfo("Email", user.email)}
                   {renderUserInfo("Phone", user.phoneNumber)}
-                  {renderUserInfo("Tier", user.tier)}
+                  {renderUserInfo(
+                    "Tier",
+                    <Link to="/tier" style={{ color: "#bbab6f" }}>
+                      {user.tier ? tiers[user.tier].name : "Bronze"} (View
+                      Details)
+                    </Link>
+                  )}
                   {renderUserInfo("Points Available", user.pointAvailable)}
                   {renderUserInfo("Points Used", user.usedPoint)}
                   {renderUserInfo("Total Points", user.accommodatePoint)}
