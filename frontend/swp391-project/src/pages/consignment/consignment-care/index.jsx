@@ -89,22 +89,34 @@ function ConsignmentCare() {
     const currentDate = new Date();
     const start = new Date(startDate);
     const end = new Date(endDate);
+
     try {
       if (startDate && endDate) {
+        // Kiểm tra ngày bắt đầu phải trước hoặc bằng ngày kết thúc
         if (start > end) {
-          toast.error(t("start date can not be later than end date"));
+          toast.error(t("startDateCanNotBeLaterThanEndDate"));
+          return false;
+        } else if (start < currentDate || end < currentDate) {
+          toast.error(t("startDateOrEndDateCanNotBeInThePast"));
           return false;
         }
         if (start >= currentDate || end >= currentDate) {
-          return true;
-        } else {
-          toast.error(t("start date or end date can not be in the past"));
-          return false;
+          // Tính sự khác biệt giữa hai ngày (tính theo ngày)
+          const differenceInDays = Math.floor(
+            (end - start) / (1000 * 60 * 60 * 24)
+          );
+          if (differenceInDays === 30 || differenceInDays > 30) {
+            return true; // Hợp lệ nếu đúng 30 ngày
+          } else {
+            toast.error(t("endDateMustBeAtLeast30DaysAfterStartDate")); // Thông báo lỗi nếu khác 30 ngày
+            return false;
+          }
         }
       }
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      return false;
     }
   };
 
@@ -191,6 +203,7 @@ function ConsignmentCare() {
 
       toast.success(t("Consignment Care Created Successfully"));
       formVariable.resetFields();
+      formVariable.setFieldsValue({ fish: [{}] });
       // setShowDateFields(false);
     } catch (error) {
       console.error("Error submitting consignment care:", error);
@@ -230,7 +243,7 @@ function ConsignmentCare() {
                       onClick={() => {
                         setShowTable(true);
                         setShowDateFields(true);
-                        add();
+                        formVariable.setFieldsValue({ fish: [{}] });
                       }}
                       icon={<PlusOutlined />}
                     >
@@ -366,7 +379,7 @@ function ConsignmentCare() {
                                   icon={<MinusCircleOutlined />}
                                   onClick={() => {
                                     remove(field.name);
-                                    if (fields.length === 0) {
+                                    if (fields.length === 1) {
                                       setShowTable(false);
                                       setShowDateFields(false);
                                       formVariable.resetFields();

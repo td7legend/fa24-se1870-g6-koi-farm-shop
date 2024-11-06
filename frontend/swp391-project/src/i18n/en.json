@@ -138,7 +138,7 @@
   "failedToCompleteTheOrderPleaseContactSupport": "Failed to complete the order. Please contact support.",
   "pleaseSelectAValidPaymentMethod": "Please select a valid payment method.",
   "noActiveCartFoundOrUserInformationUnavailable": "No active cart found or user information unavailable.",
-  "fishList": "Fish List",
+  "fishList": "Fish list",
   "billingInformation": "Billing Information",
   "phoneNumber": "Phone Number",
   "email": "Email",
@@ -412,6 +412,11 @@
   "orderID": "Order ID",
   "female": "Female",
   "male": "Male",
+  "staffManagement": "Staff Management",
+  "consignmentForSale": "Consignment for sale",
+  "consignmentFish": "Consignment fish",
+  "endDateMustBeAtLeast30DaysAfterStartDate" : "End Date Must At Least 30 Days After Start Date",
+  "expectedPrice": "Expected Price",
   "yes": "Yes",
   "no": "No",
   "missingRequiredInformation": "Missing required information",
@@ -419,5 +424,6 @@
   "failedToAwardPoints": "Failed to award loyalty points",
   "loyaltyPointsEarned": "Loyalty Points Earned",
   "points": "points",
-  "alreadyAwarded": "Already awarded"
+  "alreadyAwarded": "Already awarded",
+  "adding": "Adding..."
 }

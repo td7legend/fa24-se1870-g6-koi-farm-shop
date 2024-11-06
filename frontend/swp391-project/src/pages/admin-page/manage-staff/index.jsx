@@ -51,8 +51,8 @@ const StaffManagement = () => {
 
       setStaffs(staffsWithKeys);
     } catch (error) {
-      console.error("Lỗi khi lấy danh sách nhân viên:", error);
-      message.error("Không thể tải danh sách nhân viên");
+      // console.error("Lỗi khi lấy danh sách nhân viên:", error);
+      message.error("Unable to load employee list");
     } finally {
       setLoading(false);
     }
@@ -77,24 +77,24 @@ const StaffManagement = () => {
   const handleAdd = async (values) => {
     try {
       if (!validateEmail(values.email)) {
-        toast.error("Email không hợp lệ");
+        toast.error("Invalid email");
         return;
       }
 
       if (!validatePassword(values.password)) {
         toast.error(
-          "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt"
+          "Password must have at least 6 characters, including uppercase letters, numbers and special characters"
         );
         return;
       }
 
       if (values.password !== values.confirmPassword) {
-        toast.error("Mật khẩu xác nhận không khớp");
+        toast.error("Confirmation password does not match");
         return;
       }
 
       if (!validatePhone(values.phoneNumber)) {
-        toast.error("Số điện thoại phải có 10 chữ số");
+        toast.error("Phone number must have 10 digits");
         return;
       }
 
@@ -112,19 +112,19 @@ const StaffManagement = () => {
         },
       });
 
-      message.success("Thêm nhân viên thành công");
+      message.success("Add employees successfully");
       setIsModalVisible(false);
       form.resetFields();
       fetchStaffs();
     } catch (error) {
-      console.error("Lỗi khi thêm nhân viên:", error);
-      message.error("Không thể thêm nhân viên. Vui lòng thử lại.");
+      // console.error("Lỗi khi thêm nhân viên:", error);
+      message.error("Unable to add employees. Please try again.");
     }
   };
 
   const columns = [
     {
-      title: "Họ và tên",
+      title: "Full Name",
       dataIndex: "fullName",
       key: "fullName",
     },
@@ -134,7 +134,7 @@ const StaffManagement = () => {
       key: "email",
     },
     {
-      title: "Số điện thoại",
+      title: "Phone Number",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
@@ -153,8 +153,8 @@ const StaffManagement = () => {
       <Form form={form} layout="vertical" onFinish={handleAdd}>
         <Form.Item
           name="fullName"
-          label="Họ và tên"
-          rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
+          label="Full Name"
+          rules={[{ required: true, message: "Please enter your full name" }]}
         >
           <Input />
         </Form.Item>
@@ -162,30 +162,30 @@ const StaffManagement = () => {
         <Form.Item
           name="email"
           label="Email"
-          rules={[{ required: true, message: "Vui lòng nhập email" }]}
+          rules={[{ required: true, message: "Please enter email" }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="phoneNumber"
-          label="Số điện thoại"
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+          label="Phone Number"
+          rules={[{ required: true, message: "Please enter phone number" }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="password"
-          label="Mật khẩu"
+          label="Password"
           rules={[
-            { required: true, message: "Vui lòng nhập mật khẩu" },
+            { required: true, message: "Please enter your password" },
             {
               validator: (_, value) => {
                 if (!value) return Promise.resolve();
                 if (!validatePassword(value)) {
                   return Promise.reject(
-                    "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt"
+                    "Password must have at least 6 characters, including uppercase letters, numbers and special characters"
                   );
                 }
                 return Promise.resolve();
@@ -199,16 +199,16 @@ const StaffManagement = () => {
 
         <Form.Item
           name="confirmPassword"
-          label="Xác nhận mật khẩu"
+          label="Confirm password"
           dependencies={["password"]}
           rules={[
-            { required: true, message: "Vui lòng xác nhận mật khẩu" },
+            { required: true, message: "Please confirm your password" },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject("Mật khẩu xác nhận không khớp!");
+                return Promise.reject("Confirmation password does not match!");
               },
             }),
           ]}
@@ -225,14 +225,14 @@ const StaffManagement = () => {
                 form.resetFields();
               }}
             >
-              Hủy
+              Cancel
             </Button>
             <Button
               type="primary"
               htmlType="submit"
               style={{ backgroundColor: "#bbab6f" }}
             >
-              Thêm
+              Ok
             </Button>
           </Space>
         </Form.Item>
@@ -248,20 +248,20 @@ const StaffManagement = () => {
             <FontAwesomeIcon icon={faHome} className="icon" />
           </Breadcrumb.Item>
           <Breadcrumb.Item>Admin</Breadcrumb.Item>
-          <Breadcrumb.Item>Quản lý nhân viên</Breadcrumb.Item>
+          <Breadcrumb.Item>Staff Management</Breadcrumb.Item>
         </Breadcrumb>
       </div>
 
       <Card className="card">
         <div className="flex justify-between items-center mb-4">
-          <Title level={3}>Quản lý nhân viên</Title>
+          <Title level={3}>Staff Management</Title>
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setIsModalVisible(true)}
             style={{ backgroundColor: "#bbab6f" }}
           >
-            Thêm nhân viên mới
+            Add Staff
           </Button>
         </div>
 

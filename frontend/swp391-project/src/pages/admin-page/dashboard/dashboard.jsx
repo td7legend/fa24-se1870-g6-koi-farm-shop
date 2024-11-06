@@ -22,7 +22,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import config from "../../../config/config";
-
+import LoadingKoi from "../../../components/loading";
 const { RangePicker } = DatePicker;
 
 const AdminDashboard = () => {
@@ -376,7 +376,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
-        <Spin size="large" />
+        <LoadingKoi />
       </div>
     );
   }

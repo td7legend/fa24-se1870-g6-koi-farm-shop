@@ -52,7 +52,7 @@ function ConsignmentSellPage() {
                 textAlign: "center",
               }}
             >
-              {t("consignmentForSell")}
+              {t("consignmentForSale")}
             </Button>
           </div>
 

@@ -382,6 +382,9 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                   <li className="menu-item">
                     <Link to="/batch-filter">{t("fishSellByBatch")}</Link>
                   </li>
+                  <li className="menu-item">
+                    <Link to="/consignment-filter">{t("consignmentFish")}</Link>
+                  </li>
                 </ul>
               </Link>
             </li>
@@ -432,9 +435,9 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
               <List.Item>
                 <List.Item.Meta
                   avatar={
-                    <img src={item.imageUrl} width={50} alt={item.fishName} />
+                    <img src={item.imageUrl} width={50} alt={item.name} />
                   }
-                  title={item.fishName}
+                  title={item.name}
                   description={`${t("quantity")}: ${item.quantity}`}
                 />
                 <div>

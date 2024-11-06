@@ -1,18 +1,16 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Card, Col, Row, Pagination, Breadcrumb } from "antd";
-import { Link } from "react-router-dom";
-import config from "../../config/config";
-import "./index.scss";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Breadcrumb, Col, Pagination, Row } from "antd";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CurrencyFormatter from "../currency";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
-const { Meta } = Card;
-
-const BatchFishFilter = () => {
+import { Link } from "react-router-dom";
+import axios from "axios";
+import config from "../../config/config";
+import "./index.scss";
+function ConsignmentFishFilter() {
   const [allFishes, setAllFishes] = useState([]);
-  const [batchFishes, setBatchFishes] = useState([]);
+  const [consignmentFishes, setConsignmentFishes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
   const { t } = useTranslation();
@@ -22,7 +20,7 @@ const BatchFishFilter = () => {
   }, []);
 
   useEffect(() => {
-    filterBatchFishes();
+    filterConsignmentFishes();
   }, [allFishes, currentPage]);
 
   const fetchAllFishes = async () => {
@@ -34,23 +32,24 @@ const BatchFishFilter = () => {
     }
   };
 
-  const filterBatchFishes = () => {
+  const filterConsignmentFishes = () => {
     const filteredFishes = allFishes.filter(
-      (fish) => fish.batch === true && fish.quantity > 0
+      (fish) => fish.consignmentLineId !== null && fish.quantity > 0
     );
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    setBatchFishes(filteredFishes.slice(startIndex, endIndex));
+    setConsignmentFishes(filteredFishes.slice(startIndex, endIndex));
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const totalItems = allFishes.filter((fish) => fish.batch === true).length;
-
+  const totalItems = allFishes.filter(
+    (fish) => fish.consignmentLineId !== null
+  ).length;
   return (
-    <div className="batch-fish-page">
+    <div className="consignment-fish-page">
       <Col span={24}>
         <div className="breadcrumb-container">
           <Breadcrumb className="breadcrumb" separator=">">
@@ -58,13 +57,13 @@ const BatchFishFilter = () => {
               <FontAwesomeIcon icon={faHome} className="icon" />
             </Breadcrumb.Item>
             <Breadcrumb.Item className="breadcrumb-page">
-              Batch Fish
+              Consignment Fish
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </Col>
-      <div className="batch-fish-filter">
-        <h2>{t("fishSellByBatch")}</h2>
+      <div className="consignment-fish-filter">
+        <h2>{t("consignmentFish")}</h2>
         <Pagination
           current={currentPage}
           total={totalItems}
@@ -72,9 +71,12 @@ const BatchFishFilter = () => {
           onChange={handlePageChange}
         />
         <Row gutter={[16, 16]}>
-          {batchFishes.map((fish) => (
+          {consignmentFishes.map((fish) => (
             <Col xs={24} sm={12} md={8} lg={6} key={fish.fishId}>
-              <Link to={`/fish/${fish.fishId}`} className="batch-fish-wrapper">
+              <Link
+                to={`/fish/${fish.fishId}`}
+                className="consignment-fish-wrapper"
+              >
                 <div className="image">
                   <img src={fish.imageUrl} alt={fish.name} />
                 </div>
@@ -96,6 +98,6 @@ const BatchFishFilter = () => {
       </div>
     </div>
   );
-};
+}
 
-export default BatchFishFilter;
+export default ConsignmentFishFilter;

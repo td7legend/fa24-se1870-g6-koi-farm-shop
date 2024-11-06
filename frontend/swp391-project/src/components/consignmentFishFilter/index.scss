@@ -1,0 +1,157 @@
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$background-color: #fffaf0;
+$highlight-color: #bbab6f;
+$text-color: #264653;
+$border-color: #ddd;
+$large-border-radius: 20px;
+$transition-fast: 0.3s;
+$transition-slow: 0.5s;
+
+.consignment-fish-page {
+  padding: 10px;
+  position: relative;
+  background-color: $background-color;
+  font-family: sans-serif;
+  z-index: 1;
+  overflow: hidden;
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: url("../../images/japanese-pattern.png"); // Use a traditional Japanese wave or floral pattern
+    background-position: center;
+    background-size: cover;
+    filter: blur(5px) opacity(0.15);
+    z-index: 2;
+  }
+
+  .consignment-fish-filter {
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 3;
+    background: rgba(255, 250, 240, 0.5);
+    border-radius: $large-border-radius;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+
+    h2 {
+      margin-bottom: 25px;
+      font-family: "Lora", serif;
+      font-size: 28px;
+      color: $secondary-color;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .consignment-fish-wrapper {
+      overflow: hidden;
+      height: 480px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid $border-color;
+      border-radius: 15px;
+      max-width: 320px;
+      width: 100%;
+      padding: 25px;
+      margin-bottom: 30px;
+      background: linear-gradient(#fefefe, $background-color);
+      transition: transform $transition-fast, box-shadow $transition-fast,
+        border $transition-fast;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 4;
+      &:hover {
+        transform: scale(1.08);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        border-color: $highlight-color;
+      }
+
+      .image {
+        height: 280px;
+        width: 100%;
+        overflow: hidden;
+        margin: 10px 0;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform $transition-slow;
+          border-radius: 10px;
+        }
+
+        &:hover img {
+          transform: scale(1.15);
+        }
+      }
+
+      .info-container {
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        flex-grow: 1;
+        margin-top: 20px;
+        .info {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          margin-left: 10px;
+          flex-grow: 1;
+
+          h2 {
+            margin: 0;
+            font-size: 20px;
+            color: $secondary-color;
+            font-weight: 700;
+            margin-bottom: 10px;
+            transition: color $transition-fast;
+            font-family: "Lora", serif;
+
+            &:hover {
+              color: $highlight-color;
+            }
+          }
+
+          .price {
+            margin: 12px 0;
+            font-size: 18px;
+            color: $highlight-color;
+            font-weight: bold;
+            margin-bottom: 15px;
+          }
+          p {
+            color: $highlight-color;
+            font-weight: 500;
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+
+    .ant-pagination {
+      margin-top: 40px;
+      margin-bottom: 40px;
+      .ant-pagination-item-active {
+        // background-color: $highlight-color;
+        border-color: $highlight-color;
+      }
+      a {
+        border-radius: 8px;
+        color: $highlight-color;
+        border-color: $highlight-color;
+        font-weight: bold;
+        &:hover {
+          color: $highlight-color;
+          background-color: #f0f0f0;
+        }
+      }
+    }
+  }
+}
