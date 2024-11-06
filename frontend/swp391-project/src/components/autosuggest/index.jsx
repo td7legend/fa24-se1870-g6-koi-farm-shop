@@ -36,11 +36,28 @@ const EnhancedSearchBar = () => {
 
   const getSuggestionValue = (suggestion) => suggestion.name;
 
-  const renderSuggestion = (suggestion) => (
-    <div>
-      <strong>{suggestion.name}</strong> - {suggestion.breed}
-    </div>
-  );
+  const renderSuggestion = (suggestion) => {
+    // Định dạng giá
+    const formattedPrice = new Intl.NumberFormat("vi-VN").format(
+      suggestion.price
+    );
+
+    return (
+      <div className="suggestion-item">
+        <div className="suggestion-image">
+          <img
+            src={suggestion.imageUrl}
+            alt={suggestion.name}
+            style={{ width: "50px", height: "50px", objectFit: "cover" }}
+          />
+        </div>
+        <div className="suggestion-info">
+          <strong>{suggestion.name}</strong> - {suggestion.breed}
+          <div className="suggestion-price">{formattedPrice} đ</div>
+        </div>
+      </div>
+    );
+  };
 
   const onChange = (event, { newValue }) => {
     setValue(newValue);
@@ -83,6 +100,7 @@ const EnhancedSearchBar = () => {
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
         onSuggestionSelected={onSuggestionSelected}
+        style={{ zIndex: "3000" }}
       />
       <button
         onClick={handleSearch}

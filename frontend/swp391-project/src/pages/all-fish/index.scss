@@ -14,7 +14,7 @@ $large-border-radius: 20px;
   z-index: 2;
   background-color: $background-color;
   padding: 10px;
-
+  // display: flex;
   &::before {
     content: "";
     position: absolute;
@@ -152,6 +152,17 @@ $large-border-radius: 20px;
         border-radius: 8px;
         color: white;
       }
+    }
+  }
+
+  .search-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+      font-family: "Lora", serif;
+      color: #bbab6f;
     }
   }
 }

@@ -13,6 +13,8 @@ import {
   faCog,
   faHistory,
   faSignOutAlt,
+  faDiamond,
+  faGem,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
@@ -387,6 +389,12 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                     <Link to="/consignment/sell">{t("consignmentSale")}</Link>
                   </li>
                 </ul>
+              </Link>
+            </li>
+            <li>
+              <Link to="/tier">
+                <FontAwesomeIcon icon={faGem} className="fa__icon" />
+                {t("tier")}
               </Link>
             </li>
           </ul>

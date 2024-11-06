@@ -96,7 +96,7 @@ const Home = () => {
               )}
             </p>
             <Link to="/breed/Ogon" className="view-details">
-              View Details <FontAwesomeIcon icon={faArrowRight} />
+              {t("viewDetails")} <FontAwesomeIcon icon={faArrowRight} />
             </Link>
           </div>
           <iframe
@@ -151,7 +151,7 @@ const Home = () => {
               )}
             </p>
             <Link to="/breed/Ochiba" className="view-details">
-              View Details <FontAwesomeIcon icon={faArrowRight} />
+              {t("viewDetails")} <FontAwesomeIcon icon={faArrowRight} />
             </Link>
           </div>
         </div>
@@ -182,7 +182,7 @@ const Home = () => {
               )}
             </p>
             <Link to="/breed/Kohaku" className="view-details">
-              View Details <FontAwesomeIcon icon={faArrowRight} />
+              {t("viewDetails")} <FontAwesomeIcon icon={faArrowRight} />
             </Link>
           </div>
           <iframe
@@ -237,7 +237,7 @@ const Home = () => {
               )}
             </p>
             <Link to="/breed/Kujaku" className="view-details">
-              View Details <FontAwesomeIcon icon={faArrowRight} />
+              {t("viewDetails")} <FontAwesomeIcon icon={faArrowRight} />
             </Link>
           </div>
         </div>

@@ -1,11 +1,40 @@
+$primary-color: #bbab6f;
+$secondary-color: #264653;
+$border-color: #ddd;
+$highlight-color: #bbab6f;
+$background-color: #fffaf0;
+$text-color: #264653;
+$button-padding: 12px 24px;
+$card-padding: 15px;
+$element-spacing: 25px;
+$large-border-radius: 20px;
+
 .tier-system {
   padding: 24px;
   background-color: #fafafa;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-image: url("../../../images/japanese-pattern.png");
+    background-position: center;
+    background-size: cover;
+    z-index: 2;
+    filter: blur(5px) opacity(0.15);
+    pointer-events: none;
+  }
 
   .tier-container {
     max-width: 1200px;
     margin: 0 auto;
+    z-index: 3;
   }
 
   .main-title {
@@ -28,6 +57,7 @@
     overflow: hidden;
     position: relative;
     border: none;
+    z-index: 4;
 
     &::before {
       content: "";
@@ -149,7 +179,6 @@
       }
     }
 
-    // Specific styles for each tier
     &[style*="Silver"] {
       .tier-icon-wrapper {
         background: linear-gradient(45deg, #5d6874, #8e9eab);
@@ -161,7 +190,6 @@
       }
     }
 
-    // Platinum styles
     &[style*="Platinum"] {
       position: relative;
       overflow: hidden;
@@ -497,6 +525,7 @@
         }
 
         ul li {
+          list-style: none;
           color: #666;
           font-weight: 500;
 
