@@ -7,40 +7,51 @@ import { useTranslation } from "react-i18next";
 const LatestNews = () => {
   const newsItems = [
     {
-      image: Picture,
-      title: "News 1",
-      summary: "Summary of news 1",
-      link: "/news/1",
+      image:
+        "https://sieuthicakoi.vn/storage/3l/5t/3l5tbbzposykbmji64iugx6pvtpr_danh-gia-ca-koi-doitsu-chat-luong.webp",
+      title: "What Makes a Beautiful, Quality Doitsu Koi Fish?",
+      summary: "Not everyone knows how to own quality Doitsu koi fish...",
+      link: "/blog1",
     },
     {
-      image: Picture,
-      title: "News 2",
-      summary: "Summary of news 2",
-      link: "/news/2",
+      image:
+        "https://sieuthicakoi.vn/storage/io/sl/ioslz0a75kxf2ixl09f0cbvpqrcz_danh-gia-ca-koi-asagi-chat-luong.webp",
+      title: "Complete Guide to Asagi Koi: Characteristics and Care Tips",
+      summary:
+        "Asagi Koi, known for their distinctive blue scales and red belly, are among the most traditional and respected varieties in the Koi world...",
+      link: "/blog2",
     },
     {
-      image: Picture,
-      title: "News 3",
-      summary: "Summary of news 3",
-      link: "/news/3",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/koifarmmanagement.appspot.com/o/blog_image%2Fintro_sakai.jpg?alt=media&token=e99dad21-90f8-40ba-9011-6501d4703c5f",
+      title: "Sakai Fish Farm: Legacy of Excellence in Koi Breeding",
+      summary:
+        "Discover the history and breeding techniques of one of Japan's most prestigious koi farms...",
+      link: "/blogs/sakai-farm",
     },
     {
-      image: Picture,
-      title: "News 4",
-      summary: "Summary of news 4",
-      link: "/news/4",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/koifarmmanagement.appspot.com/o/blog_image%2Fwater-testing.jpg?alt=media&token=fe5d096a-fce0-4ed9-84ba-3a09ca188a18",
+      title: "Essential Water Quality Parameters for Koi Ponds",
+      summary:
+        "Understanding and maintaining optimal water conditions for healthy koi...",
+      link: "/blogs/water-quality",
     },
     {
-      image: Picture,
-      title: "News 5",
-      summary: "Summary of news 5",
-      link: "/news/5",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/koifarmmanagement.appspot.com/o/blog_image%2FseasonKoiCare.jpg?alt=media&token=348e2818-db81-4988-b234-f4c5aee6157e",
+      title: "Seasonal Koi Care: Year-Round Maintenance Guide",
+      summary:
+        "A comprehensive guide to caring for your koi throughout all seasons...",
+      link: "/blogs/seasonal-care",
     },
     {
-      image: Picture,
-      title: "News 6",
-      summary: "Summary of news 6",
-      link: "/news/6",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/koifarmmanagement.appspot.com/o/blog_image%2FkoiFeeding_nutrition.jpg?alt=media&token=ed9a2f1a-2787-4d2e-876f-3650c7a7a077",
+      title: "Koi Nutrition: Complete Feeding Guide",
+      summary:
+        "Learn about proper koi nutrition and feeding schedules for optimal health...",
+      link: "/blogs/koi-nutrition",
     },
   ];
   const { t } = useTranslation();
@@ -66,7 +77,7 @@ const LatestNews = () => {
       setCurrentIndex((prevIndex) =>
         prevIndex - itemsPerPage >= 0
           ? prevIndex - itemsPerPage
-          : Math.floor(newsItems.length / itemsPerPage) * itemsPerPage
+          : Math.floor((newsItems.length - 1) / itemsPerPage) * itemsPerPage
       );
       setFade("fade__in");
     }, 300);

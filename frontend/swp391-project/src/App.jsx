@@ -44,6 +44,12 @@ import AdminDashboard from "./pages/admin-page/dashboard/dashboard.jsx";
 import ConsignmentCare from "./pages/consignment/consignment-care/index.jsx";
 import ConsignmentSell from "./pages/consignment/consignment-sell/index.jsx";
 import TierSystem from "./pages/user-page/tier-system/index.jsx";
+import SakaiFarm from "./components/Blogs/SakaiFarm/index.jsx";
+import MomotaroFarm from "./components/Blogs/MomotaroFarm/index.jsx";
+import DainichiFarm from "./components/Blogs/DainichiFarm/index.jsx";
+import WaterQuality from "./components/Blogs/WaterQuality/index.jsx";
+import KoiNutrition from "./components/Blogs/KoiNutrition/index.jsx";
+import SeasonalCare from "./components/Blogs/SeasonalCare/index.jsx";
 
 function App() {
   const { role } = useSelector((state) => state.auth);
@@ -65,6 +71,12 @@ function App() {
         <Route path="/blog1" element={<Blog1 />} />
         <Route path="/blog2" element={<Blog2 />} />
         <Route path="/blog3" element={<Blog3 />} />
+        <Route path="/blogs/sakai-farm" element={<SakaiFarm />} />
+        <Route path="/blogs/momotaro-farm" element={<MomotaroFarm />} />
+        <Route path="/blogs/dainichi-farm" element={<DainichiFarm />} />
+        <Route path="/blogs/water-quality" element={<WaterQuality />} />
+        <Route path="/blogs/koi-nutrition" element={<KoiNutrition />} />
+        <Route path="/blogs/seasonal-care" element={<SeasonalCare />} />
         <Route path="/blog-page" element={<BlogPage />} />
         <Route path="consignment" element={<Consignment />} />
       </>
