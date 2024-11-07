@@ -11,6 +11,9 @@ import {
   Badge,
   Empty,
   Breadcrumb,
+  Checkbox,
+  Alert,
+  Space,
 } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -31,6 +34,7 @@ import { logout } from "../../../store/actions/authActions";
 const { Title } = Typography;
 import "./index.scss";
 import { useTranslation } from "react-i18next";
+import config from "../../../config/config";
 
 const ConsignmentHistory = () => {
   const [consignments, setConsignments] = useState([]);
@@ -42,6 +46,9 @@ const ConsignmentHistory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [receiveModalVisible, setReceiveModalVisible] = useState(false);
+  const [receiveAgreed, setReceiveAgreed] = useState(false);
+  const [processingReceive, setProcessingReceive] = useState(false);
   const [customerId, setCustomerId] = useState(null);
   const { t } = useTranslation();
   const { token } = useSelector((state) => state.auth);
@@ -158,6 +165,35 @@ const ConsignmentHistory = () => {
     setDetailModalVisible(true);
   };
 
+  const handleReceiveFish = async (consignmentId) => {
+    try {
+      setProcessingReceive(true);
+
+      const response = await axios.put(
+        `${config.API_ROOT}Consignment/${consignmentId}/status`,
+        {
+          status: 6,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        message.success("Fish received successfully");
+        setReceiveModalVisible(false);
+        setReceiveAgreed(false);
+        setSelectedConsignment(null);
+        fetchConsignments();
+      }
+    } catch (error) {
+      console.error("Error receiving fish:", error);
+      message.error("Failed to receive fish");
+    } finally {
+      setProcessingReceive(false);
+    }
+  };
+
   const getStatusTag = (status, type) => {
     const statusConfig = {
       0: { color: "warning", text: "Pending" },
@@ -236,14 +272,27 @@ const ConsignmentHistory = () => {
     {
       title: "Actions",
       key: "actions",
-      width: 120,
       render: (_, record) => (
-        <Button
-          icon={<EyeOutlined />}
-          onClick={() => handleViewDetails(record)}
-        >
-          Details
-        </Button>
+        <Space>
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => handleViewDetails(record)}
+          >
+            Details
+          </Button>
+          {record.type === 0 && record.status === 5 && (
+            <Button
+              type="primary"
+              onClick={() => {
+                setSelectedConsignment(record); // Set the selected consignment first
+                setReceiveModalVisible(true);
+              }}
+              style={{ backgroundColor: "#bbab6f" }}
+            >
+              Receive Fish Back
+            </Button>
+          )}
+        </Space>
       ),
     },
   ];
@@ -358,80 +407,148 @@ const ConsignmentHistory = () => {
                       <Title level={4} style={{ marginTop: 24 }}>
                         Fish Care Details
                       </Title>
-                      <Table
-                        dataSource={fishCareData}
-                        rowKey="fishCareId"
-                        pagination={false}
-                        loading={loadingFishCare}
-                        columns={[
-                          {
-                            title: "Image",
-                            dataIndex: "fishType",
-                            key: "image",
-                            width: 150,
-                            render: (fishType) => {
-                              // Find the matching consignment line for this fish care record
-                              const consignmentLine =
-                                selectedConsignment.consignmentLines.find(
-                                  (line) => line.fishType === fishType
-                                );
-                              return consignmentLine?.imageUrl ? (
-                                <img
-                                  src={consignmentLine.imageUrl}
-                                  alt={fishType}
-                                  style={{
-                                    width: 120,
-                                    height: 80,
-                                    objectFit: "cover",
-                                    borderRadius: 4,
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() =>
-                                    window.open(
-                                      consignmentLine.imageUrl,
-                                      "_blank"
-                                    )
-                                  }
-                                />
-                              ) : (
-                                "No image"
-                              );
+                      {[0, 1, 2].includes(selectedConsignment.status) ? (
+                        // Show initial consignment details for pending, under review, and confirmed status
+                        <Table
+                          dataSource={selectedConsignment.consignmentLines}
+                          rowKey="consignmentLineId"
+                          pagination={false}
+                          columns={[
+                            {
+                              title: "Image",
+                              dataIndex: "imageUrl",
+                              key: "image",
+                              width: 150,
+                              render: (imageUrl) =>
+                                imageUrl ? (
+                                  <img
+                                    src={imageUrl}
+                                    alt="Fish"
+                                    style={{
+                                      width: 120,
+                                      height: 80,
+                                      objectFit: "cover",
+                                      borderRadius: 4,
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() =>
+                                      window.open(imageUrl, "_blank")
+                                    }
+                                  />
+                                ) : (
+                                  "No image"
+                                ),
                             },
-                          },
-                          {
-                            title: "Fish Type",
-                            dataIndex: "fishType",
-                            key: "fishType",
-                            width: 120,
-                          },
-                          {
-                            title: "Health Status",
-                            dataIndex: "healthStatus",
-                            key: "healthStatus",
-                            width: 120,
-                            render: (status) => {
-                              const statusColors = {
-                                Good: "green",
-                                Bad: "red",
-                                Normal: "orange",
-                              };
-                              return (
-                                <Tag color={statusColors[status] || "default"}>
-                                  {status}
-                                </Tag>
-                              );
+                            {
+                              title: "Fish Type",
+                              dataIndex: "fishType",
+                              key: "fishType",
+                              width: 120,
                             },
-                          },
-                          {
-                            title: "Care Details",
-                            dataIndex: "careDetails",
-                            key: "careDetails",
-                            ellipsis: true,
-                          },
-                        ]}
-                      />
-                      {fishCareData.length === 0 && !loadingFishCare && (
-                        <Empty description="No fish care records found" />
+                            {
+                              title: "Quantity",
+                              dataIndex: "quantity",
+                              key: "quantity",
+                              width: 100,
+                            },
+                            {
+                              title: "Certificate",
+                              dataIndex: "certificationUrl",
+                              key: "certificate",
+                              render: (url) =>
+                                url ? (
+                                  <Button
+                                    type="link"
+                                    onClick={() => window.open(url, "_blank")}
+                                  >
+                                    View Certificate
+                                  </Button>
+                                ) : (
+                                  "No certificate"
+                                ),
+                            },
+                          ]}
+                        />
+                      ) : (
+                        // Show fish care records for other statuses
+                        <>
+                          <Table
+                            dataSource={fishCareData}
+                            rowKey="fishCareId"
+                            pagination={false}
+                            loading={loadingFishCare}
+                            columns={[
+                              {
+                                title: "Image",
+                                dataIndex: "fishType",
+                                key: "image",
+                                width: 150,
+                                render: (fishType) => {
+                                  const consignmentLine =
+                                    selectedConsignment.consignmentLines.find(
+                                      (line) => line.fishType === fishType
+                                    );
+                                  return consignmentLine?.imageUrl ? (
+                                    <img
+                                      src={consignmentLine.imageUrl}
+                                      alt={fishType}
+                                      style={{
+                                        width: 120,
+                                        height: 80,
+                                        objectFit: "cover",
+                                        borderRadius: 4,
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={() =>
+                                        window.open(
+                                          consignmentLine.imageUrl,
+                                          "_blank"
+                                        )
+                                      }
+                                    />
+                                  ) : (
+                                    "No image"
+                                  );
+                                },
+                              },
+                              {
+                                title: "Fish Type",
+                                dataIndex: "fishType",
+                                key: "fishType",
+                                width: 120,
+                              },
+                              {
+                                title: "Health Status",
+                                dataIndex: "healthStatus",
+                                key: "healthStatus",
+                                width: 120,
+                                render: (status) => {
+                                  const statusColors = {
+                                    Good: "green",
+                                    Bad: "red",
+                                    Normal: "orange",
+                                  };
+                                  return (
+                                    <Tag
+                                      color={statusColors[status] || "default"}
+                                    >
+                                      {status}
+                                    </Tag>
+                                  );
+                                },
+                              },
+                              {
+                                title: "Care Details",
+                                dataIndex: "careDetails",
+                                key: "careDetails",
+                                ellipsis: true,
+                              },
+                            ]}
+                          />
+                          {fishCareData.length === 0 && !loadingFishCare && (
+                            <Empty description="No fish care records found" />
+                          )}
+                        </>
                       )}
                     </>
                   ) : (
@@ -527,6 +644,57 @@ const ConsignmentHistory = () => {
       >
         <p>Are you sure you want to logout?</p>
       </Modal>
+      {selectedConsignment && (
+        <Modal
+          title={`Receive Fish Back Confirmation - Consignment #${selectedConsignment.consignmentId}`}
+          open={receiveModalVisible}
+          onCancel={() => {
+            setReceiveModalVisible(false);
+            setReceiveAgreed(false);
+            setSelectedConsignment(null);
+          }}
+          footer={[
+            <Button
+              key="cancel"
+              onClick={() => {
+                setReceiveModalVisible(false);
+                setReceiveAgreed(false);
+                setSelectedConsignment(null);
+              }}
+            >
+              Cancel
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              loading={processingReceive}
+              disabled={!receiveAgreed}
+              onClick={() =>
+                handleReceiveFish(selectedConsignment.consignmentId)
+              }
+              style={{ backgroundColor: "#bbab6f" }}
+            >
+              Confirm Receive
+            </Button>,
+          ]}
+        >
+          <div style={{ marginBottom: 16 }}>
+            <Alert
+              message="Important Notice"
+              description="By receiving your fish back, you acknowledge that you will not receive any care fee refund."
+              type="warning"
+              showIcon
+              style={{ marginBottom: 16 }}
+            />
+            <Checkbox
+              checked={receiveAgreed}
+              onChange={(e) => setReceiveAgreed(e.target.checked)}
+            >
+              I understand and agree to these terms
+            </Checkbox>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

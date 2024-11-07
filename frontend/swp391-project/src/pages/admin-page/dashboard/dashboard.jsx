@@ -22,6 +22,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import config from "../../../config/config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFish } from "@fortawesome/free-solid-svg-icons";
 
 const { RangePicker } = DatePicker;
 
@@ -376,7 +378,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
-        <Spin size="large" />
+        <LoadingKoi />
       </div>
     );
   }
@@ -550,6 +552,7 @@ const AdminDashboard = () => {
             <Card>
               <Statistic
                 title="Fish Sold"
+                prefix={<FontAwesomeIcon icon={faFish} />}
                 value={calculateTotalFishSold()}
                 valueStyle={{ color: "#722ed1" }}
               />

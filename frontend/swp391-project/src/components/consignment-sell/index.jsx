@@ -1,4 +1,3 @@
-// src/pages/ConsignmentSellPage.js
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -36,9 +35,9 @@ function ConsignmentSellPage() {
 
             <h2>{t("benefitsTitle")}</h2>
             <ul className="sell-benefits">
-              <li>{t("benefit1")}</li>
-              <li>{t("benefit2")}</li>
-              <li>{t("benefit3")}</li>
+              <li>{t("saleBenefit1")}</li>
+              <li>{t("saleBenefit2")}</li>
+              <li>{t("saleBenefit3")}</li>
             </ul>
             <Button
               className="consignment-sell-link"
@@ -52,14 +51,14 @@ function ConsignmentSellPage() {
                 textAlign: "center",
               }}
             >
-              {t("consignmentForSell")}
+              {t("consignmentForSale")}
             </Button>
           </div>
 
           <div className="image-container">
             <img
               src={sellImage}
-              alt={t("imageAltText")}
+              alt={t("imageAltSaleText")}
               className="content-image"
             />
           </div>

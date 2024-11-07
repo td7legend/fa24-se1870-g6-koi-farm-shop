@@ -61,7 +61,7 @@ const ExcelFishImport = ({ onUploadSuccess, token, config }) => {
         foodRequirement: parseInt(row.foodRequirement) || 0,
         overallRating: "0",
         price: parseInt(row.price) || 0,
-        batch: true,
+        batch: row.batch?.toString().toLowerCase() === "true",
         fishTypeId: parseInt(row.fishTypeId) || 0,
         description: row.description?.trim() || "",
         quantity: parseInt(row.quantity) || 0,

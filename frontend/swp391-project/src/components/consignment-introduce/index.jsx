@@ -1,59 +1,57 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "./index.scss";
 
 function ConsignmentIntroduce() {
+  const { t } = useTranslation();
+
   return (
     <div className="consignment-background">
       <div className="background-overlay">
         <div className="consignment-container">
-          <h1 className="consignment-title">Our Consignment Services</h1>
-          <p className="consignment-intro">
-            Welcome! We offer options for consignment sale and care to suit your
-            needs.
-          </p>
+          <h1 className="consignment-title">{t("ourConsignmentServices")}</h1>
+          <p className="consignment-intro">{t("welcomeMessage")}</p>
 
           <div className="consignment-columns">
             <div className="consignment-column">
-              <h2>Consignment for Sale</h2>
+              <h2>{t("consignmentForSale")}</h2>
               <div className="service-card">
-                <h3>Step 1: Contact Us</h3>
-                <p>
-                  Provide details about the item you wish to consign for sale.
-                </p>
+                <h3>{t("step1ContactUs")}</h3>
+                <p>{t("step1ContactUs")}</p>
               </div>
               <div className="service-card">
-                <h3>Step 2: Evaluation and Pricing</h3>
-                <p>We evaluate and price your item with transparency.</p>
+                <h3>{t("step2EvaluationAndPricing")}</h3>
+                <p>{t("step2EvaluationAndPricing")}</p>
               </div>
               <div className="service-card">
-                <h3>Step 3: Display and Sale</h3>
-                <p>Your item is displayed and sold through our platform.</p>
+                <h3>{t("step3DisplayAndSale")}</h3>
+                <p>{t("step3DisplayAndSale")}</p>
               </div>
             </div>
 
             <div className="consignment-column">
-              <h2>Consignment for Care</h2>
+              <h2>{t("consignmentForCare")}</h2>
               <div className="service-card">
-                <h3>Step 1: Contact Us</h3>
-                <p>Tell us about the item you'd like us to care for.</p>
+                <h3>{t("step1CareContactUs")}</h3>
+                <p>{t("step1CareContactUs")}</p>
               </div>
               <div className="service-card">
-                <h3>Step 2: Assessment and Agreement</h3>
-                <p>We inspect the item and discuss care terms with you.</p>
+                <h3>{t("step2CareAssessmentAndAgreement")}</h3>
+                <p>{t("step2CareAssessmentAndAgreement")}</p>
               </div>
               <div className="service-card">
-                <h3>Step 3: Care and Maintenance</h3>
-                <p>We provide dedicated care per our agreement.</p>
+                <h3>{t("step3CareAndMaintenance")}</h3>
+                <p>{t("step3CareAndMaintenance")}</p>
               </div>
             </div>
           </div>
 
           <div className="consignment-benefits">
-            <h2>Service Benefits</h2>
+            <h2>{t("serviceBenefits")}</h2>
             <ul>
-              <li>Save time and effort</li>
-              <li>Transparent, trustworthy process</li>
-              <li>Access to a wider customer base</li>
+              <li>{t("benefits1")}</li>
+              <li>{t("benefits2")}</li>
+              <li>{t("benefits3")}</li>
             </ul>
           </div>
         </div>

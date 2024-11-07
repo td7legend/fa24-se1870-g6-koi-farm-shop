@@ -10,6 +10,12 @@ import ogonImage from "../../images/ogon.jpg";
 import ochibaImage from "../../images/ochiba.jpg";
 import kujakuImage from "../../images/kujaku.jpg";
 import kohakuImage from "../../images/kohaku.jpg";
+import showaImage from "../../images/showa.jpg";
+import asagiImage from "../../images/asagi.jpg";
+import tanchoImage from "../../images/tancho.jpg";
+import shusuiImage from "../../images/shusui.jpg";
+import goromoImage from "../../images/goromo.jpg";
+import benigoiImage from "../../images/benigoi.jpg";
 import ProductCard from "../../components/product-card";
 import CompareModal from "../../components/compareModel/CompareModal";
 import { useTranslation } from "react-i18next";
@@ -19,7 +25,13 @@ const fishImages = {
   Ogon: ogonImage,
   Ochiba: ochibaImage,
   Kujaku: kujakuImage,
-  kohaku: kohakuImage,
+  Kohaku: kohakuImage,
+  Showa: showaImage,
+  Asagi: asagiImage,
+  Tancho: tanchoImage,
+  Shusui: shusuiImage,
+  Goromo: goromoImage,
+  Benigoi: benigoiImage,
 };
 
 const AllFishPage = () => {
@@ -148,9 +160,11 @@ const AllFishPage = () => {
       </Col>
       <div className="all-fish-page-container">
         {searchQuery && (
-          <h2>
-            {t("searchResultsFor")}: {searchQuery}
-          </h2>
+          <div className="search-result">
+            <h2>
+              {t("searchResultsFor")}: {searchQuery}
+            </h2>
+          </div>
         )}
 
         {Object.keys(fishByType).map((typeId) => {

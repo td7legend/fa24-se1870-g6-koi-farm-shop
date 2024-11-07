@@ -89,17 +89,28 @@ function ConsignmentSell() {
     const currentDate = new Date();
     const start = new Date(startDate);
     const end = new Date(endDate);
+
     try {
       if (startDate && endDate) {
+        // Kiểm tra ngày bắt đầu phải trước hoặc bằng ngày kết thúc
         if (start > end) {
           toast.error(t("startDateCanNotBeLaterThanEndDate"));
           return false;
-        }
-        if (start >= currentDate || end >= currentDate) {
-          return true;
-        } else {
+        } else if (start < currentDate || end < currentDate) {
           toast.error(t("startDateOrEndDateCanNotBeInThePast"));
           return false;
+        }
+        if (start >= currentDate || end >= currentDate) {
+          // Tính sự khác biệt giữa hai ngày (tính theo ngày)
+          const differenceInDays = Math.floor(
+            (end - start) / (1000 * 60 * 60 * 24)
+          );
+          if (differenceInDays === 30 || differenceInDays > 30) {
+            return true; // Hợp lệ nếu đúng 30 ngày
+          } else {
+            toast.error(t("endDateMustBeAtLeast30DaysAfterStartDate")); // Thông báo lỗi nếu khác 30 ngày
+            return false;
+          }
         }
       }
       return true;
@@ -192,6 +203,7 @@ function ConsignmentSell() {
 
       toast.success(t("consignmentSaleCreatedSuccessfully"));
       formVariable.resetFields();
+      formVariable.setFieldsValue({ fish: [{}] });
       // setShowDateFields(false);
     } catch (error) {
       console.error("Error submitting consignment sale:", error);
@@ -231,7 +243,7 @@ function ConsignmentSell() {
                       onClick={() => {
                         setShowTable(true);
                         setShowDateFields(true);
-                        add();
+                        formVariable.setFieldsValue({ fish: [{}] });
                       }}
                       icon={<PlusOutlined />}
                     >
@@ -367,7 +379,7 @@ function ConsignmentSell() {
                                   icon={<MinusCircleOutlined />}
                                   onClick={() => {
                                     remove(field.name);
-                                    if (fields.length === 0) {
+                                    if (fields.length === 1) {
                                       setShowTable(false);
                                       setShowDateFields(false);
                                       formVariable.resetFields();
@@ -431,7 +443,7 @@ function ConsignmentSell() {
                       <Input type="date" />
                     </Form.Item>
                     <Form.Item
-                      label={t("agreedPrice")}
+                      label={t("expectedPrice")}
                       name="agreedPrice"
                       rules={[
                         {

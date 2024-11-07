@@ -46,7 +46,7 @@ $gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
     width: 100%;
     padding: 20px;
     z-index: 2;
-    animation: fadeIn 1s ease-out forwards;
+    // animation: fadeIn 1s ease-out forwards;
   }
 
   .settings-sider {
@@ -269,6 +269,7 @@ $gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
   justify-content: center;
   align-items: center;
   padding: 60px;
+  animation: fadeIn 1s ease-out forwards;
 
   .card {
     background-color: rgba(255, 250, 240, 0.9);

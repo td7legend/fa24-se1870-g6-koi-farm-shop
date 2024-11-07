@@ -2,13 +2,17 @@
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
-  background-color: #fffaf0;
+  background-color: transparent;
 
   .manage-fish-container {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 30px;
+  }
+  .button-form {
+    display: flex;
+    gap: 15px;
   }
   .ant-card-bordered {
     background-color: #fffaf0;

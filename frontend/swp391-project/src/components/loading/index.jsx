@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.scss";
-import Picture from "../../images/koi-fish-pattern.png";
+import Picture from "../../images/fish-around.png";
 const LoadingKoi = () => {
   return (
     <div className="loading-container">

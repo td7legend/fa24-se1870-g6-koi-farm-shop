@@ -28,7 +28,7 @@ const TierSystem = () => {
       icon: GiLaurelCrown,
       color: "#CD7F32",
       gradient: "linear-gradient(135deg, #804A00, #CD7F32, #b08d57)",
-      benefits: "Basic rewards and member benefits",
+      benefits: t("tiers.bronzeTier"),
     },
     {
       name: "Silver",
@@ -37,7 +37,7 @@ const TierSystem = () => {
       icon: GiTrophy,
       color: "#C0C0C0",
       gradient: "linear-gradient(135deg, #5D6874, #8E9EAB, #B8C6DB)",
-      benefits: "2x points on all purchases",
+      benefits: t("tiers.silverTier"),
     },
     {
       name: "Gold",
@@ -46,7 +46,7 @@ const TierSystem = () => {
       icon: GiCrown,
       color: "#FFD700",
       gradient: "linear-gradient(135deg, #B8860B, #FFD700, #FFF380)",
-      benefits: "3x points and exclusive offers",
+      benefits: t("tiers.goldTier"),
     },
     {
       name: "Platinum",
@@ -55,7 +55,7 @@ const TierSystem = () => {
       icon: FaCrown,
       color: "#E5E4E2",
       gradient: "linear-gradient(135deg, #1a1a1a, #363636, #727272, #a6a6a6)",
-      benefits: "5x points and VIP privileges",
+      benefits: t("tiers.platinumTier"),
     },
   ];
 
@@ -115,18 +115,21 @@ const TierSystem = () => {
 
   return (
     <div className="tier-system">
-      <Breadcrumb className="breadcrumb" separator=">">
-        <Breadcrumb.Item href="/">
-          <FontAwesomeIcon icon={faHome} />
-        </Breadcrumb.Item>
-        <Breadcrumb.Item href="/user-dashboard/:id">Dashboard</Breadcrumb.Item>
-        <Breadcrumb.Item>Tier System</Breadcrumb.Item>
-      </Breadcrumb>
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {t("tierSystem")}
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
 
       <div className="tier-container">
         <Title level={2} className="main-title">
           <FaGem className="title-icon" />
-          Loyalty Tier System
+          {t("loyaltyTierSystem")}
         </Title>
 
         <Row gutter={[24, 24]}>
@@ -150,21 +153,21 @@ const TierSystem = () => {
                     </Title>
                     <div className="tier-details">
                       <div className="points-required">
-                        <span className="label">Points Required</span>
+                        <span className="label">{t("pointsRequired")}</span>
                         <span className="value">{tier.points}</span>
                       </div>
                       <div className="multiplier">
-                        <span className="label">Points Multiplier</span>
+                        <span className="label">{t("pointsMultiplier")}</span>
                         <span className="value">x{tier.multiplier}</span>
                       </div>
                       <div className="benefits">
-                        <span className="label">Benefits</span>
+                        <span className="label">{t("benefits")}</span>
                         <span className="value">{tier.benefits}</span>
                       </div>
                     </div>
                   </div>
                   {isCurrentTier && (
-                    <div className="current-badge">Current Tier</div>
+                    <div className="current-badge">{t("currentTier")}</div>
                   )}
                 </Card>
               </Col>
@@ -180,12 +183,12 @@ const TierSystem = () => {
                   className="section-icon"
                   style={{ color: "#bbab6f" }}
                 />
-                Your Current Progress
+                {t("yourCurrentProgress")}
               </Title>
 
               <div className="status-labels">
-                <span className="label">Current Tier</span>
-                <span className="label">Total Points</span>
+                <span className="label">{t("currentTier")}</span>
+                <span className="label">{t("totalPoints")}</span>
               </div>
 
               <div className="current-status">
@@ -198,7 +201,7 @@ const TierSystem = () => {
                 <div className="status-item">
                   <span className="value">
                     <AiFillStar className="points-icon" />
-                    {userInfo.accommodatePoint} points
+                    {userInfo.accommodatePoint} {t("points")}
                   </span>
                 </div>
               </div>
@@ -228,16 +231,20 @@ const TierSystem = () => {
                   <div className="points-needed">
                     <FaGem className="details-icon" />
                     <div className="details-text">
-                      <span className="label">Points needed for next tier</span>
+                      <span className="label">
+                        {t("pointsNeededForNextTier")}
+                      </span>
                       <span className="value">
-                        {getPointsToNextTier()} points
+                        {getPointsToNextTier()} {t("points")}
                       </span>
                     </div>
                   </div>
                   <div className="purchase-needed">
                     <FaPercent className="details-icon" />
                     <div className="details-text">
-                      <span className="label">Estimated purchase needed</span>
+                      <span className="label">
+                        {t("estimatedPurchaseNeeded")}
+                      </span>
                       <span className="value">
                         {getMoneyNeededForNextTier().toLocaleString()} VND
                       </span>
@@ -252,32 +259,35 @@ const TierSystem = () => {
         <Card className="benefits-card">
           <Title level={3}>
             <AiFillGift className="section-icon" />
-            Tier Benefits
+            {t("tierBenefits")}
           </Title>
           <Row gutter={[24, 24]}>
             <Col xs={24} md={12}>
               <div className="benefits-section">
                 <div className="benefits-content">
                   <Title level={4}>
-                    <BsFillPersonFill className="benefit-icon" />
-                    Basic Benefits (All Tiers)
+                    <BsFillPersonFill
+                      className="benefit-icon"
+                      style={{ marginRight: "5px" }}
+                    />
+                    {t("basicBenefits")}
                   </Title>
                   <ul>
                     <li>
-                      <FaPercent className="list-icon" /> Points accumulation on
-                      all purchases
+                      <FaPercent className="list-icon" />{" "}
+                      {t("pointsAccumulation")}
                     </li>
                     <li>
-                      <AiFillGift className="list-icon" /> Access to exclusive
-                      products
+                      <AiFillGift className="list-icon" />{" "}
+                      {t("exclusiveProducts")}
                     </li>
                     <li>
-                      <FaBirthdayCake className="list-icon" /> Birthday special
-                      offers
+                      <FaBirthdayCake className="list-icon" />{" "}
+                      {t("birthdayOffers")}
                     </li>
                     <li>
-                      <MdNewReleases className="list-icon" /> Regular
-                      promotional updates
+                      <MdNewReleases className="list-icon" />{" "}
+                      {t("promotionalUpdates")}
                     </li>
                   </ul>
                 </div>
@@ -290,25 +300,26 @@ const TierSystem = () => {
               <div className="benefits-section premium">
                 <div className="benefits-content">
                   <Title level={4}>
-                    <BsTrophy className="benefit-icon" />
-                    Premium Benefits (Platinum)
+                    <BsTrophy
+                      className="benefit-icon"
+                      style={{ marginRight: "5px" }}
+                    />
+                    {t("premiumBenefits")}
                   </Title>
                   <ul>
                     <li>
-                      <AiFillStar className="list-icon" /> 5x points on all
-                      purchases
+                      <AiFillStar className="list-icon" /> {t("fivexPoints")}
                     </li>
                     <li>
-                      <AiFillCustomerService className="list-icon" /> Priority
-                      customer service
+                      <AiFillCustomerService className="list-icon" />{" "}
+                      {t("priorityService")}
                     </li>
                     <li>
-                      <MdNewReleases className="list-icon" /> Early access to
-                      new products
+                      <MdNewReleases className="list-icon" /> {t("earlyAccess")}
                     </li>
                     <li>
-                      <MdEventAvailable className="list-icon" /> Exclusive
-                      Platinum member events
+                      <MdEventAvailable className="list-icon" />{" "}
+                      {t("exclusiveEvents")}
                     </li>
                   </ul>
                 </div>

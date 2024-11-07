@@ -209,6 +209,7 @@ $gradient: radial-gradient(circle at 50% 50%, #f0e6da, #fffaf0);
   justify-content: center;
   align-items: center;
   padding: 60px;
+  animation: fadeIn 1s ease-out forwards;
 
   .ant-card-body {
     background-color: rgba(255, 250, 240, 0.95);
