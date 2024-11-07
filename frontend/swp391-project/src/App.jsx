@@ -1,5 +1,10 @@
 import { useMemo } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import Consignment from "./pages/consignment/consignment-page/index.jsx";
@@ -108,7 +113,6 @@ function App() {
     []
   );
 
-  // Routes cho Staff
   const staffRoutes = useMemo(
     () => (
       <Routes>
@@ -118,6 +122,7 @@ function App() {
         </Route>
 
         <Route path="/staff-dashboard" element={<StaffLayout />}>
+          <Route index element={<Navigate to="order-management" replace />} />
           <Route path="order-management" element={<StaffOrderManagement />} />
           <Route path="fish-management" element={<StaffFishManagement />} />
           <Route
@@ -150,6 +155,7 @@ function App() {
         </Route>
 
         <Route path="/admin-dashboard" element={<AdminLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="fish-management" element={<StaffFishManagement />} />
