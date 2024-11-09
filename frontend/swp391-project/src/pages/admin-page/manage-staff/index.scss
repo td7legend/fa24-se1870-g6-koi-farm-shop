@@ -81,4 +81,52 @@ $soft-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       }
     }
   }
+
+  .staff-management-table {
+    .ant-table {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      .ant-table-thead > tr > th {
+        background-color: #f5f2e8;
+        color: #666;
+        font-weight: 600;
+        padding: 16px;
+        text-align: left;
+        border-bottom: 2px solid #bbab6f;
+      }
+
+      .ant-table-tbody > tr > td {
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .ant-table-tbody > tr:hover > td {
+        background-color: #faf7e8;
+      }
+    }
+
+    // Tùy chỉnh phân trang
+    .ant-pagination {
+      margin: 16px 0;
+
+      .ant-pagination-item-active {
+        border-color: #bbab6f;
+
+        a {
+          color: #bbab6f;
+        }
+      }
+    }
+  }
+
+  // Làm đẹp card chứa bảng
+  .card {
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+    .ant-card-body {
+      padding: 24px;
+    }
+  }
 }

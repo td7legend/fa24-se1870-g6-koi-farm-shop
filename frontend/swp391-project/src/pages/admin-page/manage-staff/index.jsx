@@ -38,7 +38,7 @@ const StaffManagement = () => {
   const fetchStaffs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${config.API_ROOT}auth/staffs`, {
+      const response = await axios.get(`${config.API_ROOT}Staff/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -124,15 +124,25 @@ const StaffManagement = () => {
 
   const columns = [
     {
+      title: "Staff ID",
+      dataIndex: "staffId",
+      key: "staffId",
+    },
+    {
       title: "Full Name",
       dataIndex: "fullName",
       key: "fullName",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
     },
+    // {
+    //   title: "Email",
+    //   dataIndex: "email",
+    //   key: "email",
+    // },
     {
       title: "Phone Number",
       dataIndex: "phoneNumber",

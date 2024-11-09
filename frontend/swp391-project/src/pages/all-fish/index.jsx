@@ -16,10 +16,6 @@ import tanchoImage from "../../images/tancho.jpg";
 import shusuiImage from "../../images/shusui.jpg";
 import goromoImage from "../../images/goromo.jpg";
 import benigoiImage from "../../images/benigoi.jpg";
-import goshikiImage from "../../images/goshiki.jpg";
-import ginrinImage from "../../images/ginrin.jpg";
-import doitsuImage from "../../images/doitsu.jpg";
-import bekkoImage from "../../images/bekko.jpg";
 import ProductCard from "../../components/product-card";
 import CompareModal from "../../components/compareModel/CompareModal";
 import { useTranslation } from "react-i18next";
@@ -36,10 +32,6 @@ const fishImages = {
   Shusui: shusuiImage,
   Goromo: goromoImage,
   Benigoi: benigoiImage,
-  Goshiki: goshikiImage,
-  Ginrin: ginrinImage,
-  Doitsu: doitsuImage,
-  Bekko: bekkoImage,
 };
 
 const AllFishPage = () => {
@@ -54,7 +46,6 @@ const AllFishPage = () => {
   const [fishTypes, setFishTypes] = useState([]);
   const itemsPerPage = 4;
   const [isLoading, setIsLoading] = useState(true);
-  const [fadeClasses, setFadeClasses] = useState({});
 
   const fetchAllFish = async () => {
     try {
@@ -63,7 +54,7 @@ const AllFishPage = () => {
         axios.get(`${config.API_ROOT}fishtypes`),
       ]);
 
-      const fishData = fishResponse.data;
+      const fishData = fishResponse.data.filter((fish) => fish.quantity > 0);
       const typesData = typesResponse.data;
 
       setAllFish(fishData);
@@ -76,6 +67,8 @@ const AllFishPage = () => {
   };
 
   const categorizeFishByType = (fishData) => {
+    if (!fishData.length) return;
+
     const typeMap = fishData.reduce((acc, fish) => {
       const typeId = fish.fishTypeId.toString();
       if (!acc[typeId]) {
@@ -88,13 +81,10 @@ const AllFishPage = () => {
     setFishByType(typeMap);
 
     const initialPageState = {};
-    const initialFadeClasses = {};
     Object.keys(typeMap).forEach((typeId) => {
       initialPageState[typeId] = 1;
-      initialFadeClasses[typeId] = "fade-in visible";
     });
     setCurrentPage(initialPageState);
-    setFadeClasses(initialFadeClasses);
   };
 
   useEffect(() => {
@@ -129,30 +119,19 @@ const AllFishPage = () => {
   }, [fishTypes, fishByType]);
 
   const handlePageChange = (typeId, direction) => {
-    setFadeClasses((prevState) => ({
-      ...prevState,
-      [typeId]: "fade-out hidden",
-    }));
-
-    setTimeout(() => {
-      setCurrentPage((prevState) => {
-        const newPage = prevState[typeId] + direction;
-        if (
-          newPage < 1 ||
-          newPage > Math.ceil(fishByType[typeId].length / itemsPerPage)
-        ) {
-          return prevState;
-        }
-        return {
-          ...prevState,
-          [typeId]: newPage,
-        };
-      });
-      setFadeClasses((prevState) => ({
+    setCurrentPage((prevState) => {
+      const newPage = prevState[typeId] + direction;
+      if (
+        newPage < 1 ||
+        newPage > Math.ceil(fishByType[typeId].length / itemsPerPage)
+      ) {
+        return prevState;
+      }
+      return {
         ...prevState,
-        [typeId]: "fade-in visible",
-      }));
-    }, 300);
+        [typeId]: newPage,
+      };
+    });
   };
 
   const filterFishBySearch = (fish) => {
@@ -187,6 +166,7 @@ const AllFishPage = () => {
             </h2>
           </div>
         )}
+
         {Object.keys(fishByType).map((typeId) => {
           const typeFish = fishByType[typeId].filter(filterFishBySearch);
           if (typeFish.length === 0) return null;
@@ -200,8 +180,17 @@ const AllFishPage = () => {
             (type) => type.fishTypeId === parseInt(typeId)
           );
 
+          console.log("Type ID:", typeId);
+          console.log("Found Fish Type:", fishType);
+
           const typeName = fishType ? fishType.name : "Unknown Type";
-          const imageSrc = fishImages[typeName] || "default_image_link";
+          console.log("Type Name:", typeName);
+
+          const imageSrc =
+            fishImages[typeName] ||
+            fishImages[typeName.toLowerCase()] ||
+            "default_image_link";
+          console.log("Image Source:", imageSrc);
 
           return (
             <div
@@ -223,16 +212,15 @@ const AllFishPage = () => {
                 >
                   &lt;
                 </button>
-                <div className={`product-fade ${fadeClasses[typeId]}`}>
-                  {fishToDisplay.map((fish) => (
-                    <ProductCard
-                      className="product-card"
-                      fish={fish}
-                      key={fish.fishId}
-                      onCompare={handleCompare}
-                    />
-                  ))}
-                </div>
+
+                {fishToDisplay.map((fish) => (
+                  <ProductCard
+                    className="product-card"
+                    fish={fish}
+                    key={fish.fishId}
+                    onCompare={handleCompare}
+                  />
+                ))}
 
                 <button
                   className="nav__button right"
