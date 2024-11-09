@@ -251,7 +251,7 @@ const Cart = () => {
                 <Button
                   className="button"
                   size="large"
-                  onClick={() => (window.location.href = "/products")}
+                  onClick={() => (window.location.href = "/fish-page")}
                   style={{ marginRight: 10 }}
                 >
                   {t("backToShop")}
