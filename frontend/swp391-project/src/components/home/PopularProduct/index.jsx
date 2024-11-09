@@ -12,7 +12,7 @@ const PopularProduct = () => {
   const itemsPerPage = 4;
   const [currentPage, setCurrentPage] = useState(0);
   const [fade, setFade] = useState("");
-  // sài tạm mốt co api thi update
+
   const fetchPopularTypes = async () => {
     try {
       const response = await axios.get(

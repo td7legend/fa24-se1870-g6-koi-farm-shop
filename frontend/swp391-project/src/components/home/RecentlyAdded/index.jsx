@@ -6,18 +6,16 @@ import config from "../../../config/config";
 import { useTranslation } from "react-i18next";
 import Product from "../product/index.jsx";
 
-
 const RecentlyAdded = () => {
   const [newFishes, setNewFishes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [fade, setFade] = useState(""); // For CSS animations
-  const itemsPerPage = 4; // Number of products to show at once
-  const itemsToShow = 8; // Number of products to fetch
+  const [fade, setFade] = useState("");
+  const itemsPerPage = 4;
+  const itemsToShow = 8;
   const { t } = useTranslation();
   const fetchRecentlyAdded = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}fishs`);
-      // Only take the last 8 items and reverse them
       setNewFishes(response.data.slice(-itemsToShow).reverse());
     } catch (error) {
       console.error("Error fetching fishs:", error);

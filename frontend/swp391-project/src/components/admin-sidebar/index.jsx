@@ -9,7 +9,10 @@ import {
   faSignOutAlt,
   faShoppingCart,
   faRightFromBracket,
+  faTruck,
+  faNotesMedical,
 } from "@fortawesome/free-solid-svg-icons";
+import logo from "../../images/logo.png";
 import { DashboardOutlined, TeamOutlined } from "@ant-design/icons";
 import { logout } from "../../store/actions/authActions";
 import { useTranslation } from "react-i18next";
@@ -55,7 +58,13 @@ const AdminSidebar = ({ onHover }) => {
       onMouseLeave={handleMouseLeave}
     >
       <div className="admin-sidebar__logo">
-        <h2>{isHovered ? "Admin Dashboard" : "AD"}</h2>
+        <h2>
+          {isHovered ? (
+            "Admin Dashboard"
+          ) : (
+            <img src={logo} alt="Golden Koi" className="Logo" />
+          )}
+        </h2>
       </div>
       <aside className="admin-sidebar__nav">
         <ul className="admin-sidebar__menu">
@@ -90,6 +99,24 @@ const AdminSidebar = ({ onHover }) => {
             >
               <FontAwesomeIcon icon={faList} className="admin-icon" />
               <span className="admin-label">{t("fishtypeManagement")}</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admin-dashboard/consignment-management"
+              activeClassName="active"
+            >
+              <FontAwesomeIcon icon={faTruck} className="admin-icon" />
+              <span className="admin-label">{t("consignmentManagement")}</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admin-dashboard/fishcare-management"
+              activeClassName="active"
+            >
+              <FontAwesomeIcon icon={faNotesMedical} className="admin-icon" />
+              <span className="admin-label">{t("fishCareManagement")}</span>
             </NavLink>
           </li>
           <li>

@@ -45,6 +45,13 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
   const { cartItemsRedux } = useSelector((state) => state.cart);
   const userDropdownRef = useRef(null);
 
+  const tiers = [
+    { name: "Bronze", minPoints: 0 },
+    { name: "Silver", minPoints: 100 },
+    { name: "Gold", minPoints: 200 },
+    { name: "Platinum", minPoints: 500 },
+  ];
+
   const { t } = useTranslation();
 
   const getFishPrice = (fishId) => {
@@ -299,8 +306,8 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                   <div className="info-item">
                     <span className="label">{t("membershipLevel")}:</span>
                     <span className="value">
-                      {userData.membershipLevel || "Bronze"}
-                    </span>
+                      {userData.tier ? tiers[userData.tier].name : "Bronze"}
+                    </span>{" "}
                   </div>
                   <div className="dropdown-divider"></div>
                   <Link

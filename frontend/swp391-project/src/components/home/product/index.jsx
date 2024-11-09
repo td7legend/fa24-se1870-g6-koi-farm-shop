@@ -74,9 +74,17 @@ const Product = ({ product }) => {
             <h2>{product.name}</h2>
             <p className="description">{product.description}</p>
             <div className="tag">
-              <div className="tag-item-origin">{product.origin}</div>
+              <div className="tag-item-origin">
+                {t("origin")}: {product.class}
+              </div>
               <div className="tag-item-size">
                 {t("size")}: {product.size} cm
+              </div>
+              <div className="tag-item-age">
+                {t("age")}: {product.age}
+              </div>
+              <div className="tag-item-gender">
+                {t("gender")}: {product.gender === 1 ? t("female") : t("male")}
               </div>
             </div>
             <p className="price">

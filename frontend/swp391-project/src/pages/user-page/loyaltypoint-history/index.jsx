@@ -156,7 +156,7 @@ const LoyaltyPointHistory = () => {
             <li onClick={() => navigate("/user-setting/:id")}>
               <FontAwesomeIcon icon={faCog} /> {t("setting")}
             </li>
-            <li>
+            <li onClick={() => navigate("/consignment-history")}>
               <FontAwesomeIcon icon={faHandHoldingUsd} />
               {t("consignment")}
             </li>

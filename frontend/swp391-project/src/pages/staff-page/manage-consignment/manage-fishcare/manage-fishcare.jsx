@@ -28,7 +28,8 @@ const FishCareManagement = () => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.token);
+  const { token } = useSelector((state) => state.auth);
+
   useEffect(() => {
     fetchFishCares();
   }, []);
@@ -36,7 +37,6 @@ const FishCareManagement = () => {
   const fetchFishCares = async () => {
     try {
       setLoading(true);
-
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
