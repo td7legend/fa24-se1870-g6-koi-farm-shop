@@ -7,7 +7,9 @@ import {
   faTruck,
   faSignOutAlt,
   faRightFromBracket,
+  faNotesMedical,
 } from "@fortawesome/free-solid-svg-icons";
+import logo from "../../images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
@@ -55,7 +57,13 @@ function Sidebar({ onHover }) {
       onMouseLeave={handleMouseLeave}
     >
       <div className="sidebar__logo">
-        <h2>{isHovered ? "Staff Dashboard" : "SD"}</h2>
+        <h2>
+          {isHovered ? (
+            "Staff Dashboard"
+          ) : (
+            <img src={logo} alt="Golden Koi" className="Logo" />
+          )}
+        </h2>
       </div>
       <aside className="sidebar__nav">
         <ul className="sidebar__menu">
@@ -93,6 +101,15 @@ function Sidebar({ onHover }) {
             >
               <FontAwesomeIcon icon={faTruck} className="icon" />
               <span className="label">{t("consignmentManagement")}</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/staff-dashboard/fishcare-management"
+              activeClassName="active"
+            >
+              <FontAwesomeIcon icon={faNotesMedical} className="icon" />
+              <span className="label">{t("fishCareManagement")}</span>
             </NavLink>
           </li>
           <li>
