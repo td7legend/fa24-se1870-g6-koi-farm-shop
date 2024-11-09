@@ -15,6 +15,7 @@ import { EyeOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -27,7 +28,7 @@ const FishCareManagement = () => {
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
+  const token = useSelector((state) => state.auth.token);
   useEffect(() => {
     fetchFishCares();
   }, []);
@@ -35,7 +36,7 @@ const FishCareManagement = () => {
   const fetchFishCares = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
@@ -64,7 +65,6 @@ const FishCareManagement = () => {
 
   const handleUpdateStatusDetails = async (values) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         toast.error("No authentication token found. Please log in.");
         navigate("/login");
