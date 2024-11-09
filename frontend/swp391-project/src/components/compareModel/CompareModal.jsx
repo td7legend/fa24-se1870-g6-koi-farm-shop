@@ -71,8 +71,15 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
     const comparedFishIds = comparedFishes
       .filter((fish) => fish !== null)
       .map((fish) => fish.fishId);
-    return allFish.filter((fish) => !comparedFishIds.includes(fish.fishId));
-  }, [allFish, comparedFishes]);
+    return initialFish
+      ? allFish.filter(
+          (fish) =>
+            !comparedFishIds.includes(fish.fishId) &&
+            fish.class === initialFish.class &&
+            fish.fishTypeId === initialFish.fishTypeId
+        )
+      : [];
+  }, [allFish, comparedFishes, initialFish]);
 
   const renderComparisonRow = (
     label,

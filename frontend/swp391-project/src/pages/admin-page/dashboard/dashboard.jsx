@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import config from "../../../config/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFish } from "@fortawesome/free-solid-svg-icons";
+import LoadingKoi from "../../../components/loading";
 
 const { RangePicker } = DatePicker;
 

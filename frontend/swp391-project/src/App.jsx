@@ -122,7 +122,10 @@ function App() {
         </Route>
 
         <Route path="/staff-dashboard" element={<StaffLayout />}>
-          <Route index element={<Navigate to="order-management" replace />} />
+          <Route
+            index
+            element={<Navigate temento="order-management" replace />}
+          />
           <Route path="order-management" element={<StaffOrderManagement />} />
           <Route path="fish-management" element={<StaffFishManagement />} />
           <Route
@@ -133,7 +136,7 @@ function App() {
             path="consignment-management"
             element={<ConsignmentManagement />}
           />
-          <Route path="fish-care-management" element={<FishCareManagement />} />
+          <Route path="fishcare-management" element={<FishCareManagement />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
