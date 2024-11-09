@@ -88,7 +88,7 @@ const ProductCard = ({ fish, onCompare }) => {
                 {t("age")}: {fish.age} {t("years")}
               </div>
               <div className="tag-item-gender">
-                {t("gender")}: {fish.gender === 1 ? t("male") : t("female")}
+                {t("gender")}: {fish.gender === 1 ? t("female") : t("male")}
               </div>
             </div>
             <p className="price">

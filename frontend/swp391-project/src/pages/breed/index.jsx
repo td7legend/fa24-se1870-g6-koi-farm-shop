@@ -114,16 +114,22 @@ const BreedFishPage = () => {
 
   const imageSrc = fishImages[currentBreed?.name] || "default_image_link";
 
-  const origins = [...new Set(breedFish.map((Fish) => Fish.origin))];
+  const origins = [...new Set(breedFish.map((Fish) => Fish.class))];
   const sizes = [...new Set(breedFish.map((Fish) => Fish.size))];
   const ages = [...new Set(breedFish.map((Fish) => Fish.age))];
-  const gender = [...new Set(breedFish.map((Fish) => Fish.gender))];
+  const gender = [
+    ...new Set(
+      breedFish.map((Fish) => {
+        return Fish.gender === 0 ? "Male" : "Female";
+      })
+    ),
+  ];
   const filteredFishs =
     searchQuery === ""
       ? breedFish
           .filter((Fish) => {
             if (selectedOrigins.length === 0) return true;
-            return selectedOrigins.includes(Fish.origin);
+            return selectedOrigins.includes(Fish.class);
           })
           .filter((Fish) => {
             if (selectedSizes.length === 0) return true;
@@ -135,7 +141,10 @@ const BreedFishPage = () => {
           })
           .filter((Fish) => {
             if (selectedGender.length === 0) return true;
-            return selectedGender.includes(Fish.gender);
+            const genderValues = selectedGender.map((g) =>
+              g === "Male" ? 0 : 1
+            );
+            return genderValues.includes(Fish.gender);
           })
           .filter((Fish) => {
             return Fish.price >= priceRange[0] && Fish.price <= priceRange[1];

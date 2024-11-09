@@ -30,6 +30,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../store/actions/authActions";
 import "./index.scss";
+import LoadingKoi from "../../../components/loading";
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -109,18 +110,7 @@ const LoyaltyPointHistory = () => {
   ];
 
   if (loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <Spin size="large" />
-      </div>
-    );
+    return <LoadingKoi />;
   }
   const confirmLogout = () => {
     setShowConfirmation(true);
@@ -166,7 +156,7 @@ const LoyaltyPointHistory = () => {
             <li onClick={() => navigate("/user-setting/:id")}>
               <FontAwesomeIcon icon={faCog} /> {t("setting")}
             </li>
-            <li>
+            <li onClick={() => navigate("/consignment-history")}>
               <FontAwesomeIcon icon={faHandHoldingUsd} />
               {t("consignment")}
             </li>

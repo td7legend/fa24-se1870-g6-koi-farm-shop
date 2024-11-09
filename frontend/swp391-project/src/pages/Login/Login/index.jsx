@@ -11,6 +11,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import LanguageSelector from "../../../components/language/LanguageSelector";
 import { useTranslation } from "react-i18next";
+import {
+  faEnvelope,
+  faLock,
+  faUnlock,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Main = ({
   active,
@@ -38,14 +44,11 @@ const Main = ({
   remainingTime,
   isResendDisabled,
   t,
+  showPassword,
+  setShowPassword,
+  togglePasswordVisibility,
 }) => (
   <main>
-    {/* <div
-      className="language-container"
-      style={{ position: "relative", zIndex: 1000 }}
-    >
-      <LanguageSelector />
-    </div> */}
     <div className={`container ${active ? "active" : ""}`} id="container">
       {/* Sign Up Form */}
       <div className="form-container sign-up">
@@ -55,34 +58,64 @@ const Main = ({
               <h1>{t("createAccount")}</h1>
 
               <span>{t("useYourEmailForRegistration")}</span>
-              <input
-                type="text"
-                placeholder={t("name")}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-              <input
-                type="email"
-                placeholder={t("email")}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder={t("password")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder={t("confirmPassword")}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
+              <div className="input-container">
+                <FontAwesomeIcon icon={faUser} className="input-icon" />
+                <input
+                  id="name"
+                  type="text"
+                  placeholder=""
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <label htmlFor="name">{t("name")}</label>
+              </div>
+              <div className="input-container">
+                <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
+                <input
+                  id="email"
+                  type="email"
+                  placeholder=""
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <label htmlFor="email">{t("email")}</label>
+              </div>
+              <div className="input-container">
+                <FontAwesomeIcon
+                  icon={showPassword ? faUnlock : faLock}
+                  className="input-icon"
+                  onClick={togglePasswordVisibility}
+                />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder=""
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+
+                <label htmlFor="password">{t("password")}</label>
+              </div>
+              <div className="input-container">
+                <FontAwesomeIcon
+                  icon={showPassword ? faUnlock : faLock}
+                  className="input-icon"
+                  onClick={togglePasswordVisibility}
+                />
+                <input
+                  id="confirmPassword"
+                  type={showPassword ? "text" : "password"}
+                  placeholder=""
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <label htmlFor="confirmPassword">{t("confirmPassword")}</label>
+              </div>
+
               <button type="submit">{t("signUp")}</button>
             </>
           ) : (
@@ -140,20 +173,34 @@ const Main = ({
           </div>
 
           <span>{t("orUseYourEmailForLogin")}</span>
-          <input
-            type="email"
-            placeholder={t("email")}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder={t("password")}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="input-container">
+            <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
+            <input
+              id="email"
+              type="email"
+              placeholder=""
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <label htmlFor="email">{t("email")}</label>
+          </div>
+          <div className="input-container">
+            <FontAwesomeIcon
+              icon={showPassword ? faUnlock : faLock}
+              className="input-icon"
+              onClick={togglePasswordVisibility}
+            />
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder=""
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <label htmlFor="password">{t("password")}</label>
+          </div>
           <Link to="/forgot-password">{t("forgotYourPassword")}</Link>
           <button type="submit">{t("signIn")}</button>
           {error && <p className="error-message">{error}</p>}
@@ -191,6 +238,7 @@ const LoginPage = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [otp, setOtp] = useState(""); // <-- Added this state for OTP
   const [otpExpiry, setOtpExpiry] = useState(0); // <-- Added this state for OTP expiry
@@ -217,6 +265,10 @@ const LoginPage = () => {
     const passwordRegex =
       /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     return passwordRegex.test(password);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
   };
 
   const handleLogin = async (e) => {
@@ -438,6 +490,9 @@ const LoginPage = () => {
         remainingTime={remainingTime}
         isResendDisabled={isResendDisabled}
         t={t}
+        showPassword={showPassword}
+        setShowPassword={setShowPassword}
+        togglePasswordVisibility={togglePasswordVisibility}
       />
       <ToastContainer />
     </div>

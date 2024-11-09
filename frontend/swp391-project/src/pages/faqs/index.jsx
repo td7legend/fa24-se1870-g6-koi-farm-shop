@@ -10,55 +10,44 @@ function FAQsPage() {
   const { t } = useTranslation();
   const faqData = [
     {
-      question: "What types of koi fish do you sell?",
-      answer:
-        "We offer a wide variety of koi fish, including Kohaku, Showa, and Sanke....",
+      question: t("faqData.question1"),
+      answer: t("faqData.answer1"),
     },
     {
-      question: "How do I take care of my koi?",
-      answer:
-        "Koi fish require a clean pond, proper filtration, and balanced feeding.",
+      question: t("faqData.question2"),
+      answer: t("faqData.answer2"),
     },
     {
-      question: "What is the price range for your koi fish?",
-      answer:
-        "Prices vary depending on the breed, size, and quality, ranging from $50 to over $1,000.",
+      question: t("faqData.question3"),
+      answer: t("faqData.answer3"),
     },
     {
-      question: "Do you ship koi fish internationally?",
-      answer:
-        "Yes, we offer international shipping with special care for the health of the fish during transit.",
+      question: t("faqData.question4"),
+      answer: t("faqData.answer4"),
     },
     {
-      question: "Can I visit your farm to select koi in person?",
-      answer:
-        "Absolutely! We welcome visitors to our farm by appointment to select koi directly.",
-    },
-    // New questions related to buying and selling
-    {
-      question: "How can I purchase koi fish from your store?",
-      answer:
-        "You can purchase koi fish directly from our website or visit our farm by appointment.",
+      question: t("faqData.question5"),
+      answer: t("faqData.answer5"),
     },
     {
-      question: "Do you offer discounts for bulk purchases?",
-      answer:
-        "Yes, we offer discounts for bulk purchases. Please contact us for more details.",
+      question: t("faqData.question6"),
+      answer: t("faqData.answer6"),
     },
     {
-      question: "What payment methods do you accept?",
-      answer:
-        "We accept various payment methods, including credit cards, PayPal, and bank transfers.",
+      question: t("faqData.question7"),
+      answer: t("faqData.answer7"),
     },
     {
-      question: "What is your return policy for koi fish?",
-      answer:
-        "We have a strict return policy. Please contact us within 24 hours if you have any issues with your purchase.",
+      question: t("faqData.question8"),
+      answer: t("faqData.answer8"),
     },
     {
-      question: "Can I sell my koi fish to you?",
-      answer:
-        "Yes, we occasionally buy koi fish from breeders. Please reach out to us for more information.",
+      question: t("faqData.question9"),
+      answer: t("faqData.answer9"),
+    },
+    {
+      question: t("faqData.question10"),
+      answer: t("faqData.answer10"),
     },
   ];
 
@@ -75,7 +64,7 @@ function FAQsPage() {
                 ></FontAwesomeIcon>
               </Breadcrumb.Item>
               <Breadcrumb.Item className="breadcrumb-page">
-                FAQs
+                {t("frequentlyAskedQuestions")}
               </Breadcrumb.Item>
             </Breadcrumb>
           </div>

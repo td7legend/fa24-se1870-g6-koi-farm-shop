@@ -13,6 +13,8 @@ import {
   faCog,
   faHistory,
   faSignOutAlt,
+  faDiamond,
+  faGem,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
@@ -216,56 +218,6 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
     return null;
   };
 
-  const renderUserDropdown = () => {
-    if (!isLoggedIn) return null;
-
-    return (
-      <div className="user-dropdown-menu">
-        <div className="user-info">
-          <div className="info-item">
-            <span className="label">{t("role")}:</span>
-            <span className="value">{role}</span>
-          </div>
-          <div className="info-item">
-            <span className="label">{t("loyaltyPoints")}:</span>
-            <span className="value">{userData.loyaltyPoint || 0}</span>
-          </div>
-          <div className="info-item">
-            <span className="label">{t("membershipLevel")}:</span>
-            <span className="value">
-              {userData.membershipLevel || "Bronze"}
-            </span>
-          </div>
-          <div className="dropdown-divider"></div>
-          <div className="dropdown-links">
-            <Link
-              to={`/user-dashboard/${userData.userId}`}
-              className="dropdown-link"
-            >
-              <FontAwesomeIcon icon={faUser} className="fa__icon" />
-              {t("dashboard")}
-            </Link>
-            <Link
-              to={`/user-setting/${userData.userId}`}
-              className="dropdown-link"
-            >
-              <FontAwesomeIcon icon={faCog} className="fa__icon" />
-              {t("settings")}
-            </Link>
-            <Link to="/order-history" className="dropdown-link">
-              <FontAwesomeIcon icon={faHistory} className="fa__icon" />
-              {t("orderHistory")}
-            </Link>
-            <button className="dropdown-link logout-btn" onClick={handleLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} className="fa__icon" />
-              {t("logout")}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const toggleUserDropdown = () => {
     setIsUserDropdownOpen((prev) => !prev);
   };
@@ -340,12 +292,37 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
               />
               {isUserDropdownOpen && (
                 <div className="user-dropdown">
+                  <div className="info-item">
+                    <span className="label">{t("loyaltyPoints")}:</span>
+                    <span className="value">{userData.loyaltyPoint || 0}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">{t("membershipLevel")}:</span>
+                    <span className="value">
+                      {userData.membershipLevel || "Bronze"}
+                    </span>
+                  </div>
+                  <div className="dropdown-divider"></div>
                   <Link
                     to={`/user-dashboard/${userData.userId}`}
                     className="dropdown-item"
                   >
                     <FontAwesomeIcon icon={faUser} className="dropdown-icon" />
                     {t("myAccount")}
+                  </Link>
+                  <Link
+                    to={`/user-setting/${userData.userId}`}
+                    className="dropdown-item"
+                  >
+                    <FontAwesomeIcon icon={faCog} className="dropdown-icon" />
+                    {t("settings")}
+                  </Link>
+                  <Link to="/order-history" className="dropdown-item">
+                    <FontAwesomeIcon
+                      icon={faHistory}
+                      className="dropdown-icon"
+                    />
+                    {t("orderHistory")}
                   </Link>
                   <div onClick={handleLogout} className="dropdown-item">
                     <FontAwesomeIcon
@@ -412,6 +389,12 @@ const Header = ({ cartDrawerVisible, setCartDrawerVisible }) => {
                     <Link to="/consignment/sell">{t("consignmentSale")}</Link>
                   </li>
                 </ul>
+              </Link>
+            </li>
+            <li>
+              <Link to="/tier">
+                <FontAwesomeIcon icon={faGem} className="fa__icon" />
+                {t("tier")}
               </Link>
             </li>
           </ul>

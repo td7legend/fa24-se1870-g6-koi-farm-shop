@@ -244,7 +244,7 @@ function ProductDetail() {
                 {t("fishList")}
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to={`/breed/${currentFishTypes.name}`}>
+                <Link to={`/breed/${currentFishTypes.fishTypeId}`}>
                   {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
                 </Link>
               </Breadcrumb.Item>

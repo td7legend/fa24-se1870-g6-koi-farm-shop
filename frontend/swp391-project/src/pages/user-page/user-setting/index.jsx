@@ -15,6 +15,8 @@ import {
   faSignOutAlt,
   faHandHoldingUsd,
   faTrophy,
+  faUnlock,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/authActions";
@@ -49,6 +51,8 @@ const UserSetting = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     console.log("token ", token);
     const fetchData = async () => {
@@ -261,6 +265,10 @@ const UserSetting = () => {
     navigate("/");
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
   if (loading) {
     return <LoadingKoi />;
   }
@@ -396,38 +404,59 @@ const UserSetting = () => {
               <div className="form-row">
                 <div className="form-column">
                   <label>{t("currentPassword")}</label>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    value={passwordForm.currentPassword}
-                    onChange={handlePasswordInputChange}
-                    required
-                    style={{ backgroundColor: "#fffaf0" }}
-                  />
+                  <div className="input-container-user">
+                    <FontAwesomeIcon
+                      icon={showPassword ? faUnlock : faLock}
+                      className="input-icon"
+                      onClick={togglePasswordVisibility}
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="currentPassword"
+                      value={passwordForm.currentPassword}
+                      onChange={handlePasswordInputChange}
+                      required
+                      style={{ backgroundColor: "#fffaf0" }}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-column">
                   <label>{t("newPassword")}</label>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    value={passwordForm.newPassword}
-                    onChange={handlePasswordInputChange}
-                    required
-                    style={{ backgroundColor: "#fffaf0" }}
-                  />
+                  <div className="input-container-user">
+                    <FontAwesomeIcon
+                      icon={showPassword ? faUnlock : faLock}
+                      className="input-icon"
+                      onClick={togglePasswordVisibility}
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="newPassword"
+                      value={passwordForm.newPassword}
+                      onChange={handlePasswordInputChange}
+                      required
+                      style={{ backgroundColor: "#fffaf0" }}
+                    />
+                  </div>
                 </div>
                 <div className="form-column">
                   <label>{t("confirmPassword")}</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={passwordForm.confirmPassword}
-                    onChange={handlePasswordInputChange}
-                    required
-                    style={{ backgroundColor: "#fffaf0" }}
-                  />
+                  <div className="input-container-user">
+                    <FontAwesomeIcon
+                      icon={showPassword ? faUnlock : faLock}
+                      className="input-icon"
+                      onClick={togglePasswordVisibility}
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={passwordForm.confirmPassword}
+                      onChange={handlePasswordInputChange}
+                      required
+                      style={{ backgroundColor: "#fffaf0" }}
+                    />
+                  </div>
                 </div>
               </div>
               <button type="submit" disabled={!isPasswordFormChanged}>
