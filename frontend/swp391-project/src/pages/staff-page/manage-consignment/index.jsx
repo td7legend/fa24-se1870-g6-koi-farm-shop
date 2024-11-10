@@ -38,9 +38,10 @@ const ConsignmentManagement = () => {
   const [quantity, setQuantity] = useState(0);
   const [fishCareData, setFishCareData] = useState([]);
   const [loadingFishCare, setLoadingFishCare] = useState(false);
-
   const [careForm] = Form.useForm();
   const [saleForm] = Form.useForm();
+  const [typeFilter, setTypeFilter] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(null);
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
   useEffect(() => {
@@ -118,6 +119,54 @@ const ConsignmentManagement = () => {
     // Update agree price
     form.setFieldValue("agreePrice", totalSum);
   };
+
+  const getFilteredConsignments = () => {
+    return consignments.filter((consignment) => {
+      const matchesType =
+        typeFilter === null || consignment.type === typeFilter;
+      const matchesStatus =
+        statusFilter === null || consignment.status === statusFilter;
+      return matchesType && matchesStatus;
+    });
+  };
+
+  const FilterSection = () => (
+    <Space style={{ marginBottom: 16 }}>
+      <Select
+        style={{ width: 200 }}
+        placeholder="Filter by Type"
+        onChange={(value) => setTypeFilter(value)}
+        value={typeFilter}
+      >
+        <Select.Option value={0}>Care</Select.Option>
+        <Select.Option value={1}>Sale</Select.Option>
+      </Select>
+
+      <Select
+        style={{ width: 200 }}
+        placeholder="Filter by Status"
+        onChange={(value) => setStatusFilter(value)}
+        value={statusFilter}
+      >
+        <Select.Option value={0}>Pending</Select.Option>
+        <Select.Option value={1}>Under Review</Select.Option>
+        <Select.Option value={2}>Confirmed</Select.Option>
+        <Select.Option value={3}>Listed For Sale</Select.Option>
+        <Select.Option value={4}>Sold</Select.Option>
+        <Select.Option value={5}>Under Care</Select.Option>
+        <Select.Option value={6}>Care Completed</Select.Option>
+        <Select.Option value={7}>Cancelled</Select.Option>
+      </Select>
+      <Button
+        onClick={() => {
+          setTypeFilter(null);
+          setStatusFilter(null);
+        }}
+      >
+        Reset Filters
+      </Button>
+    </Space>
+  );
 
   const handleCareConfirm = async (values) => {
     try {
@@ -435,8 +484,9 @@ const ConsignmentManagement = () => {
       <div className="consignment-management-container">
         <Card className="card">
           <Title level={2}>Consignment Management</Title>
+          <FilterSection />
           <Table
-            dataSource={consignments}
+            dataSource={getFilteredConsignments()}
             columns={columns}
             rowKey="consignmentId"
             loading={loading}

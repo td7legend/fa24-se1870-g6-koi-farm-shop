@@ -9,6 +9,7 @@ import {
   Modal,
   Card,
   Space,
+  Select,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -25,6 +26,7 @@ const StaffOrderManagement = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [statusFilter, setStatusFilter] = useState(null);
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
 
@@ -73,6 +75,37 @@ const StaffOrderManagement = () => {
       message.error("Failed to fetch order details.");
     }
   };
+
+  const getFilteredOrders = () => {
+    return orders.filter((order) => {
+      return statusFilter === null || order.status === statusFilter;
+    });
+  };
+
+  const FilterSection = () => (
+    <Space style={{ marginBottom: 16 }}>
+      <Select
+        style={{ width: 200 }}
+        placeholder="Filter by Status"
+        onChange={(value) => setStatusFilter(value)}
+        value={statusFilter}
+        allowClear
+      >
+        <Select.Option value={1}>Paid</Select.Option>
+        <Select.Option value={2}>Cancelled</Select.Option>
+        <Select.Option value={3}>Shipping</Select.Option>
+        <Select.Option value={4}>Completed</Select.Option>
+      </Select>
+
+      <Button
+        onClick={() => {
+          setStatusFilter(null);
+        }}
+      >
+        Reset Filters
+      </Button>
+    </Space>
+  );
 
   const awardLoyaltyPoints = async (order) => {
     try {
@@ -328,13 +361,14 @@ const StaffOrderManagement = () => {
 
       <Card className="card">
         <Title level={3}>Order Management</Title>
+        <FilterSection />
         <Table
           className="order-management-table"
           columns={columns}
-          dataSource={orders}
+          dataSource={getFilteredOrders()}
           loading={loading}
           pagination={{
-            total: orders.length,
+            total: getFilteredOrders().length,
             pageSize: 10,
             showSizeChanger: false,
             showQuickJumper: false,
