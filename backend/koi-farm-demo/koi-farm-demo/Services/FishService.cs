@@ -1,4 +1,5 @@
 ﻿using koi_farm_demo.Data;
+using koi_farm_demo.Models;
 using koi_farm_demo.Repositories;
 
 namespace koi_farm_demo.Services
@@ -8,10 +9,12 @@ namespace koi_farm_demo.Services
     {
         private readonly IFishRepository _fishRepository;
         private readonly ICertificateRepository _certificateRepository;
-        public FishService(IFishRepository fishRepository, ICertificateRepository certificateRepository)
+        private readonly IFishImageRepository _fishImageRepository;
+        public FishService(IFishRepository fishRepository, ICertificateRepository certificateRepository, IFishImageRepository fishImageRepository)
         {
             _fishRepository = fishRepository;
             _certificateRepository = certificateRepository;
+            _fishImageRepository = fishImageRepository;
         }
 
         public async Task<IEnumerable<Fish>> GetAllFishAsync()
@@ -57,8 +60,22 @@ namespace koi_farm_demo.Services
 
                 await _certificateRepository.AddCertificateAsync(certificate);
             }
-        }
+            foreach (var imageUrl in fishCreateDto.ImageUrls)
+            {
+                var fishImage = new FishImage
+                {
+                    FishId = fish.FishId,
+                    ImageUrl = imageUrl
+                };
+                await _fishImageRepository.AddFishImageAsync(fishImage);
+            }
 
+        }
+        public async Task<IEnumerable<FishImage>> GetFishImagesByFishIdAsync(int fishId)
+        {
+            return await _fishImageRepository.GetFishImagesByFishIdAsync(fishId);
+
+        }
 
 
         public async Task UpdateFishAsync(Fish fish)

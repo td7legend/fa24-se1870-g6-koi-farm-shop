@@ -18,6 +18,7 @@
         public string? Description { get; set; }
         public int? ConsignmentLineId { get; set; }
         public CertificateCreateDto? Certificate { get; set; }// Có thể là null
+        public List<string> ImageUrls { get; set; } = new List<string>();
     }
 
 }

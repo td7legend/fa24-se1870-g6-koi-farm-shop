@@ -45,7 +45,7 @@ namespace koi_farm_demo.Controllers
             try
             {
                 var response = _vnPayService.PaymentExecute(Request.Query);
-                return Redirect($" http://localhost:5173/payment/{response.Success}");
+                return Redirect($"http://localhost:5173/payment/{response.Success}");
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@
         public int FishCareId { get; set; }
         public string FishType { get; set; }
         public int ConsignmentId { get; set; }
-        public string HealthStatus { get; set; } 
-        public string CareDetails { get; set; }
+        public string StandardCareDetails { get; set; } // Yêu cầu chăm sóc tiêu chuẩn
+        public string StandardHealthStatus { get; set; }
     }
 }

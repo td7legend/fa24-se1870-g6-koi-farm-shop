@@ -1,4 +1,5 @@
-﻿using koi_farm_demo.Models;
+﻿using koi_farm_demo.Data;
+using koi_farm_demo.Models;
 using koi_farm_demo.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,11 @@ namespace koi_farm_demo.Controllers
     public class FishCareController : ControllerBase
     {
         private readonly IFishCareService _fishCareService;
-
-        public FishCareController(IFishCareService fishCareService)
+        private readonly IFishCareHistoryService _fishCareHistoryService;
+        public FishCareController(IFishCareService fishCareService, IFishCareHistoryService fishCareHistoryService)
         {
             _fishCareService = fishCareService;
+            _fishCareHistoryService = fishCareHistoryService;
         }
 
         [HttpPost]
@@ -79,6 +81,29 @@ namespace koi_farm_demo.Controllers
             }
 
             return Ok(result);
+        }
+        [HttpPost("{fishId}/add-history")]
+        public async Task<ActionResult<FishCareHistory>> AddFishCare(int fishId, [FromBody] FishCareDto fishCareDto)
+        {
+            // Thêm tình trạng sức khỏe cá vào lịch sử
+            var fishCareHistory = await _fishCareHistoryService.AddFishCareHistoryAsync(fishId, fishCareDto);
+
+            if (fishCareHistory == null)
+                return BadRequest("Failed to add fish care history.");
+
+            return CreatedAtAction(nameof(GetFishCareHistory), new { fishId = fishId }, fishCareHistory);
+        }
+
+        // Lấy tất cả lịch sử tình trạng sức khỏe cá
+        [HttpGet("{fishId}/history")]
+        public async Task<ActionResult<IEnumerable<FishCareHistory>>> GetFishCareHistory(int fishId)
+        {
+            var fishCareHistory = await _fishCareHistoryService.GetFishCareHistoryByFishIdAsync(fishId);
+
+            if (fishCareHistory == null || !fishCareHistory.Any())
+                return NotFound("No care history found for this fish.");
+
+            return Ok(fishCareHistory);
         }
     }
 }
