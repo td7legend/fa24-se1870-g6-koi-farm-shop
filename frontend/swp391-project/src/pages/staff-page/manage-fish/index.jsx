@@ -111,6 +111,14 @@ const StaffFishManagement = () => {
 
   const handleAdd = async (values) => {
     try {
+      const existingFish = fishes.find(
+        (fish) => fish.name.toLowerCase() === values.name.toLowerCase()
+      );
+
+      if (existingFish) {
+        message.error("A fish with this name already exists!");
+        return;
+      }
       let imageUrl = "";
 
       // Handle image upload if there's a file
@@ -640,6 +648,7 @@ const StaffFishManagement = () => {
                 onUploadSuccess={fetchFishes}
                 token={token}
                 config={config}
+                fishes={fishes}
               />
               <Button
                 type="primary"

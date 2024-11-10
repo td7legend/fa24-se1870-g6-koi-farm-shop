@@ -44,10 +44,12 @@ const StaffManagement = () => {
         },
       });
 
-      const staffsWithKeys = response.data.map((staff) => ({
-        ...staff,
-        key: staff.id || staff._id,
-      }));
+      const staffsWithKeys = response.data
+        .map((staff) => ({
+          ...staff,
+          key: staff.id || staff._id,
+        }))
+        .sort((a, b) => b.staffId - a.staffId);
 
       setStaffs(staffsWithKeys);
     } catch (error) {

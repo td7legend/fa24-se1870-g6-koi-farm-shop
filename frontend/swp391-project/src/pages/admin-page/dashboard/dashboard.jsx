@@ -15,9 +15,8 @@ import {
   DollarCircleOutlined,
   ShoppingCartOutlined,
   UserOutlined,
-  StarOutlined,
 } from "@ant-design/icons";
-import { Column, Pie } from "@ant-design/charts";
+import { Pie } from "@ant-design/charts";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
@@ -25,8 +24,7 @@ import config from "../../../config/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFish } from "@fortawesome/free-solid-svg-icons";
 import LoadingKoi from "../../../components/loading";
-
-const { RangePicker } = DatePicker;
+const { MonthPicker } = DatePicker;
 
 const AdminDashboard = () => {
   const { token } = useSelector((state) => state.auth);
@@ -37,11 +35,10 @@ const AdminDashboard = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [dateRange, setDateRange] = useState([
-    dayjs().subtract(1, "month"),
-    dayjs(),
+    dayjs().startOf("month"),
+    dayjs().endOf("month"),
   ]);
 
-  // Function to fetch orders data
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}orders`, {
@@ -57,7 +54,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Function to fetch customers data
   const fetchCustomers = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}customers`, {
@@ -100,7 +96,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Calculate total revenue from filtered orders
   const calculateRevenue = (orders) => {
     return orders.reduce((total, order) => {
       const revenue = (order.totalAmount || 0) - (order.totalDiscount || 0);
@@ -108,7 +103,6 @@ const AdminDashboard = () => {
     }, 0);
   };
 
-  // Filter orders by date range
   const filterOrdersByDateRange = (orders, startDate, endDate) => {
     const filtered = orders.filter((order) => {
       const orderDate = dayjs(order.orderDate);
@@ -119,7 +113,7 @@ const AdminDashboard = () => {
 
   const getOrderStatusDistribution = () => {
     const distribution = filteredOrders.reduce((acc, order) => {
-      const status = getStatusText(order.status); // Convert status number to text
+      const status = getStatusText(order.status);
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {});
@@ -146,43 +140,12 @@ const AdminDashboard = () => {
     }
   };
 
-  // Add this color mapping for the pie chart
   const statusColors = {
-    Paid: "#FFD700", // gold
-    Cancelled: "#FF4D4F", // red
-    Shipping: "#52C41A", // green
-    Completed: "#52C41A", // green
-    Unknown: "#D9D9D9", // default gray
-  };
-
-  // Process orders data for charts
-  const processOrdersData = (orders) => {
-    const dailyData = {};
-
-    orders.forEach((order) => {
-      const date = dayjs(order.orderDate).format("YYYY-MM-DD");
-      if (!dailyData[date]) {
-        dailyData[date] = {
-          date, // Keep the full date format for proper sorting
-          orders: 0,
-          revenue: 0,
-          fishSold: 0,
-        };
-      }
-
-      dailyData[date].orders += 1;
-      dailyData[date].revenue +=
-        (order.totalAmount || 0) - (order.totalDiscount || 0);
-      dailyData[date].fishSold +=
-        order.orderLines?.reduce(
-          (sum, line) => sum + (line.quantity || 0),
-          0
-        ) || 0;
-    });
-
-    return Object.values(dailyData).sort((a, b) =>
-      dayjs(a.date).diff(dayjs(b.date))
-    );
+    Paid: "#FFD700",
+    Cancelled: "#FF4D4F",
+    Shipping: "#52C41A",
+    Completed: "#52C41A",
+    Unknown: "#D9D9D9",
   };
 
   // Calculate total fish sold from filtered orders
@@ -198,25 +161,22 @@ const AdminDashboard = () => {
     }, 0);
   };
 
-  // Handle date range change
-  const handleDateRangeChange = async (dates) => {
-    if (!dates || dates.length !== 2) {
-      return;
-    }
-    setDateRange(dates);
-    filterOrdersByDateRange(allOrders, dates[0], dates[1]);
+  const handleMonthChange = (date) => {
+    if (!date) return;
+
+    const startOfMonth = date.startOf("month");
+    const endOfMonth = date.endOf("month");
+    setDateRange([startOfMonth, endOfMonth]);
+    filterOrdersByDateRange(allOrders, startOfMonth, endOfMonth);
   };
 
   const getFishStats = () => {
     const totalFish = fishes.length;
-    const avgPrice =
-      fishes.reduce((sum, fish) => sum + (fish.price || 0), 0) / totalFish;
-    const avgRating =
-      fishes.reduce((sum, fish) => sum + (fish.overallRating || 0), 0) /
-      totalFish;
+    const avgPrice = Math.round(
+      fishes.reduce((sum, fish) => sum + (fish.price || 0), 0) / totalFish
+    );
     const inStock = fishes.filter((fish) => fish.quantity > 0).length;
-
-    return { totalFish, avgPrice, avgRating, inStock };
+    return { totalFish, avgPrice, inStock };
   };
 
   // Fish type distribution for pie chart
@@ -230,7 +190,6 @@ const AdminDashboard = () => {
     return Object.entries(distribution).map(([type, count]) => ({
       type,
       count,
-      percentage: ((count / fishes.length) * 100).toFixed(1),
     }));
   };
 
@@ -239,7 +198,6 @@ const AdminDashboard = () => {
     return fishType ? fishType.name : "Unknown";
   };
 
-  // Add this function to calculate top selling fish types
   const getTopSellingFishTypes = () => {
     const typesSales = {};
 
@@ -273,82 +231,6 @@ const AdminDashboard = () => {
       }))
       .sort((a, b) => b.totalSold - a.totalSold);
   };
-
-  // Chart configurations
-  // Update the getLineChartConfig function
-  // Update the getLineChartConfig function to properly handle tooltips
-  // const getLineChartConfig = (data, yField, title, color) => ({
-  //   data,
-  //   xField: "date",
-  //   yField,
-  //   smooth: true,
-  //   meta: {
-  //     date: { alias: "Date" },
-  //     [yField]: {
-  //       alias: title,
-  //       formatter: (value) => {
-  //         return yField === "revenue"
-  //           ? `₫${value.toLocaleString()}`
-  //           : value.toLocaleString();
-  //       },
-  //     },
-  //   },
-  //   color: color,
-  //   point: {
-  //     size: 4,
-  //     shape: "diamond",
-  //   },
-  //   tooltip: {
-  //     formatter: (datum) => {
-  //       return {
-  //         name: title,
-  //         value:
-  //           yField === "revenue"
-  //             ? `₫${datum[yField].toLocaleString()}`
-  //             : datum[yField].toLocaleString(),
-  //       };
-  //     },
-  //   },
-  //   xAxis: {
-  //     label: {
-  //       formatter: (v) => dayjs(v).format("MMM DD"),
-  //     },
-  //   },
-  //   yAxis: {
-  //     label: {
-  //       formatter: (v) => {
-  //         if (yField === "revenue") {
-  //           return `₫${(v / 1000000).toFixed(0)}M`;
-  //         }
-  //         return v;
-  //       },
-  //     },
-  //   },
-  // });
-
-  const getColumnChartConfig = (data) => ({
-    data,
-    xField: "date",
-    yField: "fishSold",
-    meta: {
-      date: { alias: "Date" },
-      fishSold: { alias: "Fish Sold" },
-    },
-    label: {
-      position: "middle",
-      style: {
-        fill: "#FFFFFF",
-        opacity: 0.6,
-      },
-    },
-    color: "#722ed1",
-    tooltip: {
-      title: "Date",
-      formatter: (datum) => {
-        return { name: "Fish Sold", value: datum.fishSold };
-      },
-    },
-  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -389,34 +271,22 @@ const AdminDashboard = () => {
       <Col xs={24}>
         <Card title="Fish Statistics">
           <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} sm={12} md={8}>
               <Statistic
                 title="Total Fish"
                 value={getFishStats().totalFish}
                 valueStyle={{ color: "#1890ff" }}
               />
             </Col>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} sm={12} md={8}>
               <Statistic
                 title="Average Price"
                 value={getFishStats().avgPrice}
-                precision={0}
-                prefix="₫"
-                formatter={(value) => `${value.toLocaleString()}`}
+                formatter={(value) => `${value.toLocaleString()} VNĐ`}
                 valueStyle={{ color: "#3f8600" }}
               />
             </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Statistic
-                title="Average Rating"
-                value={getFishStats().avgRating}
-                precision={1}
-                prefix={<StarOutlined />}
-                suffix="/5"
-                valueStyle={{ color: "#faad14" }}
-              />
-            </Col>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} sm={12} md={8}>
               <Statistic
                 title="Fish in Stock"
                 value={getFishStats().inStock}
@@ -471,7 +341,7 @@ const AdminDashboard = () => {
                 key: "revenue",
                 render: (value) => (
                   <span style={{ color: "#3f8600" }}>
-                    ₫{value.toLocaleString()}
+                    {value.toLocaleString()} VNĐ
                   </span>
                 ),
                 sorter: (a, b) => a.revenue - b.revenue,
@@ -505,10 +375,10 @@ const AdminDashboard = () => {
           }}
         >
           <h1 style={{ fontSize: "24px", margin: 0 }}>Admin Dashboard</h1>
-          <RangePicker
-            defaultValue={dateRange}
-            onChange={handleDateRangeChange}
-            format="YYYY-MM-DD"
+          <MonthPicker
+            defaultValue={dateRange[0]}
+            onChange={handleMonthChange}
+            format="YYYY-MM"
           />
         </div>
 
@@ -517,17 +387,15 @@ const AdminDashboard = () => {
             <Card>
               <Statistic
                 title="Total Revenue"
-                value={totalRevenue / 1000000}
-                precision={2}
+                value={Math.round(totalRevenue)}
                 prefix={<DollarCircleOutlined />}
-                suffix="M"
+                suffix="VNĐ"
                 valueStyle={{ color: "#3f8600" }}
               />
               <div
                 style={{ fontSize: "12px", color: "#8c8c8c", marginTop: "8px" }}
               >
-                {dateRange[0].format("MMM D")} -{" "}
-                {dateRange[1].format("MMM D, YYYY")}
+                {dateRange[0].format("MMMM YYYY")}
               </div>
             </Card>
           </Col>
@@ -602,7 +470,7 @@ const AdminDashboard = () => {
 
         {/* Charts Section */}
         <Row gutter={[16, 16]}>
-          <Col xs={24} lg={12}>
+          <Col xs={24}>
             <Card title="Order Status Distribution">
               <Row gutter={[16, 16]}>
                 <Col xs={24} lg={12}>
@@ -612,18 +480,10 @@ const AdminDashboard = () => {
                     colorField="status"
                     radius={0.8}
                     color={({ status }) => statusColors[status]}
-                    label={false} // Remove labels completely
+                    label={false}
                     legend={{
                       position: "top",
                       flipPage: false,
-                    }}
-                    tooltip={{
-                      formatter: (datum) => {
-                        return {
-                          name: datum.status,
-                          value: `${datum.count} orders`,
-                        };
-                      },
                     }}
                     height={300}
                   />
@@ -639,15 +499,6 @@ const AdminDashboard = () => {
                         key: "status",
                         render: (status) => (
                           <Tag
-                            color={
-                              status === "Completed"
-                                ? "processing"
-                                : status === "Paid"
-                                ? "warning"
-                                : status === "Cancelled"
-                                ? "error"
-                                : "default"
-                            }
                             style={{
                               backgroundColor: statusColors[status],
                               color: "#fff",
@@ -663,47 +514,11 @@ const AdminDashboard = () => {
                         title: "Count",
                         dataIndex: "count",
                         key: "count",
-                        sorter: (a, b) => a.count - b.count,
                       },
                     ]}
                   />
                 </Col>
               </Row>
-            </Card>
-          </Col>
-
-          <Col xs={24} lg={12}>
-            <Card title="Orders Daily">
-              <Column
-                data={processOrdersData(filteredOrders)}
-                xField="date"
-                yField="orders"
-                meta={{
-                  date: { alias: "Date" },
-                  orders: { alias: "Orders" },
-                }}
-                color="#1890ff"
-                label={{
-                  position: "top",
-                  style: {
-                    fontSize: 12,
-                  },
-                }}
-                xAxis={{
-                  label: {
-                    formatter: (v) => dayjs(v).format("MMM DD"),
-                  },
-                }}
-                tooltip={{
-                  formatter: (datum) => {
-                    return {
-                      name: "Orders",
-                      value: datum.orders,
-                    };
-                  },
-                }}
-                height={300}
-              />
             </Card>
           </Col>
         </Row>

@@ -16,7 +16,8 @@ const RecentlyAdded = () => {
   const fetchRecentlyAdded = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}fishs`);
-      setNewFishes(response.data.slice(-itemsToShow).reverse());
+      const fishData = response.data.filter((fish) => fish.quantity > 0);
+      setNewFishes(fishData.slice(-itemsToShow).reverse());
     } catch (error) {
       console.error("Error fetching fishs:", error);
     }
