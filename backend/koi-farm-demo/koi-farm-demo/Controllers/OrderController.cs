@@ -145,13 +145,13 @@ namespace koi_farm_demo.Controllers
             .SetBold());
 
                 // Thêm thông tin liên hệ (có thể điều chỉnh theo thông tin của bạn)
-                document.Add(new Paragraph("Address: 123 ABC Street, Ho Chi Minh City")
+                document.Add(new Paragraph("Address: Lo E2a-7, D1 Road, Long Thanh My Ward, Thu Duc City, Ho Chi Minh City")
                     .SetTextAlignment(TextAlignment.CENTER)
                     .SetFontSize(12));
-                document.Add(new Paragraph("Phone: 0123 456 789")
+                document.Add(new Paragraph("Phone: 024xxx.xxx.xxx")
                     .SetTextAlignment(TextAlignment.CENTER)
                     .SetFontSize(12));
-                document.Add(new Paragraph("Email: contact@goldenkoi.com")
+                document.Add(new Paragraph("Email: goldenkoi.vn@gmail.com")
                     .SetTextAlignment(TextAlignment.CENTER)
                     .SetFontSize(12));
 
