@@ -60,23 +60,27 @@
       text-transform: uppercase;
     }
 
-    .ant-pagination {
-      .ant-pagination-item-active {
-        border-color: #bbab6f;
-        color: #bbab6f;
-      }
-      a {
-        border-radius: 5px;
-        color: #bbab6f;
-        border-color: #bbab6f;
-        &:hover {
-          color: #bbab6f;
-          background-color: #ddd;
-        }
-      }
-    }
     .ant-table-tbody > tr > td {
       background-color: #fffaf0;
+    }
+  }
+}
+.ant-pagination {
+  .ant-pagination-item-active {
+    border-color: #bbab6f;
+    color: #bbab6f;
+    &:hover {
+      border-color: #bbab6f;
+      color: #bbab6f;
+    }
+  }
+  a {
+    border-radius: 5px;
+    color: #bbab6f !important;
+    border-color: #bbab6f;
+    &:hover {
+      color: #bbab6f;
+      background-color: #ddd;
     }
   }
 }

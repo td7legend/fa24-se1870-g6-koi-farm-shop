@@ -98,6 +98,7 @@ const StaffOrderManagement = () => {
       </Select>
 
       <Button
+        className="button"
         onClick={() => {
           setStatusFilter(null);
         }}

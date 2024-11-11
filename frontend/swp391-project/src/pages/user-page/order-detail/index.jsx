@@ -206,27 +206,29 @@ const OrderDetailsPage = () => {
       <div className="layout-container">
         <div className="order-detail-container">
           <Card className="card" style={{ maxWidth: 1200, margin: "0 auto" }}>
-            <Button
-              type="link"
-              icon={<ArrowLeftOutlined />}
-              onClick={() => navigate("/order-history")}
-              style={{ marginBottom: 16, color: "bbab6f" }}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} />
-              {t("backToList")}
-            </Button>
-            <Button
-              type="primary"
-              icon={<FilePdfOutlined />}
-              onClick={handleExportInvoice}
-              loading={exporting}
-              style={{
-                backgroundColor: "#bbab6f",
-                borderColor: "#bbab6f",
-              }}
-            >
-              {t("exportInvoice")}
-            </Button>
+            <div className="button-form">
+              <Button
+                type="link"
+                // icon={<ArrowLeftOutlined />}
+                onClick={() => navigate("/order-history")}
+                className="button"
+              >
+                <FontAwesomeIcon icon={faArrowLeft} />
+                {t("backToList")}
+              </Button>
+              <Button
+                type="primary"
+                icon={<FilePdfOutlined />}
+                onClick={handleExportInvoice}
+                loading={exporting}
+                style={{
+                  backgroundColor: "#bbab6f",
+                  borderColor: "#bbab6f",
+                }}
+              >
+                {t("exportInvoice")}
+              </Button>
+            </div>
             <Title level={3}>
               {t("orderDetail")} • {formatDate(order.orderDate)} •{" "}
               {order.orderLines.length} {t("fish")}

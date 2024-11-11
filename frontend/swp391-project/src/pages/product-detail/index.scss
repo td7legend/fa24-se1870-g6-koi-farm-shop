@@ -200,15 +200,16 @@ $large-border-radius: 20px;
         border: 2px solid $primary-color;
         border-radius: $large-border-radius;
         padding: 10px;
-        background: white;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        height: fit-content;
 
         .main-image {
-          width: 100%;
-          height: auto;
-          border-radius: $large-border-radius;
+          overflow: hidden;
+          width: 430px;
+          height: 440px;
+          object-fit: cover;
           transition: transform 0.3s ease;
-
+          border-radius: $large-border-radius;
           &:hover {
             transform: scale(1.02);
           }
@@ -218,13 +219,6 @@ $large-border-radius: 20px;
           div {
             line-height: 0;
           }
-        }
-
-        img {
-          width: 100%;
-          height: auto;
-          object-fit: cover;
-          border-radius: $large-border-radius;
         }
 
         .slick-prev,

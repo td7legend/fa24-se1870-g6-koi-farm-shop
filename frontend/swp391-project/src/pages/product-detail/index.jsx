@@ -101,7 +101,7 @@ function ProductDetail() {
       const imageUrls = response.data.map((cert) => cert.url);
       setCertificateImages(imageUrls);
     } catch (error) {
-      toast.error(t("failedToFetchCertificateImages"));
+      // toast.error(t("failedToFetchCertificateImages"));
     }
   };
   const fetchFishes = async () => {
@@ -341,7 +341,7 @@ function ProductDetail() {
 
       <div className="product-detail-container">
         <Row gutter={[24, 24]}>
-          <Col span={8}>
+          <Col span={10}>
             <div className="product-slider-container">
               <Slider
                 asNavFor={nav2}
@@ -391,7 +391,7 @@ function ProductDetail() {
             </div>
           </Col>
 
-          <Col span={11}>
+          <Col span={14}>
             <div className="info-container">
               <h1>{product.name}</h1>
               <h2>
@@ -556,7 +556,7 @@ function ProductDetail() {
             </div>
           </Col>
 
-          <Col span={5}>
+          {/* <Col span={5}>
             <div className="contact-info-card">
               <div className="card-header">THÔNG TIN LIÊN HỆ</div>
               <div className="contact-items-container">
@@ -589,7 +589,7 @@ function ProductDetail() {
                 </div>
               </div>
             </div>
-          </Col>
+          </Col> */}
         </Row>
       </div>
     </div>

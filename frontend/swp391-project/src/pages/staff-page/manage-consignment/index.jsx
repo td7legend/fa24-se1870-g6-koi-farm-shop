@@ -158,6 +158,7 @@ const ConsignmentManagement = () => {
         <Select.Option value={7}>Cancelled</Select.Option>
       </Select>
       <Button
+        className="button"
         onClick={() => {
           setTypeFilter(null);
           setStatusFilter(null);
@@ -439,13 +440,19 @@ const ConsignmentManagement = () => {
             )}
 
             {showReviewButton && (
-              <Button type="primary" onClick={() => updateStatus(record, 1)}>
+              <Button
+                className="button-main"
+                onClick={() => updateStatus(record, 1)}
+              >
                 Review
               </Button>
             )}
 
             {showConfirmButton && (
-              <Button type="primary" onClick={() => updateStatus(record, 2)}>
+              <Button
+                className="button-main"
+                onClick={() => updateStatus(record, 2)}
+              >
                 Confirm
               </Button>
             )}
