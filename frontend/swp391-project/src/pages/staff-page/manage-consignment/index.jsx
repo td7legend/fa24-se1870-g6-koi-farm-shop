@@ -418,6 +418,7 @@ const ConsignmentManagement = () => {
         return (
           <Space>
             <Button
+              type="link"
               icon={<EyeOutlined />}
               onClick={() => {
                 setSelectedConsignment(record);
@@ -426,6 +427,7 @@ const ConsignmentManagement = () => {
                 }
                 setDetailModalVisible(true);
               }}
+              style={{ color: "#D4B57E" }}
             >
               Details
             </Button>
@@ -1073,7 +1075,7 @@ const ConsignmentManagement = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button className="button-main" htmlType="submit" block>
               Confirm Sale
             </Button>
           </Form.Item>
