@@ -1,11 +1,31 @@
 .blog-page {
   background-color: #fffaf0;
-  padding: 40px 0;
+  padding: 20px;
+  position: relative;
+  z-index: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    background-blend-mode: overlay;
+    filter: blur(5px);
+    opacity: 0.15;
+    pointer-events: none;
+  }
 
   .blog-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
+    z-index: 2;
 
     h1 {
       color: #bbab6f;
@@ -16,6 +36,7 @@
 
     // Custom Ant Design Tabs
     .ant-tabs {
+      z-index: 3;
       .ant-tabs-nav {
         &::before {
           border-bottom: 2px solid #eee;
@@ -39,7 +60,7 @@
 
     .blog-list {
       padding: 20px 0;
-
+      z-index: 4;
       .blog-card {
         display: flex;
         gap: 30px;
@@ -119,7 +140,7 @@
       background: white;
       border-radius: 12px;
       margin-top: 20px;
-
+      z-index: 5;
       h2 {
         color: #bbab6f;
         font-size: 28px;

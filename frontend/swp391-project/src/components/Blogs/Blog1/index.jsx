@@ -2,8 +2,14 @@ import React from "react";
 import "./styles.scss";
 import BlogSidebar from "../../common/BlogSidebar";
 import CompanyInfo from "../../common/CompanyInfo";
+import { Breadcrumb } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { t } from "i18next";
+import { useNavigate } from "react-router-dom";
 
 const Blog1 = () => {
+  const navigate = useNavigate();
   // Khai báo sidebarData
   const sidebarData = {
     relatedNews: [
@@ -56,6 +62,17 @@ const Blog1 = () => {
 
   return (
     <div className="blog1">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/blog-page">{t("blog")}</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            What Makes a Beautiful, Quality Doitsu Koi Fish?
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div className="blog-container">
         <div className="blog-flex-container">
           {/* Main Content */}
@@ -65,7 +82,7 @@ const Blog1 = () => {
             <div className="blog-author-info">
               <div className="author">
                 <i className="fas fa-user"></i>
-                <span>Author: Trùm Mafia - Quang Khoa</span>
+                <span>Author: Thành Danh</span>
               </div>
               <div className="date">
                 <i className="fas fa-calendar-alt"></i>

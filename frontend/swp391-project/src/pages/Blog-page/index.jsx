@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Tabs, Pagination } from "antd";
+import { Tabs, Pagination, Breadcrumb } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./styles.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { t } from "i18next";
 
 const BlogPage = () => {
   const navigate = useNavigate();
@@ -17,7 +20,7 @@ const BlogPage = () => {
         "https://sieuthicakoi.vn/storage/3l/5t/3l5tbbzposykbmji64iugx6pvtpr_danh-gia-ca-koi-doitsu-chat-luong.webp",
       excerpt: "Not everyone knows how to own quality Doitsu koi fish...",
       date: "31/10/2024",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Thành Danh",
       readTime: "8 min read",
       link: "/blog1",
     },
@@ -29,7 +32,7 @@ const BlogPage = () => {
       excerpt:
         "Asagi Koi, known for their distinctive blue scales and red belly, are among the most traditional and respected varieties in the Koi world...",
       date: "2024-03-14",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Quang Vinh",
       readTime: "10 min read",
       link: "/blog2",
     },
@@ -41,7 +44,7 @@ const BlogPage = () => {
       excerpt:
         "Karashi Koi, with their stunning golden-yellow coloration, represent one of the most beautiful varieties in the Koi world...",
       date: "2024-03-13",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Quang Duy",
       readTime: "9 min read",
       link: "/blog3",
     },
@@ -57,7 +60,7 @@ const BlogPage = () => {
       excerpt:
         "Discover the history and breeding techniques of one of Japan's most prestigious koi farms...",
       date: "2024-03-20",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Quang Vinh",
       readTime: "12 min read",
       link: "/blogs/sakai-farm",
     },
@@ -69,7 +72,7 @@ const BlogPage = () => {
       excerpt:
         "Explore how Dainichi Koi Farm has revolutionized koi breeding with their innovative techniques...",
       date: "2024-03-18",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Quang Khoa",
       readTime: "10 min read",
       link: "/blogs/dainichi-farm",
     },
@@ -81,7 +84,7 @@ const BlogPage = () => {
       excerpt:
         "Learn about the cutting-edge breeding methods at Momotaro Koi Farm...",
       date: "2024-03-15",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Thành Danh",
       readTime: "11 min read",
       link: "/blogs/momotaro-farm",
     },
@@ -97,7 +100,7 @@ const BlogPage = () => {
       excerpt:
         "Understanding and maintaining optimal water conditions for healthy koi...",
       date: "2024-03-19",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Quang Khoa",
       readTime: "9 min read",
       link: "/blogs/water-quality",
     },
@@ -109,7 +112,7 @@ const BlogPage = () => {
       excerpt:
         "A comprehensive guide to caring for your koi throughout all seasons...",
       date: "2024-03-17",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Quang Duy",
       readTime: "15 min read",
       link: "/blogs/seasonal-care",
     },
@@ -121,7 +124,7 @@ const BlogPage = () => {
       excerpt:
         "Learn about proper koi nutrition and feeding schedules for optimal health...",
       date: "2024-03-16",
-      author: "Trùm Mafia - Quang Khoa",
+      author: "Minh Quân",
       readTime: "13 min read",
       link: "/blogs/koi-nutrition",
     },
@@ -135,7 +138,7 @@ const BlogPage = () => {
   const items = [
     {
       key: "1",
-      label: "Tìm hiểu về các giống cá Koi",
+      label: "Learn about Koi fish breeds",
       children: (
         <div className="blog-list">
           {currentBlogs.map((blog) => (
@@ -161,7 +164,7 @@ const BlogPage = () => {
                   </span>
                 </p>
                 <p className="blog-excerpt">{blog.excerpt}</p>
-                <button className="read-more">Đọc thêm →</button>
+                <button className="read-more">Read more →</button>
               </div>
             </div>
           ))}
@@ -207,7 +210,7 @@ const BlogPage = () => {
                   </span>
                 </p>
                 <p className="blog-excerpt">{blog.excerpt}</p>
-                <button className="read-more">Đọc thêm →</button>
+                <button className="read-more">Read more →</button>
               </div>
             </div>
           ))}
@@ -242,7 +245,7 @@ const BlogPage = () => {
                   </span>
                 </p>
                 <p className="blog-excerpt">{blog.excerpt}</p>
-                <button className="read-more">Đọc thêm →</button>
+                <button className="read-more">Read more →</button>
               </div>
             </div>
           ))}
@@ -253,6 +256,16 @@ const BlogPage = () => {
 
   return (
     <div className="blog-page">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            {t("blog")}
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div className="blog-container">
         <h1>Blog</h1>
         <Tabs
