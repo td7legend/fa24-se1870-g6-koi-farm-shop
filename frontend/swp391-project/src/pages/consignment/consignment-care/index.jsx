@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import "./index.scss";
-
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import uploadFile from "../../../utils/upload/upload";
@@ -40,6 +40,7 @@ function ConsignmentCare() {
   const { token } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   const [showTable, setShowTable] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     fetchCustomerInfo();
   }, []);
@@ -200,10 +201,12 @@ function ConsignmentCare() {
           "Content-Type": "application/json",
         },
       });
-
       toast.success(t("Consignment Care Created Successfully"));
       formVariable.resetFields();
       formVariable.setFieldsValue({ fish: [{}] });
+      setTimeout(() => {
+        navigate("/consignment-history");
+      }, 1000); // Refresh page after 1 second
       // setShowDateFields(false);
     } catch (error) {
       console.error("Error submitting consignment care:", error);

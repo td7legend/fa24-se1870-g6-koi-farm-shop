@@ -295,14 +295,14 @@ const StaffFishManagement = () => {
             type="link"
             icon={<EditOutlined />}
             onClick={() => showQuantityModal(record)}
-            style={{ backgroundColor: "#52c41a" }}
+            className="button-main"
           >
             Update Quantity
           </Button>
           <Button
             type="link"
             onClick={() => handleDelete(record.fishId)}
-            style={{ backgroundColor: "#ff4d4f" }}
+            className="button"
           >
             Delete
           </Button>
@@ -638,14 +638,11 @@ const StaffFishManagement = () => {
                 setIsQuantityModalVisible(false);
                 quantityForm.resetFields();
               }}
+              className="button"
             >
               Cancel
             </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ backgroundColor: "#52c41a" }}
-            >
+            <Button type="primary" htmlType="submit" className="button-main">
               Update
             </Button>
           </Space>

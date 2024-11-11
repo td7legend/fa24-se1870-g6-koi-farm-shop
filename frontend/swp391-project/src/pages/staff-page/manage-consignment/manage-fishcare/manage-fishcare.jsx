@@ -10,12 +10,16 @@ import {
   Typography,
   Form,
   Input,
+  Breadcrumb,
 } from "antd";
 import { EyeOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import "./manage-fishcare.scss";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -23,9 +27,11 @@ const { TextArea } = Input;
 const FishCareManagement = () => {
   const [fishCares, setFishCares] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFishCare, setSelectedFishCare] = useState(null);
+  const [selectedFishCare, setSelectedFishCare] = useState({});
   // const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [viewHistoryModalVisible, setViewHistoryModalVisible] = useState(false);
+  const [fishCareHistory, setFishCareHistory] = useState([]);
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
@@ -63,6 +69,25 @@ const FishCareManagement = () => {
     }
   };
 
+  const fetchFishCareHistory = async (fishCareId) => {
+    try {
+      const response = await axios.get(
+        `https://localhost:44366/api/FishCare/${fishCareId}/history`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setFishCareHistory(response.data);
+    } catch (error) {
+      console.error("Error fetching fish care history:", error);
+      message.error("Failed to fetch fish care history");
+    }
+  };
+
+  const handleViewHistory = async (record) => {
+    setSelectedFishCare(record);
+    await fetchFishCareHistory(record.fishCareId);
+    setViewHistoryModalVisible(true);
+  };
+
   const handleUpdateStatusDetails = async (values) => {
     try {
       if (!token) {
@@ -71,8 +96,8 @@ const FishCareManagement = () => {
         return;
       }
 
-      await axios.patch(
-        `https://localhost:44366/api/FishCare/${selectedFishCare.fishCareId}/status-details`,
+      await axios.post(
+        `https://localhost:44366/api/FishCare/${selectedFishCare.fishCareId}/add-history`,
         {
           healthStatus: values.healthStatus,
           careDetails: values.careDetails,
@@ -109,8 +134,8 @@ const FishCareManagement = () => {
     },
     {
       title: "Health Status",
-      dataIndex: "healthStatus",
-      key: "healthStatus",
+      dataIndex: "standardCareDetails",
+      key: "standardCareDetails",
       render: (status) => (
         <Tag
           color={
@@ -127,8 +152,8 @@ const FishCareManagement = () => {
     },
     {
       title: "Care Details",
-      dataIndex: "careDetails",
-      key: "careDetails",
+      dataIndex: "standardCareDetails",
+      key: "standardCareDetails",
     },
     {
       title: "Actions",
@@ -136,15 +161,9 @@ const FishCareManagement = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          {/* <Button
-            icon={<EyeOutlined />}
-            onClick={() => {
-              setSelectedFishCare(record);
-              setDetailModalVisible(true);
-            }}
-          >
-            Details
-          </Button> */}
+          <Button type="primary" onClick={() => handleViewHistory(record)}>
+            View History
+          </Button>
           <Button
             type="primary"
             icon={<EditOutlined />}
@@ -165,43 +184,85 @@ const FishCareManagement = () => {
   ];
 
   return (
-    <div style={{ padding: 24 }}>
-      <Card>
-        <Title level={2}>Fish Care Management</Title>
-        <Table
-          dataSource={fishCares}
-          columns={columns}
-          rowKey="fishCareId"
-          loading={loading}
-          pagination={{ pageSize: 10 }}
-        />
-      </Card>
+    <div className="staff-fishcare-management">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item>
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+
+          <Breadcrumb.Item>Staff</Breadcrumb.Item>
+
+          <Breadcrumb.Item>Consignment Management</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+
+      <div className="manage-fishcare-container">
+        <Card>
+          <Title level={2}>Fish Care Management</Title>
+
+          <Table
+            dataSource={fishCares}
+            columns={columns}
+            rowKey="fishCareId"
+            loading={loading}
+            pagination={{ pageSize: 10 }}
+            className="fishcare-management-table"
+          />
+        </Card>
+      </div>
 
       {/* Detail Modal */}
-      {/* <Modal
-        title={`Fish Care #${selectedFishCare?.fishCareId} Details`}
-        open={detailModalVisible}
-        onCancel={() => setDetailModalVisible(false)}
+      <Modal
+        title={`Fish Care #${selectedFishCare?.fishCareId} History`}
+        open={viewHistoryModalVisible}
+        onCancel={() => setViewHistoryModalVisible(false)}
         footer={null}
-        width={600}
+        width={800}
       >
-        {selectedFishCare && (
-          <div>
-            <p>
-              <strong>Fish Type:</strong> {selectedFishCare.fishType}
-            </p>
-            <p>
-              <strong>Health Status:</strong> {selectedFishCare.healthStatus}
-            </p>
-            <p>
-              <strong>Care Details:</strong> {selectedFishCare.careDetails}
-            </p>
-            <p>
-              <strong>Consignment ID:</strong> {selectedFishCare.consignmentId}
-            </p>
-          </div>
+        {fishCareHistory.length > 0 ? (
+          <Table
+            dataSource={fishCareHistory}
+            columns={[
+              {
+                title: "ID",
+                dataIndex: "fishCareHistoryId",
+                key: "fishCareHistoryId",
+              },
+              {
+                title: "Health Status",
+                dataIndex: "healthStatus",
+                key: "healthStatus",
+              },
+              {
+                title: "Care Details",
+                dataIndex: "careDetails",
+                key: "careDetails",
+              },
+              {
+                title: "Care Date",
+                dataIndex: "careDate",
+                key: "careDate",
+                render: (date) => {
+                  const careDate = new Date(date);
+                  return careDate.toLocaleString("vi-VN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                  });
+                },
+              },
+            ]}
+            rowKey="fishCareHistoryId"
+          />
+        ) : (
+          <div>No history available for this fish care.</div>
         )}
-      </Modal> */}
+      </Modal>
 
       {/* Update Status Modal */}
       <Modal
