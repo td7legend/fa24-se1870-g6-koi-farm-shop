@@ -191,9 +191,9 @@ const ConsignmentManagement = () => {
             fishCareId: 0,
             fishType: fishCare.fishType,
             consignmentId: selectedConsignment.consignmentId,
-            consignmentLineId: fishCare.consignmentLineId,
-            healthStatus: fishCare.healthStatus,
-            careDetails: fishCare.careDetails,
+            // consignmentLineId: fishCare.consignmentLineId,
+            standardCareDetails: fishCare.healthStatus,
+            standardHealthStatus: fishCare.careDetails,
           },
           { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -665,7 +665,7 @@ const ConsignmentManagement = () => {
                         },
                         {
                           title: "Health Status",
-                          dataIndex: "healthStatus",
+                          dataIndex: "standardHealthStatus",
                           key: "healthStatus",
                           width: 120,
                           render: (status) => {
@@ -683,7 +683,7 @@ const ConsignmentManagement = () => {
                         },
                         {
                           title: "Care Details",
-                          dataIndex: "careDetails",
+                          dataIndex: "standardCareDetails",
                           key: "careDetails",
                           ellipsis: true,
                         },

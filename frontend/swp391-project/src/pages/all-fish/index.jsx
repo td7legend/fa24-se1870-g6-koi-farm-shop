@@ -54,6 +54,7 @@ const AllFishPage = () => {
   const [fishTypes, setFishTypes] = useState([]);
   const itemsPerPage = 4;
   const [isLoading, setIsLoading] = useState(true);
+  const [fadeClasses, setFadeClasses] = useState({});
 
   const fetchAllFish = async () => {
     try {
@@ -89,10 +90,14 @@ const AllFishPage = () => {
     setFishByType(typeMap);
 
     const initialPageState = {};
+    const initialFadeClasses = {};
+
     Object.keys(typeMap).forEach((typeId) => {
       initialPageState[typeId] = 1;
+      initialFadeClasses[typeId] = "fade-in visible";
     });
     setCurrentPage(initialPageState);
+    setFadeClasses(initialFadeClasses);
   };
 
   useEffect(() => {
@@ -127,19 +132,29 @@ const AllFishPage = () => {
   }, [fishTypes, fishByType]);
 
   const handlePageChange = (typeId, direction) => {
-    setCurrentPage((prevState) => {
-      const newPage = prevState[typeId] + direction;
-      if (
-        newPage < 1 ||
-        newPage > Math.ceil(fishByType[typeId].length / itemsPerPage)
-      ) {
-        return prevState;
-      }
-      return {
+    setFadeClasses((prevState) => ({
+      ...prevState,
+      [typeId]: "fade-out hidden",
+    }));
+    setTimeout(() => {
+      setCurrentPage((prevState) => {
+        const newPage = prevState[typeId] + direction;
+        if (
+          newPage < 1 ||
+          newPage > Math.ceil(fishByType[typeId].length / itemsPerPage)
+        ) {
+          return prevState;
+        }
+        return {
+          ...prevState,
+          [typeId]: newPage,
+        };
+      });
+      setFadeClasses((prevState) => ({
         ...prevState,
-        [typeId]: newPage,
-      };
-    });
+        [typeId]: "fade-in visible",
+      }));
+    }, 300);
   };
 
   const filterFishBySearch = (fish) => {
@@ -221,14 +236,16 @@ const AllFishPage = () => {
                   &lt;
                 </button>
 
-                {fishToDisplay.map((fish) => (
-                  <ProductCard
-                    className="product-card"
-                    fish={fish}
-                    key={fish.fishId}
-                    onCompare={handleCompare}
-                  />
-                ))}
+                <div className={`product-fade ${fadeClasses[typeId]}`}>
+                  {fishToDisplay.map((fish) => (
+                    <ProductCard
+                      className="product-card"
+                      fish={fish}
+                      key={fish.fishId}
+                      onCompare={handleCompare}
+                    />
+                  ))}
+                </div>
 
                 <button
                   className="nav__button right"

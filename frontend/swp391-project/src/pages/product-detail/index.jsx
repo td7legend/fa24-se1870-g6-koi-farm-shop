@@ -23,6 +23,15 @@ import CurrencyFormatter from "../../components/currency";
 import { setCart } from "../../store/actions/cartAction";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import {
+  EnvironmentOutlined,
+  PhoneOutlined,
+  MessageOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -43,7 +52,10 @@ function ProductDetail() {
   const { isLoggedIn, token, role } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
+  const [productImages, setProductImages] = useState([]);
+  const [nav1, setNav1] = useState(null);
+  const [nav2, setNav2] = useState(null);
+  const [certificateImages, setCertificateImages] = useState([]);
   useEffect(() => {
     if (id) {
       fetchProduct();
@@ -59,6 +71,18 @@ function ProductDetail() {
     getCurrentFishTypes();
   }, [product, fishTypes]);
 
+  useEffect(() => {
+    if (id) {
+      fetchProductImages();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchCertificateImages();
+    }
+  }, [id]);
+
   const fetchProduct = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}fishs/${id}`);
@@ -69,7 +93,17 @@ function ProductDetail() {
       toast.error(t("failedToFetchProductData"));
     }
   };
-
+  const fetchCertificateImages = async () => {
+    try {
+      const response = await axios.get(
+        `${config.API_ROOT}fishs/certificates/${id}`
+      );
+      const imageUrls = response.data.map((cert) => cert.url);
+      setCertificateImages(imageUrls);
+    } catch (error) {
+      toast.error(t("failedToFetchCertificateImages"));
+    }
+  };
   const fetchFishes = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}fishs`);
@@ -224,6 +258,55 @@ function ProductDetail() {
     }
   }
 
+  const fetchProductImages = async () => {
+    try {
+      const response = await axios.get(`${config.API_ROOT}fishs/images/${id}`);
+      if (response.data) {
+        const images = response.data.map((item) => ({
+          imageUrl: item.imageUrl,
+        }));
+        setProductImages(images);
+      }
+    } catch (error) {
+      console.error("Failed to fetch product images:", error);
+    }
+  };
+
+  const mainSliderSettings = {
+    dots: false,
+    fade: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    asNavFor: nav2,
+  };
+
+  const thumbnailSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+    focusOnSelect: true,
+    asNavFor: nav1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+    ],
+  };
+
   if (!product.name) {
     return <div>{t("loading")}</div>;
   }
@@ -257,16 +340,58 @@ function ProductDetail() {
       </Row>
 
       <div className="product-detail-container">
-        <Row gutter={16}>
-          <Col span={10}>
-            <Carousel>
-              <div>
-                <Image src={product.imageUrl} alt={product?.name} />
-              </div>
-            </Carousel>
+        <Row gutter={[24, 24]}>
+          <Col span={8}>
+            <div className="product-slider-container">
+              <Slider
+                asNavFor={nav2}
+                ref={(slider1) => setNav1(slider1)}
+                className="main-slider"
+              >
+                <div>
+                  <Image
+                    src={product.imageUrl}
+                    alt={product?.name}
+                    preview={true}
+                    className="main-image"
+                  />
+                </div>
+                {productImages.map((img, idx) => (
+                  <div key={idx}>
+                    <Image
+                      src={img.imageUrl}
+                      alt={`${product?.name} ${idx + 1}`}
+                      preview={true}
+                      className="main-image"
+                    />
+                  </div>
+                ))}
+              </Slider>
+
+              <Slider
+                asNavFor={nav1}
+                ref={(slider2) => setNav2(slider2)}
+                slidesToShow={3}
+                swipeToSlide={true}
+                focusOnSelect={true}
+                className="thumbnail-slider"
+              >
+                <div>
+                  <img src={product.imageUrl} alt={product?.name} />
+                </div>
+                {productImages.map((img, idx) => (
+                  <div key={idx}>
+                    <img
+                      src={img.imageUrl}
+                      alt={`${product?.name} ${idx + 1}`}
+                    />
+                  </div>
+                ))}
+              </Slider>
+            </div>
           </Col>
 
-          <Col span={14}>
+          <Col span={11}>
             <div className="info-container">
               <h1>{product.name}</h1>
               <h2>
@@ -280,7 +405,7 @@ function ProductDetail() {
               <div className="product-info">
                 <p>
                   <span>{t("breed")}:</span>{" "}
-                  {capitalizeFirstLetter(currentFishTypes.name) || "Loading..."}
+                  {capitalizeFirstLetter(currentFishTypes.name)}
                 </p>
                 <p>
                   <span>{t("age")}:</span> {product.age}
@@ -317,7 +442,6 @@ function ProductDetail() {
                 </Button>
               </div>
 
-              {/* Tab Box */}
               <div className="tab-container">
                 <div
                   className={`tab-item ${
@@ -335,9 +459,16 @@ function ProductDetail() {
                 >
                   {t("rating")}
                 </div>
+                <div
+                  className={`tab-item ${
+                    activeTab === "certificate" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("certificate")}
+                >
+                  {t("Certificate Images")}
+                </div>
               </div>
 
-              {/* Content Box */}
               {activeTab === "description" && (
                 <div className="product-description">
                   <h3>{t("description")}</h3>
@@ -349,7 +480,6 @@ function ProductDetail() {
               )}
               {activeTab === "rating" && (
                 <div className="product-ratings">
-                  {/* Left side: Rating submission form */}
                   <div className="rating-form">
                     <h4>{t("Write A Review")}</h4>
                     <div>
@@ -378,7 +508,6 @@ function ProductDetail() {
                     </Button>
                   </div>
 
-                  {/* Right side: Display all reviews */}
                   <div className="all-ratings">
                     <h4>{t("All Reviews")}</h4>
                     {ratings.length > 0 ? (
@@ -401,6 +530,64 @@ function ProductDetail() {
                   </div>
                 </div>
               )}
+              {activeTab === "certificate" && (
+                <div className="product-certificates">
+                  <h3>{t("Certificate Images")}</h3>
+                  <div className="certificate-grid">
+                    {certificateImages.length > 0 ? (
+                      certificateImages.map((url, index) => (
+                        <div key={index} className="certificate-item">
+                          <Image
+                            src={url}
+                            alt={`Certificate ${index + 1}`}
+                            preview={true}
+                            className="certificate-image"
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <p className="no-certificates">
+                        {t("No certificates available")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </Col>
+
+          <Col span={5}>
+            <div className="contact-info-card">
+              <div className="card-header">THÔNG TIN LIÊN HỆ</div>
+              <div className="contact-items-container">
+                <div className="contact-item">
+                  <EnvironmentOutlined className="icon" />
+                  <div className="text">
+                    Lô E2a-7, Đường D1, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ
+                    Chí Minh
+                  </div>
+                </div>
+                <div className="contact-item">
+                  <PhoneOutlined className="icon" />
+                  <div className="text">
+                    <a href="tel:0932144888">0932.144.888</a>
+                  </div>
+                </div>
+                <div className="contact-item">
+                  <MessageOutlined className="icon" />
+                  <div className="text">
+                    <a href="tel:0971466888">0971.466.888</a>
+                  </div>
+                </div>
+                <div className="contact-item">
+                  <MailOutlined className="icon" />
+                  <div className="text">
+                    <a href="mailto:goldenkoi.vn@gmail.com">
+                      goldenkoi.vn@gmail.com
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </Col>
         </Row>

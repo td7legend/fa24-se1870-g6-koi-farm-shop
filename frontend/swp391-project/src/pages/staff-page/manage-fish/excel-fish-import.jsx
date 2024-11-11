@@ -71,6 +71,20 @@ const ExcelFishImport = ({ onUploadSuccess, token, config, fishes }) => {
         description: row.description?.trim() || "",
         quantity: parseInt(row.quantity) || 0,
         imageUrl: row.imageUrl?.trim() || "",
+        consignmentLineId: row.consignmentLineId
+          ? parseInt(row.consignmentLineId)
+          : null,
+        imageUrls: row.imageUrls
+          ? row.imageUrls
+              .split(";")
+              .map((url) => url.trim())
+              .filter((url) => url)
+          : [],
+        certificate: {
+          description: "none",
+          issueDate: new Date().toISOString(),
+          url: row.certificateUrl?.trim() || "",
+        },
       }));
 
       let successCount = 0;

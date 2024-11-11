@@ -21,7 +21,12 @@ import axios from "axios";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
-import { PlusOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  EyeOutlined,
+  EditOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 import uploadFile from "../../../utils/upload/upload";
 import "./index.scss";
 import { useSelector } from "react-redux";
@@ -121,7 +126,7 @@ const StaffFishManagement = () => {
       }
       let imageUrl = "";
 
-      // Handle image upload if there's a file
+      // Handle main image upload
       if (values.image && values.image.length > 0) {
         const fileObj = values.image[0].originFileObj;
         if (fileObj) {
@@ -129,7 +134,7 @@ const StaffFishManagement = () => {
         }
       }
 
-      // Construct the fish data according to the API schema
+      // Construct the fish data
       const fishData = {
         name: values.name,
         gender: parseInt(values.gender),
@@ -144,9 +149,8 @@ const StaffFishManagement = () => {
         description: values.description,
         quantity: parseInt(values.quantity),
         imageUrl: imageUrl,
+        imageUrls: values.additionalImages || [],
       };
-
-      console.log(fishData);
 
       await axios.post(`${config.API_ROOT}fishs`, fishData, {
         headers: {
@@ -462,6 +466,54 @@ const StaffFishManagement = () => {
             {form.getFieldValue("image")?.length >= 1 ? null : uploadButton}
           </Upload>
         </Form.Item>
+
+        <Form.List name="additionalImages">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field, index) => (
+                <Form.Item
+                  required={false}
+                  key={field.key}
+                  label={index === 0 ? "Additional Images" : ""}
+                  style={{ marginBottom: "8px" }}
+                >
+                  <Form.Item
+                    {...field}
+                    validateTrigger={["onChange", "onBlur"]}
+                    rules={[
+                      {
+                        required: true,
+                        whitespace: true,
+                        message: "Please input image URL or delete this field.",
+                      },
+                    ]}
+                    noStyle
+                  >
+                    <Input
+                      placeholder="Enter image URL"
+                      style={{ width: "90%" }}
+                    />
+                  </Form.Item>
+                  <MinusCircleOutlined
+                    className="dynamic-delete-button"
+                    onClick={() => remove(field.name)}
+                    style={{ margin: "0 8px" }}
+                  />
+                </Form.Item>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  icon={<PlusOutlined />}
+                  style={{ width: "100%" }}
+                >
+                  Add Additional Image
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
 
         <Form.Item>
           <Space className="w-full justify-end">

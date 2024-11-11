@@ -65,14 +65,35 @@
     }
   }
 }
-.button {
-  color: #bbab6f;
-  border-color: #bbab6f;
-  transition: all 0.3s ease;
+
+// Thêm styles cho phần additional images
+.dynamic-delete-button {
+  color: #999;
+  cursor: pointer;
+  transition: all 0.3s;
+
   &:hover {
-    background-color: #ddd !important;
-    border-color: #bbab6f !important;
-    color: #bbab6f !important;
+    color: #777;
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.ant-form-item-control-input-content {
+  display: flex;
+  align-items: center;
+  .button {
+    color: #bbab6f;
+    border-color: #bbab6f;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: #ddd !important;
+      border-color: #bbab6f !important;
+      color: #bbab6f !important;
+    }
   }
 }
 
