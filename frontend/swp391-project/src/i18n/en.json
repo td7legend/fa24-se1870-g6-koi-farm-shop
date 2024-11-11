@@ -549,5 +549,9 @@
   "birthdayOffers": " Birthday special offers",
   "exclusiveProducts": "Access to exclusive products",
   "pointsAccumulation": "Points accumulation on all purchases",
-  "fishCareManagement": "Fish Care Management"
+  "fishCareManagement": "Fish Care Management",
+  "failedToFetchCertificateImages": "Failed to fetch certificate images",
+  "certificateImages": "Certificate Images",
+  "noCertificateImages": "No certificate images",
+  "noReviewsYet": "No review yet"
 }

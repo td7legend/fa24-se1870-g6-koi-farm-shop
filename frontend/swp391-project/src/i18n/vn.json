@@ -547,5 +547,9 @@
   "birthdayOffers": "Khuyến mại đặc biệt mừng sinh nhật",
   "exclusiveProducts": "Truy cập vào các sản phẩm độc quyền",
   "pointsAccumulation": "Tích lũy điểm cho tất cả các giao dịch mua",
-  "fishCareManagement": "Quản lý chăm sóc cá"
+  "fishCareManagement": "Quản lý chăm sóc cá",
+  "failedToFetchCertificateImages": "Không thể lấy hình ảnh chứng chỉ",
+  "certificateImages": "Hình ảnh chứng chỉ",
+  "noCertificateImages": "Không có hình ảnh chứng chỉ",
+  "noReviewsYet": "Không có đánh giá nào"
 }
