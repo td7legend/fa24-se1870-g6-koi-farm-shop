@@ -1,5 +1,6 @@
 ﻿using koi_farm_demo.Data;
 using koi_farm_demo.Models;
+using koi_farm_demo.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -13,10 +14,12 @@ namespace koi_farm_demo.Controllers
     public class FishController : ControllerBase
     {
         private readonly IFishService _fishService;
+        private readonly ICertificateService _certificateService;
 
-        public FishController(IFishService fishService)
+        public FishController(IFishService fishService, ICertificateService certificateService)
         {
             _fishService = fishService;
+            _certificateService = certificateService;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -78,6 +81,16 @@ namespace koi_farm_demo.Controllers
                 return NotFound("No images found for this fish.");
 
             return Ok(fishImages);
+        }
+        [HttpGet("certificates/{fishId}")]
+        public async Task<ActionResult<IEnumerable<CertificateDto>>> GetFishCertificate(int fishId)
+        {
+            var fishCertificate = await _certificateService.GetCertificatesByFishIdAsync(fishId);
+
+            if (fishCertificate == null || !fishCertificate.Any())
+                return NotFound("No images found for this fish.");
+
+            return Ok(fishCertificate);
         }
     }
 }
