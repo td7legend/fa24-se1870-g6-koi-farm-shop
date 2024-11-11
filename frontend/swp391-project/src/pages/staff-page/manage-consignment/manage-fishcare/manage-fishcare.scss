@@ -1,20 +1,9 @@
-.staff-consignment-management {
+.staff-fishcare-management {
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
   background-color: transparent;
   position: relative;
-  .button {
-    color: #bbab6f;
-    border-color: #bbab6f;
-    transition: all 0.3s ease;
-    &:hover {
-      background-color: #ddd !important;
-      border-color: #bbab6f !important;
-      color: #bbab6f !important;
-    }
-  }
-
   .button-main {
     color: #fffaf0;
     background-color: #bbab6f;
@@ -23,12 +12,15 @@
     padding: 10px 20px;
     transition: all 0.3s ease;
     &:hover {
-      background-color: #ddd !important;
+      background-color: #ddd;
       border-color: #bbab6f !important;
       color: #bbab6f !important;
     }
   }
-  .manage-consignment-container {
+  .ant-table-tbody > tr.ant-table-placeholder > td {
+    background-color: #fffaf0;
+  }
+  .manage-fishcare-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,7 +37,7 @@
     width: 1200px;
     border: 1px solid #000;
   }
-  .consignment-management-table {
+  .fishcare-management-table {
     .card {
       background-color: #fffaf0;
       width: 1000px;
@@ -67,6 +59,7 @@
       padding: 16px;
       text-transform: uppercase;
     }
+
     .ant-pagination {
       .ant-pagination-item-active {
         border-color: #bbab6f;

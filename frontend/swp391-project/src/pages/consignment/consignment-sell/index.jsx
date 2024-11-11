@@ -23,6 +23,7 @@ import uploadFile from "../../../utils/upload/upload";
 import config from "../../../config/config";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function ConsignmentSell() {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -33,6 +34,7 @@ function ConsignmentSell() {
   const { token } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   const [showTable, setShowTable] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     fetchCustomerInfo();
   }, []);
@@ -204,6 +206,9 @@ function ConsignmentSell() {
       toast.success(t("consignmentSaleCreatedSuccessfully"));
       formVariable.resetFields();
       formVariable.setFieldsValue({ fish: [{}] });
+      setTimeout(() => {
+        navigate("/consignment-history");
+      }, 1000);
       // setShowDateFields(false);
     } catch (error) {
       console.error("Error submitting consignment sale:", error);

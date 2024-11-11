@@ -450,7 +450,6 @@ const ConsignmentManagement = () => {
 
             {showReceiveButton && (
               <Button
-                type="primary"
                 onClick={() => {
                   setSelectedConsignment(record);
                   if (record.type === 0) {
@@ -459,6 +458,7 @@ const ConsignmentManagement = () => {
                     handleOpenSaleModal(record);
                   }
                 }}
+                className="button-main"
               >
                 {record.type === 0 ? "Receive Care" : "Receive Sale"}
               </Button>
@@ -481,7 +481,7 @@ const ConsignmentManagement = () => {
         </Breadcrumb>
       </div>
 
-      <div className="consignment-management-container">
+      <div className="manage-consignment-container">
         <Card className="card">
           <Title level={2}>Consignment Management</Title>
           <FilterSection />
@@ -498,7 +498,11 @@ const ConsignmentManagement = () => {
 
       {/* Detail Modal */}
       <Modal
-        title={`Consignment #${selectedConsignment?.consignmentId} Details`}
+        title={
+          <span style={{ fontSize: "25px", fontWeight: "bold" }}>
+            Consignment #{selectedConsignment?.consignmentId} Details
+          </span>
+        }
         open={detailModalVisible}
         onCancel={() => {
           setDetailModalVisible(false);
@@ -509,7 +513,7 @@ const ConsignmentManagement = () => {
       >
         {selectedConsignment && (
           <>
-            <Descriptions bordered column={2}>
+            <Descriptions bordered column={1}>
               <Descriptions.Item label="Type">
                 {selectedConsignment.type === 0 ? "Care" : "Sale"}
               </Descriptions.Item>
@@ -833,7 +837,12 @@ const ConsignmentManagement = () => {
             />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              className="button-main"
+            >
               Confirm Care
             </Button>
           </Form.Item>
@@ -842,7 +851,11 @@ const ConsignmentManagement = () => {
 
       {/* Sale Confirmation Modal */}
       <Modal
-        title="Confirm Sale Consignment"
+        title={
+          <span style={{ fontSize: "25px", fontWeight: "bold" }}>
+            Confirm Sale Consignment
+          </span>
+        }
         open={saleModalVisible}
         onCancel={handleCloseSaleModal}
         footer={null}
