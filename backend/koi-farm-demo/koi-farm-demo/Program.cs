@@ -113,6 +113,9 @@ namespace koi_farm_demo
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<ICertificateRepository, CertificateRepository>();
             builder.Services.AddScoped<ICertificateService, CertificateService>();
+            builder.Services.AddScoped<IFishImageRepository, FishImageRepository>();
+            builder.Services.AddScoped<IFishCareHistoryRepository, FishCareHistoryRepository>();
+            builder.Services.AddScoped<IFishCareHistoryService, FishCareHistoryService>();
             // Đăng ký các dịch vụ Customer
             builder.Services.AddAuthorization(options =>
             {

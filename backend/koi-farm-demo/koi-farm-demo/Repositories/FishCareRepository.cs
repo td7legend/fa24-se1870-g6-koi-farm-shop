@@ -39,8 +39,8 @@ namespace koi_farm_demo.Repositories
             // Cập nhật các thuộc tính cần thiết
             existingFishCare.FishType = fishCare.FishType;
             existingFishCare.ConsignmentId = fishCare.ConsignmentId;
-            existingFishCare.HealthStatus = fishCare.HealthStatus;
-            existingFishCare.CareDetails = fishCare.CareDetails;
+            existingFishCare.StandardHealthStatus = fishCare.StandardHealthStatus;
+            existingFishCare.StandardCareDetails = fishCare.StandardCareDetails;
 
             await _context.SaveChangesAsync();
             return existingFishCare;
@@ -54,8 +54,8 @@ namespace koi_farm_demo.Repositories
             }
 
             // Cập nhật HealthStatus và CareDetails
-            fishCare.HealthStatus = healthStatus;
-            fishCare.CareDetails = careDetails;
+            fishCare.StandardHealthStatus = healthStatus;
+            fishCare.StandardCareDetails = careDetails;
 
             await _context.SaveChangesAsync();
             return fishCare;

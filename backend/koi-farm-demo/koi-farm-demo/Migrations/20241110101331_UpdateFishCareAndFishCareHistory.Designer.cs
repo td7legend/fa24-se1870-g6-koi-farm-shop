@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace koi_farm_demo.Migrations
 {
     [DbContext(typeof(KoiFarmDbContext))]
-    [Migration("20241025101815_Danh")]
-    partial class Danh
+    [Migration("20241110101331_UpdateFishCareAndFishCareHistory")]
+    partial class UpdateFishCareAndFishCareHistory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -454,11 +454,6 @@ namespace koi_farm_demo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FishCareId"));
 
-                    b.Property<string>("CareDetails")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<int>("ConsignmentId")
                         .HasColumnType("int");
 
@@ -466,7 +461,12 @@ namespace koi_farm_demo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HealthStatus")
+                    b.Property<string>("StandardCareDetails")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("StandardHealthStatus")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -476,6 +476,35 @@ namespace koi_farm_demo.Migrations
                     b.HasIndex("ConsignmentId");
 
                     b.ToTable("FishCares");
+                });
+
+            modelBuilder.Entity("koi_farm_demo.Models.FishCareHistory", b =>
+                {
+                    b.Property<int>("FishCareHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FishCareHistoryId"));
+
+                    b.Property<DateTime>("CareDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CareDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FishCareId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HealthStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FishCareHistoryId");
+
+                    b.HasIndex("FishCareId");
+
+                    b.ToTable("FishCareHistories");
                 });
 
             modelBuilder.Entity("Certification", b =>
@@ -611,6 +640,17 @@ namespace koi_farm_demo.Migrations
                         .HasForeignKey("ConsignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("koi_farm_demo.Models.FishCareHistory", b =>
+                {
+                    b.HasOne("koi_farm_demo.Models.FishCare", "FishCare")
+                        .WithMany()
+                        .HasForeignKey("FishCareId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FishCare");
                 });
 
             modelBuilder.Entity("Consignment", b =>

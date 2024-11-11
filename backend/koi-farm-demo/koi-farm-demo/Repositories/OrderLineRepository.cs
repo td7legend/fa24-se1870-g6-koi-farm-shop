@@ -79,4 +79,15 @@ public class OrderLineRepository : IOrderLineRepository
         }
         await _context.SaveChangesAsync();
     }
+    public async Task AddAsync(OrderLine orderLine)
+    {
+        await _context.OrderLines.AddAsync(orderLine);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(OrderLine orderLine)
+    {
+        _context.OrderLines.Update(orderLine);
+        await _context.SaveChangesAsync();
+    }
 }

@@ -16,6 +16,10 @@ import tanchoImage from "../../images/tancho.jpg";
 import shusuiImage from "../../images/shusui.jpg";
 import goromoImage from "../../images/goromo.jpg";
 import benigoiImage from "../../images/benigoi.jpg";
+import goshikiImage from "../../images/goshiki.jpg";
+import ginrinImage from "../../images/ginrin.jpg";
+import doitsuImage from "../../images/doitsu.jpg";
+import bekkoImage from "../../images/bekko.jpg";
 import ProductCard from "../../components/product-card";
 import CompareModal from "../../components/compareModel/CompareModal";
 import { useTranslation } from "react-i18next";
@@ -32,6 +36,10 @@ const fishImages = {
   Shusui: shusuiImage,
   Goromo: goromoImage,
   Benigoi: benigoiImage,
+  Goshiki: goshikiImage,
+  Ginrin: ginrinImage,
+  Doitsu: doitsuImage,
+  Bekko: bekkoImage,
 };
 
 const AllFishPage = () => {

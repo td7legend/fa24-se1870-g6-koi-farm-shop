@@ -1,4 +1,6 @@
-﻿public class Fish
+﻿using koi_farm_demo.Models;
+
+public class Fish
 {
     public int FishId { get; set; }
     public string Name { get; set; }
@@ -14,6 +16,7 @@
     public int FishTypeId { get; set; }
     public FishType FishType { get; set; }
     public ICollection<OrderLine> OrderLines { get; set; }
+    public ICollection<FishImage> FishImages { get; set; }
     public int Quantity { get; set; }
     public string ImageUrl { get; set; }
     public string Description { get; set; }

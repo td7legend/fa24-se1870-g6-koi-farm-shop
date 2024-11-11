@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace koi_farm_demo.Migrations
 {
     /// <inheritdoc />
-    public partial class Danh : Migration
+    public partial class UpdateFishCareAndFishCareHistory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -310,8 +310,8 @@ namespace koi_farm_demo.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FishType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConsignmentId = table.Column<int>(type: "int", nullable: false),
-                    HealthStatus = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CareDetails = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                    StandardCareDetails = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    StandardHealthStatus = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -321,6 +321,28 @@ namespace koi_farm_demo.Migrations
                         column: x => x.ConsignmentId,
                         principalTable: "Consignments",
                         principalColumn: "ConsignmentId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FishCareHistories",
+                columns: table => new
+                {
+                    FishCareHistoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FishCareId = table.Column<int>(type: "int", nullable: false),
+                    CareDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HealthStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CareDetails = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FishCareHistories", x => x.FishCareHistoryId);
+                    table.ForeignKey(
+                        name: "FK_FishCareHistories_FishCares_FishCareId",
+                        column: x => x.FishCareId,
+                        principalTable: "FishCares",
+                        principalColumn: "FishCareId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -354,6 +376,11 @@ namespace koi_farm_demo.Migrations
                 name: "IX_Fish_FishTypeId",
                 table: "Fish",
                 column: "FishTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FishCareHistories_FishCareId",
+                table: "FishCareHistories",
+                column: "FishCareId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FishCares_ConsignmentId",
@@ -402,7 +429,7 @@ namespace koi_farm_demo.Migrations
                 name: "ConsignmentLines");
 
             migrationBuilder.DropTable(
-                name: "FishCares");
+                name: "FishCareHistories");
 
             migrationBuilder.DropTable(
                 name: "LoyaltyPoints");
@@ -414,7 +441,7 @@ namespace koi_farm_demo.Migrations
                 name: "Ratings");
 
             migrationBuilder.DropTable(
-                name: "Consignments");
+                name: "FishCares");
 
             migrationBuilder.DropTable(
                 name: "Orders");
@@ -423,13 +450,16 @@ namespace koi_farm_demo.Migrations
                 name: "Fish");
 
             migrationBuilder.DropTable(
-                name: "Staffs");
+                name: "Consignments");
+
+            migrationBuilder.DropTable(
+                name: "FishTypes");
 
             migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "FishTypes");
+                name: "Staffs");
 
             migrationBuilder.DropTable(
                 name: "Users");

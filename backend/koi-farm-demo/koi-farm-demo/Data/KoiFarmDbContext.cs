@@ -18,7 +18,8 @@ public class KoiFarmDbContext : DbContext
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<LoyaltyPoint> LoyaltyPoints { get; set; }
     public DbSet<FishCare> FishCares { get; set; }
-
+    public DbSet<FishCareHistory> FishCareHistories { get; set; }
+    public DbSet<FishImage> FishImages { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         
@@ -224,8 +225,8 @@ public class KoiFarmDbContext : DbContext
         {
             entity.HasKey(e => e.FishCareId);
             entity.Property(e => e.FishType).IsRequired();
-            entity.Property(e => e.HealthStatus).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.CareDetails).HasMaxLength(500);
+            entity.Property(e => e.StandardHealthStatus).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.StandardCareDetails).HasMaxLength(500);
             
             // Quan hệ với bảng Consignment
             entity.HasOne<Consignment>()
@@ -253,8 +254,23 @@ public class KoiFarmDbContext : DbContext
                   .HasForeignKey(e => e.FishId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
+        modelBuilder.Entity<FishCareHistory>()
+            .HasKey(fch => fch.FishCareHistoryId);
 
-        
+        modelBuilder.Entity<FishCareHistory>()
+            .HasOne(fch => fch.FishCare)
+            .WithMany() // Quan hệ nhiều bản ghi FishCareHistory cho một FishCare
+            .HasForeignKey(fch => fch.FishCareId)
+            .OnDelete(DeleteBehavior.Cascade); // Xóa FishCare sẽ xóa các FishCareHistory
+
+        modelBuilder.Entity<FishImage>()
+           .HasKey(fi => fi.FishImageId);
+
+        modelBuilder.Entity<FishImage>()
+            .HasOne(fi => fi.Fish)
+            .WithMany(f => f.FishImages)
+            .HasForeignKey(fi => fi.FishId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<LoyaltyPoint>(entity =>
         {
             entity.HasKey(e => e.LPId);
@@ -265,6 +281,8 @@ public class KoiFarmDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(e => e.CustomerId)
                   .OnDelete(DeleteBehavior.Cascade);
+
         });
+        
     }
 }

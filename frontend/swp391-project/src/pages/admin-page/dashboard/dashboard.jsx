@@ -98,8 +98,11 @@ const AdminDashboard = () => {
 
   const calculateRevenue = (orders) => {
     return orders.reduce((total, order) => {
-      const revenue = (order.totalAmount || 0) - (order.totalDiscount || 0);
-      return total + revenue;
+      if (order.status === 4) {
+        const revenue = (order.totalAmount || 0) - (order.totalDiscount || 0);
+        return total + revenue;
+      }
+      return total;
     }, 0);
   };
 
