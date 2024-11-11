@@ -85,14 +85,15 @@
 .ant-form-item-control-input-content {
   display: flex;
   align-items: center;
-.button {
-  color: #bbab6f;
-  border-color: #bbab6f;
-  transition: all 0.3s ease;
-  &:hover {
-    background-color: #ddd !important;
-    border-color: #bbab6f !important;
-    color: #bbab6f !important;
+  .button {
+    color: #bbab6f;
+    border-color: #bbab6f;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: #ddd !important;
+      border-color: #bbab6f !important;
+      color: #bbab6f !important;
+    }
   }
 }
 
