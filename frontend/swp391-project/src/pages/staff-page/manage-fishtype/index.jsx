@@ -145,14 +145,11 @@ const FishTypeManagement = () => {
                 setIsModalVisible(false);
                 form.resetFields();
               }}
+              className="button"
             >
               Cancel
             </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ backgroundColor: "#bbab6f" }}
-            >
+            <Button type="primary" htmlType="submit" className="button-main">
               Add
             </Button>
           </Space>

@@ -16,13 +16,13 @@
   }
   .ant-card-bordered {
     background-color: #fffaf0;
+    border: 1px solid #000;
   }
   .ant-card-body {
     border-radius: 10px;
     background-color: #fffaf0;
     height: fit-content;
     width: 1200px;
-    border: 1px solid #000;
   }
   .fish-management-table {
     .card {
@@ -63,5 +63,29 @@
     .ant-table-tbody > tr > td {
       background-color: #fffaf0;
     }
+  }
+}
+.button {
+  color: #bbab6f;
+  border-color: #bbab6f;
+  transition: all 0.3s ease;
+  &:hover {
+    background-color: #ddd !important;
+    border-color: #bbab6f !important;
+    color: #bbab6f !important;
+  }
+}
+
+.button-main {
+  color: #fffaf0;
+  background-color: #bbab6f;
+  border-color: #bbab6f;
+  // border-radius: 15px;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+  &:hover {
+    background-color: #ddd !important;
+    border-color: #bbab6f !important;
+    color: #bbab6f !important;
   }
 }

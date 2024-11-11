@@ -10,13 +10,16 @@ import {
   Typography,
   Form,
   Input,
+  Breadcrumb,
 } from "antd";
 import { EyeOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import "./manage-fishcare.scss";
 const { Title } = Typography;
 const { TextArea } = Input;
 
@@ -165,17 +168,29 @@ const FishCareManagement = () => {
   ];
 
   return (
-    <div style={{ padding: 24 }}>
-      <Card>
-        <Title level={2}>Fish Care Management</Title>
-        <Table
-          dataSource={fishCares}
-          columns={columns}
-          rowKey="fishCareId"
-          loading={loading}
-          pagination={{ pageSize: 10 }}
-        />
-      </Card>
+    <div className="staff-fishcare-management">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item>
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Staff</Breadcrumb.Item>
+          <Breadcrumb.Item>Consignment Management</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+      <div className="manage-fishcare-container">
+        <Card>
+          <Title level={2}>Fish Care Management</Title>
+          <Table
+            dataSource={fishCares}
+            columns={columns}
+            rowKey="fishCareId"
+            loading={loading}
+            pagination={{ pageSize: 10 }}
+            className="fishcare-management-table"
+          />
+        </Card>
+      </div>
 
       {/* Detail Modal */}
       {/* <Modal
