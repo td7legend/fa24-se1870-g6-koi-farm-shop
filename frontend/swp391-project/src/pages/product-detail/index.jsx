@@ -32,7 +32,7 @@ import {
   MessageOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-
+import LoadingKoi from "../../components/loading";
 const { Text } = Typography;
 
 function ProductDetail() {
@@ -100,16 +100,14 @@ function ProductDetail() {
       );
       const imageUrls = response.data.map((cert) => cert.url);
       setCertificateImages(imageUrls);
-    } catch (error) {
-      // toast.error(t("failedToFetchCertificateImages"));
-    }
+    } catch (error) {}
   };
   const fetchFishes = async () => {
     try {
       const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
-      toast.error(t("failedToFetchFishData"));
+      // toast.error(t("failedToFetchFishData"));
     }
   };
 
@@ -308,7 +306,7 @@ function ProductDetail() {
   };
 
   if (!product.name) {
-    return <div>{t("loading")}</div>;
+    return <LoadingKoi />;
   }
 
   return (
@@ -344,9 +342,34 @@ function ProductDetail() {
           <Col span={10}>
             <div className="product-slider-container">
               <Slider
+                asNavFor={nav1}
+                ref={(slider2) => setNav2(slider2)}
+                slidesToShow={3}
+                vertical={true}
+                swipeToSlide={true}
+                focusOnSelect={true}
+                className="thumbnail-slider"
+                arrows={true}
+                verticalSwiping={true}
+              >
+                <div>
+                  <img src={product.imageUrl} alt={product?.name} />
+                </div>
+                {productImages.map((img, idx) => (
+                  <div key={idx}>
+                    <img
+                      src={img.imageUrl}
+                      alt={`${product?.name} ${idx + 1}`}
+                    />
+                  </div>
+                ))}
+              </Slider>
+
+              <Slider
                 asNavFor={nav2}
                 ref={(slider1) => setNav1(slider1)}
                 className="main-slider"
+                arrows={false}
               >
                 <div>
                   <Image
@@ -363,27 +386,6 @@ function ProductDetail() {
                       alt={`${product?.name} ${idx + 1}`}
                       preview={true}
                       className="main-image"
-                    />
-                  </div>
-                ))}
-              </Slider>
-
-              <Slider
-                asNavFor={nav1}
-                ref={(slider2) => setNav2(slider2)}
-                slidesToShow={3}
-                swipeToSlide={true}
-                focusOnSelect={true}
-                className="thumbnail-slider"
-              >
-                <div>
-                  <img src={product.imageUrl} alt={product?.name} />
-                </div>
-                {productImages.map((img, idx) => (
-                  <div key={idx}>
-                    <img
-                      src={img.imageUrl}
-                      alt={`${product?.name} ${idx + 1}`}
                     />
                   </div>
                 ))}
@@ -406,6 +408,10 @@ function ProductDetail() {
                 <p>
                   <span>{t("breed")}:</span>{" "}
                   {capitalizeFirstLetter(currentFishTypes.name)}
+                </p>
+                <p>
+                  <span>{t("origin")}:</span>{" "}
+                  {capitalizeFirstLetter(product.class)}
                 </p>
                 <p>
                   <span>{t("age")}:</span> {product.age}
