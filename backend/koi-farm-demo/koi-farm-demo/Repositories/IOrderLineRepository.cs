@@ -9,6 +9,8 @@ namespace koi_farm_demo.Repositories
         Task DeleteAsync(OrderLine orderLine);
         Task UpdateAsync(UpdateCartDTO orderLineUpdateData, int orderId);
         Task<OrderLine> GetOrderLineByFishId(int fishId, int orderId);
+        Task AddAsync(OrderLine orderLine);
+        Task UpdateAsync(OrderLine orderLine);
 
     }
 }

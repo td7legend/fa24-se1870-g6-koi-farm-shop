@@ -166,11 +166,12 @@ public class OrderService : IOrderService
     }
     public async Task AddItemToCart(int customerId, OrderLineCreateDTO orderLineCreateDto)
     {
+        // Get or create an in-cart order for the customer
         var inCartOrder = await _orderRepository.GetInCartOrderByCustomerIdAsync(customerId);
 
         if (inCartOrder == null)
         {
-            var newOrder = new Order
+            inCartOrder = new Order
             {
                 CustomerId = customerId,
                 Status = OrderStatus.InCart,
@@ -180,31 +181,55 @@ public class OrderService : IOrderService
                 OrderLines = new List<OrderLine>()
             };
 
-            await _orderRepository.AddOrderAsync(newOrder);
-            inCartOrder = newOrder;
+            await _orderRepository.AddOrderAsync(inCartOrder);
         }
 
+        // Fetch fish information
         var fish = await _fishRepository.GetByIdAsync(orderLineCreateDto.FishId);
         if (fish == null)
         {
             throw new Exception("Fish not available");
         }
-        if (fish.Quantity < orderLineCreateDto.Quantity)
+
+        // Check if the item is already in the cart
+        var existingOrderLine = inCartOrder.OrderLines.FirstOrDefault(ol => ol.FishId == orderLineCreateDto.FishId);
+        int totalRequestedQuantity = orderLineCreateDto.Quantity;
+
+        // If item already exists in cart, add its quantity to total requested quantity
+        if (existingOrderLine != null)
         {
-            throw new Exception("Insufficient quantity");
+            totalRequestedQuantity += existingOrderLine.Quantity;
         }
 
-        var orderLine = new OrderLine
+        // Validate stock availability
+        if (fish.Quantity < totalRequestedQuantity)
         {
-            OrderId = inCartOrder.OrderId,
-            FishId = orderLineCreateDto.FishId,
-            Quantity = orderLineCreateDto.Quantity,
-            UnitPrice = fish.Price,
-            TotalPrice = fish.Price * orderLineCreateDto.Quantity
-        };
+            throw new Exception("Insufficient quantity in stock");
+        }
 
-        await _orderLineRepository.AddAsync(orderLine, orderLineCreateDto);
+        if (existingOrderLine == null)
+        {
+            // Add a new order line if it doesn't already exist
+            var orderLine = new OrderLine
+            {
+                OrderId = inCartOrder.OrderId,
+                FishId = orderLineCreateDto.FishId,
+                Quantity = orderLineCreateDto.Quantity,
+                UnitPrice = fish.Price,
+                TotalPrice = fish.Price * orderLineCreateDto.Quantity
+            };
 
+            await _orderLineRepository.AddAsync(orderLine);
+        }
+        else
+        {
+            // Update the quantity and total price of the existing order line
+            existingOrderLine.Quantity += orderLineCreateDto.Quantity;
+            existingOrderLine.TotalPrice = existingOrderLine.Quantity * existingOrderLine.UnitPrice;
+            await _orderLineRepository.UpdateAsync(existingOrderLine);
+        }
+
+        // Update the total amount in the order
         inCartOrder.TotalAmount = inCartOrder.OrderLines.Sum(ol => ol.TotalPrice);
         await _orderRepository.UpdateAsync(inCartOrder);
     }
