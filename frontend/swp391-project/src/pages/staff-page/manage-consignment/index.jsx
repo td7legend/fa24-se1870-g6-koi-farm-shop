@@ -158,6 +158,7 @@ const ConsignmentManagement = () => {
         <Select.Option value={7}>Cancelled</Select.Option>
       </Select>
       <Button
+        className="button"
         onClick={() => {
           setTypeFilter(null);
           setStatusFilter(null);
@@ -418,6 +419,7 @@ const ConsignmentManagement = () => {
         return (
           <Space>
             <Button
+              type="link"
               icon={<EyeOutlined />}
               onClick={() => {
                 setSelectedConsignment(record);
@@ -426,6 +428,7 @@ const ConsignmentManagement = () => {
                 }
                 setDetailModalVisible(true);
               }}
+              style={{ color: "#D4B57E" }}
             >
               Details
             </Button>
@@ -437,13 +440,19 @@ const ConsignmentManagement = () => {
             )}
 
             {showReviewButton && (
-              <Button type="primary" onClick={() => updateStatus(record, 1)}>
+              <Button
+                className="button-main"
+                onClick={() => updateStatus(record, 1)}
+              >
                 Review
               </Button>
             )}
 
             {showConfirmButton && (
-              <Button type="primary" onClick={() => updateStatus(record, 2)}>
+              <Button
+                className="button-main"
+                onClick={() => updateStatus(record, 2)}
+              >
                 Confirm
               </Button>
             )}
@@ -1073,7 +1082,7 @@ const ConsignmentManagement = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button className="button-main" htmlType="submit" block>
               Confirm Sale
             </Button>
           </Form.Item>

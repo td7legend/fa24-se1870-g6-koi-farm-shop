@@ -2,6 +2,10 @@ import React from "react";
 import "./styles.scss";
 import BlogSidebar from "../../common/BlogSidebar";
 import CompanyInfo from "../../common/CompanyInfo";
+import { Breadcrumb } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { t } from "i18next";
 
 const SeasonalCare = () => {
   const sidebarData = {
@@ -54,6 +58,17 @@ const SeasonalCare = () => {
 
   return (
     <div className="blog-seasonal-care">
+      <div className="breadcrumb-container">
+        <Breadcrumb className="breadcrumb" separator=">">
+          <Breadcrumb.Item href="/">
+            <FontAwesomeIcon icon={faHome} className="icon" />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="/blog-page">{t("blog")}</Breadcrumb.Item>
+          <Breadcrumb.Item className="breadcrumb-page">
+            Seasonal Koi Care: Year-Round Maintenance Guide
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div className="blog-container">
         <div className="blog-flex-container">
           <div className="blog-main-content">
@@ -62,7 +77,7 @@ const SeasonalCare = () => {
             <div className="blog-author-info">
               <div className="author">
                 <i className="fas fa-user"></i>
-                <span>Author: Trùm Mafia - Quang Khoa</span>
+                <span>Author: Quang Duy</span>
               </div>
               <div className="date">
                 <i className="fas fa-calendar-alt"></i>

@@ -161,11 +161,11 @@ const FishCareManagement = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          <Button type="primary" onClick={() => handleViewHistory(record)}>
+          <Button className="button" onClick={() => handleViewHistory(record)}>
             View History
           </Button>
           <Button
-            type="primary"
+            className="button-main"
             icon={<EditOutlined />}
             onClick={() => {
               setSelectedFishCare(record);
@@ -295,7 +295,7 @@ const FishCareManagement = () => {
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button className="button-main" htmlType="submit" block>
               Update Status
             </Button>
           </Form.Item>

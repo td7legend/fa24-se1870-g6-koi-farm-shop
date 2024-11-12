@@ -32,7 +32,7 @@ import {
   MessageOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-
+import LoadingKoi from "../../components/loading";
 const { Text } = Typography;
 
 function ProductDetail() {
@@ -109,7 +109,7 @@ function ProductDetail() {
       const response = await axios.get(`${config.API_ROOT}fishs`);
       setFishes(response.data);
     } catch (error) {
-      toast.error(t("failedToFetchFishData"));
+      // toast.error(t("failedToFetchFishData"));
     }
   };
 
@@ -308,7 +308,7 @@ function ProductDetail() {
   };
 
   if (!product.name) {
-    return <div>{t("loading")}</div>;
+    return <LoadingKoi />;
   }
 
   return (
@@ -341,12 +341,37 @@ function ProductDetail() {
 
       <div className="product-detail-container">
         <Row gutter={[24, 24]}>
-          <Col span={8}>
+          <Col span={10}>
             <div className="product-slider-container">
+              <Slider
+                asNavFor={nav1}
+                ref={(slider2) => setNav2(slider2)}
+                slidesToShow={3}
+                vertical={true}
+                swipeToSlide={true}
+                focusOnSelect={true}
+                className="thumbnail-slider"
+                arrows={true}
+                verticalSwiping={true}
+              >
+                <div>
+                  <img src={product.imageUrl} alt={product?.name} />
+                </div>
+                {productImages.map((img, idx) => (
+                  <div key={idx}>
+                    <img
+                      src={img.imageUrl}
+                      alt={`${product?.name} ${idx + 1}`}
+                    />
+                  </div>
+                ))}
+              </Slider>
+
               <Slider
                 asNavFor={nav2}
                 ref={(slider1) => setNav1(slider1)}
                 className="main-slider"
+                arrows={false}
               >
                 <div>
                   <Image
@@ -367,31 +392,10 @@ function ProductDetail() {
                   </div>
                 ))}
               </Slider>
-
-              <Slider
-                asNavFor={nav1}
-                ref={(slider2) => setNav2(slider2)}
-                slidesToShow={3}
-                swipeToSlide={true}
-                focusOnSelect={true}
-                className="thumbnail-slider"
-              >
-                <div>
-                  <img src={product.imageUrl} alt={product?.name} />
-                </div>
-                {productImages.map((img, idx) => (
-                  <div key={idx}>
-                    <img
-                      src={img.imageUrl}
-                      alt={`${product?.name} ${idx + 1}`}
-                    />
-                  </div>
-                ))}
-              </Slider>
             </div>
           </Col>
 
-          <Col span={11}>
+          <Col span={14}>
             <div className="info-container">
               <h1>{product.name}</h1>
               <h2>
@@ -406,6 +410,10 @@ function ProductDetail() {
                 <p>
                   <span>{t("breed")}:</span>{" "}
                   {capitalizeFirstLetter(currentFishTypes.name)}
+                </p>
+                <p>
+                  <span>{t("origin")}:</span>{" "}
+                  {capitalizeFirstLetter(product.class)}
                 </p>
                 <p>
                   <span>{t("age")}:</span> {product.age}
@@ -556,7 +564,7 @@ function ProductDetail() {
             </div>
           </Col>
 
-          <Col span={5}>
+          {/* <Col span={5}>
             <div className="contact-info-card">
               <div className="card-header">THÔNG TIN LIÊN HỆ</div>
               <div className="contact-items-container">
@@ -589,7 +597,7 @@ function ProductDetail() {
                 </div>
               </div>
             </div>
-          </Col>
+          </Col> */}
         </Row>
       </div>
     </div>

@@ -1,17 +1,38 @@
 .blog2 {
   background-color: #fffaf0;
-  padding: 40px 0;
+  padding: 20px;
   font-family: "Inter", sans-serif;
+  position: relative;
+  z-index: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../../images/japanese-pattern.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    background-blend-mode: overlay;
+    filter: blur(5px);
+    opacity: 0.15;
+    pointer-events: none;
+  }
 
   .blog-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
+    z-index: 2;
   }
 
   .blog-flex-container {
     display: flex;
     gap: 30px;
+    z-index: 2;
   }
 
   .blog-main-content {
@@ -21,6 +42,7 @@
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 2;
 
     h1 {
       text-align: left;
@@ -170,32 +192,33 @@
       }
     }
     .blog-author-info {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin: 20px 0;
+      padding: 15px 0;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      font-family: "Inter", sans-serif;
+
+      .author,
+      .date {
         display: flex;
         align-items: center;
-        gap: 30px;
-        margin: 20px 0;
-        padding: 15px 0;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
-        font-family: 'Inter', sans-serif;
-    
-        .author, .date {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #666;
-          font-size: 14px;
-    
-          i {
-            color: #bbab6f;
-            font-size: 16px;
-          }
-    
-          span {
-            color: #333;
-          }
+        gap: 8px;
+        color: #666;
+        font-size: 14px;
+
+        i {
+          color: #bbab6f;
+          font-size: 16px;
+        }
+
+        span {
+          color: #333;
         }
       }
+    }
   }
 
   @media (max-width: 1024px) {

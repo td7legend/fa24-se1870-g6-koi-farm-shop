@@ -275,8 +275,10 @@ const ConsignmentHistory = () => {
       render: (_, record) => (
         <Space>
           <Button
+            type="link"
             icon={<EyeOutlined />}
             onClick={() => handleViewDetails(record)}
+            style={{ color: "#bbab6f" }}
           >
             Details
           </Button>

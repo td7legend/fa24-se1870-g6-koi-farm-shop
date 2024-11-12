@@ -97,12 +97,25 @@ const BreedFishPage = () => {
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
+    setMinPrice(value[0]);
+    setMaxPrice(value[1]);
     setCurrentPage(1);
   };
 
   const handleManualPriceChange = () => {
     setPriceRange([minPrice, maxPrice]);
     setCurrentPage(1);
+  };
+
+  const formatNumberWithCommas = (number) =>
+    new Intl.NumberFormat("vi-VN").format(number);
+
+  const handleMinPriceChange = (e) => {
+    setMinPrice(Number(e.target.value));
+  };
+
+  const handleMaxPriceChange = (e) => {
+    setMaxPrice(Number(e.target.value));
   };
 
   const fishImages = {
@@ -307,18 +320,22 @@ const BreedFishPage = () => {
                     defaultValue={[100000, 100000000]}
                     value={priceRange}
                     onChange={handlePriceChange}
+                    tipFormatter={(value) =>
+                      `$${formatNumberWithCommas(value)}`
+                    }
                   />
                   <div className="price-range">
                     <span style={{ fontSize: 16 }}>
-                      {t("price")}: ${priceRange[0]} - ${priceRange[1]}
+                      {t("price")}: {formatNumberWithCommas(priceRange[0])} đ -
+                      {formatNumberWithCommas(priceRange[1])} đ
                     </span>
                   </div>
                   <div className="price-inputs">
                     <Input
                       type="number"
                       placeholder={t("minPrice")}
-                      value={minPrice}
-                      onChange={(e) => setMinPrice(Number(e.target.value))}
+                      value={formatNumberWithCommas(minPrice)}
+                      onChange={handleMinPriceChange}
                       style={{
                         marginTop: 10,
                         marginRight: 8,
@@ -330,8 +347,8 @@ const BreedFishPage = () => {
                     <Input
                       type="number"
                       placeholder={t("maxPrice")}
-                      value={maxPrice}
-                      onChange={(e) => setMaxPrice(Number(e.target.value))}
+                      value={formatNumberWithCommas(maxPrice)}
+                      onChange={handleMaxPriceChange}
                       style={{
                         width: "47%",
                         borderRadius: "10px",
