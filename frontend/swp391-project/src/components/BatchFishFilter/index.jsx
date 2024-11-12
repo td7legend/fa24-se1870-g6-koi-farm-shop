@@ -58,7 +58,7 @@ const BatchFishFilter = () => {
               <FontAwesomeIcon icon={faHome} className="icon" />
             </Breadcrumb.Item>
             <Breadcrumb.Item className="breadcrumb-page">
-              Batch Fish
+              {t("batchFish")}
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>

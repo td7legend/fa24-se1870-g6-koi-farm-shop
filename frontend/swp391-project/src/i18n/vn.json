@@ -551,5 +551,8 @@
   "failedToFetchCertificateImages": "Không thể lấy hình ảnh chứng chỉ",
   "certificateImages": "Hình ảnh chứng chỉ",
   "noCertificateImages": "Không có hình ảnh chứng chỉ",
-  "noReviewsYet": "Không có đánh giá nào"
+  "noReviewsYet": "Không có đánh giá nào",
+  "batchFish": "Cá lô",
+  "fishName": "Tên cá",
+  "pleaseEnterFishName": "Vui lòng nhập tên cá"
 }

@@ -519,7 +519,7 @@ const ConsignmentHistory = () => {
                               },
                               {
                                 title: "Health Status",
-                                dataIndex: "healthStatus",
+                                dataIndex: "standardHealthStatus",
                                 key: "healthStatus",
                                 width: 120,
                                 render: (status) => {
@@ -539,7 +539,7 @@ const ConsignmentHistory = () => {
                               },
                               {
                                 title: "Care Details",
-                                dataIndex: "careDetails",
+                                dataIndex: "standardCareDetails",
                                 key: "careDetails",
                                 ellipsis: true,
                               },

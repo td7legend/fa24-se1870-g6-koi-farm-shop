@@ -553,5 +553,8 @@
   "failedToFetchCertificateImages": "Failed to fetch certificate images",
   "certificateImages": "Certificate Images",
   "noCertificateImages": "No certificate images",
-  "noReviewsYet": "No review yet"
+  "noReviewsYet": "No review yet",
+  "batchFish": "Batch Fish",
+  "fishName": "Fish Name",
+  "pleaseEnterFishName": "Please enter fish name"
 }

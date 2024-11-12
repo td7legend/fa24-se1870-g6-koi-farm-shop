@@ -263,7 +263,7 @@ function ConsignmentCare() {
                           rowKey="key"
                           columns={[
                             {
-                              title: t("fishType"),
+                              title: t("fishName"),
                               key: "fish_type",
                               render: (_, field, index) => (
                                 <Form.Item
@@ -272,12 +272,12 @@ function ConsignmentCare() {
                                   rules={[
                                     {
                                       required: true,
-                                      message: t("pleaseEnterFishType"),
+                                      message: t("pleaseEnterFishName"),
                                     },
                                   ]}
                                   style={{ margin: 0 }}
                                 >
-                                  <Input placeholder={t("fishType")} />
+                                  <Input placeholder={t("fishName")} />
                                 </Form.Item>
                               ),
                             },

@@ -101,7 +101,7 @@ function ProductDetail() {
       const imageUrls = response.data.map((cert) => cert.url);
       setCertificateImages(imageUrls);
     } catch (error) {
-      toast.error(t("failedToFetchCertificateImages"));
+      // toast.error(t("failedToFetchCertificateImages"));
     }
   };
   const fetchFishes = async () => {

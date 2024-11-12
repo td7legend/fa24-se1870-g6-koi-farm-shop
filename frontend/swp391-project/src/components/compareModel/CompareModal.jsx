@@ -200,7 +200,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
   };
 
   const formatGender = (gender) => {
-    return gender === 0 ? "Male" : "Female";
+    return gender === 0 ? t("male") : t("female");
   };
 
   return (
@@ -243,7 +243,7 @@ const CompareModal = ({ isVisible, onClose, initialFish, allFish }) => {
                         </div>
                       }
                       extra={
-                        <Tooltip title="Remove">
+                        <Tooltip title={t("remove")}>
                           <Button
                             icon={<CloseOutlined />}
                             onClick={() => handleRemoveFish(index)}
