@@ -29,6 +29,7 @@ Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá k
 
 **xUnit**
 xUnit là một framework kiểm thử phổ biến cho .NET, cung cấp một cách tiếp cận rõ ràng và dễ sử dụng để kiểm tra các đơn vị mã nguồn trong ứng dụng. Các bài kiểm thử được viết trong xUnit cho phép xác minh rằng mã nguồn thực thi chính xác như mong đợi, từ đó giúp phát hiện các lỗi tiềm ẩn ngay trong quá trình phát triển.
+
 **Mocking**
 Trong khi kiểm thử các API hoặc các thành phần trong ứng dụng, chúng tôi sử dụng mocking để tạo các đối tượng giả lập thay vì phụ thuộc vào các dịch vụ hoặc thành phần ngoài như cơ sở dữ liệu, API bên ngoài, hoặc các dịch vụ mạng. Việc này giúp giảm thiểu sự phụ thuộc vào các yếu tố bên ngoài trong quá trình kiểm thử, giúp các kiểm thử trở nên nhanh chóng, ổn định và dễ kiểm soát hơn.
 
