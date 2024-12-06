@@ -12,6 +12,7 @@ Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá k
 - **Frontend**: <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png"  width="20"  height="20">
 - **Backend**: <img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/C_Sharp_wordmark.svg/1024px-C_Sharp_wordmark.svg.png"  width="20"  height="20">
 - **Cơ sở dữ liệu**: <img  src="https://www.vhv.rs/dpng/d/79-799586_microsoft-sql-server-logo-hd-png-download.png"  width="20"  height="20">
+- **Deployment**: https://fa24-se1870-g6-koi-farm-shop.vercel.app
 
 ## Tính năng
 
@@ -22,6 +23,7 @@ Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá k
 - **Firebase**: Cấu hình Firebase cho việc lưu trữ ảnh.
 - **Google OAuth**: Cấu hình API Google cho đăng nhập.
 - **VNPay**: Cấu hình API VNPay cho thanh toán.
+- **Bảo mật API**: JWT
 ## Nhóm phát triển
 
 Dự án được thực hiện bởi một nhóm 5 thành viên:
