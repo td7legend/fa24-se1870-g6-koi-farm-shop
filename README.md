@@ -24,6 +24,8 @@ Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá k
 - **Google OAuth**: Cấu hình API Google cho đăng nhập.
 - **VNPay**: Cấu hình API VNPay cho thanh toán.
 - **Bảo mật API**: JWT
+## Testing
+- Chúng tôi sử dụng xUnit để unit test, sử dụng mock để test các api viết ra
 ## Nhóm phát triển
 
 Dự án được thực hiện bởi một nhóm 5 thành viên:
