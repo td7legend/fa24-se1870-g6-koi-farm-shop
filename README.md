@@ -25,7 +25,17 @@ Golden Koi là một nền tảng trực tuyến dành cho việc mua bán cá k
 - **VNPay**: Cấu hình API VNPay cho thanh toán.
 - **Bảo mật API**: JWT
 ## Testing
-- Chúng tôi sử dụng xUnit để unit test, sử dụng mock để test các api viết ra
+- Trong dự án Golden Koi, chúng tôi sử dụng xUnit để thực hiện unit testing cho các thành phần của hệ thống, đặc biệt là các API được xây dựng trong backend. Việc kiểm thử giúp đảm bảo rằng tất cả các phần của ứng dụng hoạt động đúng đắn và ổn định. Để thực hiện unit tests hiệu quả và kiểm tra tính chính xác của các API, chúng tôi sử dụng mocking để giả lập các thành phần bên ngoài và tránh phụ thuộc vào các dịch vụ hoặc tài nguyên thực tế như cơ sở dữ liệu hoặc các dịch vụ bên thứ ba.
+
+**xUnit**
+xUnit là một framework kiểm thử phổ biến cho .NET, cung cấp một cách tiếp cận rõ ràng và dễ sử dụng để kiểm tra các đơn vị mã nguồn trong ứng dụng. Các bài kiểm thử được viết trong xUnit cho phép xác minh rằng mã nguồn thực thi chính xác như mong đợi, từ đó giúp phát hiện các lỗi tiềm ẩn ngay trong quá trình phát triển.
+**Mocking**
+Trong khi kiểm thử các API hoặc các thành phần trong ứng dụng, chúng tôi sử dụng mocking để tạo các đối tượng giả lập thay vì phụ thuộc vào các dịch vụ hoặc thành phần ngoài như cơ sở dữ liệu, API bên ngoài, hoặc các dịch vụ mạng. Việc này giúp giảm thiểu sự phụ thuộc vào các yếu tố bên ngoài trong quá trình kiểm thử, giúp các kiểm thử trở nên nhanh chóng, ổn định và dễ kiểm soát hơn.
+
+Các thư viện mocking phổ biến mà chúng tôi sử dụng trong dự án bao gồm:
+- Moq: Đây là một thư viện phổ biến cho .NET giúp tạo mock objects một cách dễ dàng. Bằng cách sử dụng Moq, chúng tôi có thể giả lập các hành vi của các lớp hoặc interface bên ngoài, từ đó chỉ kiểm thử mã nguồn của ứng dụng mà không phải lo lắng về các yếu tố ngoài như cơ sở dữ liệu thực tế hoặc các dịch vụ bên ngoài.
+
+- Mocking HttpClient: Để kiểm thử các API bên ngoài mà hệ thống tương tác, chúng tôi sử dụng HttpClient trong ứng dụng backend. Tuy nhiên, trong khi kiểm thử, thay vì gọi các API thực tế, chúng tôi sử dụng mocking để giả lập các phản hồi từ các dịch vụ bên ngoài. Điều này giúp đảm bảo rằng các logic xử lý API trong ứng dụng được kiểm tra mà không gây ra các cuộc gọi mạng thực tế.
 ## Nhóm phát triển
 
 Dự án được thực hiện bởi một nhóm 5 thành viên:
